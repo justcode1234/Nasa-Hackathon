@@ -4,3 +4,14 @@ export function findCrop(value) {
   const key = String(value ?? '').trim().toLowerCase();
   return catalog.crops.find(crop => [crop.id, crop.name.toLowerCase(), ...crop.aliases].includes(key));
 }
+
+export function mentionedCrops(question) {
+  const text = String(question).toLowerCase();
+  return catalog.crops.filter(crop => [crop.id, crop.name.toLowerCase(), ...crop.aliases].some(alias => {
+    const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`\\b${escaped}\\b`, 'i').test(text);
+  }));
+}
+
+export const ambiguousCornQuestion = question => /\b(?:corn|maize)\b/i.test(question) && !mentionedCrops(question).some(crop => crop.id === 'sweet-corn');
+export const cornScopeNotice = 'Only explicitly identified sweet corn has sourced starter rules here. Other or unspecified corn/maize types remain unassessed; sweet-corn maturity and suitability rules are not applied to them.';

@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Compare crop rotations using historical NASA POWER evidence and transparent screening rules.">
+  <meta name="fieldshift-transport" content="worker">
   <title>FieldShift — crop rotation evidence</title>
   <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="/css/app.css">
@@ -25,7 +26,13 @@
   <main id="main">
     <section id="location" role="tabpanel" aria-labelledby="tab-location">
       <h2 id="location-heading">01 · Find a place and explore mapped fields</h2>
-      <label class="country-picker">Country for crop and pest records<select id="pest-country"><option value="">Choose a country or search for a place</option></select></label>
+      <label class="country-picker">Country<select id="pest-country"><option value="">Choose a country</option></select></label>
+      <div class="fields">
+        <label>Region (optional filter)<select id="place-region" disabled><option value="">Choose a country first</option></select></label>
+        <label>Town / city<select id="place-town" disabled><option value="">Choose a country first</option></select></label>
+      </div>
+      <p id="location-list-status" role="status">Choose a country to browse regions and towns. No place name is needed.</p>
+      <details><summary>Place-list coverage and source</summary><div id="location-list-source"></div><p>A town point is not a farm. Smaller settlements can be missing; search, map selection and coordinates remain available.</p></details>
       <p id="country-status" role="status">Choose a country to see its recorded crops. A town or field gives a more precise planning location.</p>
       <form id="place-form" class="search-row">
         <label>Town, region or country<input id="place-query" minlength="2" maxlength="120" placeholder="For example: Cambridge, UK" required></label>
@@ -126,6 +133,7 @@
     <button id="flow-next" type="button">Next: NASA evidence →</button>
   </div>
   <footer>
+    <p id="runtime-status">Browser showcase mode</p>
     <p><a href="https://power.larc.nasa.gov/docs/services/api/temporal/daily/" target="_blank" rel="noreferrer">NASA POWER</a> · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap contributors</a> · <a href="/submission/index.html" target="_blank" rel="noreferrer">Project &amp; submission deck</a></p>
   </footer>
   <button id="chat-toggle" class="chat-launcher" type="button" aria-controls="chat-panel" aria-expanded="false" aria-label="Open FieldShift assistant">Chat</button>
@@ -133,8 +141,8 @@
     <div class="chat-header"><h2 id="chat-heading">FieldShift assistant</h2><button id="chat-close" type="button" aria-label="Close assistant">Close</button></div>
     <p id="model-status" role="status">Evidence is available immediately. The compact model loads when chat opens.</p>
     <details><summary>Compact local language-model experiment</summary><p>FieldShift Mini is a custom 29,200-parameter next-word language model with 116.8 KB of weights, plus a small TensorFlow.js runtime. It is not a general-purpose LLM. Development tests showed limited free-form understanding, so a relevance guard and sourced fallback are always used. Raw generated scientific claims are never displayed.</p><button id="load-model" type="button">Enable compact local model</button><button id="unload-model" type="button" disabled>Unload model</button></details>
-    <div id="chat-history" role="log" aria-label="Conversation" aria-live="polite"><p>Ask about crops, mapped fields, country pest records or your rotation. Load a comparison for weather-specific answers.</p></div>
-    <form id="question-form"><label>Message<input id="question" name="question" type="text" maxlength="500" required placeholder="What do we know about peas?"></label><button id="ask" type="submit">Send</button></form>
+    <div id="chat-history" role="log" aria-label="Conversation" aria-live="polite"><p>Ask about a crop and country, such as “rice in India”. Or ask “help me plan a rotation in India” to select a field, enter your three crops, load NASA evidence and compare in step 4.</p></div>
+    <form id="question-form"><label>Message<input id="question" name="question" type="text" maxlength="500" required placeholder="Tell me about a crop in a country"></label><button id="ask" type="submit">Send</button></form>
     <p id="answer-status" role="status">Answers include sources and limitations.</p>
     <div id="answer-output" hidden></div>
   </aside>

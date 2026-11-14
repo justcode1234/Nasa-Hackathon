@@ -1,17 +1,18 @@
 ﻿# FieldShift
 
-Browser-only crop-rotation decision support for NASA Space Apps 2026. Team **Explorer**, Singapore. Read [AGENTS.md](AGENTS.md) and the later user decisions in [docs/decisions.md](docs/decisions.md).
+Crop-rotation decision support for NASA Space Apps 2026, with a **Node.js testing mode** and a **browser-only Vercel showcase**. Team **Explorer**, Singapore. Read [AGENTS.md](AGENTS.md) and the current user decisions in [docs/decisions.md](docs/decisions.md).
 
 ## Run
 
-Requires Node.js 22+ for building/local preview; the deployed app has no Node backend.
+Requires Node.js 22+. Both modes use the same NASA adapters, sourced catalog and deterministic rotation engine.
 
 ```sh
 npm ci
-npm run start
+npm run start:node          # Node backend + frontend, default http://localhost:3001
+npm run start:showcase      # static browser-only showcase, default http://localhost:3000
 ```
 
-The command builds and opens the app in your browser. Re-running it reuses this project's preview and opens it again; an unrelated app keeps its port and FieldShift chooses the next free one. Default: http://localhost:3000. `NO_OPEN=1` disables automatic opening. In PowerShell with npm.ps1 blocked, use `npm.cmd run start`.
+Run either command in its own terminal to use both at once. Node mode serves source files and real `/api` endpoints; the frontend sends validated planning inputs to the Node backend. Showcase mode builds static files and performs retrieval/calculations in a browser worker. The footer identifies the active mode. Re-running a command reuses only the matching project's runtime; unrelated applications and the other mode keep their ports. `PORT` overrides the preferred port; `NO_OPEN=1` disables automatic browser opening. In PowerShell with npm.ps1 blocked, use `npm.cmd`. `npm start` retains the showcase workflow. `npm run dev:node` watches the Node testing server.
 
 ## Vercel
 
@@ -19,11 +20,11 @@ The command builds and opens the app in your browser. Re-running it reuses this 
 npm run build
 ```
 
-Import this repository into Vercel: framework **Other**, build **npm run build**, output **dist/client**. The checked-in `vercel.json` contains these settings and security headers. No API keys, environment variables, serverless functions or database are needed. See [deployment status and instructions](docs/deployment.md). No public production URL is claimed without a verified deployment.
+The existing showcase origin is [nasa-hackathon-three.vercel.app](https://nasa-hackathon-three.vercel.app/). See the [deployment record](docs/deployment.md) for release verification. Vercel settings are framework **Other**, build **npm run build**, output **dist/client**; the checked-in `vercel.json` includes security headers. No API keys, environment variables, serverless functions or database are needed. Local testing uses the separate Node command above.
 
 ## Workflow
 
-1. Search a town/region/country or choose an example region. Find nearby OpenStreetMap farmland and choose a mapped field from the outline or dropdown. Coordinates remain an optional precise input.
+1. Choose a country, optionally filter by region, then choose a town/city without typing a place name. The sourced GeoNames extract includes 70,036 places across 245 countries/areas; it does not include every rural settlement. Search, example regions, map selection and coordinates remain available. Find nearby OpenStreetMap farmland and choose a mapped field from the outline or dropdown.
 2. Load a historical NASA POWER year. Inspect real daily source metadata, monthly charts, missing days and downloadable observations. Regional soil estimates load independently.
 3. Choose baseline crops from the selected country's recorded production list, restrict alternatives and set priorities. FAOSTAT supplies 9,238 crop records across 197 countries/areas, using latest positive production records in 2020–2024. Missing coverage stays empty. Only country categories with starter rules can form alternatives; fewer than two disables comparison. Optional measured soil pH/drainage can be supplied; mapped regional estimates never masquerade as a farm soil test. Published Australian irrigation history supplies context where relevant.
 4. Compare the existing rotation with two alternatives over the same 12 months. Read individual criteria, risks, sources and gaps. Country pest records provide inspection leads.
@@ -33,6 +34,22 @@ Exactly four tabbed modules: **SI Model**, **Geospatial Map**, **Data Flow**, **
 Visible workflow numbering follows the user's path: **01 Find farmland → 02 NASA evidence → 03 Plan crops → 04 Compare**. Persistent Next/Back buttons and keyboard-accessible tabs provide navigation.
 
 ## Fast local assistant
+
+Ask about a crop and country directly: “rice in India”, “wheat in Australia” or
+“kai lan in Singapore”. Answers stay short, with separate growing/harvest/country
+evidence follow-ups and expandable sources. A country named in chat does not change
+the map or borrow weather from another country. Cultivation coverage is limited;
+missing crop-country rules remain explicit.
+
+To have chat carry out the workflow, ask “Help me plan a rotation in India. Crops:
+rice, wheat, beans.” It selects the country and asks for a town, mapped field or
+explicit coordinates. It enters the supplied three-crop sequence, loads historical
+NASA evidence, runs the same comparison engine and opens step 4. You can select a
+returned field by button, field number or its current OSM way ID. Missing crops are
+never filled automatically. Unsupported crops remain unassessed; alternatives use
+the allowed screened crops. Manual form edits cancel pending actions; say “continue”
+to use the current form. “Cancel” ends guided planning. Actions are fixed app code,
+independent of model generation, and use no arbitrary URLs or generated code.
 
 Chat renders sourced evidence immediately. A custom **29,200-parameter autoregressive word language model** loads in a worker when chat opens. Its trained weights are **116.8 KB**. It is an experimental small language model, not a general-purpose LLM or an agronomic authority. A relevance guard leaves inconclusive answers on deterministic retrieval; raw generated scientific statements are never displayed.
 
@@ -46,13 +63,14 @@ The earlier 184 MB SmolLM2 experiment and a 12.5 MB TinyStories candidate were b
 - **ISRIC SoilGrids**: modelled pH, sand/clay and prediction intervals at 250 m, 0–5 cm depth. ISRIC advises against farm-level use; these are regional background, never automatically filled as measured farm inputs. There is no single observation year.
 - **ABS**: Australian 2020–21 national irrigated-area and water-applied totals. ML/ha ratios are documented annual aggregates, not field irrigation schedules or water requirements. They are not applied to other countries.
 - **OpenStreetMap/Nominatim**: community-mapped field outlines, optional crop/produce tags and place names. Missing tags stay unknown. Mapping does not prove ownership, access, available land or current crops. Grain maize is not assigned sweet-corn rules.
+- **GeoNames**: dated, country-sized town lists and administrative-region names, with source hashes and CC BY 4.0 attribution. Country selection clears the old point; town selection sets a gazetteer coordinate, not a farm boundary. Smaller places may need search or map selection. The largest current country file is about 454 KB and loads only when that country is chosen.
 - **GBIF + IPPC/UF IFAS**: a small sourced host watchlist and historical country occurrences for fall armyworm/diamondback moth. Country presence is not farm presence, outbreak status or pest probability.
 - **FAOSTAT QCL + UN M49**: dated national primary-crop production records drive country lists, not trade/imports or generic climate guesses. Commodity categories are broader than cultivars; green beans/peas/corn provide explicitly qualified starter-rule mappings. Absence is unknown, not proof a crop cannot grow. Full source flags, years, units, source hash, licence and reproducible extraction are included.
 - **UMN/Cornell Extension**: the four sourced starter vegetables are bush snap bean, garden pea, sweet corn and radish. Source-region evidence is not worldwide validation.
 
 Comparisons assume one field, three four-month slots, maturity upper bounds plus a disclosed 14-day harvest/turnaround allowance. They screen family repeats, calendar fit, missing evidence, frost exposure, limited heat/pH/drainage rules and rain-free exposure. They do not calculate crop water demand, fertilizer credit, pest prevention, yield gains, soil improvement, profitability or savings. Unsupported crops remain visible and unassessed.
 
-All scientific logic runs in a browser worker. Device-local IndexedDB caches retain original retrieval times; failure never creates substitute readings. External-source availability, fair-use limits and CORS still apply. [Sources](docs/data-sources.md), [challenge fit](docs/challenge-alignment.md), [decisions](docs/decisions.md).
+In showcase mode scientific logic runs in a browser worker, and device-local IndexedDB caches retain original retrieval times. In Node testing mode the same logic runs on the local server with its in-memory caches. Optional model inference stays browser-local in both. Failure never creates substitute readings. External-source availability and fair-use limits apply to both; browser CORS requirements also apply to the showcase. [Sources](docs/data-sources.md), [challenge fit](docs/challenge-alignment.md), [decisions](docs/decisions.md).
 
 ## Validation and development
 
@@ -60,11 +78,15 @@ All scientific logic runs in a browser worker. Device-local IndexedDB caches ret
 npm test                    # offline unit / HTTP-harness / static-build / startup checks
 npm run test:live            # real NASA retrieval at three contrasting coordinates
 npm run test:browser         # installed Chrome/Chromium/Edge, live sources and UI
+npm run test:node-browser    # Node-backed UI, real NASA and injected upstream failure
+npm run test:firefox         # installed Firefox, separate engine, real data and failure paths
 node scripts/check-sourced-context.js
 node scripts/benchmark-mini-lm.js
 ```
 
-Browser checks use isolated profiles and built-in Chrome debugging; no browser is downloaded. `CHROME_PATH` can override discovery. Ignored `artifacts/` contains raw reports, screenshots and profiles. The retained Node API adapter is a test harness; production uses static files and browser-worker messages, with no `/api` network requests.
+Browser checks use isolated profiles and built-in Chrome debugging; no browser is downloaded. `CHROME_PATH` can override discovery. Ignored `artifacts/` contains raw reports, screenshots and profiles. Static showcase tests verify no `/api` network requests; Node browser tests verify real `/api` calls and no browser-side NASA retrieval or data-worker load.
+
+Firefox checks use native WebDriver BiDi with a separate temporary profile and no downloaded driver; `FIREFOX_PATH` can override discovery. Chrome process-memory snapshots are included in `node scripts/benchmark-mini-lm.js` on Windows. They count the isolated test browser and descendants, with explicit limits for shared pages and missed short-lived processes. See the [validation record](docs/validation.md).
 
 Actual browser training: `node scripts/build-mini-corpus.js` then `node scripts/train-mini-lm.js`. Rebuild afterward. The corpus has explicitly labelled synthetic question wording and source-linked continuations, no fabricated NASA observations. Python/Jupyter inspection and guarded training/reproduction paths are in [notebooks](notebooks/README.md). Pretrained fine-tuning and Keras export are separate, unexecuted experiments.
 

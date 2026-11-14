@@ -1,12 +1,15 @@
 import { api } from '../lib/api.js';
 import { el, sourceLinks } from '../lib/dom.js';
+import { createWorkflowAssistant } from './workflow-assistant.js';
 
-export function initChat(getState) {
+export function initChat(getState, actions) {
   const $ = id => document.getElementById(id);
-  let worker, ready = false, disabled = false, revision = 0, request, sequence = 0;
+  let worker, ready = false, disabled = false, revision = 0, request, sequence = 0, chatContext = null;
   const selections = new Map();
   const log = $('chat-history');
   const setStatus = message => { $('model-status').textContent = message; };
+  const workflow = createWorkflowAssistant({ getState, actions, progress: message => { $('answer-status').textContent = message; } });
+  let pendingChoice = null, messageSerial = 0;
   function open(value) {
     $('chat-panel').hidden = !value;
     $('chat-toggle').setAttribute('aria-expanded', String(value));
@@ -53,11 +56,13 @@ export function initChat(getState) {
       worker.postMessage({ type: 'select', id, question, blocks });
     });
   }
-  function contextBlocks(question, state) {
+  function contextBlocks(question, state, answer) {
     const blocks = [], sources = [];
+    if (answer.topic === 'greeting' || answer.useSelectedLocation === false) return { blocks, sources };
     if(/weather|nasa|temperature|rainfall|precipitation|solar|frost/.test(question.toLowerCase())&&state.observations){
       const data=state.observations;
-      for(const name of ['T2M','PRECTOTCORR','ALLSKY_SFC_SW_DWN']){
+      const parameterId = /solar/i.test(question) ? 'ALLSKY_SFC_SW_DWN' : /rain|precipitation/i.test(question) ? 'PRECTOTCORR' : 'T2M';
+      for(const name of [parameterId]){
         const parameter=data.parameters[name],date=parameter.latestAvailableDate;
         const value=date?parameter.values[data.dates.indexOf(date)]:null;
         blocks.push({kind:'historical weather evidence',text:`${parameter.label}: latest non-missing value inside ${data.period.start} to ${data.period.end} is ${value??'missing'} ${parameter.units} on ${date??'unknown date'}. Regional estimated gridded observation at ${data.location.latitude}°, ${data.location.longitude}°; retrieved ${data.retrievedAt}. It is not current weather, a forecast or a field measurement.`,sourceIds:['nasa-power']});
@@ -66,34 +71,36 @@ export function initChat(getState) {
     }
     if (/soil|ph\b|sand|clay|drain/.test(question.toLowerCase())) {
       if (state.soil) {
-        state.soil.properties.forEach(p => blocks.push({ kind: 'regional soil model', text: `${p.name}: mean ${p.mean ?? 'missing'} ${p.units}; source 5th–95th prediction quantiles ${p.lower ?? 'missing'}–${p.upper ?? 'missing'} ${p.units}. SoilGrids ${state.soil.nominalResolutionM} m grid, ${state.soil.depth}, retrieved ${state.soil.retrievedAt}; no single observation date. This is not a farm measurement.`, sourceIds: ['soilgrids'] }));
+        const property = state.soil.properties.find(p => /sand/i.test(question) ? p.id === 'sand' : /clay/i.test(question) ? p.id === 'clay' : p.id === 'phh2o');
+        [property].filter(Boolean).forEach(p => blocks.push({ kind: 'regional soil model', text: `${p.name}: mean ${p.mean ?? 'missing'} ${p.units}; source 5th–95th prediction quantiles ${p.lower ?? 'missing'}–${p.upper ?? 'missing'} ${p.units}. SoilGrids ${state.soil.nominalResolutionM} m grid, ${state.soil.depth}, retrieved ${state.soil.retrievedAt}; no single observation date. This is not a farm measurement.`, sourceIds: ['soilgrids'] }));
         blocks.push({ kind: 'limitation', text: 'ISRIC advises against local/farm-level use of SoilGrids. These estimates are regional context only; no measured pH, drainage or soil-water capacity is inferred for this field.', sourceIds: ['soilgrids'] });
         sources.push(state.soil.source);
       } else blocks.push({ kind: 'limitation', text: 'Mapped soil context is not loaded. Load it in Plan crops. No soil type or pH is guessed for this field.', sourceIds: [] });
     }
     if (/water|irrigat|australia/.test(question.toLowerCase())) {
       if (state.water?.available) {
-        state.water.rows.forEach(row => blocks.push({ kind: 'historical national irrigation context', text: `${row.category}: Australia ${state.water.period}, ${row.waterAppliedMl} ML applied ÷ ${row.irrigatedHa} irrigated ha = ${row.appliedMlPerIrrigatedHa.toFixed(2)} ML/ha annually. ABS release ${state.water.publishedDate}. This broad national ratio is not this farm's water requirement or a daily watering schedule.`, sourceIds: ['abs-irrigation'] }));
+        const row = state.water.rows.find(row => /vegetable/i.test(row.category)) ?? state.water.rows[0];
+        if (row) blocks.push({ kind: 'historical national irrigation context', text: `${row.category}: Australia ${state.water.period}, ${row.waterAppliedMl} ML applied ÷ ${row.irrigatedHa} irrigated ha = ${row.appliedMlPerIrrigatedHa.toFixed(2)} ML/ha annually. ABS release ${state.water.publishedDate}. This broad national ratio is not this farm's water requirement or a daily watering schedule.`, sourceIds: ['abs-irrigation'] });
         sources.push(state.water.source);
       } else blocks.push({ kind: 'limitation', text: 'No verified irrigation benchmark is loaded for this country. Australian national statistics are not substituted for another country or for a field irrigation schedule.', sourceIds: [] });
     }
-    if (/farm|field|crop|grow|produc/.test(question.toLowerCase()) && state.farm) {
+    if (/farm|field/.test(question.toLowerCase()) && state.farm) {
       const farm = state.farm;
       blocks.push({ kind: 'mapped field record', text: `${farm.name}. ${farm.crops.length ? `Recorded crop tags: ${farm.crops.join(', ')}.` : 'No crop tags are recorded.'} OSM edit date: ${farm.updatedAt ?? 'unknown'}; current crops, ownership and access are unverified.`, sourceIds: ['selected-field'] });
       sources.push({ id: 'selected-field', title: 'Selected OpenStreetMap field', url: farm.sourceUrl });
     }
     if (/pest|insect|moth|worm|disease/.test(question.toLowerCase())) {
-      if (state.pests) for (const pest of state.pests.records) {
+      if (state.pests) for (const pest of [state.pests.records.find(p => question.toLowerCase().includes(p.name.toLowerCase())) ?? state.pests.records[0]].filter(Boolean)) {
         blocks.push({ kind: 'country occurrence context', text: `${pest.name} in ${state.pests.country}: ${pest.status}${pest.occurrenceCount !== null ? ` (${pest.occurrenceCount} historical occurrence records)` : ''}. ${pest.hostNote} This does not establish farm presence or current outbreak.`, sourceIds: [pest.id, `${pest.id}-host`] });
         sources.push({ id: pest.id, title: `GBIF ${pest.name} country query`, url: pest.sourceUrl }, { id: `${pest.id}-host`, ...pest.hostSource });
       } else blocks.push({ kind: 'limitation', text: 'Country pest context is not loaded. Use Plan crops → Country pest context. There are no pest observations for this farm in the app.', sourceIds: [] });
     }
-    return { blocks, sources };
+    return { blocks: blocks.slice(0, 2), sources };
   }
   $('question-form').addEventListener('submit', async event => {
     event.preventDefault();
     const startedAt=performance.now();
-    const version = revision, question = $('question').value.trim();
+    const version = revision, question = $('question').value.trim(), serial = ++messageSerial;
     if (!question) return;
     request?.abort(); request = new AbortController();
     $('ask').disabled = true; $('answer-status').textContent = 'Retrieving source facts…';
@@ -101,34 +108,53 @@ export function initChat(getState) {
     user.append(el('h3', 'You'), el('p', question)); log.append(user);
     $('question').value = '';
     try {
+      const choice = pendingChoice; pendingChoice = null;
+      let answer = await workflow.respond(question, choice);
       const state = getState();
-      const answer = await api('/api/ask', { method: 'POST', body: { ...(state.inputs ?? {}), question }, signal: request.signal });
-      const extra = contextBlocks(question, state);
-      answer.blocks = [...extra.blocks, ...answer.blocks]; answer.sources.push(...extra.sources);
-      if (version !== revision) return;
+      answer ??= await api('/api/ask', { method: 'POST', body: { ...(state.inputs ?? {}), selectedCountry: state.country, chatContext, question }, signal: request.signal });
+      const extra = contextBlocks(question, state, answer);
+      answer.blocks = extra.blocks.length ? [...extra.blocks, ...answer.blocks.filter(block => block.kind === 'limitation').slice(0, 1)].slice(0, 3) : answer.blocks.slice(0, 3);
+      answer.sources.push(...extra.sources);
+      if (version !== revision || serial !== messageSerial) return;
+      if (answer.context) chatContext = answer.context;
+      else if (answer.topic === 'greeting') chatContext = null;
       const response = el('article', null, { class: 'chat-message' });
-      response.append(el('h3', ready ? 'Assistant · local model + retrieved evidence' : 'Assistant · retrieved evidence'));
+      response.append(el('h3', 'Assistant'));
       answer.blocks.forEach(block => {
-        response.append(el('p', `${block.kind}: ${block.text}`));
-        if (block.sourceIds.length) response.append(sourceLinks(block.sourceIds, answer.sources));
+        response.append(el('p', block.text));
       });
+      const sourceIds = [...new Set(answer.blocks.flatMap(block => block.sourceIds))];
+      if (sourceIds.length) {
+        const details = el('details'); details.append(el('summary', `Sources (${sourceIds.length})`), sourceLinks(sourceIds, answer.sources)); response.append(details);
+      }
+      const followUps = answer.followUps ?? (answer.topic === 'weather' ? ['Show me rainfall evidence', 'Show me solar evidence'] :
+        /soil|ph\b|sand|clay/i.test(question) ? ['Tell me about soil pH', 'Tell me about soil sand', 'Tell me about soil clay'] : []);
+      if (followUps.length) {
+        const choices = el('div', null, { role: 'group', 'aria-label': 'Explore another topic' });
+        followUps.slice(0, 3).forEach(followUp => {
+          const text = typeof followUp === 'string' ? followUp : followUp.question;
+          const button = el('button', typeof followUp === 'string' ? followUp : followUp.label, { type: 'button' });
+          button.addEventListener('click', () => { pendingChoice = followUp.workflowChoice ?? null; $('question').value = text; $('question-form').requestSubmit(); }); choices.append(button);
+        });
+        response.append(choices);
+      }
       log.append(response);
       // The evidence answer is visible before optional neural inference finishes.
       const renderedAt=performance.now();
       window.fieldshiftAnswerLatencyMs=renderedAt-startedAt;
-      if(ready)select(question,answer.blocks).then(index=>{
-        if(version!==revision||!response.isConnected)return;
-        response.append(el('p',index===null?'Compact model: no verified selection; the sourced answer above remains the fallback.':`Compact model identified relevant ${answer.blocks[index].kind}. Displayed facts are from the retrieved evidence.`));
-      });
+      if(ready && answer.topic !== 'greeting') select(question,answer.blocks).catch(() => {});
       // Keep a bounded conversation in memory; nothing is sent to a cloud model.
       while (log.children.length > 20) log.firstElementChild.remove();
       log.scrollTop = log.scrollHeight;
       $('answer-status').textContent = 'Answer ready. Sources and limits are included.';
-    } catch (error) { if (error.name !== 'AbortError' && version === revision) $('answer-status').textContent = error.message; }
-    finally { if (version === revision) $('ask').disabled = false; }
+    } catch (error) { if (error.name !== 'AbortError' && version === revision && serial === messageSerial) $('answer-status').textContent = error.message; }
+    finally { if (version === revision && serial === messageSerial) $('ask').disabled = false; }
   });
-  return { invalidate() {
-    revision++; request?.abort(); $('ask').disabled = false;
+  return { invalidate({ fromAssistant = false } = {}) {
+    chatContext = null;
+    if (fromAssistant) return;
+    workflow.invalidate(); pendingChoice = null;
+    revision++; request?.abort(); $('ask').disabled = false; chatContext = null;
     log.replaceChildren(el('p', 'Location or planning context changed. New messages use the current selection.'));
     $('answer-status').textContent = 'Answers include sources and limitations.';
   } };

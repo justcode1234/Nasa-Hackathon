@@ -1,11 +1,11 @@
 {
-  "checkedAt": "2026-11-14T11:42:22.554Z",
-  "firstEvidenceAnswerMs": 10,
+  "checkedAt": "2026-11-14T15:09:25.795Z",
+  "firstEvidenceAnswerMs": 2.300000011920929,
   "coldLoad": {
     "model": "FieldShift Mini word LM (experimental)",
     "parameters": 29200,
     "weightBytes": 116800,
-    "loadMs": 903,
+    "loadMs": 228.19999998807907,
     "backend": "wasm",
     "tensorBytes": 116800,
     "wasmHeapCapacityBytes": 16777216,
@@ -15,7 +15,7 @@
     "model": "FieldShift Mini word LM (experimental)",
     "parameters": 29200,
     "weightBytes": 116800,
-    "loadMs": 652.6000000000931,
+    "loadMs": 184,
     "backend": "wasm",
     "tensorBytes": 116800,
     "wasmHeapCapacityBytes": 16777216,
@@ -25,16 +25,365 @@
     "model": "FieldShift Mini word LM (experimental)",
     "parameters": 29200,
     "weightBytes": 116800,
-    "loadMs": 903,
+    "loadMs": 228.19999998807907,
     "backend": "wasm",
     "tensorBytes": 116800,
     "wasmHeapCapacityBytes": 16777216,
     "peakTotalBrowserMemoryBytes": null,
-    "inferenceMs": 84,
+    "inferenceMs": 13.799999982118607,
     "topic": "soil",
     "accepted": true
   },
   "rawGenerationForEvaluationOnly": "regional soil estimates are not farm measurements . a local soil test",
+  "browserProcessMemory": {
+    "supported": true,
+    "method": "Windows .NET process counters for the isolated browser and descendants; snapshots at workflow phases.",
+    "maxSampledWorkingSetBytes": 748978176,
+    "maxSampledPrivateBytes": 354177024,
+    "sumObservedProcessPeakWorkingSetsBytes": 798654464,
+    "observedProcessCount": 14,
+    "snapshots": [
+      {
+        "phase": "before model load",
+        "startedAt": "2026-11-14T15:09:23.3865247Z",
+        "finishedAt": "2026-11-14T15:09:23.7774659Z",
+        "processCount": 11,
+        "workingSetBytes": 556417024,
+        "privateBytes": 226488320
+      },
+      {
+        "phase": "after model load and inference",
+        "startedAt": "2026-11-14T15:09:24.5446613Z",
+        "finishedAt": "2026-11-14T15:09:24.7577770Z",
+        "processCount": 11,
+        "workingSetBytes": 607367168,
+        "privateBytes": 278147072
+      },
+      {
+        "phase": "after developer generation and app model reload",
+        "startedAt": "2026-11-14T15:09:25.5279643Z",
+        "finishedAt": "2026-11-14T15:09:25.7527583Z",
+        "processCount": 13,
+        "workingSetBytes": 748978176,
+        "privateBytes": 354177024
+      }
+    ],
+    "limitations": [
+      "Working-set sums can count shared physical pages more than once.",
+      "Summed per-process lifetime peaks are not a simultaneous browser peak.",
+      "Subprocesses that start and exit entirely between snapshots can be missed; this is not an exact full-session peak.",
+      "These are desktop headless measurements, not real mobile hardware or a memory guarantee."
+    ]
+  },
+  "browserProcessMemorySamples": [
+    {
+      "startedAt": "2026-11-14T15:09:23.3865247Z",
+      "finishedAt": "2026-11-14T15:09:23.7774659Z",
+      "rootProcessId": 36304,
+      "processes": [
+        {
+          "id": 36304,
+          "parentId": 34672,
+          "startedAt": "2026-11-14T15:09:22.5919069Z",
+          "workingSetBytes": 135655424,
+          "privateBytes": 41168896,
+          "peakWorkingSetBytes": 135655424
+        },
+        {
+          "id": 18492,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6029152Z",
+          "workingSetBytes": 9981952,
+          "privateBytes": 2744320,
+          "peakWorkingSetBytes": 9981952
+        },
+        {
+          "id": 2716,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6907109Z",
+          "workingSetBytes": 40194048,
+          "privateBytes": 15056896,
+          "peakWorkingSetBytes": 40194048
+        },
+        {
+          "id": 16860,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6954406Z",
+          "workingSetBytes": 41689088,
+          "privateBytes": 14712832,
+          "peakWorkingSetBytes": 41836544
+        },
+        {
+          "id": 27168,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7111677Z",
+          "workingSetBytes": 17649664,
+          "privateBytes": 8028160,
+          "peakWorkingSetBytes": 17649664
+        },
+        {
+          "id": 38080,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7550967Z",
+          "workingSetBytes": 65531904,
+          "privateBytes": 29220864,
+          "peakWorkingSetBytes": 65531904
+        },
+        {
+          "id": 26024,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7793720Z",
+          "workingSetBytes": 30924800,
+          "privateBytes": 15007744,
+          "peakWorkingSetBytes": 30924800
+        },
+        {
+          "id": 14624,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7798154Z",
+          "workingSetBytes": 91308032,
+          "privateBytes": 37810176,
+          "peakWorkingSetBytes": 91308032
+        },
+        {
+          "id": 38512,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.8682954Z",
+          "workingSetBytes": 42311680,
+          "privateBytes": 22646784,
+          "peakWorkingSetBytes": 42311680
+        },
+        {
+          "id": 34844,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.8936575Z",
+          "workingSetBytes": 39329792,
+          "privateBytes": 19681280,
+          "peakWorkingSetBytes": 39329792
+        },
+        {
+          "id": 13324,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.9182316Z",
+          "workingSetBytes": 41840640,
+          "privateBytes": 20410368,
+          "peakWorkingSetBytes": 41840640
+        }
+      ],
+      "phase": "before model load",
+      "supported": true
+    },
+    {
+      "startedAt": "2026-11-14T15:09:24.5446613Z",
+      "finishedAt": "2026-11-14T15:09:24.7577770Z",
+      "rootProcessId": 36304,
+      "processes": [
+        {
+          "id": 36304,
+          "parentId": 34672,
+          "startedAt": "2026-11-14T15:09:22.5919069Z",
+          "workingSetBytes": 137547776,
+          "privateBytes": 41988096,
+          "peakWorkingSetBytes": 137547776
+        },
+        {
+          "id": 18492,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6029152Z",
+          "workingSetBytes": 9981952,
+          "privateBytes": 2744320,
+          "peakWorkingSetBytes": 9981952
+        },
+        {
+          "id": 2716,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6907109Z",
+          "workingSetBytes": 43995136,
+          "privateBytes": 15286272,
+          "peakWorkingSetBytes": 43995136
+        },
+        {
+          "id": 16860,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6954406Z",
+          "workingSetBytes": 42225664,
+          "privateBytes": 14770176,
+          "peakWorkingSetBytes": 45617152
+        },
+        {
+          "id": 27168,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7111677Z",
+          "workingSetBytes": 17649664,
+          "privateBytes": 8028160,
+          "peakWorkingSetBytes": 17649664
+        },
+        {
+          "id": 38080,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7550967Z",
+          "workingSetBytes": 65531904,
+          "privateBytes": 29220864,
+          "peakWorkingSetBytes": 65531904
+        },
+        {
+          "id": 26024,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7793720Z",
+          "workingSetBytes": 30924800,
+          "privateBytes": 15007744,
+          "peakWorkingSetBytes": 30924800
+        },
+        {
+          "id": 14624,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7798154Z",
+          "workingSetBytes": 136028160,
+          "privateBytes": 88363008,
+          "peakWorkingSetBytes": 136028160
+        },
+        {
+          "id": 38512,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.8682954Z",
+          "workingSetBytes": 42311680,
+          "privateBytes": 22646784,
+          "peakWorkingSetBytes": 42311680
+        },
+        {
+          "id": 34844,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.8936575Z",
+          "workingSetBytes": 39329792,
+          "privateBytes": 19681280,
+          "peakWorkingSetBytes": 39329792
+        },
+        {
+          "id": 13324,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.9182316Z",
+          "workingSetBytes": 41840640,
+          "privateBytes": 20410368,
+          "peakWorkingSetBytes": 41840640
+        }
+      ],
+      "phase": "after model load and inference",
+      "supported": true
+    },
+    {
+      "startedAt": "2026-11-14T15:09:25.5279643Z",
+      "finishedAt": "2026-11-14T15:09:25.7527583Z",
+      "rootProcessId": 36304,
+      "processes": [
+        {
+          "id": 36304,
+          "parentId": 34672,
+          "startedAt": "2026-11-14T15:09:22.5919069Z",
+          "workingSetBytes": 157556736,
+          "privateBytes": 53874688,
+          "peakWorkingSetBytes": 160239616
+        },
+        {
+          "id": 18492,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6029152Z",
+          "workingSetBytes": 9998336,
+          "privateBytes": 2760704,
+          "peakWorkingSetBytes": 9998336
+        },
+        {
+          "id": 2716,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6907109Z",
+          "workingSetBytes": 44560384,
+          "privateBytes": 15429632,
+          "peakWorkingSetBytes": 44580864
+        },
+        {
+          "id": 16860,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.6954406Z",
+          "workingSetBytes": 43163648,
+          "privateBytes": 15511552,
+          "peakWorkingSetBytes": 45674496
+        },
+        {
+          "id": 27168,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7111677Z",
+          "workingSetBytes": 17850368,
+          "privateBytes": 8081408,
+          "peakWorkingSetBytes": 17850368
+        },
+        {
+          "id": 38080,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7550967Z",
+          "workingSetBytes": 65859584,
+          "privateBytes": 29270016,
+          "peakWorkingSetBytes": 65859584
+        },
+        {
+          "id": 14624,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.7798154Z",
+          "workingSetBytes": 153145344,
+          "privateBytes": 103370752,
+          "peakWorkingSetBytes": 166076416
+        },
+        {
+          "id": 38512,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.8682954Z",
+          "workingSetBytes": 42688512,
+          "privateBytes": 22724608,
+          "peakWorkingSetBytes": 42688512
+        },
+        {
+          "id": 34844,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.8936575Z",
+          "workingSetBytes": 39710720,
+          "privateBytes": 19750912,
+          "peakWorkingSetBytes": 39710720
+        },
+        {
+          "id": 13324,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:22.9182316Z",
+          "workingSetBytes": 42180608,
+          "privateBytes": 20463616,
+          "peakWorkingSetBytes": 42180608
+        },
+        {
+          "id": 38176,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:25.2371197Z",
+          "workingSetBytes": 52531200,
+          "privateBytes": 22700032,
+          "peakWorkingSetBytes": 52531200
+        },
+        {
+          "id": 27400,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:25.3601317Z",
+          "workingSetBytes": 31195136,
+          "privateBytes": 15052800,
+          "peakWorkingSetBytes": 31195136
+        },
+        {
+          "id": 21132,
+          "parentId": 36304,
+          "startedAt": "2026-11-14T15:09:25.4125019Z",
+          "workingSetBytes": 48537600,
+          "privateBytes": 25186304,
+          "peakWorkingSetBytes": 49143808
+        }
+      ],
+      "phase": "after developer generation and app model reload",
+      "supported": true
+    }
+  ],
   "limitations": [
     "Development question wording is synthetic and not agronomist-reviewed.",
     "Raw generated words never reach scientific UI output.",

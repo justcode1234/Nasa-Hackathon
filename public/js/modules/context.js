@@ -1,26 +1,37 @@
+import { COUNTRY_CODES, COUNTRY_NAMES } from '../lib/countries.js';
 import { api } from '../lib/api.js';
 import { el, list, sourceLinks, table, number } from '../lib/dom.js';
+import { initLocationPicker } from './location-picker.js';
 
-export function initContext({ map, coordinates, selectLocation, onFarm, onPests, onSoil, onWater, onCountry, onCountrySelection }) {
+export function initContext({ map, coordinates, selectLocation, onFarm, onPests, onSoil, onWater, onCountry, onCountrySelection, request = api }) {
   let farms = [], places = [], token = 0;
   let countryTimer, countryTask;
   const $ = id => document.getElementById(id);
   // ISO 3166-1 codes; names are supplied by the browser's Intl locale data.
-  const codes = 'AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW'.split(' ');
-  const names = new Intl.DisplayNames(['en'], { type: 'region' });
+  const codes = [...COUNTRY_CODES];
+  const names = COUNTRY_NAMES;
   codes.sort((a, b) => names.of(a).localeCompare(names.of(b))).forEach(code => $('pest-country').append(el('option', names.of(code), { value: code })));
   const message = (id, text, error = false) => { $(id).textContent = text; $(id).classList.toggle('error', error); };
-  function locationChanged({ preserveFields = false, countryCode = '' } = {}) {
+  const picker = initLocationPicker({ request,
+    onTown: place => {
+      selectLocation(place.latitude, place.longitude, { pan: true, countryCode: place.country, regionCode: place.regionCode, placeId: place.id });
+      message('place-status', `${place.name} · ${names.of(place.country)}. This is a town point; choose a field or map point before interpreting farm conditions.`);
+      loadFarms();
+    },
+    onRegion: ({ country, regionCode }) => { onCountrySelection(); locationChanged({ countryCode: country, regionCode }); }
+  });
+  function locationChanged({ preserveFields = false, countryCode = '', regionCode = null, placeId = '', fromAssistant = false } = {}) {
     token++;
     clearTimeout(countryTimer);
     $('pest-country').value = countryCode;
+    const placeTask = picker.setCountry(countryCode, { regionCode, placeId });
     $('pest-output').replaceChildren();
-    onPests(null);
+    onPests(null, { fromAssistant });
     onSoil(null); onWater(null);
     $('soil-context-output').replaceChildren(); $('water-context-output').replaceChildren();
     message('soil-context-status', 'Regional soil context is not loaded for this location.');
     if (countryCode) loadWater(countryCode);
-    loadCountry(countryCode);
+    const cropTask = loadCountry(countryCode, { fromAssistant });
     if (!countryCode && coordinates()) countryTimer = setTimeout(() => { ensureCountry(); }, 450);
     message('pest-status', 'Load country records for this selection. Country presence is not farm presence.');
     if (!preserveFields) {
@@ -28,43 +39,49 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
       $('farm-results').replaceChildren(el('option', 'Load nearby fields first', { value: '' }));
       $('farm-results').disabled = true;
       $('farm-details').replaceChildren();
-      onFarm(null);
+      onFarm(null, { fromAssistant });
     }
+    return Promise.all([placeTask, cropTask]);
   }
-  async function loadCountry(country) {
+  async function loadCountry(country, options = {}) {
     const version = token;
-    onCountry(null);
+    onCountry(null, options);
     message('country-status', country ? `Loading recorded crops for ${names.of(country)}…` : 'Choose a country to see its recorded crops.');
     try {
-      const data = await api(`/api/country-crops?country=${country}`);
+      const data = await request(`/api/country-crops?country=${country}`);
       if (version !== token) return;
-      onCountry(data);
+      onCountry(data, options);
       message('country-status', country ? `${names.of(country)} · ${data.records.length} crop production categories in the 2020–2024 source snapshot. National records do not establish field suitability.` : 'Choose a country to see its recorded crops.');
     } catch (error) { if (version === token) message('country-status', error.message, true); }
   }
-  async function ensureCountry() {
+  async function ensureCountry(options = {}) {
     clearTimeout(countryTimer);
     if ($('pest-country').value) return;
-    if (countryTask) return countryTask;
     const position = coordinates(), version = token;
     if (!position) return;
-    countryTask = (async () => {
+    if (countryTask?.version === version) return countryTask.promise;
+    const task = (async () => {
       try {
-        const data = await api(`/api/places?${new URLSearchParams(position)}`);
+        const data = await request(`/api/places?${new URLSearchParams(position)}`);
         if (version !== token) return;
         const country = data.places[0]?.countryCode;
         if (!country) return message('country-status', 'No country identified at this point. Choose a country or a named place.');
         $('pest-country').value = country;
+        picker.setCountry(country);
         loadWater(country);
-        await loadCountry(country);
+        await loadCountry(country, options);
       } catch (error) { if (version === token) message('country-status', `Country could not be identified: ${error.message}`, true); }
     })();
-    try { await countryTask; } finally { countryTask = null; }
+    countryTask = { version, promise: task };
+    try { await task; } finally {
+      // A previous location may finish after a newer lookup has already started.
+      if (countryTask?.promise === task) countryTask = null;
+    }
   }
   async function loadWater(country) {
     const version = token;
     try {
-      const data = await api(`/api/water-context?country=${country}`);
+      const data = await request(`/api/water-context?country=${country}`);
       if (version !== token) return;
       onWater(data);
       const root = $('water-context-output');
@@ -80,7 +97,7 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     $('load-soil-context').disabled = true;
     message('soil-context-status', 'Retrieving mapped regional soil estimates and source prediction intervals…');
     try {
-      const data = await api(`/api/soil?${new URLSearchParams(position)}`);
+      const data = await request(`/api/soil?${new URLSearchParams(position)}`);
       if (version !== token) return;
       onSoil(data);
       $('soil-context-output').replaceChildren(el('p', `${data.product} · ${data.kind} · nominal ${data.nominalResolutionM} m grid · depth ${data.depth} · retrieved ${data.retrievedAt}. No single observation date.`),
@@ -98,7 +115,7 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     $('find-farms').disabled = true;
     message('farms-status', 'Loading community-mapped farmland in a small area around this point…');
     try {
-      const data = await api(`/api/farms?${new URLSearchParams(position)}`);
+      const data = await request(`/api/farms?${new URLSearchParams(position)}`);
       if (version !== token) return;
       farms = data.farms; map.setFarms(farms);
       $('farm-results').replaceChildren(el('option', farms.length ? 'Choose a mapped field' : 'No complete mapped fields returned', { value: '' }));
@@ -109,18 +126,19 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     } catch (error) { if (version === token) message('farms-status', error.message, true); }
     finally { $('find-farms').disabled = false; }
   }
-  function selectFarm(id) {
+  async function selectFarm(id, options = {}) {
     const farm = farms.find(f => f.id === id);
     if (!farm) return;
     const countryCode = $('pest-country').value;
-    selectLocation(farm.representativePoint.latitude, farm.representativePoint.longitude, { preserveFields: true, countryCode });
+    const selected = selectLocation(farm.representativePoint.latitude, farm.representativePoint.longitude, { preserveFields: true, countryCode, ...options });
     $('farm-results').value = id;
     map.highlightFarm(id);
     const root = $('farm-details');
     root.replaceChildren(el('h3', farm.name), el('p', `Recorded crops: ${farm.crops.length ? farm.crops.join(', ') : 'unknown — no crop tag'}. ${farm.cropEvidence}.`),
       el('p', `OSM last edited: ${farm.updatedAt ?? 'unknown'}. This is an edit date, not a crop observation date. Ownership, access and current production are unverified.`));
     root.append(el('a', 'View mapped field and history', { href: farm.sourceUrl, target: '_blank', rel: 'noreferrer' }));
-    onFarm(farm);
+    onFarm(farm, options);
+    await selected;
   }
   $('find-farms').addEventListener('click', loadFarms);
   $('farm-results').addEventListener('change', () => selectFarm($('farm-results').value));
@@ -132,7 +150,7 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     $('place-results').replaceChildren(el('option', 'Searching…', { value: '' }));
     message('place-status', 'Searching place names with OpenStreetMap / Nominatim…');
     try {
-      const data = await api(`/api/places?${new URLSearchParams({ q: $('place-query').value })}`);
+      const data = await request(`/api/places?${new URLSearchParams({ q: $('place-query').value })}`);
       if (version !== token) return;
       places = data.places;
       $('place-results').replaceChildren(el('option', places.length ? 'Choose a result' : 'No matching places', { value: '' }));
@@ -159,7 +177,7 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
       if (!country) {
         const position = coordinates();
         if (!position) throw new Error('Select a location or choose a country.');
-        const data = await api(`/api/places?${new URLSearchParams(position)}`);
+        const data = await request(`/api/places?${new URLSearchParams(position)}`);
         if (version !== token) return;
         country = data.places[0]?.countryCode;
         if (!country) throw new Error('Country could not be identified here. Choose one manually.');
@@ -167,7 +185,7 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
         loadWater(country);
         loadCountry(country);
       }
-      const data = await api(`/api/pests?country=${country}`);
+      const data = await request(`/api/pests?country=${country}`);
       if (version !== token) return;
       const root = $('pest-output');
       root.replaceChildren(el('p', `${names.of(country)} · GBIF country records, all dates · retrieved ${data.retrievedAt ?? 'unavailable'}`), list(data.notices));
@@ -185,21 +203,16 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     } catch (error) { if (version === token) message('pest-status', error.message, true); }
     finally { $('load-pests').disabled = false; }
   });
-  $('pest-country').addEventListener('change', async () => {
+  $('pest-country').addEventListener('change', () => {
     const country = $('pest-country').value;
     onCountrySelection();
     locationChanged({ countryCode: country });
-    const version = token;
-    if (!country) return;
-    message('place-status', `Finding ${names.of(country)}. Choose a town or field next for a precise location.`);
-    try {
-      const data = await api(`/api/places?${new URLSearchParams({ q: names.of(country) })}`);
-      if (version !== token) return;
-      const place = data.places.find(p => p.countryCode === country);
-      if (!place) throw new Error('No matching location returned. Search a town in this country.');
-      selectLocation(place.latitude, place.longitude, { pan: true, countryCode: country });
-      message('place-status', `${place.name}. This is a country representative point; choose a town or field before planning.`);
-    } catch (error) { if (version === token) message('place-status', error.message, true); }
+    message('place-status', country ? 'Choose a region or town from the dropdowns, search a place, or pick the map.' : 'Choose a country to browse towns.');
   });
-  return { locationChanged, loadFarms, selectFarm, loadSoil, ensureCountry };
+  return { locationChanged, loadFarms, selectFarm, loadSoil, ensureCountry, getFarms: () => farms,
+    async chooseCountry(country, options = {}) {
+      if (!codes.includes(country)) throw new Error('Choose a supported country.');
+      onCountrySelection(options);
+      return locationChanged({ countryCode: country, ...options });
+    } };
 }

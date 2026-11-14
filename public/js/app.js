@@ -1,4 +1,4 @@
-import { api } from './lib/api.js';
+import { api, getTransport } from './lib/api.js';
 import { initMap } from './modules/map.js';
 import { renderEvidence } from './modules/data-flow.js';
 import { renderStrategy } from './modules/strategy.js';
@@ -6,8 +6,10 @@ import { renderCatalog, updateCropChoices } from './modules/si.js';
 import { initTabs } from './lib/tabs.js';
 import { initContext } from './modules/context.js';
 import { initChat } from './modules/chat.js';
+import { resolveCropInput } from './modules/workflow-assistant.js';
 
 const $ = selector => document.querySelector(selector);
+$('#runtime-status').textContent = getTransport() === 'http' ? 'Node.js testing mode' : 'Browser showcase mode';
 let observations = null;
 let comparedInputs = null;
 let catalogReady = false;
@@ -33,11 +35,11 @@ function status(selector, message, error = false) {
 function syncControls() {
   $('#compare').disabled = !observations || !catalogReady || document.querySelectorAll('[name="allowedCrops"]:checked').length < 2;
 }
-function invalidate(clearEvidence) {
+function invalidate(clearEvidence, options = {}) {
   revision++;
   controller?.abort();
   comparedInputs = null;
-  chat?.invalidate();
+  chat?.invalidate(options);
   $('#strategy-output').textContent = 'Inputs changed. Compare again to see results for the current inputs.';
   status('#comparison-status', clearEvidence ? 'Load evidence for the selected coordinates and year.' : 'Constraints changed. Compare again.');
   if (clearEvidence) {
@@ -52,31 +54,59 @@ function selectLocation(latitude, longitude, options = {}) {
   $('#latitude').value = latitude;
   $('#longitude').value = longitude;
   $('#example-location').value = '';
-  invalidate(true);
+  invalidate(true, options);
   map.setLocation(latitude, longitude, options.pan ?? false);
-  context?.locationChanged(options);
+  return context?.locationChanged(options);
 }
 const map = initMap((latitude, longitude) => selectLocation(latitude, longitude), id => context.selectFarm(id));
 context = initContext({ map, selectLocation,
   coordinates: () => $('#latitude').value !== '' && $('#longitude').value !== '' && $('#latitude').checkValidity() && $('#longitude').checkValidity() ?
     { latitude: Number($('#latitude').value), longitude: Number($('#longitude').value) } : null,
-  onFarm: farm => {
+  onFarm: (farm, options = {}) => {
     selectedFarm = farm;
     if (catalogData) updateCropChoices(catalogData, farm?.crops ?? [], countryCrops);
     $('#recorded-crops').textContent = farm ? `Selected field: ${farm.name}. ${farm.crops.length ? `Recorded crop tags: ${farm.crops.join(', ')}. They are available as unassessed choices.` : 'No crop tags are recorded.'} A current tag does not establish rotation history.` : 'Choose crops yourself; a map tag does not provide a three-crop rotation history.';
-    chat?.invalidate();
-  }, onPests: data => { pestContext = data; chat?.invalidate(); },
+    chat?.invalidate(options);
+  }, onPests: (data, options = {}) => { pestContext = data; chat?.invalidate(options); },
   onSoil: data => { soilContext = data; }, onWater: data => { waterContext = data; },
-  onCountrySelection: () => { $('#latitude').value = ''; $('#longitude').value = ''; invalidate(true); },
-  onCountry: data => {
+  onCountrySelection: (options = {}) => { $('#latitude').value = ''; $('#longitude').value = ''; map.clearLocation(); invalidate(true, options); },
+  onCountry: (data, options = {}) => {
     const changed = countryCrops?.country !== data?.country;
     countryCrops = data;
     if (catalogData) renderCatalog(catalogData, countryCrops, selectedFarm?.crops ?? []);
-    if (changed && observations) invalidate(false);
+    if (changed && observations) invalidate(false, options);
     syncControls();
   }
 });
-chat = initChat(() => ({ inputs: comparedInputs, observations, farm: selectedFarm, pests: pestContext, soil: soilContext, water: waterContext }));
+chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country ?? '', observations, farm: selectedFarm,
+  pests: pestContext, soil: soilContext, water: waterContext,
+  location: $('#latitude').value !== '' && $('#longitude').value !== '' && $('#location-form').checkValidity() ?
+    { latitude: Number($('#latitude').value), longitude: Number($('#longitude').value) } : null,
+  planning: readInputs(), countryCrops, catalog: catalogData, farms: context.getFarms() }), {
+  chooseCountry: code => context.chooseCountry(code, { fromAssistant: true }),
+  chooseLocation: (point, countryCode) => selectLocation(point.latitude, point.longitude, { pan: true, countryCode, fromAssistant: true }),
+  chooseFarm: id => context.selectFarm(id, { fromAssistant: true }),
+  loadFarms: () => context.loadFarms(),
+  showStep: activateTab, loadEvidence: () => loadEvidence({ fromAssistant: true }),
+  compare: () => runComparison({ fromAssistant: true }),
+  applyPlanning({ baseline, constraints, allowed }) {
+    if (!catalogData || !countryCrops?.country) throw new Error('Country crop evidence is not loaded.');
+    if (baseline) baseline.forEach((name, index) => {
+      const crop = resolveCropInput(name, catalogData, countryCrops);
+      const select = $(`#baseline-${index + 1}`);
+      if (![...select.options].some(option => option.value === crop.id)) select.add(new Option(`${crop.name} — farmer supplied / unassessed`, crop.id));
+      select.value = crop.id;
+    });
+    const controls = { irrigation: '#irrigation', soil: '#soil', soilPh: '#soil-ph', priority: '#priority',
+      planningYear: '#planning-year', startMonth: '#start-month', referenceYear: '#reference-year' };
+    for (const [key, value] of Object.entries(constraints ?? {})) if (controls[key]) $(controls[key]).value = value;
+    if (allowed) {
+      const ids = allowed.map(name => resolveCropInput(name, catalogData, countryCrops).id);
+      document.querySelectorAll('[name=allowedCrops]').forEach(input => { input.checked = ids.includes(input.value); });
+    }
+    invalidate(Boolean(constraints?.referenceYear), { fromAssistant: true });
+  }
+});
 for (const id of ['#latitude', '#longitude']) $(id).addEventListener('input', () => {
   $('#example-location').value = '';
   invalidate(true);
@@ -98,10 +128,12 @@ $('#example-location').addEventListener('change', () => {
   context.loadFarms();
 });
 $('#planning-form').addEventListener('input', () => invalidate(false));
-$('#location-form').addEventListener('submit', async event => {
-  event.preventDefault();
-  await context.ensureCountry();
-  invalidate(true);
+async function loadEvidence(options = {}) {
+  if (!$('#location-form').checkValidity()) return false;
+  const selectionVersion = revision;
+  await context.ensureCountry(options);
+  if (selectionVersion !== revision) return;
+  invalidate(true, options);
   const version = revision;
   controller = new AbortController();
   $('#load-evidence').disabled = true;
@@ -116,12 +148,15 @@ $('#location-form').addEventListener('submit', async event => {
     status('#comparison-status', 'Enter the baseline and constraints, then compare.');
     activateTab('evidence');
     context.loadSoil();
+    return true;
   } catch (error) {
     if (error.name !== 'AbortError' && revision === version) status('#evidence-status', error.message, true);
+    return false;
   } finally {
     if (revision === version) { $('#load-evidence').disabled = false; syncControls(); }
   }
-});
+}
+$('#location-form').addEventListener('submit', event => { event.preventDefault(); loadEvidence(); });
 function readInputs() {
   return { latitude: Number($('#latitude').value), longitude: Number($('#longitude').value), referenceYear: Number($('#reference-year').value), country: countryCrops?.country ?? '',
     planningYear: Number($('#planning-year').value), startMonth: Number($('#start-month').value),
@@ -143,10 +178,9 @@ activateTab.beforeNext = from => {
     return false;
   }
 };
-$('#planning-form').addEventListener('submit', async event => {
-  event.preventDefault();
-  if (!observations || !catalogReady) return;
-  invalidate(false);
+async function runComparison(options = {}) {
+  if (!observations || !catalogReady || !$('#planning-form').checkValidity()) return false;
+  invalidate(false, options);
   const version = revision;
   const inputs = readInputs();
   controller = new AbortController();
@@ -160,10 +194,13 @@ $('#planning-form').addEventListener('submit', async event => {
     status('#comparison-status', 'Baseline and two alternatives ready. Review the trade-offs in module 04.');
     status('#answer-status', 'Ask about a catalog crop, water, soil, pest limits or the comparison.');
     activateTab('strategy');
+    return result;
   } catch (error) {
     if (error.name !== 'AbortError' && version === revision) status('#comparison-status', error.message, true);
+    return false;
   } finally { if (version === revision) syncControls(); }
-});
+}
+$('#planning-form').addEventListener('submit', event => { event.preventDefault(); runComparison(); });
 try {
   const catalog = await api('/api/crops');
   catalogData = catalog;

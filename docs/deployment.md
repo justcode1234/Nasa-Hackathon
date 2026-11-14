@@ -1,9 +1,11 @@
 # Vercel deployment
 
-The user explicitly chose a **browser-only static app on Vercel**, superseding
-the first Node-backend plan. No serverless functions, backend URLs, database,
-secrets or API keys are required. NASA/OSM/Nominatim/GBIF/SoilGrids retrieval,
-normalisation, caching, agronomy and model inference run in browser workers.
+The user chose **both a Node.js testing mode and a browser-only static Vercel
+showcase**. Vercel needs no serverless functions, backend URLs, database, secrets
+or API keys. In the showcase, NASA/OSM/Nominatim/GBIF/SoilGrids retrieval,
+normalisation, caching and agronomy run in the browser worker. Local Node testing
+uses the same modules through real HTTP APIs. Optional model inference stays in
+the browser in both modes.
 
 ## Commands and settings
 
@@ -21,10 +23,22 @@ npm run build
   if present, selects another free port when needed, and opens the browser.
 
 The build bundles the shared pure JavaScript application core into a local browser
-worker, copies Leaflet assets, and writes static files. The retained Node HTTP/API
-adapter is a test harness; Vercel does not execute it. The local preview is also
-static-only; `/api/health` returns 404. The worker's `/api/...` strings are internal
-message route names, not network endpoints.
+worker, copies Leaflet assets, and writes static files. Vercel does not execute
+the Node server. `npm run start:showcase` and `npm start` serve static-only files;
+`/api/health` returns 404. The showcase worker's `/api/...` strings are internal
+message route names. `npm run start:node` serves the Node frontend and real APIs
+on preferred port 3001; its `/api/health` returns 200. Both can run together.
+
+## Public host and release
+
+The existing public origin was discovered in the user's browser and checked with
+an unauthenticated HTTP request on 2026-11-14:
+https://nasa-hackathon-three.vercel.app/ . It returned HTTP 200, but initially served
+the older source revision without the new country/region/town picker. The browser
+also showed Vercel's completed setup page for the same GitHub repository and main
+branch. The latest local crop-country conversation and guided step-4 workflow have
+passed local checks. Publication is pending; public file hashes and the deployed
+workflow must pass before these changes are declared live.
 
 ## Publish
 
@@ -33,10 +47,22 @@ and deploy with the checked-in settings. Vercel can then deploy future Git commi
 If using an authenticated CLI, run `vercel --prod` from the repository. Do not add
 tokens or credentials to this repository.
 
-The Vercel plugin was found but was not connected at the latest confirmed check;
-no existing CLI credentials were found. A live Vercel deployment cannot be claimed
-until authenticated account access and a successful deployment result exist. No
-production URL is invented. The build and browser tests are independently verifiable.
+The requested https://vercel.com/get-started.md setup was followed. Vercel CLI
+65.16.0 is installed. The user completed login and `vercel whoami` verified
+**justcode1234**; the separate **4chatgptsim** account is retained. This checkout
+is linked to **justcode1234s-projects/nasa-hackathon**, existing project ID
+`prj_YGWfxpDRdDQOx9LKEQkrMduC9Rhp`. Read-only CLI team/project checks passed.
+The user-scoped Codex Vercel plugin 0.54.1 is enabled. The global shared MCP server
+is https://mcp.vercel.com with successful OAuth authorization. Active-session tools
+still do not expose Vercel MCP methods; refresh Codex before checking MCP
+`search_vercel_documentation` and `list_teams`. Those two MCP checks are not claimed
+as executed. CLI publishing can proceed independently.
+
+CLI-created .env.local and .vercel files are ignored and must never be committed
+or uploaded. A dry run caught hundreds of MB of local browser profiles before any
+upload; .vercelignore now excludes them, credentials, dependencies and build output.
+Required source/build inputs and the public submission package remain included.
+Recheck identity/project and inspect `vercel deploy --dry --json` before upload.
 
 An earlier private Sites project was provisioned while exploring hosting. It was
 never published; its hosting adapter was removed when the user chose Vercel.

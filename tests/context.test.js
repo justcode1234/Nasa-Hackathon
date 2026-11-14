@@ -61,6 +61,17 @@ test('general crop questions return sourced facts without needing a field or syn
   assert.ok(answer.sources.some(s => s.id === 'umn-peas'));
   assert.ok(answer.blocks.some(b => b.text.includes('No location-specific comparison')));
 });
+
+test('catalog answers match explicit multiword sweet-corn names and explain unsupported generic corn', () => {
+  for (const name of ['sweet corn', 'sweet-corn', 'sweetcorn']) {
+    assert.ok(answerCatalogQuestion(`Tell me about ${name}`).blocks.some(block => block.kind === 'sourced crop facts' && block.sourceIds.includes('umn-corn')));
+  }
+  for (const name of ['maize', 'corn', 'grain maize', 'field corn']) {
+    const answer = answerCatalogQuestion(`How long does ${name} take?`);
+    assert.ok(answer.blocks.every(block => block.kind !== 'sourced crop facts'));
+    assert.ok(answer.blocks.some(block => block.text.includes('remain unassessed')));
+  }
+});
 test('soil model values use source unit factors, retain intervals and never become farm measurements', () => {
   const raw = { properties: { layers: [{ name: 'phh2o', unit_measure: { d_factor: 10 }, depths: [{ range: { top_depth: 0, bottom_depth: 5 }, values: { mean: 72, 'Q0.05': 56, 'Q0.95': 88 } }] }] } };
   const result = normalizeSoil(raw, { latitude: -31.89, longitude: 116.77 }, 'TEST', 'TEST');

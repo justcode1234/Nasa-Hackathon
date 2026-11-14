@@ -11,6 +11,8 @@ FieldShift helps people compare crop rotations using real NASA weather evidence 
 
 ## Detailed description
 
+The location path supports country, optional region and town dropdowns without requiring a known place name. A dated GeoNames extract provides 70,036 points across 245 countries/areas, loaded in small country-sized files. Missing rural settlements retain search, map and coordinate paths; a town point is not a farm boundary.
+
 A global map cannot establish what a field grows, how much irrigation it needs or which rotation is right for a farmer. FieldShift builds an explainable evidence workflow instead of claiming a single optimal crop.
 
 The four modules are Geospatial Map, Data Flow, SI Model and Strategy Logic. The map searches named places and displays nearby complete OpenStreetMap farmland polygons. Users select an outline or dropdown entry. Crop/produce tags appear where recorded; missing tags and historical rotations remain unknown. Mapping does not verify ownership, access, available land or current production.
@@ -25,14 +27,17 @@ Published data reduce the need to guess. ISRIC SoilGrids provides modelled pH an
 
 The country pest watchlist combines sourced crop-host relationships for fall armyworm and diamondback moth with GBIF historical occurrence queries. It provides inspection leads with dates and source links, not field diagnosis, abundance, infestation probability, official phytosanitary status or pesticide advice.
 
-The bottom-right assistant works across all tabs. Retrieved crop, weather, soil, water and pest evidence supplies its scientific statements. A custom 29,200-parameter word-level autoregressive language-model experiment runs in a browser worker with 116.8 KB of weights. It was trained with next-word prediction, not a topic-classifier output layer. Production topic selection is guarded; source answers render before inference. Inconclusive selections fall back to evidence, and raw generated scientific text is never displayed. It is not a general-purpose LLM or a validated agronomic model.
+The bottom-right assistant works across all tabs. It answers named crop-country questions with brief, source-backed topics and follow-ups. It can also select a country/place or returned field, enter the farmer's three crops, load NASA evidence and run the comparison through step 4. Missing inputs are requested; unsupported crops remain unassessed. Fixed app handlers execute these actions, never generated code. Retrieved crop, weather, soil, water and pest evidence supplies scientific statements. A custom 29,200-parameter word-level autoregressive language-model experiment runs in a browser worker with 116.8 KB of weights. It was trained with next-word prediction, not a topic-classifier output layer. Production topic selection is guarded; source answers render before inference. Inconclusive selections fall back to evidence, and raw generated scientific text is never displayed. It is not a general-purpose LLM or a validated agronomic model.
 
-The deployed architecture is static HTML/CSS/JavaScript with Leaflet and browser workers. All retrieval, caching, normalization, agronomy and inference run on the user's device. Vercel needs no serverless functions, database, environment variables, API keys or inference server. Local Node tooling builds, tests and previews static files. Device caches preserve original retrieval dates. The approved visual direction uses a large map, compact sidebar, dark green/cream styling, accessible tabs and mobile layouts.
+The Vercel showcase architecture is static HTML/CSS/JavaScript with Leaflet and browser workers. A separate local Node.js testing mode serves the same frontend through real HTTP APIs and the shared data/strategy modules. Showcase retrieval, caching, normalization, agronomy and inference run on the user's device; in local testing, the Node backend supplies data and deterministic results while optional model inference stays in the browser. Vercel needs no serverless functions, database, environment variables, API keys or inference server. Local Node tooling builds, tests and previews static files. Device caches preserve original retrieval dates. The approved visual direction uses a large map, compact sidebar, dark green/cream styling, accessible tabs and mobile layouts.
 
 ## What was actually validated
 
-- 37 automated unit, adapter, country-filter, static-build, model-artifact and startup checks passed.
-- 23 browser checks passed in Chrome, including Next/Back navigation, actual country-dependent choices, named places, real field selection, NASA evidence, comparison timelines, sourced answers, stale-input clearing, model load/unload, failures and seven-page PDF output.
+- 74 automated unit, adapter, conversation/action, country-filter, static-build, model-artifact, location-race and startup checks passed.
+- 31 browser checks passed in Chrome against the static build, including named crop-country questions, focused follow-ups, guided execution through step 4, pending-location edits, Next/Back navigation, country-dependent choices, real field selection, NASA evidence, timelines, invalidation, model load/unload, failures and seven-page PDF output.
+- 17 Node-backed browser checks passed with direct browser NASA access and the data worker blocked, including chat-driven country/location/crop selection, real backend retrieval, comparison and failure/retry.
+- 16 separate Firefox 160 workflow checks passed using native BiDi, including crop-country chat, guided execution through step 4, blocked model/NASA requests, model recovery and narrow-viewport keyboard navigation.
+- Windows process-tree snapshots measured 607 MB aggregate working set after model load/inference and a maximum sampled 749 MB after the additional developer generation/reload check. Shared pages and missed short-lived processes limit interpretation; the exact session peak and real mobile memory remain unverified.
 - A static-only preview with no backend API retrieved real NASA/SoilGrids data and rendered dated ABS ratios; farm pH remained unknown and soil/water chat answers retained source limitations.
 - NASA 2025 retrievals at Perth, Minneapolis and Nairobi had all five requested parameters present in those requests and different seasonal temperature evidence.
 - A clean browser TensorFlow.js/WASM training run completed. Its synthetic-development wording is explicitly labelled; results were 75/90 development selections and only 9/18 free-form cases. This is not agronomic accuracy.
@@ -46,6 +51,7 @@ The deployed architecture is static HTML/CSS/JavaScript with Leaflet and browser
 
 ## Other sources and credits
 
+- GeoNames, CC BY 4.0: https://www.geonames.org/ ; extract format and scope: https://download.geonames.org/export/dump/readme.txt
 - OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/copyright
 - Nominatim search policy: https://operations.osmfoundation.org/policies/nominatim/
 - ISRIC SoilGrids, CC BY 4.0; Poggio et al. (2021): https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_04.html

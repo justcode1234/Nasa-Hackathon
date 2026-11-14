@@ -40,7 +40,7 @@ export async function openChrome() {
     return value.result.value;
   };
   await call('Page.enable'); await call('Runtime.enable'); await call('Network.enable');
-  return { call, evaluate, events,
+  return { call, evaluate, events, processId: processHandle.pid,
     async waitFor(expression, timeoutMs = 60_000) {
       const stop = Date.now() + timeoutMs;
       while (Date.now() < stop) { if (await evaluate(expression)) return; await new Promise(resolve => setTimeout(resolve, 250)); }

@@ -7,7 +7,7 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 out = root / 'public/submission'
 out.mkdir(parents=True, exist_ok=True)
-root_files = ['.gitattributes', '.gitignore', 'AGENTS.md', 'README.md', 'package.json', 'package-lock.json', 'vercel.json']
+root_files = ['.gitattributes', '.gitignore', '.vercelignore', 'AGENTS.md', 'README.md', 'package.json', 'package-lock.json', 'vercel.json']
 files = [root / name for name in root_files if (root / name).is_file()]
 for folder in ['server', 'public', 'scripts', 'tests', 'models', 'notebooks', 'docs']:
     for path in (root / folder).rglob('*'):

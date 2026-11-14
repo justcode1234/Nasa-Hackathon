@@ -45,7 +45,21 @@ Chrome 157 on this Windows development machine, headless, GPU disabled, CPU WASM
 | Full peak browser/process memory | Unmeasured |
 | Real mobile / non-Chromium behavior | Unverified; deterministic fallback remains |
 
-Raw local report: artifacts/mini-lm-benchmark.json. `node scripts/benchmark-mini-lm.js` reproduces load, answer, inference, raw developer continuation and unload/reload checks after building.
+Original raw report: docs/evidence/mini-lm-benchmark-initial.json. `node scripts/benchmark-mini-lm.js` writes the latest report to artifacts/mini-lm-benchmark.json and reproduces load, answer, inference, raw developer continuation and unload/reload checks after building.
+
+## Process-memory assessment — resumed G4 check
+
+The latest Windows/Chrome run adds three snapshots of the isolated browser and its descendants using .NET `WorkingSet64`, `PrivateMemorySize64` and `PeakWorkingSet64` counters. It does not inspect model tensors as a substitute for browser memory. Raw per-process counters, phase totals and timings are retained in `docs/evidence/mini-lm-benchmark-latest.json`.
+
+| Phase | Aggregate working set | Aggregate private memory |
+| --- | --- | --- |
+| Before model loading | 556,417,024 bytes | 226,488,320 bytes |
+| After model loading and one inference | 607,367,168 bytes | 278,147,072 bytes |
+| After extra developer generation and app model reload | 748,978,176 bytes | 354,177,024 bytes |
+
+The sum of observed process lifetime peak working sets was 798,654,464 bytes across 14 observed process identities. Peaks need not occur together, and working sets can double-count shared pages. Processes that start and exit entirely between snapshots can be missed. These observations are below the approximate 1 GB target on this machine, but do not prove an exact session peak, incremental model cost or real mobile memory use. The final phase includes the developer-only generation check.
+
+Counter definitions: [Microsoft working-set peak](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.process.peakworkingset64) and [private memory](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.process.privatememorysize64). Firefox 160 also passed model load, WASM inference, unload and unavailable-runtime fallback in the separate browser workflow; its memory was not measured.
 
 ## Compared and rejected alternatives
 

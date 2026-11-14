@@ -39,6 +39,24 @@ test('unsupported baseline is preserved and is never assigned crop facts', () =>
   assert.equal(baseline.timeline[0].family, null);
   assert.equal(baseline.timeline[0].indicators, null);
 });
+
+test('unspecified corn and maize remain unassessed instead of inheriting sweet-corn maturity rules', () => {
+  const inputs = validateInputs({ ...validInput(), baseline: ['maize', 'corn', 'sweet-corn'] });
+  const observations = syntheticObservations();
+  const result = compareRotations(inputs, observations);
+  const baseline = result.scenarios[0];
+  assert.equal(baseline.criteria.unsupportedCrops, 2);
+  for (const slot of baseline.timeline.slice(0, 2)) {
+    assert.equal(slot.cropId, null);
+    assert.equal(slot.maturityDays, null);
+    assert.equal(slot.indicators, null);
+  }
+  assert.equal(baseline.timeline[2].cropId, 'sweet-corn');
+  const answer = answerQuestion('Can I grow grain maize here?', result, observations);
+  assert.ok(answer.blocks.every(block => block.kind !== 'sourced crop facts'));
+  assert.ok(answer.blocks.some(block => block.text.includes('remain unassessed')));
+  assert.ok(answerQuestion('Tell me about sweet corn', result, observations).blocks.some(block => block.sourceIds.includes('umn-corn')));
+});
 test('alternatives respect crop restrictions while baseline remains intact', () => {
   const input = validInput();
   input.allowedCrops = ['pea', 'radish'];

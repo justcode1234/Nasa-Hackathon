@@ -4,6 +4,7 @@ import { catalog } from '../agronomy/catalog.js';
 
 // Commodity evidence is a category proxy, never cultivar or farm availability.
 const screening = { '414': 'bush-bean', '423': 'bush-bean', '417': 'pea', '446': 'sweet-corn' };
+export const cropItems = Object.entries(snapshot.items).map(([id, item]) => ({ id, name: item.name }));
 export function countryCropName(value) {
   const code = /^unassessed:fao-(\d+)$/.exec(value)?.[1];
   return code ? snapshot.items[code]?.name : null;

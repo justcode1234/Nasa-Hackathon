@@ -1,6 +1,6 @@
 import { AppError } from '../errors.js';
 import { validateLocation } from '../nasa/power.js';
-import { catalog, findCrop } from './catalog.js';
+import { catalog, findCrop, mentionedCrops, ambiguousCornQuestion, cornScopeNotice } from './catalog.js';
 import { countryCropName, getCountryCrops } from '../context/crops.js';
 
 const DAY = 86_400_000;
@@ -205,15 +205,16 @@ export function compareRotations(inputs, observations) {
 export function answerQuestion(question, result, observations) {
   const lower = question.toLowerCase();
   const blocks = [];
-  const matches = catalog.crops.filter(crop => [crop.id, crop.name.toLowerCase(), ...crop.aliases].some(alias =>
-    new RegExp(`\\b${alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(lower)));
+  const matches = mentionedCrops(question);
+  const ambiguousCorn = ambiguousCornQuestion(question);
+  if (ambiguousCorn) blocks.push({ kind: 'limitation', text: cornScopeNotice, sourceIds: [] });
   for (const crop of matches) blocks.push({ kind: 'sourced crop facts', text: `${crop.name} belongs to ${crop.family}; the starter reference gives ${crop.maturityDays[0]}–${crop.maturityDays[1]} days to maturity. ${crop.notes.join(' ')}`, sourceIds: crop.sourceIds });
   if (/water|rain|irrigat|drought|flood/.test(lower)) {
     blocks.push({ kind: 'observation scope', text: `POWER precipitation for ${observations.period.start} to ${observations.period.end} is regional historical evidence in ${observations.parameters.PRECTOTCORR.units}, retrieved ${observations.retrievedAt}. It does not measure irrigation or soil water. See the comparison for each crop window's total and missing days.`, sourceIds: ['nasa-power', 'power-resolution'] });
     blocks.push({ kind: 'limitation', text: result.gaps.find(g => /Irrigation|Rainfed|irrigation/.test(g)), sourceIds: [] });
   } else if (/soil|nitrogen|fertiliz|fertilis|pest|disease/.test(lower)) {
     blocks.push({ kind: 'rule and limitation', text: 'Family changes may interrupt some shared pest hosts; this one-year plan cannot establish a sufficient disease break. Legumes can fix nitrogen, but no fertilizer credit or soil benefit is quantified here. Soil tests and local pest diagnosis are needed.', sourceIds: ['umn-families', 'cornell-rotation'] });
-  } else if (!matches.length) {
+  } else if (!matches.length && !ambiguousCorn) {
     const first = result.scenarios[1];
     blocks.push({ kind: 'rule output', text: `Among ${result.consideredCandidates} allowed candidate sequences, the first by your ${result.inputs.priority} priority is ${first.timeline.map(s => s.cropName).join(' → ')}. Its status is “${first.status}”. This is a limited comparison, not a planting recommendation.`, sourceIds: first.sourceIds });
     blocks.push({ kind: 'limitation', text: 'Crop-specific retrieval recognises only bush snap bean, garden pea, sweet corn and radish. Other crops and questions outside this evidence cannot be assessed.', sourceIds: [] });

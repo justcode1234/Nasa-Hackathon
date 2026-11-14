@@ -2,11 +2,35 @@
 
 ## Current accepted user decisions — supersede the earlier G0 plan
 
-- **Browser-only on Vercel.** All provider retrieval, normalisation, caching,
-  deterministic agronomy and model inference run in local browser workers.
-  `npm run build` emits static `dist/client`; no API functions or credentials.
-  The Node adapter remains only for tests/development. Device-local IndexedDB
-  caches preserve original retrieval dates. Direct CORS-enabled source calls were tested.
+- **Conversational crop-country answers and guided execution (2026-11-15).** A
+  question can name a crop and country independently of the selected map. Named
+  sources, broad FAOSTAT categories and their gaps remain separate from the four
+  crop screening catalog. Greetings are brief; source-backed replies expose one
+  topic at a time with follow-ups. The assistant can also execute the four existing
+  steps: select country/place or a currently returned OSM field, enter the farmer's
+  three baseline crops and explicit constraints, load real NASA evidence and compare.
+  A town is not a farm; field selection or explicit coordinates are needed. Missing
+  crops and insufficient screening coverage stop the flow. Coordinate-country
+  disagreement stops before retrieval. Fixed, validated action handlers run in both
+  runtimes; model outputs cannot invoke code, arbitrary URLs or external actions.
+  Assistant-origin form changes preserve chat; manual changes cancel pending steps.
+- **Vercel identity/setup.** The user requested justcode1234 for this project and
+  explicitly retained the separate 4chatgptsim account. CLI identity is verified
+  before release. The checkout is linked to justcode1234s-projects/nasa-hackathon;
+  Codex Vercel plugin 0.54.1 and global OAuth MCP configuration are installed.
+  Active-session MCP tool discovery still requires a refreshed session. No tokens
+  are committed. .vercelignore prevents local artifacts, profiles and credentials
+  from being uploaded; inspect a CLI dry run before any source upload.
+- **Two runtimes, explicitly requested by the user.** Use Node.js for local backend
+  testing and browser-only static files for Vercel showcasing. `npm run start:node`
+  serves the frontend and real `/api` routes on preferred port 3001. The command
+  `npm run start:showcase` builds/serves `dist/client` on preferred port 3000;
+  `npm start` retains that showcase behavior. The Node HTML entry explicitly selects
+  HTTP transport; the static entry selects the browser worker. Both use the same
+  adapter, normalisation, agronomy and answer modules and source contracts. Optional
+  model inference remains in the browser in both. No database, account or paid
+  service is added. Node uses in-memory evidence caches; the showcase also has
+  device-local IndexedDB caching. Retrieval dates stay intact in either mode.
 - **Map-first dark green/cream design**, explicitly selected by the user. Four
   accessible tabs replace page-length module navigation. Named places, real mapped
   fields and crop dropdowns support a non-farmer workflow; unknown field crops stay unknown.
@@ -21,6 +45,13 @@
   cultivar or field suitability. Fewer than two screened crops disables comparison.
   Next validates location and loads NASA evidence, then validates planning inputs
   and runs comparison; tabs still allow direct inspection of each step.
+- **Browse places without knowing a name.** Country selection populates an optional
+  region filter and a town/city dropdown from a GeoNames cities5000 snapshot. The
+  70,036 recorded points span 245 countries/areas; they are location context, not
+  agricultural evidence. Per-country files load on demand. Country/region changes
+  clear prior coordinates, map marker and evidence; choosing a town sets its source
+  point. No country representative point is silently selected. Missing rural places
+  retain search/map/coordinate paths, and missing lists show explicit states.
 - **Published soil/water context.** SoilGrids modelled properties with quantiles
   are regional background only: ISRIC advises against farm-level use. ABS 2020–21
   national irrigation figures are explicitly historical aggregate practice, not
@@ -43,6 +74,36 @@
 
 The historical planning and first-pass notes below are retained as history. They
 do not override these later user-approved changes.
+
+## Resumed implementation audit — 2026-11-14
+
+- Preserve the existing static showcase delivery and recorded approved design instead
+  of replacing working code with the historical G0 skeleton. No new framework,
+  dependency, model download or CSS polishing is introduced by this audit.
+- Country identification belongs to a location revision. Only requests within that
+  revision may share a pending lookup; old results cannot select the new location's
+  country or clear its pending task. A NASA submission waiting on identification
+  stops when the user changes inputs.
+- Startup tests own temporary static files and verify preview identity by directory.
+  They do not rely on another test having built the app. The production default
+  directory remains `dist/client`.
+- Browser validation builds and uses the static preview, matching the real start
+  path and Vercel headers. Separate Node-backed browser validation exercises the
+  HTTP frontend as requested in the later dual-runtime decision.
+- A second G4 pass added native Firefox/BiDi checks and Windows process-tree memory
+  snapshots. The checks exercise the actual static build and optional-model failure
+  recovery; no browser, driver or new model is downloaded. Memory bookkeeping has
+  offline tests and preserves raw counters beside derived phase totals.
+- G4 remains partial for real mobile devices, Safari/WebKit, independent agronomy
+  and exact full-session peak memory. G5 publication/account work and any new CSS
+  direction remain deferred.
+- **Architecture clarification resolved:** the user requested “do both, one for
+  testing with node.js and one for showcasing on vercel.” The Node frontend now
+  calls the backend instead of silently using the showcase worker. Preview identities
+  include runtime type, so starting both or restarting one cannot reuse the wrong mode.
+- Unspecified `corn` or `maize` no longer aliases the sweet-corn starter record.
+  Baselines preserve these names as unassessed. Questions use shared phrase matching
+  for explicit sweet-corn names and explain the catalog gap for other maize types.
 
 ## G0 specification — 2026-11-14
 

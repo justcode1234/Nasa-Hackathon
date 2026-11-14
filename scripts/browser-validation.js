@@ -1,11 +1,13 @@
 // Real local Chrome + real NASA requests. No browser automation dependency.
 import assert from 'node:assert/strict';
+import { validateConversation, validateGuidedWorkflow } from './chat-validation.js';
 import { spawn } from 'node:child_process';
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { once } from 'node:events';
-import { createApp } from '../server/index.js';
+import { buildBrowser } from './build-browser.js';
+import { createStaticPreview } from './static-preview.js';
 
 const chromePath = process.env.CHROME_PATH ?? [
   'C:/Program Files/Google/Chrome/Application/chrome.exe',
@@ -15,10 +17,19 @@ const chromePath = process.env.CHROME_PATH ?? [
 if (!chromePath) throw new Error('Set CHROME_PATH to an installed Chromium browser. No browser will be downloaded.');
 await mkdir('artifacts', { recursive: true });
 const profile = await mkdtemp(path.resolve('artifacts/chrome-validation-'));
-const app = createApp();
-app.listen(0, '127.0.0.1');
-await once(app, 'listening');
-const base = `http://127.0.0.1:${app.address().port}`;
+const externalBase = process.env.TEST_BASE_URL;
+let app, base;
+if (externalBase) {
+  const target = new URL(externalBase);
+  if (target.protocol !== 'https:') throw new Error('Public deployment validation requires an HTTPS origin.');
+  base = target.origin;
+} else {
+  await buildBrowser();
+  app = createStaticPreview();
+  app.listen(0, '127.0.0.1');
+  await once(app, 'listening');
+  base = `http://127.0.0.1:${app.address().port}`;
+}
 const chrome = spawn(chromePath, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
   '--disable-background-networking', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { windowsHide: true, stdio: ['ignore', 'ignore', 'pipe'] });
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -104,6 +115,36 @@ try {
   assert.equal(await evaluate('document.querySelectorAll("[name=allowedCrops]").length'), 0);
   assert.deepEqual(await evaluate('[...document.querySelectorAll("[role=tab]")].map(t=>t.textContent.slice(0,2))'), ['01','02','03','04']);
   check('four numbered steps, empty initial location, no generic crop list or automatic NASA/model download');
+  // UI-only regression fixture: hold country identification without fabricating NASA data.
+  await evaluate(`(() => {
+    window.heldCountryLookups = [];
+    window.regressionPaths = [];
+    window.originalPostMessage = Worker.prototype.postMessage;
+    Worker.prototype.postMessage = function(message, ...args) {
+      window.regressionPaths.push(message.path);
+      if (message.path?.startsWith('/api/places?latitude=')) {
+        window.heldCountryLookups.push({ worker: this, id: message.id });
+        return;
+      }
+      return window.originalPostMessage.call(this, message, ...args);
+    };
+  })()`);
+  await fill('#latitude', '1'); await fill('#longitude', '2');
+  await evaluate('document.querySelector("#location-form").requestSubmit()');
+  await waitFor('window.heldCountryLookups.length === 1');
+  await fill('#latitude', '3'); await fill('#longitude', '4');
+  await evaluate(`(async () => {
+    const held = window.heldCountryLookups[0];
+    held.worker.dispatchEvent(new MessageEvent('message', { data: { id: held.id, data: { places: [] } } }));
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  })()`);
+  assert.equal(await evaluate('window.regressionPaths.some(path => path?.startsWith("/api/observations"))'), false);
+  assert.equal(await evaluate('document.querySelector("#evidence-output").children.length'), 0);
+  assert.equal(await evaluate('document.querySelector("#load-evidence").disabled'), false);
+  check('editing coordinates while country identification is pending cancels the earlier evidence submission');
+  await evaluate('Worker.prototype.postMessage = window.originalPostMessage');
+  await call('Page.navigate', { url: base });
+  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Choose a country")');
   await evaluate('document.querySelector("#flow-next").click()');
   assert.equal(await evaluate('document.querySelector("#location").hidden'), false);
   await evaluate('document.querySelector("#tab-evidence").click()');
@@ -124,11 +165,22 @@ try {
   await evaluate('document.querySelector("#map").focus()');
   await screenshot('desktop-initial');
   await evaluate('const c=document.querySelector("#pest-country");c.value="AU";c.dispatchEvent(new Event("change",{bubbles:true}));');
-  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Australia:") && document.querySelector("#latitude").value !== ""');
+  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Australia:") && document.querySelector("#place-town").options.length > 1');
+  assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
+  await evaluate('const r=document.querySelector("#place-region");r.value=[...r.options].find(o=>o.textContent==="Western Australia").value;r.dispatchEvent(new Event("change",{bubbles:true}));');
+  await waitFor('[...document.querySelector("#place-town").options].some(o=>o.textContent.startsWith("Perth ·"))');
+  assert.ok(await evaluate('[...document.querySelector("#place-town").options].every(o=>!o.value||o.textContent.includes("Western Australia"))'));
+  await evaluate('const t=document.querySelector("#place-town");t.value=[...t.options].find(o=>o.textContent.startsWith("Perth ·")).value;t.dispatchEvent(new Event("change",{bubbles:true}));');
+  await waitFor('document.querySelector("#latitude").value !== "" && document.querySelector("#catalog-status").textContent.startsWith("Australia:")');
+  assert.ok(await evaluate('Number(document.querySelector("#latitude").value)<-30 && Number(document.querySelector("#longitude").value)>110'));
+  check('country, region and town dropdowns select a real sourced point without typing a place name');
+  await screenshot('desktop-location-picker');
   assert.ok(await evaluate('[...document.querySelector("#baseline-1").options].some(o=>o.value==="unassessed:fao-27")'));
   await fill('#baseline-1', 'sweet-corn');
   await evaluate('document.querySelector("#pest-country").value="SG";document.querySelector("#pest-country").dispatchEvent(new Event("change",{bubbles:true}));');
-  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Singapore:") && document.querySelector("#latitude").value !== ""');
+  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Singapore:") && document.querySelector("#place-town").options.length > 1');
+  assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
+  assert.equal(await evaluate('document.querySelector("#place-town").value'), '');
   assert.equal(await evaluate('document.querySelectorAll("[name=allowedCrops]").length'), 0);
   assert.equal(await evaluate('document.querySelector("#baseline-1").value'), '');
   assert.ok(await evaluate('![...document.querySelector("#baseline-1").options].some(o=>o.value==="sweet-corn")'));
@@ -179,6 +231,7 @@ try {
   await evaluate('document.querySelector("#ask").click()');
   await waitFor('document.querySelector("#chat-history").textContent.includes("Fabaceae")');
   assert.ok(await evaluate('document.querySelectorAll("#chat-history a").length > 0'));
+  await validateConversation({ evaluate, waitFor, fill, check });
   await screenshot('desktop-chat');
   await evaluate('document.querySelector("#chat-close").click()');
   check('assistant fallback answers crop question with source links and no model');
@@ -229,7 +282,7 @@ try {
     assert.match(await evaluate('document.querySelector("#model-status").textContent'), /ready/);
     await fill('#question', 'Tell me about peas');
     await evaluate('document.querySelector("#ask").click()');
-    await waitFor('document.querySelector("#chat-history").textContent.includes("Assistant · local model")', 60_000);
+    await waitFor('!!window.fieldshiftModelMetrics.inferenceMs', 60_000);
     const modelMetrics = await evaluate('window.fieldshiftModelMetrics');
     await waitFor('!!window.fieldshiftModelMetrics.inferenceMs');
     const measured = await evaluate('window.fieldshiftModelMetrics');
@@ -254,6 +307,8 @@ try {
   check('all data and comparison calls stay in the browser; no server /api request occurred');
   await call('Network.setBlockedURLs', { urls: [] });
   intentionalBlocking = false;
+  await call('Network.setBlockedURLs', { urls: [] }, coreSession);
+  await validateGuidedWorkflow({ evaluate, waitFor, fill, check, capture: () => screenshot('guided-chat-step4') });
   await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
   await call('Page.navigate', { url: base + '/submission/index.html' });
   await waitFor('document.querySelectorAll(".slide").length === 7');
@@ -263,19 +318,20 @@ try {
   const pdf = await call('Page.printToPDF', { printBackground: true, preferCSSPageSize: true });
   const pdfBytes = Buffer.from(pdf.data, 'base64');
   assert.equal((pdfBytes.toString('latin1').match(/\/Type\s*\/Page\b/g) ?? []).length, 7);
-  await writeFile('public/submission/fieldshift-deck.pdf', pdfBytes);
+  if (!externalBase) await writeFile('public/submission/fieldshift-deck.pdf', pdfBytes);
   await evaluate('document.querySelector("#slide-4").scrollIntoView()');
   await screenshot('submission-slide-4');
   check('seven-slide deck has no clipped content and exports exactly seven PDF pages');
   assert.deepEqual(errors, [], 'No uncaught JavaScript or CSP errors');
   check('no uncaught JavaScript exceptions or CSP violations');
   if (failures.length) console.log(`Observed ${failures.length} external resource failures (see report).`);
-  await writeFile('artifacts/browser-validation.json', JSON.stringify({ checkedAt: new Date().toISOString(), browser: await call('Browser.getVersion'), checks, errors, failures }, null, 2));
+  await writeFile(externalBase ? 'artifacts/public-browser-validation.json' : 'artifacts/browser-validation.json', JSON.stringify({ checkedAt: new Date().toISOString(), origin: base,
+    scope: externalBase ? 'public deployment' : 'local static preview', browser: await call('Browser.getVersion'), checks, errors, failures }, null, 2));
   browserSocket = new WebSocket(endpoint);
   await once(browserSocket, 'open');
   browserSocket.send(JSON.stringify({ id: 1, method: 'Browser.close' }));
 } finally {
   socket?.close(); browserSocket?.close();
   chrome.kill();
-  await new Promise(resolve => app.close(resolve));
+  if (app) await new Promise(resolve => app.close(resolve));
 }

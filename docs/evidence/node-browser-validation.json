@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-11-14T16:44:41.204Z",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/157.0.8103.79",
+    "revision": "@6dc9bc3bdaea5c35ed6d41fceab2f7a3a2227c4f",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "jsVersion": "15.7.112.43"
+  },
+  "checks": [
+    "Node entry explicitly selects HTTP transport and displays its testing mode",
+    "Node serves the sourced country town dropdown and choosing Cambridge sets the location",
+    "Node fetches real NASA observations while browser NASA access and the data worker are blocked",
+    "Node comparison returns the baseline and two alternatives through the shared engine",
+    "sourced assistant answers arrive from Node with the optional browser model unloaded",
+    "a greeting receives one brief friendly reply without scientific data or sources",
+    "kai lan in Singapore has traceable facts and a working focused growing-conditions follow-up",
+    "a crop-country question and country-evidence follow-up work independently of the current map selection",
+    "asking about another country never appends the selected map location’s weather",
+    "unsupported grain maize questions do not inherit sweet-corn maturity facts",
+    "constraint edits invalidate Node results and unsupported baseline crops remain unassessed",
+    "Node runtime label and comparison fit a 390px viewport",
+    "Node upstream failure reaches the UI as an error and prevents stale-evidence comparison",
+    "retrying after the Node upstream failure retrieves real evidence successfully",
+    "chat selects India and asks for the specific location without inventing a farm",
+    "chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4",
+    "all data calls use the Node API with no browser NASA request, data-worker load or uncaught exception"
+  ],
+  "errors": [],
+  "apiRequests": [
+    "/api/crops",
+    "/api/health",
+    "/api/locations?country=GB",
+    "/api/water-context?country=GB",
+    "/api/country-crops?country=GB",
+    "/api/water-context?country=GB",
+    "/api/country-crops?country=GB",
+    "/api/water-context?country=GB",
+    "/api/country-crops?country=GB",
+    "/api/water-context?country=GB",
+    "/api/country-crops?country=GB",
+    "/api/farms?latitude=52.2&longitude=0.11667",
+    "/api/observations?latitude=52.2&longitude=0.11667&year=2025",
+    "/api/soil?latitude=52.2&longitude=0.11667",
+    "/api/compare",
+    "/api/ask",
+    "/api/ask",
+    "/api/ask",
+    "/api/ask",
+    "/api/ask",
+    "/api/ask",
+    "/api/ask",
+    "/api/ask",
+    "/api/compare",
+    "/api/observations?latitude=52.2&longitude=0.11667&year=2024",
+    "/api/observations?latitude=52.2&longitude=0.11667&year=2024",
+    "/api/soil?latitude=52.2&longitude=0.11667",
+    "/api/locations?country=IN",
+    "/api/water-context?country=IN",
+    "/api/country-crops?country=IN",
+    "/api/locations?country=IN",
+    "/api/places?latitude=18.5204&longitude=73.8567",
+    "/api/water-context?country=IN",
+    "/api/country-crops?country=IN",
+    "/api/observations?latitude=18.5204&longitude=73.8567&year=2024",
+    "/api/soil?latitude=18.5204&longitude=73.8567",
+    "/api/compare"
+  ],
+  "upstreamRequests": [
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CALLSKY_SFC_SW_DWN&community=AG&latitude=52.2&longitude=0.11667&start=20250101&end=20251231&format=JSON&time-standard=LST",
+      "intentionallyFailed": false
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CALLSKY_SFC_SW_DWN&community=AG&latitude=52.2&longitude=0.11667&start=20240101&end=20241231&format=JSON&time-standard=LST",
+      "intentionallyFailed": true
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CALLSKY_SFC_SW_DWN&community=AG&latitude=52.2&longitude=0.11667&start=20240101&end=20241231&format=JSON&time-standard=LST",
+      "intentionallyFailed": false
+    },
+    {
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CALLSKY_SFC_SW_DWN&community=AG&latitude=18.5204&longitude=73.8567&start=20240101&end=20241231&format=JSON&time-standard=LST",
+      "intentionallyFailed": false
+    }
+  ],
+  "limitations": [
+    "Desktop Chrome and narrow viewport emulation, not real mobile hardware.",
+    "The intentional provider failure was injected in the test harness; successful observations came from the real NASA service."
+  ]
+}

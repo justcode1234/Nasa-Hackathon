@@ -17,6 +17,20 @@ async function withApp(fn, fetchImpl = async () => ({ ok: true, json: async () =
 }
 const post = (base, route, body) => fetch(base + route, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
 
+test('HTTP conversational crop-country answers bypass NASA and planning validation', async () => {
+  let calls = 0;
+  await withApp(async base => {
+    for (const question of ['hi', 'kai lan from Singapore', 'rice in India', 'Show me rainfall in India']) {
+      const response = await post(base, '/api/ask', { question, selectedCountry: 'AU', baseline: ['unconfigured'] });
+      assert.equal(response.status, 200);
+      const answer = await response.json();
+      assert.ok(answer.blocks.length <= 3);
+      assert.ok(answer.blocks.every(block => typeof block.text === 'string'));
+    }
+    assert.equal(calls, 0);
+  }, async () => { calls++; throw new Error('A crop-country question must not retrieve unrelated NASA observations'); });
+});
+
 test('HTTP end to end: static modules, local map assets, NASA contract, comparison, sourced assistant', async () => {
   await withApp(async base => {
     for (const file of ['/', '/js/app.js', '/js/modules/map.js', '/js/modules/si.js', '/js/modules/strategy.js', '/js/modules/data-flow.js', '/css/app.css', '/vendor/leaflet/leaflet.js', '/vendor/leaflet/images/marker-icon.png']) {
@@ -25,7 +39,12 @@ test('HTTP end to end: static modules, local map assets, NASA contract, comparis
       assert.ok(response.headers.get('content-security-policy'));
     }
     const crops = await (await fetch(base + '/api/crops')).json();
+    assert.match(await (await fetch(base + '/')).text(), /name="fieldshift-transport" content="http"/);
+    assert.match(await (await fetch(base + '/index.html')).text(), /name="fieldshift-transport" content="http"/);
     assert.equal(crops.crops.length, 4);
+    const places = await (await fetch(base + '/api/locations?country=AU')).json();
+    assert.ok(places.places.some(place => place.name === 'Perth'));
+    assert.equal(places.source.license, 'CC BY 4.0');
     const observations = await (await fetch(base + '/api/observations?latitude=0&longitude=0&year=2025')).json();
     assert.equal(observations.parameters.T2M.validDays, 365);
     const comparison = await (await post(base, '/api/compare', input())).json();

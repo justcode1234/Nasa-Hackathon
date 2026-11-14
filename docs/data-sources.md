@@ -6,6 +6,19 @@ integrated. The first-pass notes below describe the NASA layer scope.
 
 ## Field, soil, pest and browser-model additions — 2026-11-14
 
+- GeoNames cities5000 and admin1CodesASCII: https://download.geonames.org/export/dump/readme.txt .
+  CC BY 4.0, https://www.geonames.org/ . The retained extract has 70,036 real place
+  records across 245 countries/areas, with administrative-region labels joined by
+  the source country/admin codes. Provider scope is cities over 5,000 population
+  or first-order administrative seats; it is not a complete rural-town inventory.
+  Names, WGS84 latitude/longitude, IDs and source modification dates are preserved.
+  Gazetteer edit dates are not crop/weather observation dates. Town points are not
+  surveyed field locations or suitability evidence. The manifest retains source
+  URLs, last-modified headers, retrieval time, SHA-256 hashes, licence and per-country
+  counts/hashes. `python scripts/build-locations.py` reproduces the extract. The
+  4,254,070 bytes of country records are served in country-sized files, with a
+  largest file of 453,783 bytes, rather than entering the initial worker bundle.
+  Browser showcase and Node testing use the same `/api/locations` data contract.
 - FAOSTAT QCL country crop snapshot: https://www.fao.org/faostat/en/#data/QCL .
   FAO. 2025. FAOSTAT: Crops and livestock products. Accessed 14 November 2026.
   Licence: CC-BY-4.0 plus https://www.fao.org/contact-us/terms/db-terms-of-use/en/ .
@@ -71,6 +84,23 @@ Accessed 2026-11-14. Stable IDs below are also returned by the API.
 | cornell-rotation | https://allegany.cce.cornell.edu/gardening/food-gardening/vegetable-garden/rotating-vegetables-by-family | Shared pest/disease problems within crop families; rotation cannot guarantee protection |
 
 ## Observations
+
+### Crop-country conversation references (checked 2026-11-15)
+
+Knowledge profiles are separate from rotation-screening eligibility. The small
+profile set does not imply validated growing advice for all FAOSTAT crops/countries.
+
+| Source | Use and scope |
+| --- | --- |
+| [NParks: Growing Five Leafy Vegetables](https://www.nparks.gov.sg/publications-resources/articles/growing-five-leafy-vegetables) | Kai lan identity, qualitative conditions and 21–55-day harvest reference; published 2025-02-04, Singapore gardening context, cultivar/farm timing unknown |
+| [NParks: Tips On Growing Brassica Edibles](https://www.nparks.gov.sg/publications-resources/articles/tips-on-growing-barssica-edibles) | Brassica gardening context; published 2026-10-14, not a global farm prescription |
+| [IRRI: Plant establishment](https://www.knowledgebank.irri.org/images/docs/planting-establishment.pdf) | Rice direct seeding/transplanting and dependence on local variety, water and timing; no universal duration or irrigation amount |
+| [UMN: Spring wheat growth and development](https://extension.umn.edu/agriculture/crop-production/small-grains/spring-wheat-growth-and-development-guide) | Spring/winter developmental distinction; Minnesota reference, not another region's planting calendar |
+| [UMN: Growing tomatoes](https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-tomatoes) | Warm-season, sun, growth-habit and family-rotation context; reviewed 2024, Minnesota home gardening |
+
+The named country selects dated national FAOSTAT evidence. National production is
+not a local recommendation or field yield. Fine-grained kai lan has no commodity
+total assigned: broccoli/cabbage aggregates are not silently substituted.
 
 Fixed upstream host: `https://power.larc.nasa.gov/api/temporal/daily/point`.
 Parameters: T2M, T2M_MAX, T2M_MIN, PRECTOTCORR, ALLSKY_SFC_SW_DWN;

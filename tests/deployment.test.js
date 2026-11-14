@@ -11,6 +11,7 @@ test('Vercel build is static and includes browser workers, crop data and local m
   assert.equal(config.rewrites, undefined);
   for (const file of ['index.html', 'css/app.css', 'js/app.js', 'js/lib/core-worker.bundle.js', 'vendor/leaflet/leaflet.js', 'vendor/leaflet/images/marker-icon.png']) await access(`dist/client/${file}`);
   const browserCore = await readFile('dist/client/js/lib/core-worker.bundle.js', 'utf8');
+  assert.match(await readFile('dist/client/index.html', 'utf8'), /name="fieldshift-transport" content="worker"/);
   assert.match(browserCore, /power\.larc\.nasa\.gov/);
   assert.match(browserCore, /rest\.isric\.org/);
   assert.doesNotMatch(browserCore, /node:fs|node:http|readFileSync/);

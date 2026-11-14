@@ -1,6 +1,21 @@
 let worker, sequence = 0;
 const pending = new Map();
+export function getTransport() {
+  return globalThis.document?.querySelector?.('meta[name="fieldshift-transport"]')?.content ?? 'worker';
+}
+
+async function httpApi(path, { method, body, signal }) {
+  const response = await fetch(path, { method, signal,
+    ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) });
+  let data;
+  try { data = await response.json(); }
+  catch { throw new Error('The Node.js API returned an unreadable response. Check the local server.'); }
+  if (!response.ok) throw new Error(data?.error?.message ?? `The Node.js API returned HTTP ${response.status}.`);
+  return data;
+}
+
 export function api(path, { method = 'GET', body, signal } = {}) {
+  if (getTransport() === 'http') return httpApi(path, { method, body, signal });
   if (!worker) {
     worker = new Worker('/js/lib/core-worker.bundle.js', { type: 'module' });
     worker.onmessage = event => {

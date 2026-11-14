@@ -2,10 +2,13 @@ import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { AppError } from './errors.js';
 import { createApiHandler, SECURITY_HEADERS } from './api.js';
+import { createLocationClient } from './context/locations.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const previewId = createHash('sha256').update(path.resolve(root)).digest('hex').slice(0, 16);
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.bin': 'application/octet-stream', '.pdf': 'application/pdf', '.zip': 'application/zip', '.txt': 'text/plain; charset=utf-8' };
 
 async function readJson(request) {
@@ -22,7 +25,8 @@ async function readJson(request) {
 }
 
 export function createApp(dependencies = {}) {
-  const handleApi = createApiHandler(dependencies);
+  const handleApi = createApiHandler({ getLocations: createLocationClient({ readJson: async name =>
+    JSON.parse(await readFile(path.join(root, 'public/data/locations', name), 'utf8')) }), ...dependencies });
   return http.createServer(async (request, response) => {
     for (const [key, value] of Object.entries(SECURITY_HEADERS)) response.setHeader(key, value);
     const json = (body, status = 200) => {
@@ -31,6 +35,9 @@ export function createApp(dependencies = {}) {
     };
     try {
       const url = new URL(request.url, 'http://localhost');
+      if (url.pathname === '/.well-known/fieldshift-preview' && ['GET', 'HEAD'].includes(request.method)) {
+        return json({ app: 'fieldshift-node-preview', previewId });
+      }
       if (url.pathname.startsWith('/api/')) {
         return json(await handleApi({ method: request.method, url, readJson: () => readJson(request) }));
       }
@@ -43,7 +50,12 @@ export function createApp(dependencies = {}) {
       }
       const filename = path.resolve(base, relative);
       if (!filename.startsWith(`${base}${path.sep}`) || !types[path.extname(filename)]) throw new AppError('Not found.', 404);
-      const data = await readFile(filename);
+      let data = await readFile(filename);
+      if (filename === path.join(root, 'public', 'index.html')) {
+        const marker = '<meta name="fieldshift-transport" content="worker">';
+        if (!data.toString('utf8').includes(marker)) throw new Error('The app entry is missing its explicit transport marker.');
+        data = Buffer.from(data.toString('utf8').replace(marker, '<meta name="fieldshift-transport" content="http">'));
+      }
       response.writeHead(200, { 'Content-Type': types[path.extname(filename)], 'Cache-Control': 'no-cache' });
       response.end(request.method === 'HEAD' ? undefined : data);
     } catch (error) {

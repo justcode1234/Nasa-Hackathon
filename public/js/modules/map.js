@@ -2,7 +2,7 @@ export function initMap(onSelect, onFarmSelect = () => {}) {
   const status = document.querySelector('#map-status');
   if (!window.L) {
     status.textContent = 'Map library unavailable. Enter coordinates below to continue.';
-    return { setLocation() {}, setFarms() {}, highlightFarm() {}, clearFarms() {} };
+    return { setLocation() {}, setFarms() {}, highlightFarm() {}, clearFarms() {}, clearLocation() {} };
   }
   const L = window.L;
   const map = L.map('map', { worldCopyJump: true }).setView([12, 0], 2);
@@ -20,6 +20,11 @@ export function initMap(onSelect, onFarmSelect = () => {}) {
   });
   status.textContent = 'No location selected. Click the map or enter coordinates below. Keyboard users can use the coordinate fields.';
   return {
+    clearLocation() {
+      support.clearLayers();
+      if (marker) { map.removeLayer(marker); marker = null; }
+      status.textContent = 'No point selected. Choose a town, click the map or enter coordinates.';
+    },
     clearFarms() { farms.clearLayers(); farmLayers.clear(); },
     setFarms(records) {
       farms.clearLayers(); farmLayers.clear();

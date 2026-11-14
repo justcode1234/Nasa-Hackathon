@@ -2,6 +2,9 @@
 
 > Instructions for Codex. Read this file before writing code. This project is in its planning/early implementation stage. Preserve user decisions, build incrementally, and do not treat suggested features as already implemented.
 
+> **Current implementation and cross-device handoff:** read section 10 at the end
+> before resuming work. It records later user decisions and current verified state.
+
 ## 1. Mission and product rules
 
 Build **FieldShift**, a **global, location-adaptive crop-rotation decision-support web app** for the 2026 NASA Space Apps Challenge: **“Field Shift: Adapting Farms with NASA Data.”**
@@ -176,3 +179,68 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 - WebLLM browser runtime: https://github.com/mlc-ai/web-llm
 
 **Priority when there is a conflict:** scientific honesty and working functionality > benchmarked, optional browser AI > CSS polish and extra features. User-approved requirements override speculative implementation ideas in this document.
+
+## 10. Current implementation and cross-device handoff - 2026-11-15
+
+Update this section and docs/decisions.md / docs/validation.md after each substantive
+implementation change. Record what changed, actual checks, remaining work and deployment
+state. Do not leave another device relying on an earlier planning assumption.
+
+- **User-approved dual runtimes:** `npm run start:node` runs Node HTTP APIs and the
+  frontend (preferred port 3001). `npm run start:showcase` builds and serves the static
+  browser-worker version (preferred port 3000); `npm start` retains showcase behavior.
+  Both share NASA, agronomy and answer modules. Optional model inference stays local
+  to the browser. The HTML transport marker selects HTTP versus worker explicitly.
+- **Guided geography:** country -> optional region filter -> town/city uses the sourced
+  GeoNames extract under public/data/locations. Its 70,036 points cover 245 countries
+  and areas; smaller rural places may need search/map/coordinates. Country/region
+  changes clear the old point and evidence. Blank source region codes remain distinct
+  from All regions. No country centroid is silently treated as a farm.
+- **Scientific scope:** four crop types currently have rotation screening rules.
+  Generic corn/maize no longer receives sweet-corn maturity rules. Crop-country
+  knowledge answers must remain separate from scenario eligibility and national
+  production records must not be presented as local suitability proof.
+- **Crop-country chat implemented and browser-verified:** the question can
+  name a crop and country independently of the map. FAOSTAT commodity matching covers
+  the saved global production extract; sourced cultivation profiles cover kai lan,
+  rice, wheat, tomato and the four screening crops. NParks, IRRI and UMN references
+  retain their scope limits. These extra knowledge profiles do not become ranked crops.
+  Greetings get one short reply; answers have at most three paragraphs and three
+  follow-up buttons. Sources are expandable, with scientific caveats still visible.
+  Typed follow-ups retain crop/country context. Another country's question cannot
+  reuse the selected location's NASA weather. Unknown crops or missing local rules
+  produce an explicit gap. No cloud model or new dependency was added. Focused
+  source-backed questions and follow-ups passed in Chrome and Firefox.
+- **Chat can carry out the four-step workflow (implemented and tested).** Use a
+  finite set of validated app actions: choose country/place or
+  a returned field, enter the farmer's three crops and explicit constraints, load
+  NASA observations, then run comparison and open step 4. Never choose an arbitrary
+  farm, invent missing crops, infer field ownership, or execute generated code/URLs.
+  The same app functions serve chat and forms. Manual edits cancel pending chat
+  actions; assistant-origin changes preserve the conversation. Keep ordinary crop
+  knowledge questions read-only. Offline coverage includes action order, missing
+  inputs, coordinate-country disagreement, explicit field selection, unsupported
+  alternatives, provider failure and manual cancellation. Both delivery modes and
+  Firefox completed an India coordinate + farmer-crops flow using real NASA data
+  through step 4; rice/wheat baseline slots stayed unassessed. No CSS was changed.
+- **Vercel setup:** CLI 65.16.0 is installed; current CLI identity was verified as
+  justcode1234. This checkout is linked to justcode1234s-projects/nasa-hackathon.
+  Global Codex Vercel plugin 0.54.1 is enabled; the shared MCP URL is
+  https://mcp.vercel.com and OAuth login succeeded. Active-session MCP tool discovery
+  still needs verification. Do not alter unrelated MCP entries or approval settings.
+  Recheck `vercel whoami` and linked project before deploying; never store credentials
+  in this repository. The CLI-created .env.local and .vercel directory are ignored.
+- **Deployment:** existing public origin is https://nasa-hackathon-three.vercel.app/ .
+  It was observed serving the older source revision; the current local picker/chat
+  changes must be deployed and checked before claiming they are live. A deployment
+  dry run initially included local browser artifacts, so .vercelignore now excludes
+  those, local dependencies, credentials and generated output. Build inputs and
+  public showcase files remain included. Verify the dry-run file list before upload.
+- **Latest executed checks:** 74 offline tests, 31 static Chrome checks,
+  17 Node-backed Chrome checks, 16 Firefox checks and 70 JavaScript syntax checks
+  passed. Seven-slide PDF and source ZIP are regenerated before publishing.
+  Reports live under docs/evidence; transient profiles/logs are ignored in artifacts.
+  Rerun checks appropriate to future changes and record their actual results here.
+- **Still deferred/unverified:** CSS polishing, real mobile hardware, Safari/WebKit,
+  exact full-session memory peaks, independent agronomic validation and NASA portal
+  submission. Keep these distinct from the tested prototype behavior.

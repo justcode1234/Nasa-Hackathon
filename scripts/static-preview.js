@@ -7,8 +7,9 @@ import { spawn } from 'node:child_process';
 const root=path.resolve(fileURLToPath(new URL('../dist/client/',import.meta.url)));
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.bin':'application/octet-stream','.png':'image/png','.svg':'image/svg+xml','.pdf':'application/pdf','.zip':'application/zip','.txt':'text/plain; charset=utf-8'};
 const config=JSON.parse(await readFile(new URL('../vercel.json',import.meta.url),'utf8'));
-const previewId=createHash('sha256').update(root).digest('hex').slice(0,16);
-export function createStaticPreview(){
+const identity=directory=>createHash('sha256').update(directory).digest('hex').slice(0,16);
+export function createStaticPreview({directory=root}={}){
+  const staticRoot=path.resolve(directory),previewId=identity(staticRoot);
   return http.createServer(async(request,response)=>{
     for(const header of config.headers[0].headers)response.setHeader(header.key,header.value);
     try{
@@ -19,8 +20,8 @@ export function createStaticPreview(){
         response.end(JSON.stringify({app:'fieldshift-static-preview',previewId}));return;
       }
       const name=decodeURIComponent(url.pathname.endsWith('/')?url.pathname+'index.html':url.pathname).replace(/^\/+/, '');
-      const filename=path.resolve(root,name);
-      if(!filename.startsWith(root+path.sep)||!types[path.extname(filename)])throw new Error('Not found');
+      const filename=path.resolve(staticRoot,name);
+      if(!filename.startsWith(staticRoot+path.sep)||!types[path.extname(filename)])throw new Error('Not found');
       const bytes=await readFile(filename);
       response.writeHead(200,{'Content-Type':types[path.extname(filename)],'Cache-Control':'no-cache'});
       response.end(request.method==='HEAD'?undefined:bytes);
@@ -33,11 +34,12 @@ export function openBrowser(url){
   else child=spawn(process.platform==='darwin'?'open':'xdg-open',[url],{stdio:'ignore'});
   child.on('error',()=>console.log(`Open ${url} in your browser.`));child.unref();
 }
-export async function startPreview({port=3000,open=true,opener=openBrowser,maxAttempts=20}={}){
+export async function startPreview({port=3000,open=true,opener=openBrowser,maxAttempts=20,directory=root,createServer,appName='fieldshift-static-preview'}={}){
   if(!Number.isInteger(port)||port<1||port>65535)throw new Error('PORT must be an integer from 1 to 65535.');
+  const staticRoot=path.resolve(directory),previewId=identity(staticRoot);
   for(let candidate=port;candidate<Math.min(65536,port+maxAttempts);candidate++){
     const url=`http://localhost:${candidate}`;
-    const server=createStaticPreview();
+    const server=createServer?createServer():createStaticPreview({directory:staticRoot});
     try{
       await new Promise((resolve,reject)=>{
         const failed=error=>{server.removeListener('listening',ready);reject(error);};
@@ -51,7 +53,7 @@ export async function startPreview({port=3000,open=true,opener=openBrowser,maxAt
       try{
         const response=await fetch(`http://127.0.0.1:${candidate}/.well-known/fieldshift-preview`,{signal:AbortSignal.timeout(1200)});
         const marker=await response.json();
-        if(marker.app==='fieldshift-static-preview'&&marker.previewId===previewId){
+        if(marker.app===appName&&marker.previewId===previewId){
           if(open)opener(url);
           return{server:null,url,port:candidate,reused:true};
         }
