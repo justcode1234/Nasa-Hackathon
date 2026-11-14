@@ -194,7 +194,8 @@ state. Do not leave another device relying on an earlier planning assumption.
   resume the existing step-4 workflow once a point is explicitly supplied. Keep
   replies short. The scope choices, national overview, state filtering and continued
   step-4 flow passed 79 offline tests, 33 static Chrome checks, 19 Node-backed Chrome
-  checks and 18 Firefox checks. Publishing this scope update is the next release step.
+  checks and 18 Firefox checks. The scope update also passed all 33 public Chrome
+  checks at the existing Vercel origin. Thirteen public assets matched the build.
 
 - **User-approved dual runtimes:** `npm run start:node` runs Node HTTP APIs and the
   frontend (preferred port 3001). `npm run start:showcase` builds and serves the static
@@ -242,8 +243,8 @@ state. Do not leave another device relying on an earlier planning assumption.
   in this repository. The CLI-created .env.local and .vercel directory are ignored.
 - **Deployment:** existing public origin is https://nasa-hackathon-three.vercel.app/ .
   Source is pushed to main and Git integration deploys it automatically. The complete
-  31-check public workflow passed on commit 4af1dab, including model load/inference
-  and guided India planning through step 4. Twelve public assets matched the local
+  33-check public workflow passed on commit 05a66cc, including model load/inference,
+  geographic scope choices and guided India planning through step 4. Thirteen public assets matched the local
   build hashes. Checkpoint reports are docs/evidence/public-*-validation.json;
   docs/deployment.md records the deployment ID. Pull main before continuing elsewhere.
   Public checks caught an unanchored models/ ignore rule excluding public/models;
@@ -255,7 +256,7 @@ state. Do not leave another device relying on an earlier planning assumption.
 - **Latest executed checks:** 79 offline tests, 33 static Chrome checks,
   19 Node-backed Chrome checks, 18 Firefox checks and 70 JavaScript syntax checks
   passed. Seven-slide PDF and source ZIP are regenerated before publishing.
-  The public origin also passed all 31 Chrome checks after the model upload fix.
+  The public origin also passed all 33 Chrome checks, including the new scope flow.
   Reports live under docs/evidence; transient profiles/logs are ignored in artifacts.
   Rerun checks appropriate to future changes and record their actual results here.
 - **Still deferred/unverified:** CSS polishing, real mobile hardware, Safari/WebKit,

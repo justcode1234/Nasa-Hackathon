@@ -23,10 +23,10 @@ variants, switching from a selected field, narrowing directly to Punjab, other
 countries and absent national coverage. Whole-country mode never runs a field
 comparison or substitutes an arbitrary country point.
 
-Production verification also passed **31 public Chrome checks** on
-https://nasa-hackathon-three.vercel.app/ at source 4af1dab. The optional model loaded,
+Production verification also passed **33 public Chrome checks** on
+https://nasa-hackathon-three.vercel.app/ at source 05a66cc. The optional model loaded,
 inferred and unloaded, and chat completed India planning through step 4 using real
-NASA data. Twelve public files matched local build SHA-256 values; HTTP 200 assets
+NASA data. Thirteen public files matched local build SHA-256 values; HTTP 200 assets
 include the source ZIP/PDF and model files. /api/health returns 404 for this static
 showcase. Checkpoint reports are docs/evidence/public-browser-validation.json and
 public-file-validation.json; docs/deployment.md records exact release attribution.

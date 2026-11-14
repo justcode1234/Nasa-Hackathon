@@ -20,8 +20,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 23801,
-      "sha256": "da0bfd0d2dfdc3d8d3238bb01f35dffa7955cb29d0b15d7ab83f95e68ad44264"
+      "bytes": 23909,
+      "sha256": "eea59c58f7517e4c26dac02b976b37be712867c21eec68ecb2775f212c444bb1"
     },
     {
       "path": "docs/challenge-alignment.md",
@@ -45,8 +45,8 @@
     },
     {
       "path": "docs/deployment.md",
-      "bytes": 5941,
-      "sha256": "6e40faf77b056d25a0eca4cd917f57788bcab3eaf7d4675233bfc7ffae5f2f1f"
+      "bytes": 5984,
+      "sha256": "313c4d8a6a3fc7d0fe5be4374813a61ad9522fe66943713a2d043caf9e335c26"
     },
     {
       "path": "docs/evidence/browser-validation.json",
@@ -85,13 +85,13 @@
     },
     {
       "path": "docs/evidence/public-browser-validation.json",
-      "bytes": 3227,
-      "sha256": "843790315a51714e2d0cb3d860825992c24e8c43fb65be2e1823804f59e0dbec"
+      "bytes": 3454,
+      "sha256": "22a46e6f575b5ad6c796ed25342a73d7ff0bfa655e3e30f830f2d08de5682c61"
     },
     {
       "path": "docs/evidence/public-file-validation.json",
-      "bytes": 3857,
-      "sha256": "19b4e122b897a313072ef4be5551296358e6b0e9976767890eccbe51b69e82a7"
+      "bytes": 4151,
+      "sha256": "18cbe495a1788d66c8c1e1421036350395cd43318c642830a2f9b8982f67e23f"
     },
     {
       "path": "docs/evidence/sourced-context-validation.json",
@@ -100,13 +100,13 @@
     },
     {
       "path": "docs/submission.md",
-      "bytes": 14275,
-      "sha256": "e3f62054b1cf51891ade9be11f52409a67ecc8e995e00a3a4092e928db362f36"
+      "bytes": 14304,
+      "sha256": "ad73431b6bff79034a82d75dc5efba9c04ee66fe62799107966175500613c412"
     },
     {
       "path": "docs/validation.md",
-      "bytes": 18794,
-      "sha256": "c48d4dc589ed359a906e96bc9d543e196ddd1c4134bd76f2bdfd043e3d1725a2"
+      "bytes": 18796,
+      "sha256": "dc6df6111b6a0cdf5cb61bc23495e626c88afd994e0ed772aec749afad694392"
     },
     {
       "path": "models/README.md",
@@ -1520,8 +1520,8 @@
     },
     {
       "path": "public/submission/submission-text.txt",
-      "bytes": 14275,
-      "sha256": "e3f62054b1cf51891ade9be11f52409a67ecc8e995e00a3a4092e928db362f36"
+      "bytes": 14304,
+      "sha256": "ad73431b6bff79034a82d75dc5efba9c04ee66fe62799107966175500613c412"
     },
     {
       "path": "public/submission/validation.txt",

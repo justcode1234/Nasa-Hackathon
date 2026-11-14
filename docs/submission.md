@@ -80,7 +80,7 @@ The compact model's vocabulary and template splits are optimistic development ch
 
 ## Submission links and portal steps
 
-The prepared demo is a seven-slide HTML presentation and an exactly seven-page PDF in public/submission/. Source, source archive, citations, validation reports and this copy accompany it. The public demo is https://nasa-hackathon-three.vercel.app/ ; all 31 production browser checks passed, including guided chat through step 4. Use docs/deployment.md for release attribution and settings.
+The prepared demo is a seven-slide HTML presentation and an exactly seven-page PDF in public/submission/. Source, source archive, citations, validation reports and this copy accompany it. The public demo is https://nasa-hackathon-three.vercel.app/ ; all 33 production browser checks passed, including geographic scope choices and guided chat through step 4. Use docs/deployment.md for release attribution and settings.
 
 The official challenge brief was read at the user's exact URL and explicitly lists NASA POWER. See docs/challenge-alignment.md. NASA's official discussion confirms up to seven slides OR a video of at most 30 seconds, English project text and AI disclosure: https://github.com/nasa/spaceapps/discussions/1973 . It states November 15, 2026, 11:59 PM local time. Explorer is registered under Singapore (UTC+8); confirm any event-specific portal exception before the deadline. The full current guide page was unavailable during retrieval, so no additional form limits are invented.
 

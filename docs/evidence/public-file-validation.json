@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-11-14T16:54:54.129Z",
+  "checkedAt": "2026-11-14T17:13:14.212Z",
   "origin": "https://nasa-hackathon-three.vercel.app",
-  "commit": "4af1dab0d200305c7eb084d96fc1e53329496961",
+  "commit": "05a66cc41c4f9848ec98fb51fdc376bcd9bb4ed6",
   "results": [
     {
       "path": "/index.html",
@@ -14,9 +14,9 @@
     {
       "path": "/js/app.js",
       "status": 200,
-      "bytes": 11789,
-      "sha256": "929f469c306c69c1f49bab61b1ffe8aed382465b55958b95b32c0a87c0d941c9",
-      "expectedSha256": "929f469c306c69c1f49bab61b1ffe8aed382465b55958b95b32c0a87c0d941c9",
+      "bytes": 11962,
+      "sha256": "19bec53a57de3ffcc2cbff3551961a1df015e39b148af539bbbb0e5d5a4641c4",
+      "expectedSha256": "19bec53a57de3ffcc2cbff3551961a1df015e39b148af539bbbb0e5d5a4641c4",
       "matches": true
     },
     {
@@ -28,11 +28,19 @@
       "matches": true
     },
     {
+      "path": "/js/modules/context.js",
+      "status": 200,
+      "bytes": 14388,
+      "sha256": "4f1bee099dcafa701ab0b2329121ca0a7a79cc7dff73343db4f99ef2dc24b756",
+      "expectedSha256": "4f1bee099dcafa701ab0b2329121ca0a7a79cc7dff73343db4f99ef2dc24b756",
+      "matches": true
+    },
+    {
       "path": "/js/modules/workflow-assistant.js",
       "status": 200,
-      "bytes": 13962,
-      "sha256": "39d449ac2437c3b01a2cc80952b1628994633b8ef16c1bd58637c703e05784b5",
-      "expectedSha256": "39d449ac2437c3b01a2cc80952b1628994633b8ef16c1bd58637c703e05784b5",
+      "bytes": 18225,
+      "sha256": "a1284d4e195da84fe3820aa662f2c85c4bf55aed5d32f02ddded120e6906dc31",
+      "expectedSha256": "a1284d4e195da84fe3820aa662f2c85c4bf55aed5d32f02ddded120e6906dc31",
       "matches": true
     },
     {
@@ -62,17 +70,17 @@
     {
       "path": "/submission/fieldshift-source.zip",
       "status": 200,
-      "bytes": 2081418,
-      "sha256": "f5c2bb4aac3d9979ce7393e5261945d14b181c12b2d614e07863bc8c6e4ea56e",
-      "expectedSha256": "f5c2bb4aac3d9979ce7393e5261945d14b181c12b2d614e07863bc8c6e4ea56e",
+      "bytes": 2089257,
+      "sha256": "258679e8164200904b773fdeb7b937d59ef56c322881d2d2c5f10e124afac131",
+      "expectedSha256": "258679e8164200904b773fdeb7b937d59ef56c322881d2d2c5f10e124afac131",
       "matches": true
     },
     {
       "path": "/submission/fieldshift-deck.pdf",
       "status": 200,
-      "bytes": 86631,
-      "sha256": "dd70e649d452d31b84d59820b7f2a96510548cf199ee6dac421169b3ec1855eb",
-      "expectedSha256": "dd70e649d452d31b84d59820b7f2a96510548cf199ee6dac421169b3ec1855eb",
+      "bytes": 86739,
+      "sha256": "67c84fa47462e8c55cec54486b5ba5d540f3ac56cef70fa5fc2c1d7fe06daf40",
+      "expectedSha256": "67c84fa47462e8c55cec54486b5ba5d540f3ac56cef70fa5fc2c1d7fe06daf40",
       "matches": true
     },
     {
