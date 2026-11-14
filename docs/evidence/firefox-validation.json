@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-14T16:46:23.732Z",
+  "checkedAt": "2026-11-14T17:09:40.086Z",
   "browser": {
     "acceptInsecureCerts": false,
     "browserName": "firefox",
@@ -10,8 +10,8 @@
     "moz:buildID": "20261104181552",
     "moz:headless": true,
     "moz:platformVersion": "10.0",
-    "moz:processID": 26676,
-    "moz:profile": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\firefox-check-T4FqJj",
+    "moz:processID": 9656,
+    "moz:profile": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\firefox-check-GJfoQZ",
     "moz:shutdownTimeout": 73000
   },
   "checks": [
@@ -28,7 +28,9 @@
     "edited constraints invalidate results and unsupported wheat stays unassessed",
     "390px Firefox layout fits the viewport and real arrow-key tab navigation works",
     "blocking the actual worker NASA request shows an error and prevents stale comparison",
-    "chat selects India and asks for the specific location without inventing a farm",
+    "a country-only planning request asks which part or the whole country with both scope choices",
+    "Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison",
+    "choosing a specific area accepts a sourced Indian state and filters the town dropdown",
     "chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4",
     "no backend /api requests or uncaught JavaScript exceptions occurred in Firefox"
   ],
@@ -42,7 +44,7 @@
     "model": "FieldShift Mini word LM (experimental)",
     "parameters": 29200,
     "weightBytes": 116800,
-    "loadMs": 174,
+    "loadMs": 183,
     "backend": "wasm",
     "tensorBytes": 116800,
     "wasmHeapCapacityBytes": 16777216,

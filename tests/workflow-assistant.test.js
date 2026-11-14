@@ -5,14 +5,15 @@ import { catalog } from '../server/agronomy/catalog.js';
 import { getCountryCrops } from '../server/context/crops.js';
 
 // These doubles test action sequencing, never stand in for observed NASA readings.
-function setup({ failEvidence = false, country = 'GB', point = true, waitEvidence } = {}) {
+function setup({ failEvidence = false, country = 'GB', point = true, waitEvidence, locations = { places: [], regions: [] } } = {}) {
   const calls = [];
   const state = { country, catalog, countryCrops: getCountryCrops({ country }), farm: null, farms: [],
     location: point ? { latitude: 52.19, longitude: 0.09 } : null, observations: null,
     planning: { baseline: ['', '', ''], allowedCrops: getCountryCrops({ country }).screeningCropIds, irrigation: 'unknown', soil: 'unknown' } };
   const actions = {
-    chooseCountry(code) { calls.push('country'); state.country = code; state.countryCrops = getCountryCrops({ country: code }); state.location = null; state.farm = null; state.observations = null; state.planning.allowedCrops = state.countryCrops.screeningCropIds; },
+    chooseCountry(code) { calls.push('country'); state.country = code; state.countryCrops = getCountryCrops({ country: code }); state.location = null; state.farm = null; state.regionCode = null; state.observations = null; state.planning.allowedCrops = state.countryCrops.screeningCropIds; },
     chooseLocation(location) { calls.push('location'); state.location = location; state.observations = null; },
+    chooseRegion(id) { calls.push('region'); state.regionCode = id; state.location = null; state.farm = null; },
     chooseFarm(id) { calls.push('farm'); state.farm = state.farms.find(farm => farm.id === id); state.location = state.farm.representativePoint; },
     loadFarms() { calls.push('fields'); },
     showStep(step) { calls.push(`step:${step}`); },
@@ -29,7 +30,7 @@ function setup({ failEvidence = false, country = 'GB', point = true, waitEvidenc
     request: async path => {
       const url = new URL(path, 'https://test.invalid');
       if (url.pathname === '/api/places') return { places: [{ countryCode: Number(url.searchParams.get('latitude')) > 40 ? 'GB' : 'IN' }] };
-      if (url.pathname === '/api/locations') return { places: [], regions: [] };
+      if (url.pathname === '/api/locations') return locations;
       throw new Error('Unexpected test request');
     } });
   return { assistant, calls, state };
@@ -59,11 +60,75 @@ test('explicit country, coordinates and farmer crops execute through step 4 in o
 test('country without a field asks for a point and retains supplied crops across messages', async () => {
   const { assistant, calls } = setup();
   const first = await assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
-  assert.match(first.blocks[0].text, /town.*latitude, longitude/);
+  assert.match(first.blocks[0].text, /Which part of India.*whole country/);
+  assert.deepEqual(first.followUps.map(choice => choice.label), ['Whole India', 'A specific area']);
   assert.ok(!calls.includes('NASA'));
   const second = await assistant.respond('at 18.52, 73.85');
   assert.match(second.blocks[0].text, /Step 4 is ready/);
   assert.equal(calls.filter(call => call === 'compare').length, 1);
+});
+
+test('whole-country replies use national evidence without loading point weather or comparing', async () => {
+  for (const question of ['Whole India', 'all of India', 'the whole of India', 'entire country', 'nationwide']) {
+    const { assistant, calls, state } = setup();
+    await assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
+    const answer = await assistant.respond(question);
+    const text = answer.blocks.map(block => block.text).join(' ');
+    assert.match(text, /Whole-country overview for India/);
+    assert.match(text, /Rice \(2024\).*Wheat \(2024\)/);
+    assert.match(text, /not local suitability evidence/);
+    assert.ok(answer.sources.some(source => source.id === 'faostat-qcl'));
+    assert.equal(state.location, null);
+    assert.ok(!calls.includes('NASA') && !calls.includes('compare'));
+  }
+});
+
+test('national scope clears an existing field point and keeps the farmer sequence', async () => {
+  const { assistant, state, calls } = setup({ country: 'IN' });
+  state.farm = { id: 'way/1', name: 'TEST selected field' };
+  state.observations = { kind: 'TEST existing point evidence' };
+  state.planning.baseline = ['unassessed:fao-27', 'unassessed:fao-15', 'bush-bean'];
+  const answer = await assistant.respond('Whole India');
+  assert.equal(state.location, null);
+  assert.equal(state.farm, null);
+  assert.equal(state.observations, null);
+  assert.match(answer.blocks[0].text, /Rice.*Wheat.*Bush snap bean/);
+  assert.ok(!calls.includes('compare'));
+});
+
+test('specific-area mode accepts a sourced region and preserves crops through the local comparison', async () => {
+  const { assistant, calls, state } = setup({ locations: { regions: [{ id: '16', name: 'Maharashtra' }], places: [] } });
+  await assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
+  const area = await assistant.respond('A specific area');
+  assert.match(area.blocks[0].text, /Which state, region or town in India/);
+  const region = await assistant.respond('Maharashtra');
+  assert.match(region.blocks[0].text, /Which town or farmland in Maharashtra/);
+  assert.equal(state.regionCode, '16');
+  assert.ok(!calls.includes('NASA'));
+  const result = await assistant.respond('at 18.52, 73.85');
+  assert.match(result.blocks[0].text, /Step 4 is ready/);
+  assert.deepEqual(state.planning.baseline, ['unassessed:fao-27', 'unassessed:fao-15', 'bush-bean']);
+});
+
+test('whole-country mode can narrow directly to a named region without repeating the crops', async () => {
+  const { assistant, state } = setup({ locations: { regions: [{ id: '23', name: 'Punjab' }], places: [] } });
+  await assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
+  await assistant.respond('Whole India');
+  const answer = await assistant.respond('Punjab');
+  assert.match(answer.blocks[0].text, /Which town or farmland in Punjab/);
+  assert.equal(state.regionCode, '23');
+});
+
+test('scope choices apply to other countries and empty national coverage stays honest', async () => {
+  for (const country of ['Australia', 'Antarctica']) {
+    const { assistant, calls } = setup();
+    const first = await assistant.respond(`Help me plan a rotation in ${country}`);
+    assert.match(first.blocks[0].text, new RegExp(`Which part of ${country}`));
+    const all = await assistant.respond(first.followUps[0].question);
+    assert.match(all.blocks[0].text, new RegExp(`Whole-country overview for ${country}`));
+    assert.match(all.blocks[1].text, /Missing categories remain unknown/);
+    assert.ok(!calls.includes('NASA'));
+  }
 });
 
 test('a selected point still needs three farmer crops and never fills missing slots', async () => {

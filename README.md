@@ -42,8 +42,11 @@ the map or borrow weather from another country. Cultivation coverage is limited;
 missing crop-country rules remain explicit.
 
 To have chat carry out the workflow, ask “Help me plan a rotation in India. Crops:
-rice, wheat, beans.” It selects the country and asks for a town, mapped field or
-explicit coordinates. It enters the supplied three-crop sequence, loads historical
+rice, wheat, beans.” It asks which part of India or the whole country, with both
+choices available. Whole-country mode shows national crop context without inventing
+a country-wide weather reading or planting calendar. Specific-area mode accepts a
+state/region, then a town, mapped field or explicit coordinates. It retains the
+supplied three-crop sequence across these choices, loads historical
 NASA evidence, runs the same comparison engine and opens step 4. You can select a
 returned field by button, field number or its current OSM way ID. Missing crops are
 never filled automatically. Unsupported crops remain unassessed; alternatives use

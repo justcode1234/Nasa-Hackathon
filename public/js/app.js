@@ -82,8 +82,10 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
   pests: pestContext, soil: soilContext, water: waterContext,
   location: $('#latitude').value !== '' && $('#longitude').value !== '' && $('#location-form').checkValidity() ?
     { latitude: Number($('#latitude').value), longitude: Number($('#longitude').value) } : null,
-  planning: readInputs(), countryCrops, catalog: catalogData, farms: context.getFarms() }), {
+  planning: readInputs(), countryCrops, catalog: catalogData, farms: context.getFarms(),
+  regionCode: $('#place-region').value === '__all__' ? null : $('#place-region').value || null }), {
   chooseCountry: code => context.chooseCountry(code, { fromAssistant: true }),
+  chooseRegion: code => context.chooseRegion(code, { fromAssistant: true }),
   chooseLocation: (point, countryCode) => selectLocation(point.latitude, point.longitude, { pan: true, countryCode, fromAssistant: true }),
   chooseFarm: id => context.selectFarm(id, { fromAssistant: true }),
   loadFarms: () => context.loadFarms(),

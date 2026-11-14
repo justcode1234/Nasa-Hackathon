@@ -2,6 +2,14 @@
 
 ## Current accepted user decisions — supersede the earlier G0 plan
 
+- **Ask geographic scope before requesting coordinates (2026-11-15).** Country-only
+  planning asks which part of the country or the whole country. Whole-country mode
+  presents dated FAOSTAT context, preserves supplied crops and clears any old field
+  point/evidence. It does not invent national NASA readings, a uniform calendar or
+  local rotation suitability. Specific-area mode accepts sourced state/region names
+  and filters the town dropdown before the existing field-comparison flow. The user
+  can switch scope without re-entering crops. These are working actions, available
+  as both buttons and typed replies, and apply generally across countries.
 - **Conversational crop-country answers and guided execution (2026-11-15).** A
   question can name a crop and country independently of the selected map. Named
   sources, broad FAOSTAT categories and their gaps remain separate from the four

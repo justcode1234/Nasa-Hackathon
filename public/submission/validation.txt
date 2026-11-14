@@ -25,7 +25,9 @@ PASS: custom compact browser language model loads and selects evidence with reco
 PASS: model unload returns to working evidence mode
 PASS: network failure produces visible error and prevents stale-evidence comparisons
 PASS: all data and comparison calls stay in the browser; no server /api request occurred
-PASS: chat selects India and asks for the specific location without inventing a farm
+PASS: a country-only planning request asks which part or the whole country with both scope choices
+PASS: Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison
+PASS: choosing a specific area accepts a sourced Indian state and filters the town dropdown
 PASS: chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4
 PASS: seven-slide deck has no clipped content and exports exactly seven PDF pages
 PASS: no uncaught JavaScript exceptions or CSP violations

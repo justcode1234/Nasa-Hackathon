@@ -214,5 +214,11 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
       if (!codes.includes(country)) throw new Error('Choose a supported country.');
       onCountrySelection(options);
       return locationChanged({ countryCode: country, ...options });
+    },
+    async chooseRegion(regionCode, options = {}) {
+      if (![...$('place-region').options].some(option => option.value === regionCode && option.value !== '__all__')) throw new Error('Choose a region from the current country list.');
+      const countryCode = $('pest-country').value;
+      onCountrySelection(options);
+      return locationChanged({ countryCode, regionCode, ...options });
     } };
 }

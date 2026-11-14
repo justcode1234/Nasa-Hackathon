@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-14T16:44:48.601Z",
-  "origin": "http://127.0.0.1:62762",
+  "checkedAt": "2026-11-14T17:07:41.569Z",
+  "origin": "http://127.0.0.1:51203",
   "scope": "local static preview",
   "browser": {
     "protocolVersion": "1.3",
@@ -37,7 +37,9 @@
     "model unload returns to working evidence mode",
     "network failure produces visible error and prevents stale-evidence comparisons",
     "all data and comparison calls stay in the browser; no server /api request occurred",
-    "chat selects India and asks for the specific location without inventing a farm",
+    "a country-only planning request asks which part or the whole country with both scope choices",
+    "Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison",
+    "choosing a specific area accepts a sourced Indian state and filters the town dropdown",
     "chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4",
     "seven-slide deck has no clipped content and exports exactly seven PDF pages",
     "no uncaught JavaScript exceptions or CSP violations"

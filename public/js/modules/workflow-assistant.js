@@ -7,8 +7,12 @@ export function parseWorkflowMessage(question, active = false) {
   // Knowledge questions stay read-only, even during a guided planning session.
   if (/^(tell me about|what is|what are|how long|why |hi\b|hello\b)/.test(text)) return null;
   const countries = findCountries(question);
+  const wholeCountry = /\b(?:whole|entire) (?:country|nation)\b|\bnationwide\b|\bnational overview\b/.test(text) ||
+    /^(?:all|whole|entire|all of it|whole thing)(?: please)?$/.test(text) || countries.some(country =>
+      ['whole', 'whole of', 'all', 'all of', 'entire'].some(prefix => (` ${text} `).includes(` ${prefix} ${normalizeName(COUNTRY_NAMES.of(country))} `)));
+  const specificArea = /\b(?:specific|particular) (?:area|part|region)\b|^choose a (?:region|town|field)$/.test(text);
   const intent = /\b(help me|guide me|walk me|take me|pick|select|choose|find|use|set|plan|rotate|compare|continue|next|proceed)\b/.test(text);
-  if (!active && !(intent && (/\b(farm|farmland|field|rotation|rotate|crops|baseline|compare|step|task|point|coordinates)\b/.test(text) || countries.length))) return null;
+  if (!active && !wholeCountry && !specificArea && !(intent && (/\b(farm|farmland|field|rotation|rotate|crops|baseline|compare|step|task|point|coordinates)\b/.test(text) || countries.length))) return null;
   const point = /(?:^|\bat\s+|coordinates?\s*:?\s*)([-+]?\d{1,3}(?:\.\d+)?)\s*,\s*([-+]?\d{1,3}(?:\.\d+)?)(?=\s|[.;]|$)/i.exec(question);
   const location = point ? { latitude: Number(point[1]), longitude: Number(point[2]) } : null;
   const clause = /\b(?:crops|baseline|(?:existing )?rotation)\s*(?:are|is|:|=)\s*(.+)/i.exec(question)?.[1] ??
@@ -34,7 +38,7 @@ export function parseWorkflowMessage(question, active = false) {
   const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
   const month = /\bstart(?:ing)? (?:in |month )?([a-z]+)/.exec(text)?.[1];
   if (months.includes(month)) constraints.startMonth = months.indexOf(month) + 1;
-  return { countries, location, baseline, allowed, constraints,
+  return { countries, location, baseline, allowed, constraints, wholeCountry, specificArea,
     farmId: /\bway\/(\d+)\b/.exec(question)?.[0],
     farmIndex: /\b(?:field|farm)\s+([1-9]\d?)\b/.exec(text)?.[1] ?? ({ first: 1, second: 2, third: 3 }[/\b(first|second|third) (?:mapped )?(?:field|farm)\b/.exec(text)?.[1]]),
     usePoint: /\b(?:use|using) (?:the |this |my |current |selected )*(?:point|coordinates|location)\b/.test(text),
@@ -56,17 +60,18 @@ export function resolveCropInput(name, catalog, country) {
 }
 
 const reply = (text, followUps = [], source = []) => ({ schemaVersion: 1, mode: 'guided app workflow', topic: 'workflow', useSelectedLocation: false,
-  blocks: [{ kind: 'workflow progress', text, sourceIds: source.map(s => s.id) }], sources: source, followUps });
+  blocks: (Array.isArray(text) ? text : [text]).map(text => ({ kind: 'workflow progress', text, sourceIds: source.map(s => s.id) })), sources: source, followUps });
 const next = (label, question) => ({ label, question });
 
 export function createWorkflowAssistant({ getState, actions, request = api, progress = () => {} }) {
-  let active = false, generation = 0, baseline = null, allowed = null, constraints = {}, pointAccepted = false;
+  let active = false, generation = 0, baseline = null, allowed = null, constraints = {}, pointAccepted = false, scope = null, areaRegion = null;
   const locationLists = new Map();
-  function invalidate() { generation++; baseline = null; allowed = null; constraints = {}; pointAccepted = false; }
+  function invalidate() { generation++; baseline = null; allowed = null; constraints = {}; pointAccepted = false; scope = null; areaRegion = null; }
   async function respond(question, choice = null) {
     const parsed = choice ? { countries: [], constraints: {} } : parseWorkflowMessage(question, active);
     if (!parsed) { generation++; return null; }
     if (parsed.cancel) { active = false; invalidate(); return reply('Guided planning stopped. Your current form values remain available.'); }
+    if (!active) { scope = null; areaRegion = null; pointAccepted = false; }
     active = true;
     const version = ++generation;
     const guard = () => { if (version !== generation) throw new DOMException('Planning context changed', 'AbortError'); };
@@ -82,9 +87,19 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     const requestedCountry = parsed.countries[0];
     if (requestedCountry && requestedCountry !== state.country) {
       progress(`Step 1: selecting ${COUNTRY_NAMES.of(requestedCountry)}…`);
-      await run('chooseCountry', requestedCountry); pointAccepted = false; state = getState();
+      await run('chooseCountry', requestedCountry); pointAccepted = false; scope = null; areaRegion = null; state = getState();
     }
-    if (!state.country) { actions.showStep('location'); return reply('Which country is the farmland in? After that, give a town, field selection or coordinates.'); }
+    if (!state.country) { actions.showStep('location'); return reply('Which country should we look at? Then we can explore the whole country or a particular area.'); }
+    const countryName = COUNTRY_NAMES.of(state.country);
+    if (parsed.wholeCountry) {
+      scope = 'country'; areaRegion = null; pointAccepted = false;
+      if (!baseline && state.planning.baseline.every(Boolean)) baseline = [...state.planning.baseline];
+      // A national request must not retain a field point or its NASA comparison.
+      if (state.location || state.farm || state.regionCode) { await run('chooseCountry', state.country); state = getState(); }
+    }
+    if (parsed.specificArea) { scope = 'area'; actions.showStep('location'); return areaPrompt(countryName); }
+    const explicitPoint = parsed.location || parsed.farmId || parsed.farmIndex || parsed.usePoint || parsed.useFarm || choice?.type === 'farm' || choice?.type === 'town';
+    if (parsed.wholeCountry && !explicitPoint) return countryOverview(state);
     if (parsed.location) {
       const { latitude, longitude } = parsed.location;
       if (!Number.isFinite(latitude) || Math.abs(latitude) > 90 || !Number.isFinite(longitude) || Math.abs(longitude) > 180) return reply('Those coordinates are outside the latitude/longitude range. Please give latitude, longitude in decimal degrees.');
@@ -92,35 +107,44 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       const result = await request(`/api/places?${new URLSearchParams(parsed.location)}`); guard();
       const foundCountry = result.places[0]?.countryCode;
       if (!foundCountry || foundCountry !== state.country) return reply(`Those coordinates ${foundCountry ? `were identified in ${COUNTRY_NAMES.of(foundCountry)}` : 'could not be assigned to a country'}. Please correct the point or country before I continue.`);
-      await run('chooseLocation', parsed.location, foundCountry); pointAccepted = true; state = getState();
+      await run('chooseLocation', parsed.location, foundCountry); pointAccepted = true; scope = 'area'; state = getState();
     }
     if (choice?.type === 'farm' || parsed.farmId || parsed.farmIndex) {
       const id = choice?.id ?? parsed.farmId ?? state.farms[Number(parsed.farmIndex) - 1]?.id;
       if (!state.farms.some(farm => farm.id === id)) return reply('That field is not in the current mapped results. Find nearby fields and select one of the returned outlines.');
-      await run('chooseFarm', id); pointAccepted = true; state = getState();
+      await run('chooseFarm', id); pointAccepted = true; scope = 'area'; state = getState();
     }
-    if (parsed.usePoint && state.location) pointAccepted = true;
-    if (state.farm && (parsed.useFarm || !requestedCountry)) pointAccepted = true;
+    if (parsed.usePoint && state.location) { pointAccepted = true; scope = 'area'; }
+    if (state.farm && (parsed.useFarm || !requestedCountry)) { pointAccepted = true; scope = 'area'; }
     if (parsed.findFarms && state.location) { await run('loadFarms'); return fieldPrompt(getState(), 'Choose the specific mapped field. Map coverage and crop tags may be incomplete.'); }
-    if (!state.location || (!pointAccepted && !state.farm)) {
+    if (!state.location || !pointAccepted) {
       progress('Step 1: looking for the named town…');
       let places = locationLists.get(state.country);
       if (!places) { places = await request(`/api/locations?country=${state.country}`); guard(); locationLists.set(state.country, places); while (locationLists.size > 4) locationLists.delete(locationLists.keys().next().value); }
       const q = normalizeName(question);
+      const regionMatches = places.regions.filter(region => normalizeName(region.name) !== normalizeName(countryName) && (` ${q} `).includes(` ${normalizeName(region.name)} `));
+      if (regionMatches.length === 1) {
+        const region = regionMatches[0];
+        await run('chooseRegion', region.id); areaRegion = region.id; scope = 'area';
+        return reply(`Which town or farmland in ${region.name}, ${countryName}? You can choose a town from the dropdown or name it here.`, [next(`Whole ${countryName}`, `Whole ${countryName}`)]);
+      }
+      const selectedRegion = areaRegion ?? state.regionCode ?? null;
       const matches = choice?.type === 'town' ? places.places.filter(place => place.id === choice.id) : places.places.filter(place => {
         const name = normalizeName(place.name);
-        return name.length >= 3 && (` ${q} `).includes(` ${name} `) && (q === name || /\b(in|near|at|around)\b/.test(q));
+        return (scope === 'area' || name !== normalizeName(countryName)) && (!selectedRegion || place.regionCode === selectedRegion) && name.length >= 3 && (` ${q} `).includes(` ${name} `) && (q === name || /\b(in|near|at|around)\b/.test(q));
       });
       if (matches.length === 1) {
-        await run('chooseLocation', matches[0], state.country);
+        await run('chooseLocation', matches[0], state.country); scope = 'area';
         progress('Step 1: finding community-mapped fields near the town…');
         await run('loadFarms'); state = getState();
         return fieldPrompt(state, `${matches[0].name} is selected as a town point. Choose the specific field; the town itself is not farmland.`);
       }
       if (matches.length > 1) return reply('Several listed towns match. Which one do you mean?', matches.slice(0, 3).map(place => ({ label: `${place.name} · ${place.regionCode}`, question: `Use ${place.name}`, workflowChoice: { type: 'town', id: place.id } })));
       actions.showStep('location');
-      return reply(`I selected ${COUNTRY_NAMES.of(state.country)}. Name a town, give “at latitude, longitude”, or select the specific field on the map and say “continue”.${baseline ? ' Your three supplied crops are retained for the next step.' : ''}`,
-        state.location ? [next('Use selected point', 'Use the selected point'), next('Find nearby fields', 'Find nearby fields')] : []);
+      if (scope === 'country' && !explicitPoint) return countryOverview(state);
+      if (scope === 'area' || selectedRegion) return areaPrompt(countryName, places.regions.find(region => region.id === selectedRegion)?.name);
+      return reply(`Which part of ${countryName} should we focus on, or would you like an overview of the whole country?`,
+        [next(`Whole ${countryName}`, `Whole ${countryName}`), next('A specific area', 'A specific area')]);
     }
     actions.showStep('si');
     const sequence = baseline ?? state.planning.baseline;
@@ -137,6 +161,28 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     if (!comparison) return reply('The comparison could not finish. Check the form or data error in step 3; no successful result is being claimed.', [next('Retry', 'Continue planning')]);
     active = false;
     return reply(`Step 4 is ready: your baseline and two alternatives are displayed. The baseline is ${comparison.scenarios[0].timeline.map(slot => slot.cropName).join(' → ')}. Alternatives use the allowed starter crops. The plan starts in month ${state.planning.startMonth} of ${state.planning.planningYear}, using historical ${state.planning.referenceYear} weather. Missing soil, irrigation and local agronomy remain unknown; unsupported crops stay unassessed. Review the visible trade-offs and gaps before making a planting decision.`);
+  }
+  function areaPrompt(countryName, regionName) {
+    return reply(regionName ? `Which town or farmland in ${regionName}, ${countryName}? Choose a town from the dropdown or name it here.` :
+      `Which state, region or town in ${countryName}? You can name it here or use the location dropdowns.`,
+    [next(`Whole ${countryName}`, `Whole ${countryName}`)]);
+  }
+  function countryOverview(state) {
+    actions.showStep('si');
+    const name = COUNTRY_NAMES.of(state.country), data = state.countryCrops;
+    const sequence = baseline ?? state.planning.baseline.filter(Boolean);
+    const cropNames = [], records = sequence.map(cropName => {
+      const crop = resolveCropInput(cropName, state.catalog, data);
+      cropNames.push(crop.name);
+      const itemCode = /^unassessed:fao-(\d+)$/.exec(crop.id)?.[1];
+      const record = data.records.find(record => String(record.itemCode) === itemCode || record.screeningId === crop.id);
+      return record ? `${record.name} (${record.year})` : `${crop.name}: no matching production category`;
+    });
+    return reply([`Whole-country overview for ${name}.${sequence.length ? ` Your supplied crops are retained: ${cropNames.join(' → ')}.` : ''}`,
+      records.length ? `FAOSTAT national production records: ${records.join('; ')}. Snapshot retrieved ${data.source.retrievedAt.slice(0, 10)}; these are country records, not local suitability evidence.` :
+        `${data.records.length} crop categories have saved national production records for 2020–2024. Missing categories remain unknown.`,
+      'There is no single country-wide planting calendar or field weather reading here. Choose a region when you want to compare rotations for a particular farm.'],
+    [next('Choose a region', 'A specific area')], [data.source]);
   }
   function fieldPrompt(state, message) {
     actions.showStep('location');

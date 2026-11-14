@@ -53,9 +53,27 @@ export async function validateGuidedWorkflow({ evaluate, waitFor, fill, check, c
   await ask('Help me plan a rotation in India. Crops: rice, wheat, beans. Rainfed');
   assert.equal(await evaluate('document.querySelector("#pest-country").value'), 'IN');
   assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
-  assert.match(await evaluate(`${last}.textContent`), /Name a town.*latitude, longitude/);
+  assert.match(await evaluate(`${last}.textContent`), /Which part of India.*whole country/);
+  assert.equal(await evaluate(`JSON.stringify([...${last}.querySelectorAll('button')].map(button=>button.textContent))`), JSON.stringify(['Whole India', 'A specific area']));
   assert.equal(await evaluate('document.querySelectorAll(".scenario").length'), 0);
-  check('chat selects India and asks for the specific location without inventing a farm');
+  check('a country-only planning request asks which part or the whole country with both scope choices');
+
+  await evaluate(`${last}.querySelector('button').click()`);
+  await waitFor(`${last}.textContent.includes('Whole-country overview for India') && !document.querySelector('#ask').disabled`);
+  assert.match(await evaluate(`${last}.textContent`), /Rice \(2024\).*Wheat \(2024\)/);
+  assert.ok(await evaluate(`${last}.querySelector('a[href*="faostat"]') !== null`));
+  assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
+  assert.equal(await evaluate('document.querySelector("#evidence-output").children.length'), 0);
+  assert.equal(await evaluate('document.querySelectorAll(".scenario").length'), 0);
+  check('Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison');
+
+  await evaluate(`${last}.querySelector('button').click()`);
+  await waitFor(`${last}.textContent.includes('Which state, region or town in India') && !document.querySelector('#ask').disabled`);
+  await ask('Maharashtra');
+  assert.match(await evaluate(`${last}.textContent`), /Which town or farmland in Maharashtra/);
+  assert.equal(await evaluate('document.querySelector("#place-region").value'), '16');
+  assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
+  check('choosing a specific area accepts a sourced Indian state and filters the town dropdown');
 
   await ask('at 18.5204, 73.8567');
   assert.match(await evaluate(`${last}.textContent`), /Step 4 is ready/);

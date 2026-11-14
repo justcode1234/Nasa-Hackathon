@@ -186,6 +186,16 @@ Update this section and docs/decisions.md / docs/validation.md after each substa
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
 
+- **Latest scope clarification (implemented and locally verified):** country-only planning
+  asks which part of that country or the whole country, with both choices available.
+  Whole-country mode shows dated national crop context, preserves supplied crops,
+  and never treats a centroid or existing field's weather as national evidence.
+  Specific-area mode accepts a sourced state/region, then a town or field. It can
+  resume the existing step-4 workflow once a point is explicitly supplied. Keep
+  replies short. The scope choices, national overview, state filtering and continued
+  step-4 flow passed 79 offline tests, 33 static Chrome checks, 19 Node-backed Chrome
+  checks and 18 Firefox checks. Publishing this scope update is the next release step.
+
 - **User-approved dual runtimes:** `npm run start:node` runs Node HTTP APIs and the
   frontend (preferred port 3001). `npm run start:showcase` builds and serves the static
   browser-worker version (preferred port 3000); `npm start` retains showcase behavior.
@@ -242,8 +252,8 @@ state. Do not leave another device relying on an earlier planning assumption.
   dry run initially included local browser artifacts, so .vercelignore now excludes
   those, local dependencies, credentials and generated output. Build inputs and
   public showcase files remain included. Verify the dry-run file list before upload.
-- **Latest executed checks:** 74 offline tests, 31 static Chrome checks,
-  17 Node-backed Chrome checks, 16 Firefox checks and 70 JavaScript syntax checks
+- **Latest executed checks:** 79 offline tests, 33 static Chrome checks,
+  19 Node-backed Chrome checks, 18 Firefox checks and 70 JavaScript syntax checks
   passed. Seven-slide PDF and source ZIP are regenerated before publishing.
   The public origin also passed all 31 Chrome checks after the model upload fix.
   Reports live under docs/evidence; transient profiles/logs are ignored in artifacts.
