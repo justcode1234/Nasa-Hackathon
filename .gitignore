@@ -1,0 +1,11 @@
+node_modules/
+.env
+coverage/
+artifacts/
+__pycache__/
+.ipynb_checkpoints/
+dist/
+public/vendor/
+public/js/lib/core-worker.bundle.js
+.venv/
+.vercel/

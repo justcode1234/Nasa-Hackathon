@@ -1,0 +1,89 @@
+[
+  {
+    "name": "Perth — validation location",
+    "latitude": -31.95,
+    "longitude": 115.86,
+    "year": 2025,
+    "retrievedAt": "2026-11-14T09:52:36.269Z",
+    "latestAvailableDate": "2025-12-31",
+    "januaryMeanC": 24.36129032258064,
+    "julyMeanC": 15.46258064516129,
+    "missingDays": {
+      "T2M": 0,
+      "T2M_MAX": 0,
+      "T2M_MIN": 0,
+      "PRECTOTCORR": 0,
+      "ALLSKY_SFC_SW_DWN": 0
+    },
+    "source": {
+      "id": "nasa-power",
+      "product": "NASA/POWER Source Native Resolution Daily Data",
+      "apiVersion": "v2.10.3",
+      "products": [
+        "MERRA2",
+        "SYN1DEG",
+        "POWER"
+      ],
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CALLSKY_SFC_SW_DWN&community=AG&latitude=-31.95&longitude=115.86&start=20250101&end=20251231&format=JSON&time-standard=LST",
+      "documentationUrl": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/"
+    }
+  },
+  {
+    "name": "Minneapolis — validation location",
+    "latitude": 44.98,
+    "longitude": -93.27,
+    "year": 2025,
+    "retrievedAt": "2026-11-14T09:52:37.329Z",
+    "latestAvailableDate": "2025-12-31",
+    "januaryMeanC": -11.170967741935485,
+    "julyMeanC": 23.156774193548387,
+    "missingDays": {
+      "T2M": 0,
+      "T2M_MAX": 0,
+      "T2M_MIN": 0,
+      "PRECTOTCORR": 0,
+      "ALLSKY_SFC_SW_DWN": 0
+    },
+    "source": {
+      "id": "nasa-power",
+      "product": "NASA/POWER Source Native Resolution Daily Data",
+      "apiVersion": "v2.10.3",
+      "products": [
+        "MERRA2",
+        "SYN1DEG",
+        "POWER"
+      ],
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CALLSKY_SFC_SW_DWN&community=AG&latitude=44.98&longitude=-93.27&start=20250101&end=20251231&format=JSON&time-standard=LST",
+      "documentationUrl": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/"
+    }
+  },
+  {
+    "name": "Nairobi — validation location",
+    "latitude": -1.29,
+    "longitude": 36.82,
+    "year": 2025,
+    "retrievedAt": "2026-11-14T09:52:37.842Z",
+    "latestAvailableDate": "2025-12-31",
+    "januaryMeanC": 21.33612903225807,
+    "julyMeanC": 19.29322580645161,
+    "missingDays": {
+      "T2M": 0,
+      "T2M_MAX": 0,
+      "T2M_MIN": 0,
+      "PRECTOTCORR": 0,
+      "ALLSKY_SFC_SW_DWN": 0
+    },
+    "source": {
+      "id": "nasa-power",
+      "product": "NASA/POWER Source Native Resolution Daily Data",
+      "apiVersion": "v2.10.3",
+      "products": [
+        "MERRA2",
+        "SYN1DEG",
+        "POWER"
+      ],
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CALLSKY_SFC_SW_DWN&community=AG&latitude=-1.29&longitude=36.82&start=20250101&end=20251231&format=JSON&time-standard=LST",
+      "documentationUrl": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/"
+    }
+  }
+]

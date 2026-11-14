@@ -1,0 +1,166 @@
+{
+  "scope": "Four starter vegetable types with Minnesota extension evidence. Local varieties, planting calendars and commercial-scale suitability are not globally validated.",
+  "sources": [
+    {
+      "id": "nasa-power",
+      "title": "NASA POWER Daily API",
+      "url": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/"
+    },
+    {
+      "id": "power-resolution",
+      "title": "NASA POWER tutorials: spatial resolution",
+      "url": "https://power.larc.nasa.gov/docs/tutorials/"
+    },
+    {
+      "id": "umn-duration",
+      "title": "UMN Extension: vegetable climate resilience and maturity table",
+      "url": "https://extension.umn.edu/agriculture/specialty-crops/vegetable-farming/climate-resilience-resources-for-vegetable-growers-in-minnesota"
+    },
+    {
+      "id": "umn-families",
+      "title": "UMN Extension: healthy soil and plant families",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/living-soil-healthy-garden"
+    },
+    {
+      "id": "umn-peas",
+      "title": "UMN Extension: growing peas",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-peas"
+    },
+    {
+      "id": "umn-beans",
+      "title": "UMN Extension: growing beans",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-beans"
+    },
+    {
+      "id": "umn-corn",
+      "title": "UMN Extension: growing sweet corn",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-sweet-corn"
+    },
+    {
+      "id": "cornell-rotation",
+      "title": "Cornell Extension: rotating vegetables by family",
+      "url": "https://allegany.cce.cornell.edu/gardening/food-gardening/vegetable-garden/rotating-vegetables-by-family"
+    }
+  ],
+  "crops": [
+    {
+      "id": "bush-bean",
+      "name": "Bush snap bean",
+      "aliases": [
+        "bean",
+        "beans",
+        "bush beans",
+        "bush snap beans"
+      ],
+      "family": "Fabaceae",
+      "maturityDays": [
+        45,
+        65
+      ],
+      "frostTender": true,
+      "idealAirC": null,
+      "legume": true,
+      "notes": [
+        "Cold soil can impair establishment; regional air temperature cannot establish soil warmth.",
+        "Nitrogen fixation requires compatible rhizobia; no subsequent nitrogen credit is estimated."
+      ],
+      "sourceIds": [
+        "umn-duration",
+        "umn-families",
+        "umn-beans"
+      ],
+      "soilPhRange": [
+        6,
+        7
+      ],
+      "requiresWellDrainedSoil": false
+    },
+    {
+      "id": "pea",
+      "name": "Garden pea",
+      "aliases": [
+        "peas",
+        "garden peas"
+      ],
+      "family": "Fabaceae",
+      "maturityDays": [
+        50,
+        80
+      ],
+      "frostTender": false,
+      "idealAirC": [
+        12.7777777778,
+        18.3333333333
+      ],
+      "legume": true,
+      "notes": [
+        "Cool-season crop; days above the cited ideal range indicate heat exposure, not a quantified damage prediction.",
+        "Drainage, cultivar and rhizobia matter; no nitrogen credit is estimated."
+      ],
+      "sourceIds": [
+        "umn-duration",
+        "umn-families",
+        "umn-peas"
+      ],
+      "soilPhRange": [
+        6,
+        7.5
+      ],
+      "requiresWellDrainedSoil": true
+    },
+    {
+      "id": "sweet-corn",
+      "name": "Sweet corn",
+      "aliases": [
+        "corn",
+        "maize"
+      ],
+      "family": "Poaceae",
+      "maturityDays": [
+        60,
+        100
+      ],
+      "frostTender": true,
+      "idealAirC": null,
+      "legume": false,
+      "notes": [
+        "Requires warm soil and can suffer drought stress; neither soil temperature nor irrigation sufficiency is established.",
+        "Soil testing and fertility management are needed; no fertilizer rate is calculated."
+      ],
+      "sourceIds": [
+        "umn-duration",
+        "umn-families",
+        "umn-corn"
+      ],
+      "soilPhRange": [
+        5.8,
+        7
+      ],
+      "requiresWellDrainedSoil": true
+    },
+    {
+      "id": "radish",
+      "name": "Radish",
+      "aliases": [
+        "radishes"
+      ],
+      "family": "Brassicaceae",
+      "maturityDays": [
+        30,
+        60
+      ],
+      "frostTender": false,
+      "idealAirC": null,
+      "legume": false,
+      "notes": [
+        "Cultivar and local conditions affect maturity. No quantitative heat-damage or water-demand rule is available in this catalog."
+      ],
+      "sourceIds": [
+        "umn-duration",
+        "umn-families"
+      ],
+      "soilPhRange": null,
+      "requiresWellDrainedSoil": false
+    }
+  ]
+}

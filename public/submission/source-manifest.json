@@ -1,0 +1,467 @@
+{
+  "format": 1,
+  "project": "FieldShift",
+  "notes": "Source only; npm ci then npm run start. Build outputs, dependencies, local profiles, secrets and the archive itself are excluded.",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 66,
+      "sha256": "1a1dbe176bc233b499d35a57db7513f2941c99ab9759f177830c9149be99005b"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 146,
+      "sha256": "8f948300d714e27d960066915a3e3c22ce55177a2d91fb71d81d55efb8bd47ea"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 17296,
+      "sha256": "5f245896604689ab2903060176df26d4c9084f6d017c742bf45667246bd10a82"
+    },
+    {
+      "path": "docs/challenge-alignment.md",
+      "bytes": 2640,
+      "sha256": "476cef7de3f0c2dce74733aacb9dd20aa4e769cf923ce4768b7c3c32a9b58201"
+    },
+    {
+      "path": "docs/data-sources.md",
+      "bytes": 7969,
+      "sha256": "1e80a0ac1e3b40f0c09d71ef6a9894149cee61be43ac3ce050633922725fd434"
+    },
+    {
+      "path": "docs/decisions.md",
+      "bytes": 8937,
+      "sha256": "2f178e945f28bc4e74c8f5cf4bbbcfd9b0f0d432ba12b3fdb76859bc11c70fc1"
+    },
+    {
+      "path": "docs/demo-script.md",
+      "bytes": 727,
+      "sha256": "4a28deaf584c30a05e04c3403657c747e54bef46d31fc500443781c18d4319df"
+    },
+    {
+      "path": "docs/deployment.md",
+      "bytes": 3116,
+      "sha256": "7eb331d7970e4c943ee930e934280a28747e2b0bf99b16c5540781e26270f813"
+    },
+    {
+      "path": "docs/evidence/browser-validation.json",
+      "bytes": 2335,
+      "sha256": "d8b538fd0a071762f573937ec9a5fc5312d006da1519cdf5a7bd6a41666dd3ed"
+    },
+    {
+      "path": "docs/evidence/live-validation.json",
+      "bytes": 2950,
+      "sha256": "267c2d8485bd63660d344222e4364489016bc133d8c617b0094e8c2dbd9984bf"
+    },
+    {
+      "path": "docs/evidence/mini-lm-benchmark.json",
+      "bytes": 1334,
+      "sha256": "bd01a554ccf84186a641b1910a06c2073c5f9ab9bc1e50cc94852debb79e99ab"
+    },
+    {
+      "path": "docs/evidence/sourced-context-validation.json",
+      "bytes": 6073,
+      "sha256": "4e0d643237f039dddf4ea3f01f6fecf60f89b1d2b053e7226ff461915501fd44"
+    },
+    {
+      "path": "docs/submission.md",
+      "bytes": 11742,
+      "sha256": "99a8d3435499c4c7ad83712e9e4c85a53d3d72b790ffa14743f7535418def271"
+    },
+    {
+      "path": "docs/validation.md",
+      "bytes": 8253,
+      "sha256": "7a26187f8bb6ab66592bb9087553a72ea03fb77f4cc25704a207527905dda9c6"
+    },
+    {
+      "path": "models/README.md",
+      "bytes": 5354,
+      "sha256": "a5932b5c6ec9a0c26d25414ad8a459cf3c09b0e22a973f05c039ad80ad9b8b54"
+    },
+    {
+      "path": "notebooks/data/README.md",
+      "bytes": 438,
+      "sha256": "85be4373d6a21c8cd3eb05c72bc9958108929947dcdc9c1bd99a43170acfc95f"
+    },
+    {
+      "path": "notebooks/llm_training.ipynb",
+      "bytes": 10204,
+      "sha256": "7f6ddba07473d3598b1759dd5a211943986a8546135176c15e458cf0b76dd82e"
+    },
+    {
+      "path": "notebooks/pretrained_llm_finetuning.ipynb",
+      "bytes": 9914,
+      "sha256": "cb01798768548517ddb1e01bcfa56315929f75a684d636f7d19bf2f8e8ce1634"
+    },
+    {
+      "path": "notebooks/README.md",
+      "bytes": 1949,
+      "sha256": "249088ce955d0f7a54fcebffa2a48ee736cd39da5e1f90bc716014de7c50819c"
+    },
+    {
+      "path": "notebooks/si_experiments.ipynb",
+      "bytes": 8031,
+      "sha256": "39cd39cca731a2f587cba67ceaf6d273283b5b69e3e2c246a6c8fc2071f5fd87"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 14865,
+      "sha256": "e6eea1c2f89c6553846394fef08a2ea3fbf778cb200b39d20b744d37c7a74a7f"
+    },
+    {
+      "path": "package.json",
+      "bytes": 674,
+      "sha256": "455318fdc05ef22dc2ec8437f889a3395e426e0d131dea5c8281b29b97446e17"
+    },
+    {
+      "path": "public/css/app.css",
+      "bytes": 9370,
+      "sha256": "0af98f34f00778f5e870fda730f433fbcad286927cd9532e349cf04db0cc204b"
+    },
+    {
+      "path": "public/index.html",
+      "bytes": 12437,
+      "sha256": "5c343850390089de8794bc97597bc73ec53292a50660807534b6916cd6992be2"
+    },
+    {
+      "path": "public/js/app.js",
+      "bytes": 9064,
+      "sha256": "f39f707912cc49883e35a38bcf5aa2f54c71fa582ae9365c045953637eda27af"
+    },
+    {
+      "path": "public/js/lib/api.js",
+      "bytes": 1268,
+      "sha256": "a54e64a97842e42becc788722a6277dc1d68c698fe8fcb96e6c4a11e4c86aa00"
+    },
+    {
+      "path": "public/js/lib/core-worker-entry.js",
+      "bytes": 547,
+      "sha256": "656d7ca664ecd8e5b4d9992ef4aa6c8c6ca53dc906bf147b106fbf54bef7500e"
+    },
+    {
+      "path": "public/js/lib/dom.js",
+      "bytes": 1483,
+      "sha256": "13c29ffba84d5d7f8b038e0ccfff3213aa79dcfd2abe927fa49fa42c72b60836"
+    },
+    {
+      "path": "public/js/lib/tabs.js",
+      "bytes": 2494,
+      "sha256": "55916c3dafef0606e2dabf6e3746c0378cf4470d3852f02e04017ee5047d35f7"
+    },
+    {
+      "path": "public/js/modules/candidate-worker.js",
+      "bytes": 1788,
+      "sha256": "6eca0ac748269b2caea7133d6931934b2f086614ca3e386b054cddd8abd5a552"
+    },
+    {
+      "path": "public/js/modules/chat.js",
+      "bytes": 9928,
+      "sha256": "78e83abc8b2ab50bbe883da583589102f4811c5ea2ddb2239d5cf7aa2b1b7e8c"
+    },
+    {
+      "path": "public/js/modules/context.js",
+      "bytes": 13811,
+      "sha256": "8241f7dcda1ac0e63ff63b57249aa446501a91dcdacfd61f30f033efb44e543d"
+    },
+    {
+      "path": "public/js/modules/data-flow.js",
+      "bytes": 4999,
+      "sha256": "c86d6a22ecb7a64c98c850b55ba55f985f5d0237fc35641f73b1fb6da136d542"
+    },
+    {
+      "path": "public/js/modules/llm-worker.js",
+      "bytes": 2688,
+      "sha256": "3641f3ecf4ad5953ad357294707777bb3730773267c529db5f88951c296d91a1"
+    },
+    {
+      "path": "public/js/modules/map.js",
+      "bytes": 3246,
+      "sha256": "b996c827193c7ff86c77d07101657d69b5e669738db03f90999e1758f1bcf08b"
+    },
+    {
+      "path": "public/js/modules/mini-lm-worker.js",
+      "bytes": 5242,
+      "sha256": "1dd78e0e765c46fd9eaedf198d28116e9e45f399fbf164247b09d0216f52d221"
+    },
+    {
+      "path": "public/js/modules/si.js",
+      "bytes": 4097,
+      "sha256": "1afcc50f738a46bcf73bea6f312f25af9efe21dbdeab24432e31c36772f11e51"
+    },
+    {
+      "path": "public/js/modules/strategy.js",
+      "bytes": 4130,
+      "sha256": "c45cfb95585ae0e33d8a95d4c855ebf1373b77f0119a7bcdf68511ef64ceca00"
+    },
+    {
+      "path": "public/js/modules/train-mini-lm.js",
+      "bytes": 5523,
+      "sha256": "3ba6bf8c77a452ea634ff9c1f132f0d0e628345771568c814f7bd2b8e669627d"
+    },
+    {
+      "path": "public/js/modules/wasm-training-kernel.js",
+      "bytes": 1029,
+      "sha256": "232e944d7ee8afa53992bc9102b3dc039245ae149a40c116b80cd78ae500f1c4"
+    },
+    {
+      "path": "public/models/fieldshift-mini/corpus.json",
+      "bytes": 191578,
+      "sha256": "bb51fe54d4a5d8c8f0ca3d07db63b6b09d60346ecbdbc13ee74e390c09505c92"
+    },
+    {
+      "path": "public/models/fieldshift-mini/evaluation.json",
+      "bytes": 13037,
+      "sha256": "e68b336a2f6d1e0c0afa141e038c51057b1f88b91236bea8feb375d7bfb096df"
+    },
+    {
+      "path": "public/models/fieldshift-mini/model.json",
+      "bytes": 2361,
+      "sha256": "1fac00ad8b01829edaa50a2ea337805414b74fff9a982471a34b2bcc1ae194f8"
+    },
+    {
+      "path": "public/models/fieldshift-mini/tokenizer.json",
+      "bytes": 5441,
+      "sha256": "5d2f908797211736c802e1e30aa5256c690b0bff2e24f3afc25955f5ddc3be65"
+    },
+    {
+      "path": "public/models/fieldshift-mini/weights.bin",
+      "bytes": 116800,
+      "sha256": "87311c8b2e155102c8992e2894ba3c2c58a8de98603a479ce3ccbabd430484d2"
+    },
+    {
+      "path": "public/submission/fieldshift-deck.pdf",
+      "bytes": 86537,
+      "sha256": "70195e4d8740c6d3c1a3800a7dfee3518ec04908426d92a327cf0170bfcf474d"
+    },
+    {
+      "path": "public/submission/index.html",
+      "bytes": 10673,
+      "sha256": "55228f045a0f0975dcdaac121335b8b72c3c9ceb07d2933f605e17f2e4d23970"
+    },
+    {
+      "path": "public/submission/submission-text.txt",
+      "bytes": 11742,
+      "sha256": "99a8d3435499c4c7ad83712e9e4c85a53d3d72b790ffa14743f7535418def271"
+    },
+    {
+      "path": "public/submission/validation.txt",
+      "bytes": 3346,
+      "sha256": "837b9d03084f18bf2426a65d2fb584d4b7195fc6e6bd4d30cce8b67693e8982d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 8284,
+      "sha256": "1db9c31989f2ee662e3a996bc4296cbd8e2d5e00a0784da26c9c5999b4bcd859"
+    },
+    {
+      "path": "scripts/benchmark-candidate.js",
+      "bytes": 1008,
+      "sha256": "806484a20a7a2472b64af73515ba0b2fc0450f6c1269742a11233d9a6e5d94fa"
+    },
+    {
+      "path": "scripts/benchmark-mini-lm.js",
+      "bytes": 3064,
+      "sha256": "1452a05a809cd62eedc4335e6579f379c5bccbb120e05ca6b02b4b6bb4d52582"
+    },
+    {
+      "path": "scripts/browser-validation.js",
+      "bytes": 21112,
+      "sha256": "8d2d185077a4baafccfbbe3c468b44228e353a74406621e74ac5eb7798b20c6d"
+    },
+    {
+      "path": "scripts/build-browser.js",
+      "bytes": 945,
+      "sha256": "0c949873bd4e5881edbd5071d716123c13c968493e6372fb4e93e12dabf343b3"
+    },
+    {
+      "path": "scripts/build-country-crops.py",
+      "bytes": 5024,
+      "sha256": "560a2e1ba592af1c45ef9cb0a9590c093750a5211543b158dc6075997bf52333"
+    },
+    {
+      "path": "scripts/build-mini-corpus.js",
+      "bytes": 5348,
+      "sha256": "1ffc52b56e5c16e4c04a669aaf62acd2044fbd9fc1cebb53091aed1c0cc89170"
+    },
+    {
+      "path": "scripts/build-notebooks.js",
+      "bytes": 21839,
+      "sha256": "f69a5da5ee029aab95f7af6ef6148d9bfc7b54ee01c2aaa9a52641d16856a1a1"
+    },
+    {
+      "path": "scripts/check-sourced-context.js",
+      "bytes": 2849,
+      "sha256": "cdb5cbaf47b0dbfefd30410c92e62986f88012acd083073717e8025c13c2115c"
+    },
+    {
+      "path": "scripts/check-wasm-training.js",
+      "bytes": 1791,
+      "sha256": "8f7edd4bd64c9e8c74b2356135695a2e746520bcca9076816fde33a2407586d0"
+    },
+    {
+      "path": "scripts/chrome.js",
+      "bytes": 3203,
+      "sha256": "9554095c3bf5f6108e281e6de0b8a1094c8bf39c9b3ad89f73626aaa718eb529"
+    },
+    {
+      "path": "scripts/live-validation.js",
+      "bytes": 1701,
+      "sha256": "d859b42648bb54c776552a60a977c6cef13d3b7135db4b1d216379440775785b"
+    },
+    {
+      "path": "scripts/package-source.py",
+      "bytes": 2443,
+      "sha256": "babfb5110d82488a21ef379ed9523ba759a2e2917278f24695ef381b61923e11"
+    },
+    {
+      "path": "scripts/prepare-submission.js",
+      "bytes": 12499,
+      "sha256": "3dcd7b542a423569ae5f5f33a9bfb47827f98b96566a2fca58864890db0c2cfe"
+    },
+    {
+      "path": "scripts/render-deck.js",
+      "bytes": 1887,
+      "sha256": "43fda85b75fda7ab8a128d7e03cf28a704a9890a64fc9ee755deb517294c99bc"
+    },
+    {
+      "path": "scripts/static-preview.js",
+      "bytes": 4151,
+      "sha256": "b923d22763a49ab59df052a6b2b32306cd5a36dd478d696de4cc2f8eb37cdf06"
+    },
+    {
+      "path": "scripts/train-mini-lm.js",
+      "bytes": 1893,
+      "sha256": "c7f2ff9a88a3929ef42cf169717f1c0ca659f075ff705c956a42b17994bf7aa2"
+    },
+    {
+      "path": "server/agronomy/answers.js",
+      "bytes": 1271,
+      "sha256": "4a257c31790af8629fbd0bb4829703e351483fe0ea6f329afa9a173d2760515a"
+    },
+    {
+      "path": "server/agronomy/catalog.js",
+      "bytes": 280,
+      "sha256": "e3d56f16e1fe5614dddd0a3cbf5c5fe51e454669d52e0ddf34b398ff3d0115de"
+    },
+    {
+      "path": "server/agronomy/crops.json",
+      "bytes": 4670,
+      "sha256": "8b868fafa18d9923111fe28b4a9637a8608c8601704141c0ce24c66697511ee5"
+    },
+    {
+      "path": "server/agronomy/rotation.js",
+      "bytes": 19851,
+      "sha256": "2893bd7bb8d6620fc9542d7dd41992ab8bdfd810e78c0b16ff5b8da51c31ae58"
+    },
+    {
+      "path": "server/api.js",
+      "bytes": 3283,
+      "sha256": "ac9c2219dd6c0deb6969b562fed9c1fb7ded5cfa8718cce0455a48d40c0306cf"
+    },
+    {
+      "path": "server/context/client.js",
+      "bytes": 2011,
+      "sha256": "e8ac9247279e4ccaf5203ceab0cb3ae39df019879464df6f9ce2edf8831f059f"
+    },
+    {
+      "path": "server/context/country-crops.json",
+      "bytes": 285778,
+      "sha256": "8e13c87f207c2a9f84335900112ff6aa4506a50393be6975139e9db0c05ab0fb"
+    },
+    {
+      "path": "server/context/crops.js",
+      "bytes": 2378,
+      "sha256": "b3aff71c2276afb90e2c917fe700d1ec6f7efeb85f58a036d6485377a9d0f2fa"
+    },
+    {
+      "path": "server/context/farms.js",
+      "bytes": 6333,
+      "sha256": "8825650c9d02eb4229cf4515b771f78b58d86131122d6118c4d5acf4d6dc42b9"
+    },
+    {
+      "path": "server/context/pests.js",
+      "bytes": 2974,
+      "sha256": "354943befbc74a949c914419e75c8d587fd1b1413c9e6251a5187164e1793808"
+    },
+    {
+      "path": "server/context/soil.js",
+      "bytes": 3249,
+      "sha256": "038bffd153f1dc8272b2c39ea3246f6c9188b80143b680fc13bdcd8e03fe1474"
+    },
+    {
+      "path": "server/context/water.js",
+      "bytes": 2190,
+      "sha256": "3e67a7be791169aa64db83b125367db8bb7bfdeee4825be7b0f8e0006ed8e9be"
+    },
+    {
+      "path": "server/errors.js",
+      "bytes": 175,
+      "sha256": "310d11f75ae3fb903aceadccd0cd52122c79ff0fc9da1e48657421a2ba1a0a23"
+    },
+    {
+      "path": "server/index.js",
+      "bytes": 3326,
+      "sha256": "2ebd1cef611674bd69b4a3009eee5903c6d7bf59427fc062d8ccea27b6e580e1"
+    },
+    {
+      "path": "server/nasa/power.js",
+      "bytes": 7780,
+      "sha256": "4feab63bf4a14d53ffa23ca5db22b55088aeca85e0a69c64f430e2170e5bfef8"
+    },
+    {
+      "path": "server/persistence.js",
+      "bytes": 1751,
+      "sha256": "cb1d1e5862b834b7d35518c37160ebcccc553db1b6e9eefc439ef5110ab92db1"
+    },
+    {
+      "path": "tests/context.test.js",
+      "bytes": 5643,
+      "sha256": "2e8fb1ee221643e6c1a80fc42432b64933211cb78c335d8f14a14c2a07ea180f"
+    },
+    {
+      "path": "tests/country-crops.test.js",
+      "bytes": 2116,
+      "sha256": "6746e291950689ae71c0f1f9678449d763fe0a8a8136451801ccbbd4aae5dbb3"
+    },
+    {
+      "path": "tests/deployment.test.js",
+      "bytes": 1077,
+      "sha256": "cb674a1003868b5c8b6a1c4162660c4770d95986819a9e32443b6d965af3b965"
+    },
+    {
+      "path": "tests/fixtures.js",
+      "bytes": 890,
+      "sha256": "0906c121540cc547c1786dd03d972aef3c8f96e81295d3ba39c078e51f822b7b"
+    },
+    {
+      "path": "tests/integration.test.js",
+      "bytes": 4216,
+      "sha256": "6e69c3aab7285265d545be1c041895bdd62f6d78c1005ab0e131670a417466de"
+    },
+    {
+      "path": "tests/model.test.js",
+      "bytes": 2379,
+      "sha256": "a3a8a78eb69c8669e47f024920c02755bccd4a15411351e3ca965dd8e6714080"
+    },
+    {
+      "path": "tests/nasa.test.js",
+      "bytes": 3993,
+      "sha256": "9ca7f7d82130ccf8a8c4e263b88abdb42ab3d98f2e9eb1b4fd933e5cd29e27c7"
+    },
+    {
+      "path": "tests/rotation.test.js",
+      "bytes": 7420,
+      "sha256": "5858a752737621c373331fb42da40c4b89c8a91e5b37c8174715530e9fb7d05c"
+    },
+    {
+      "path": "tests/start.test.js",
+      "bytes": 1665,
+      "sha256": "4c1327796f42e4ca7e736ad739f72a8e203c2777bcfb2068bd67ee3dcea58c2c"
+    },
+    {
+      "path": "vercel.json",
+      "bytes": 884,
+      "sha256": "06453dfd45f14e8fb5bb7ed1f6ceaf783aa133eba0fd297a7693f2e9ea117a57"
+    }
+  ]
+}

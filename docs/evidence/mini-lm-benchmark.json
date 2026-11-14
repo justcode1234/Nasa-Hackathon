@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-14T11:42:22.554Z",
+  "firstEvidenceAnswerMs": 10,
+  "coldLoad": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 29200,
+    "weightBytes": 116800,
+    "loadMs": 903,
+    "backend": "wasm",
+    "tensorBytes": 116800,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null
+  },
+  "warmLoad": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 29200,
+    "weightBytes": 116800,
+    "loadMs": 652.6000000000931,
+    "backend": "wasm",
+    "tensorBytes": 116800,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null
+  },
+  "inference": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 29200,
+    "weightBytes": 116800,
+    "loadMs": 903,
+    "backend": "wasm",
+    "tensorBytes": 116800,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null,
+    "inferenceMs": 84,
+    "topic": "soil",
+    "accepted": true
+  },
+  "rawGenerationForEvaluationOnly": "regional soil estimates are not farm measurements . a local soil test",
+  "limitations": [
+    "Development question wording is synthetic and not agronomist-reviewed.",
+    "Raw generated words never reach scientific UI output.",
+    "WASM heap capacity and tensor bytes are not total browser peak memory."
+  ]
+}

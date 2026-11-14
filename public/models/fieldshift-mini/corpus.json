@@ -1,0 +1,6645 @@
+{
+  "kind": "DEVELOPMENT synthetic wording; source-linked explanatory continuations",
+  "reviewedByAgronomist": false,
+  "limitation": "Template test wording shares vocabulary with training and is optimistic. Free-form cases are reported separately. This is not agronomic accuracy or a reliable general LLM.",
+  "topics": [
+    {
+      "id": "crops",
+      "terms": [
+        "peas",
+        "beans",
+        "sweet corn",
+        "radish",
+        "crop family",
+        "crop maturity",
+        "planting crops",
+        "legumes"
+      ],
+      "questions": [
+        "what crops can i use",
+        "what family are peas in",
+        "how long do beans grow",
+        "tell me about sweet corn",
+        "which plants are legumes"
+      ],
+      "reply": "crop families and growing times come from sourced crop records .",
+      "sources": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "id": "soil",
+      "terms": [
+        "soil",
+        "soil ph",
+        "sand",
+        "clay",
+        "drainage",
+        "soil test",
+        "soilgrids",
+        "soil type"
+      ],
+      "questions": [
+        "what is my soil like",
+        "is this soil good",
+        "what does soil ph mean",
+        "can i use the mapped clay estimate",
+        "how do i know my soil type"
+      ],
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "sources": [
+        "soilgrids"
+      ]
+    },
+    {
+      "id": "water",
+      "terms": [
+        "irrigation",
+        "water use",
+        "watering",
+        "rainfed farming",
+        "irrigation history",
+        "water demand",
+        "australian water use",
+        "water savings"
+      ],
+      "questions": [
+        "how much should i water",
+        "how much water do farmers use",
+        "show australian irrigation history",
+        "do i have enough water",
+        "can i save water"
+      ],
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "sources": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "id": "pests",
+      "terms": [
+        "pests",
+        "fall armyworm",
+        "diamondback moth",
+        "insects",
+        "crop disease",
+        "pest records",
+        "country pests",
+        "infestation"
+      ],
+      "questions": [
+        "what pests are in this country",
+        "does my farm have armyworm",
+        "are there moths here",
+        "what insects eat crops",
+        "can rotation prevent disease"
+      ],
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "sources": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "id": "weather",
+      "terms": [
+        "nasa data",
+        "temperature",
+        "rainfall",
+        "precipitation",
+        "solar radiation",
+        "frost",
+        "weather observations",
+        "nasa power"
+      ],
+      "questions": [
+        "where does the weather data come from",
+        "is this real time weather",
+        "what did nasa measure",
+        "show historical rainfall",
+        "what is the temperature source"
+      ],
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "sources": [
+        "nasa-power"
+      ]
+    },
+    {
+      "id": "rotation",
+      "terms": [
+        "rotation",
+        "baseline rotation",
+        "alternatives",
+        "crop sequence",
+        "family repeats",
+        "comparison",
+        "rotation strategy",
+        "timeline"
+      ],
+      "questions": [
+        "compare my rotation",
+        "which alternative ranks first",
+        "why is the existing sequence included",
+        "what is a rotation timeline",
+        "how do you rank alternatives"
+      ],
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "sources": [
+        "project-rules"
+      ]
+    },
+    {
+      "id": "location",
+      "terms": [
+        "farmland",
+        "map",
+        "field outlines",
+        "place search",
+        "farm location",
+        "coordinates",
+        "mapped fields",
+        "openstreetmap"
+      ],
+      "questions": [
+        "where are the farms",
+        "how can i find farmland",
+        "search for a place",
+        "is this land available",
+        "how do i choose a field"
+      ],
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "sources": [
+        "osm"
+      ]
+    },
+    {
+      "id": "limits",
+      "terms": [
+        "uncertainty",
+        "limitations",
+        "confidence",
+        "accuracy",
+        "yield guarantee",
+        "missing data",
+        "unknown observations",
+        "evidence gaps"
+      ],
+      "questions": [
+        "how reliable is this answer",
+        "can you guarantee yield",
+        "why are some values missing",
+        "what can the app not conclude",
+        "what are the risks"
+      ],
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "sources": [
+        "project-rules"
+      ]
+    },
+    {
+      "id": "other",
+      "terms": [
+        "movie",
+        "holiday",
+        "football",
+        "music",
+        "celebrity",
+        "fashion",
+        "recipe",
+        "shopping"
+      ],
+      "questions": [
+        "hello",
+        "who are you",
+        "tell me a joke",
+        "write a poem",
+        "what is the latest movie"
+      ],
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "sources": [
+        "project-scope"
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "question": "tell me about peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:peas",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "please explain peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:peas",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "i need information on peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:peas",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what do we know about peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:peas",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how can i understand peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:peas",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "help me with peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:peas",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what is the evidence for peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:peas",
+      "split": "validation",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "can you describe peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:peas",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:beans",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "please explain beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:beans",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "i need information on beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:beans",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what do we know about beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:beans",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how can i understand beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:beans",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "help me with beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:beans",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what is the evidence for beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:beans",
+      "split": "validation",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "can you describe beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:beans",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:sweet corn",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "please explain sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:sweet corn",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "i need information on sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:sweet corn",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what do we know about sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:sweet corn",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how can i understand sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:sweet corn",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "help me with sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:sweet corn",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what is the evidence for sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:sweet corn",
+      "split": "validation",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "can you describe sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:sweet corn",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:radish",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "please explain radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:radish",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "i need information on radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:radish",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what do we know about radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:radish",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how can i understand radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:radish",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "help me with radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:radish",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what is the evidence for radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:radish",
+      "split": "validation",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "can you describe radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:radish",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about crop family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop family",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "please explain crop family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop family",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "i need information on crop family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop family",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what do we know about crop family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop family",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how can i understand crop family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop family",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "help me with crop family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop family",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what is the evidence for crop family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop family",
+      "split": "validation",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "can you describe crop family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop family",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about crop maturity",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop maturity",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "please explain crop maturity",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop maturity",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "i need information on crop maturity",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop maturity",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what do we know about crop maturity",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop maturity",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how can i understand crop maturity",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop maturity",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "help me with crop maturity",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop maturity",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what is the evidence for crop maturity",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop maturity",
+      "split": "validation",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "can you describe crop maturity",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:crop maturity",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about planting crops",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:planting crops",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "please explain planting crops",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:planting crops",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "i need information on planting crops",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:planting crops",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what do we know about planting crops",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:planting crops",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how can i understand planting crops",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:planting crops",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "help me with planting crops",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:planting crops",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what is the evidence for planting crops",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:planting crops",
+      "split": "validation",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "can you describe planting crops",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:planting crops",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:legumes",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "please explain legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:legumes",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "i need information on legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:legumes",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what do we know about legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:legumes",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how can i understand legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:legumes",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "help me with legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:legumes",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what is the evidence for legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:legumes",
+      "split": "validation",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "can you describe legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:legumes",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what crops can i use",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "what family are peas in",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "how long do beans grow",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about sweet corn",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "which plants are legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "group": "crops:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "tell me about soil",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "please explain soil",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "i need information on soil",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what do we know about soil",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how can i understand soil",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "help me with soil",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is the evidence for soil",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil",
+      "split": "validation",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can you describe soil",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "tell me about soil ph",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil ph",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "please explain soil ph",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil ph",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "i need information on soil ph",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil ph",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what do we know about soil ph",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil ph",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how can i understand soil ph",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil ph",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "help me with soil ph",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil ph",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is the evidence for soil ph",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil ph",
+      "split": "validation",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can you describe soil ph",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil ph",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "tell me about sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:sand",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "please explain sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:sand",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "i need information on sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:sand",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what do we know about sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:sand",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how can i understand sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:sand",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "help me with sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:sand",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is the evidence for sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:sand",
+      "split": "validation",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can you describe sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:sand",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "tell me about clay",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:clay",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "please explain clay",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:clay",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "i need information on clay",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:clay",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what do we know about clay",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:clay",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how can i understand clay",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:clay",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "help me with clay",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:clay",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is the evidence for clay",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:clay",
+      "split": "validation",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can you describe clay",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:clay",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "tell me about drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:drainage",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "please explain drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:drainage",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "i need information on drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:drainage",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what do we know about drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:drainage",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how can i understand drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:drainage",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "help me with drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:drainage",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is the evidence for drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:drainage",
+      "split": "validation",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can you describe drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:drainage",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "tell me about soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil test",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "please explain soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil test",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "i need information on soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil test",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what do we know about soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil test",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how can i understand soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil test",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "help me with soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil test",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is the evidence for soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil test",
+      "split": "validation",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can you describe soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil test",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "tell me about soilgrids",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soilgrids",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "please explain soilgrids",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soilgrids",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "i need information on soilgrids",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soilgrids",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what do we know about soilgrids",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soilgrids",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how can i understand soilgrids",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soilgrids",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "help me with soilgrids",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soilgrids",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is the evidence for soilgrids",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soilgrids",
+      "split": "validation",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can you describe soilgrids",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soilgrids",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "tell me about soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil type",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "please explain soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil type",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "i need information on soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil type",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what do we know about soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil type",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how can i understand soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil type",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "help me with soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil type",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is the evidence for soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil type",
+      "split": "validation",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can you describe soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:soil type",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what is my soil like",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "is this soil good",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "what does soil ph mean",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "can i use the mapped clay estimate",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "how do i know my soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "group": "soil:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "tell me about irrigation",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "please explain irrigation",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "i need information on irrigation",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what do we know about irrigation",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how can i understand irrigation",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "help me with irrigation",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what is the evidence for irrigation",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation",
+      "split": "validation",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can you describe irrigation",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "tell me about water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "please explain water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "i need information on water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what do we know about water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how can i understand water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "help me with water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what is the evidence for water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water use",
+      "split": "validation",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can you describe water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water use",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "tell me about watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:watering",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "please explain watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:watering",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "i need information on watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:watering",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what do we know about watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:watering",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how can i understand watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:watering",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "help me with watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:watering",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what is the evidence for watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:watering",
+      "split": "validation",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can you describe watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:watering",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "tell me about rainfed farming",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:rainfed farming",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "please explain rainfed farming",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:rainfed farming",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "i need information on rainfed farming",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:rainfed farming",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what do we know about rainfed farming",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:rainfed farming",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how can i understand rainfed farming",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:rainfed farming",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "help me with rainfed farming",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:rainfed farming",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what is the evidence for rainfed farming",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:rainfed farming",
+      "split": "validation",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can you describe rainfed farming",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:rainfed farming",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "tell me about irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation history",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "please explain irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation history",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "i need information on irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation history",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what do we know about irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation history",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how can i understand irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation history",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "help me with irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation history",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what is the evidence for irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation history",
+      "split": "validation",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can you describe irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:irrigation history",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "tell me about water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water demand",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "please explain water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water demand",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "i need information on water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water demand",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what do we know about water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water demand",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how can i understand water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water demand",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "help me with water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water demand",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what is the evidence for water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water demand",
+      "split": "validation",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can you describe water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water demand",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "tell me about australian water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:australian water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "please explain australian water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:australian water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "i need information on australian water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:australian water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what do we know about australian water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:australian water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how can i understand australian water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:australian water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "help me with australian water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:australian water use",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what is the evidence for australian water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:australian water use",
+      "split": "validation",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can you describe australian water use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:australian water use",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "tell me about water savings",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water savings",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "please explain water savings",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water savings",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "i need information on water savings",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water savings",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what do we know about water savings",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water savings",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how can i understand water savings",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water savings",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "help me with water savings",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water savings",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "what is the evidence for water savings",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water savings",
+      "split": "validation",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can you describe water savings",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:water savings",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how much should i water",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "how much water do farmers use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "show australian irrigation history",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "do i have enough water",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "can i save water",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "group": "water:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "tell me about pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "please explain pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "i need information on pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what do we know about pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "how can i understand pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "help me with pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what is the evidence for pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pests",
+      "split": "validation",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can you describe pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pests",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "tell me about fall armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:fall armyworm",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "please explain fall armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:fall armyworm",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "i need information on fall armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:fall armyworm",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what do we know about fall armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:fall armyworm",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "how can i understand fall armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:fall armyworm",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "help me with fall armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:fall armyworm",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what is the evidence for fall armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:fall armyworm",
+      "split": "validation",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can you describe fall armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:fall armyworm",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "tell me about diamondback moth",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:diamondback moth",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "please explain diamondback moth",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:diamondback moth",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "i need information on diamondback moth",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:diamondback moth",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what do we know about diamondback moth",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:diamondback moth",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "how can i understand diamondback moth",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:diamondback moth",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "help me with diamondback moth",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:diamondback moth",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what is the evidence for diamondback moth",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:diamondback moth",
+      "split": "validation",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can you describe diamondback moth",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:diamondback moth",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "tell me about insects",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:insects",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "please explain insects",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:insects",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "i need information on insects",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:insects",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what do we know about insects",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:insects",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "how can i understand insects",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:insects",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "help me with insects",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:insects",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what is the evidence for insects",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:insects",
+      "split": "validation",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can you describe insects",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:insects",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "tell me about crop disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:crop disease",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "please explain crop disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:crop disease",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "i need information on crop disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:crop disease",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what do we know about crop disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:crop disease",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "how can i understand crop disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:crop disease",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "help me with crop disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:crop disease",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what is the evidence for crop disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:crop disease",
+      "split": "validation",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can you describe crop disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:crop disease",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "tell me about pest records",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pest records",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "please explain pest records",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pest records",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "i need information on pest records",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pest records",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what do we know about pest records",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pest records",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "how can i understand pest records",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pest records",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "help me with pest records",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pest records",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what is the evidence for pest records",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pest records",
+      "split": "validation",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can you describe pest records",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:pest records",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "tell me about country pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:country pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "please explain country pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:country pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "i need information on country pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:country pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what do we know about country pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:country pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "how can i understand country pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:country pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "help me with country pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:country pests",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what is the evidence for country pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:country pests",
+      "split": "validation",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can you describe country pests",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:country pests",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "tell me about infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:infestation",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "please explain infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:infestation",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "i need information on infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:infestation",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what do we know about infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:infestation",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "how can i understand infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:infestation",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "help me with infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:infestation",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what is the evidence for infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:infestation",
+      "split": "validation",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can you describe infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:infestation",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what pests are in this country",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "does my farm have armyworm",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "are there moths here",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "what insects eat crops",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "can rotation prevent disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "group": "pests:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "tell me about nasa data",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa data",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "please explain nasa data",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa data",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "i need information on nasa data",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa data",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what do we know about nasa data",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa data",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "how can i understand nasa data",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa data",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "help me with nasa data",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa data",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the evidence for nasa data",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa data",
+      "split": "validation",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "can you describe nasa data",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa data",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "tell me about temperature",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:temperature",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "please explain temperature",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:temperature",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "i need information on temperature",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:temperature",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what do we know about temperature",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:temperature",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "how can i understand temperature",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:temperature",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "help me with temperature",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:temperature",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the evidence for temperature",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:temperature",
+      "split": "validation",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "can you describe temperature",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:temperature",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "tell me about rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:rainfall",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "please explain rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:rainfall",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "i need information on rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:rainfall",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what do we know about rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:rainfall",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "how can i understand rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:rainfall",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "help me with rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:rainfall",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the evidence for rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:rainfall",
+      "split": "validation",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "can you describe rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:rainfall",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "tell me about precipitation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:precipitation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "please explain precipitation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:precipitation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "i need information on precipitation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:precipitation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what do we know about precipitation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:precipitation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "how can i understand precipitation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:precipitation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "help me with precipitation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:precipitation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the evidence for precipitation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:precipitation",
+      "split": "validation",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "can you describe precipitation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:precipitation",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "tell me about solar radiation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:solar radiation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "please explain solar radiation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:solar radiation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "i need information on solar radiation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:solar radiation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what do we know about solar radiation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:solar radiation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "how can i understand solar radiation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:solar radiation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "help me with solar radiation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:solar radiation",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the evidence for solar radiation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:solar radiation",
+      "split": "validation",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "can you describe solar radiation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:solar radiation",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "tell me about frost",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:frost",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "please explain frost",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:frost",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "i need information on frost",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:frost",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what do we know about frost",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:frost",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "how can i understand frost",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:frost",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "help me with frost",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:frost",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the evidence for frost",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:frost",
+      "split": "validation",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "can you describe frost",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:frost",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "tell me about weather observations",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:weather observations",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "please explain weather observations",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:weather observations",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "i need information on weather observations",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:weather observations",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what do we know about weather observations",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:weather observations",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "how can i understand weather observations",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:weather observations",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "help me with weather observations",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:weather observations",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the evidence for weather observations",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:weather observations",
+      "split": "validation",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "can you describe weather observations",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:weather observations",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "tell me about nasa power",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa power",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "please explain nasa power",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa power",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "i need information on nasa power",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa power",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what do we know about nasa power",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa power",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "how can i understand nasa power",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa power",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "help me with nasa power",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa power",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the evidence for nasa power",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa power",
+      "split": "validation",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "can you describe nasa power",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:nasa power",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "where does the weather data come from",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "is this real time weather",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what did nasa measure",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "show historical rainfall",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "what is the temperature source",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "group": "weather:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "tell me about rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about baseline rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:baseline rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain baseline rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:baseline rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on baseline rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:baseline rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about baseline rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:baseline rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand baseline rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:baseline rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with baseline rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:baseline rotation",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for baseline rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:baseline rotation",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe baseline rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:baseline rotation",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:alternatives",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:alternatives",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:alternatives",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:alternatives",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:alternatives",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:alternatives",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:alternatives",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:alternatives",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about crop sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:crop sequence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain crop sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:crop sequence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on crop sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:crop sequence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about crop sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:crop sequence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand crop sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:crop sequence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with crop sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:crop sequence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for crop sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:crop sequence",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe crop sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:crop sequence",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about family repeats",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:family repeats",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain family repeats",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:family repeats",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on family repeats",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:family repeats",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about family repeats",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:family repeats",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand family repeats",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:family repeats",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with family repeats",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:family repeats",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for family repeats",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:family repeats",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe family repeats",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:family repeats",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about comparison",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:comparison",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain comparison",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:comparison",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on comparison",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:comparison",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about comparison",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:comparison",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand comparison",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:comparison",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with comparison",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:comparison",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for comparison",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:comparison",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe comparison",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:comparison",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about rotation strategy",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation strategy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain rotation strategy",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation strategy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on rotation strategy",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation strategy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about rotation strategy",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation strategy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand rotation strategy",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation strategy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with rotation strategy",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation strategy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for rotation strategy",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation strategy",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe rotation strategy",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:rotation strategy",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:timeline",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:timeline",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:timeline",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:timeline",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:timeline",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:timeline",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:timeline",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:timeline",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "compare my rotation",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "which alternative ranks first",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "why is the existing sequence included",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is a rotation timeline",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how do you rank alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "group": "rotation:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farmland",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "please explain farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farmland",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "i need information on farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farmland",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what do we know about farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farmland",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i understand farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farmland",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "help me with farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farmland",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what is the evidence for farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farmland",
+      "split": "validation",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "can you describe farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farmland",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "tell me about map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:map",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "please explain map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:map",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "i need information on map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:map",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what do we know about map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:map",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i understand map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:map",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "help me with map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:map",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what is the evidence for map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:map",
+      "split": "validation",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "can you describe map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:map",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "tell me about field outlines",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:field outlines",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "please explain field outlines",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:field outlines",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "i need information on field outlines",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:field outlines",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what do we know about field outlines",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:field outlines",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i understand field outlines",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:field outlines",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "help me with field outlines",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:field outlines",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what is the evidence for field outlines",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:field outlines",
+      "split": "validation",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "can you describe field outlines",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:field outlines",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "tell me about place search",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:place search",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "please explain place search",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:place search",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "i need information on place search",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:place search",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what do we know about place search",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:place search",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i understand place search",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:place search",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "help me with place search",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:place search",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what is the evidence for place search",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:place search",
+      "split": "validation",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "can you describe place search",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:place search",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "tell me about farm location",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farm location",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "please explain farm location",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farm location",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "i need information on farm location",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farm location",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what do we know about farm location",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farm location",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i understand farm location",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farm location",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "help me with farm location",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farm location",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what is the evidence for farm location",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farm location",
+      "split": "validation",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "can you describe farm location",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:farm location",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "tell me about coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:coordinates",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "please explain coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:coordinates",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "i need information on coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:coordinates",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what do we know about coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:coordinates",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i understand coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:coordinates",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "help me with coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:coordinates",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what is the evidence for coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:coordinates",
+      "split": "validation",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "can you describe coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:coordinates",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "tell me about mapped fields",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:mapped fields",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "please explain mapped fields",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:mapped fields",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "i need information on mapped fields",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:mapped fields",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what do we know about mapped fields",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:mapped fields",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i understand mapped fields",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:mapped fields",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "help me with mapped fields",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:mapped fields",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what is the evidence for mapped fields",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:mapped fields",
+      "split": "validation",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "can you describe mapped fields",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:mapped fields",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "tell me about openstreetmap",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:openstreetmap",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "please explain openstreetmap",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:openstreetmap",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "i need information on openstreetmap",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:openstreetmap",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what do we know about openstreetmap",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:openstreetmap",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i understand openstreetmap",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:openstreetmap",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "help me with openstreetmap",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:openstreetmap",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "what is the evidence for openstreetmap",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:openstreetmap",
+      "split": "validation",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "can you describe openstreetmap",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:openstreetmap",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "where are the farms",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how can i find farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "search for a place",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "is this land available",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "how do i choose a field",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "group": "location:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "tell me about uncertainty",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:uncertainty",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain uncertainty",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:uncertainty",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on uncertainty",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:uncertainty",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about uncertainty",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:uncertainty",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand uncertainty",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:uncertainty",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with uncertainty",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:uncertainty",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for uncertainty",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:uncertainty",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe uncertainty",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:uncertainty",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about limitations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:limitations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain limitations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:limitations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on limitations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:limitations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about limitations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:limitations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand limitations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:limitations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with limitations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:limitations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for limitations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:limitations",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe limitations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:limitations",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about confidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:confidence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain confidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:confidence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on confidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:confidence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about confidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:confidence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand confidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:confidence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with confidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:confidence",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for confidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:confidence",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe confidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:confidence",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:accuracy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:accuracy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:accuracy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:accuracy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:accuracy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:accuracy",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:accuracy",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:accuracy",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about yield guarantee",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:yield guarantee",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain yield guarantee",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:yield guarantee",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on yield guarantee",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:yield guarantee",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about yield guarantee",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:yield guarantee",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand yield guarantee",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:yield guarantee",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with yield guarantee",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:yield guarantee",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for yield guarantee",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:yield guarantee",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe yield guarantee",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:yield guarantee",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about missing data",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:missing data",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain missing data",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:missing data",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on missing data",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:missing data",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about missing data",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:missing data",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand missing data",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:missing data",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with missing data",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:missing data",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for missing data",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:missing data",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe missing data",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:missing data",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about unknown observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:unknown observations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain unknown observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:unknown observations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on unknown observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:unknown observations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about unknown observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:unknown observations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand unknown observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:unknown observations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with unknown observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:unknown observations",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for unknown observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:unknown observations",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe unknown observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:unknown observations",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about evidence gaps",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:evidence gaps",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "please explain evidence gaps",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:evidence gaps",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "i need information on evidence gaps",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:evidence gaps",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what do we know about evidence gaps",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:evidence gaps",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how can i understand evidence gaps",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:evidence gaps",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "help me with evidence gaps",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:evidence gaps",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what is the evidence for evidence gaps",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:evidence gaps",
+      "split": "validation",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you describe evidence gaps",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:evidence gaps",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "how reliable is this answer",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "can you guarantee yield",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "why are some values missing",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what can the app not conclude",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "what are the risks",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "group": "limits:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "tell me about movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:movie",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "please explain movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:movie",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "i need information on movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:movie",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what do we know about movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:movie",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "how can i understand movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:movie",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "help me with movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:movie",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the evidence for movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:movie",
+      "split": "validation",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "can you describe movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:movie",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "tell me about holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:holiday",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "please explain holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:holiday",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "i need information on holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:holiday",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what do we know about holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:holiday",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "how can i understand holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:holiday",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "help me with holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:holiday",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the evidence for holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:holiday",
+      "split": "validation",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "can you describe holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:holiday",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "tell me about football",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:football",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "please explain football",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:football",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "i need information on football",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:football",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what do we know about football",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:football",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "how can i understand football",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:football",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "help me with football",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:football",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the evidence for football",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:football",
+      "split": "validation",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "can you describe football",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:football",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "tell me about music",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:music",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "please explain music",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:music",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "i need information on music",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:music",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what do we know about music",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:music",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "how can i understand music",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:music",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "help me with music",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:music",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the evidence for music",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:music",
+      "split": "validation",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "can you describe music",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:music",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "tell me about celebrity",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:celebrity",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "please explain celebrity",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:celebrity",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "i need information on celebrity",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:celebrity",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what do we know about celebrity",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:celebrity",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "how can i understand celebrity",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:celebrity",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "help me with celebrity",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:celebrity",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the evidence for celebrity",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:celebrity",
+      "split": "validation",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "can you describe celebrity",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:celebrity",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "tell me about fashion",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:fashion",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "please explain fashion",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:fashion",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "i need information on fashion",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:fashion",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what do we know about fashion",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:fashion",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "how can i understand fashion",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:fashion",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "help me with fashion",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:fashion",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the evidence for fashion",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:fashion",
+      "split": "validation",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "can you describe fashion",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:fashion",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "tell me about recipe",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:recipe",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "please explain recipe",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:recipe",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "i need information on recipe",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:recipe",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what do we know about recipe",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:recipe",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "how can i understand recipe",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:recipe",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "help me with recipe",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:recipe",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the evidence for recipe",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:recipe",
+      "split": "validation",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "can you describe recipe",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:recipe",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "tell me about shopping",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:shopping",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "please explain shopping",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:shopping",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "i need information on shopping",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:shopping",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what do we know about shopping",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:shopping",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "how can i understand shopping",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:shopping",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "help me with shopping",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:shopping",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the evidence for shopping",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:shopping",
+      "split": "validation",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "can you describe shopping",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:shopping",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "hello",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:freeform:0",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "who are you",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:freeform:1",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "tell me a joke",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:freeform:2",
+      "split": "train",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "write a poem",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:freeform:3",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "what is the latest movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "group": "other:freeform:4",
+      "split": "test",
+      "sourceIds": [
+        "project-scope"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "fieldshift",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "NASA POWER evidence and transparent crop-rotation screening",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build-browser.js",
+    "prestart": "node scripts/build-browser.js",
+    "start": "node scripts/static-preview.js",
+    "dev": "node --watch scripts/static-preview.js",
+    "test": "node --test tests/*.test.js",
+    "test:live": "node scripts/live-validation.js",
+    "test:browser": "node scripts/browser-validation.js"
+  },
+  "dependencies": {
+    "leaflet": "1.9.4"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

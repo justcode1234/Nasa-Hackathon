@@ -1,0 +1,70 @@
+PASS: four numbered steps, empty initial location, no generic crop list or automatic NASA/model download
+PASS: persistent Next/Back controls follow workflow order and validate missing inputs
+PASS: tabs switch modules without page scrolling; inactive panels are hidden
+PASS: country selection updates real crop lists, clears foreign selections and blocks insufficient screening coverage
+PASS: actual map click selects a coordinate and updates the coordinate form
+PASS: place-name search returns real Nominatim place choices
+PASS: real OSM field polygons and dropdown select a field with dated metadata and unknown crop labels
+PASS: real NASA year loads with units, source timestamps, daily metadata, monthly charts and tables
+PASS: country pest query displays sourced hosts and GBIF historical occurrence context
+PASS: baseline + two distinct alternatives render nine dated crop slots with risks and evidence
+PASS: assistant fallback answers crop question with source links and no model
+PASS: constraint edits immediately clear outdated comparison and answer
+PASS: unsupported baseline crop stays visible without invented family or weather fit
+PASS: 390px mobile layout has no page-wide horizontal overflow
+PASS: arrow-key navigation selects and focuses the next tab
+PASS: different coordinates clear prior evidence and load a different real NASA location
+PASS: coordinates and NASA evidence work with map library and tiles unavailable
+PASS: custom compact browser language model loads and selects evidence with recorded metrics
+PASS: model unload returns to working evidence mode
+PASS: network failure produces visible error and prevents stale-evidence comparisons
+PASS: all data and comparison calls stay in the browser; no server /api request occurred
+PASS: seven-slide deck has no clipped content and exports exactly seven PDF pages
+PASS: no uncaught JavaScript exceptions or CSP violations
+
+Compact model benchmark:
+{
+  "checkedAt": "2026-11-14T11:42:22.554Z",
+  "firstEvidenceAnswerMs": 10,
+  "coldLoad": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 29200,
+    "weightBytes": 116800,
+    "loadMs": 903,
+    "backend": "wasm",
+    "tensorBytes": 116800,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null
+  },
+  "warmLoad": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 29200,
+    "weightBytes": 116800,
+    "loadMs": 652.6000000000931,
+    "backend": "wasm",
+    "tensorBytes": 116800,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null
+  },
+  "inference": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 29200,
+    "weightBytes": 116800,
+    "loadMs": 903,
+    "backend": "wasm",
+    "tensorBytes": 116800,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null,
+    "inferenceMs": 84,
+    "topic": "soil",
+    "accepted": true
+  },
+  "rawGenerationForEvaluationOnly": "regional soil estimates are not farm measurements . a local soil test",
+  "limitations": [
+    "Development question wording is synthetic and not agronomist-reviewed.",
+    "Raw generated words never reach scientific UI output.",
+    "WASM heap capacity and tensor bytes are not total browser peak memory."
+  ]
+}
+
+No live Vercel deployment or NASA submission is claimed without verified account actions.

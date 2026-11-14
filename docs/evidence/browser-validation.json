@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-11-14T12:19:22.732Z",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/157.0.8103.78",
+    "revision": "@4b3d0dabb8250b6f152d2d85d79e7706e309d087",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "jsVersion": "15.7.112.43"
+  },
+  "checks": [
+    "four numbered steps, empty initial location, no generic crop list or automatic NASA/model download",
+    "persistent Next/Back controls follow workflow order and validate missing inputs",
+    "tabs switch modules without page scrolling; inactive panels are hidden",
+    "country selection updates real crop lists, clears foreign selections and blocks insufficient screening coverage",
+    "actual map click selects a coordinate and updates the coordinate form",
+    "place-name search returns real Nominatim place choices",
+    "real OSM field polygons and dropdown select a field with dated metadata and unknown crop labels",
+    "real NASA year loads with units, source timestamps, daily metadata, monthly charts and tables",
+    "country pest query displays sourced hosts and GBIF historical occurrence context",
+    "baseline + two distinct alternatives render nine dated crop slots with risks and evidence",
+    "assistant fallback answers crop question with source links and no model",
+    "constraint edits immediately clear outdated comparison and answer",
+    "unsupported baseline crop stays visible without invented family or weather fit",
+    "390px mobile layout has no page-wide horizontal overflow",
+    "arrow-key navigation selects and focuses the next tab",
+    "different coordinates clear prior evidence and load a different real NASA location",
+    "coordinates and NASA evidence work with map library and tiles unavailable",
+    "custom compact browser language model loads and selects evidence with recorded metrics",
+    "model unload returns to working evidence mode",
+    "network failure produces visible error and prevents stale-evidence comparisons",
+    "all data and comparison calls stay in the browser; no server /api request occurred",
+    "seven-slide deck has no clipped content and exports exactly seven PDF pages",
+    "no uncaught JavaScript exceptions or CSP violations"
+  ],
+  "errors": [],
+  "failures": []
+}
