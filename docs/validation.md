@@ -41,6 +41,10 @@ The latest resumed benchmark adds process-memory evidence and is documented in t
 
 ## Observed failures and fixes
 
+- The first new public release passed crop-country UI checks but its optional model
+  failed to load: a broad models/ entry in .vercelignore also removed public/models.
+  The ignore is now anchored to /models/. Deployment dry-run checks must explicitly
+  require the three model loading files; the live model path is rechecked after release.
 - The resumed clean-checkout run passed 36/37 tests: startup could serve HTTP 404 while a concurrent deployment test was still creating `dist/client`. Startup tests now serve isolated temporary fixtures. A third startup check verifies that a preview serving another directory is never reused. Normal `npm start` still serves `dist/client`.
 - A reproduced country-lookup race reused a previous location's pending request after coordinates changed. Lookups now coalesce only within the same location revision; an old completion cannot clear a newer task. Two UI regression tests cover moving during lookup and an outdated lookup failure. Evidence submissions also stop if inputs change while awaiting country identification.
 - Browser validation previously served the Node test harness despite production being static. It now builds and serves the actual static preview before checking the workflow, with the same Vercel headers.

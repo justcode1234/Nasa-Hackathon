@@ -63,6 +63,9 @@ or uploaded. A dry run caught hundreds of MB of local browser profiles before an
 upload; .vercelignore now excludes them, credentials, dependencies and build output.
 Required source/build inputs and the public submission package remain included.
 Recheck identity/project and inspect `vercel deploy --dry --json` before upload.
+Require public/models/fieldshift-mini/model.json, tokenizer.json and weights.bin
+in that file list. An initial public check caught a broad models/ ignore pattern
+excluding these assets; /models/ now targets only root experiment documentation.
 
 An earlier private Sites project was provisioned while exploring hosting. It was
 never published; its hosting adapter was removed when the user chose Vercel.

@@ -231,8 +231,11 @@ state. Do not leave another device relying on an earlier planning assumption.
   Recheck `vercel whoami` and linked project before deploying; never store credentials
   in this repository. The CLI-created .env.local and .vercel directory are ignored.
 - **Deployment:** existing public origin is https://nasa-hackathon-three.vercel.app/ .
-  It was observed serving the older source revision; the current local picker/chat
-  changes must be deployed and checked before claiming they are live. A deployment
+  Source commit a40e516 was pushed and Git integration published it. Public checks
+  caught an unanchored models/ ignore rule excluding public/models; the rule is now
+  root-anchored. Require model.json, tokenizer.json and weights.bin in the deploy
+  dry-run file list, then verify public model load before calling the release done.
+  A deployment
   dry run initially included local browser artifacts, so .vercelignore now excludes
   those, local dependencies, credentials and generated output. Build inputs and
   public showcase files remain included. Verify the dry-run file list before upload.

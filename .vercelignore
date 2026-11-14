@@ -8,10 +8,10 @@ coverage/
 .venv/
 __pycache__/
 **/__pycache__/
-notebooks/
-tests/
-docs/
-models/
+/notebooks/
+/tests/
+/docs/
+/models/
 public/vendor/
 public/js/lib/core-worker.bundle.js
 scripts/*
