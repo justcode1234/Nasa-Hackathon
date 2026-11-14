@@ -20,8 +20,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 22699,
-      "sha256": "f3e08da37772b032cdd2303b89b6969217df19eabab44d57c3a4b626b36484d0"
+      "bytes": 23042,
+      "sha256": "603e60f71a294ca187c31d9bc0884861d29f0f82df875f231fc72386d9732b2f"
     },
     {
       "path": "docs/challenge-alignment.md",
@@ -45,8 +45,8 @@
     },
     {
       "path": "docs/deployment.md",
-      "bytes": 5063,
-      "sha256": "37611169d2893adec6b5e3aef873eaa1d4a97e3068feacdfab4abaad21a32e7b"
+      "bytes": 5941,
+      "sha256": "6e40faf77b056d25a0eca4cd917f57788bcab3eaf7d4675233bfc7ffae5f2f1f"
     },
     {
       "path": "docs/evidence/browser-validation.json",
@@ -84,19 +84,29 @@
       "sha256": "e20a79846286dc493e24da3f40854f21c2069763d73610ba507f5fb4e271cf67"
     },
     {
+      "path": "docs/evidence/public-browser-validation.json",
+      "bytes": 3227,
+      "sha256": "843790315a51714e2d0cb3d860825992c24e8c43fb65be2e1823804f59e0dbec"
+    },
+    {
+      "path": "docs/evidence/public-file-validation.json",
+      "bytes": 3857,
+      "sha256": "19b4e122b897a313072ef4be5551296358e6b0e9976767890eccbe51b69e82a7"
+    },
+    {
       "path": "docs/evidence/sourced-context-validation.json",
       "bytes": 6073,
       "sha256": "4e0d643237f039dddf4ea3f01f6fecf60f89b1d2b053e7226ff461915501fd44"
     },
     {
       "path": "docs/submission.md",
-      "bytes": 13673,
-      "sha256": "1e8d6f3c1e6b0965cfd5b10c3bc0a36f379c4abc6e2cd6412de1116357bf0866"
+      "bytes": 14188,
+      "sha256": "cf82b556c2f0a3391855db849d85dec782d3baa910a8e725387d081b8569317d"
     },
     {
       "path": "docs/validation.md",
-      "bytes": 17646,
-      "sha256": "bf051e0c22aadc3fbac31eb79c545dc0c2f8a83053cca46845cbb690c3af369a"
+      "bytes": 18244,
+      "sha256": "6ac0ceeefd1ab2990875bd56bd59b300c26cd5827c3f3732122faaf51b453312"
     },
     {
       "path": "models/README.md",
@@ -1500,8 +1510,8 @@
     },
     {
       "path": "public/submission/fieldshift-deck.pdf",
-      "bytes": 86631,
-      "sha256": "dd70e649d452d31b84d59820b7f2a96510548cf199ee6dac421169b3ec1855eb"
+      "bytes": 86739,
+      "sha256": "56ccceb96acc6c54db399d62e3cc1de2055b151e5c1dec402722de5d8a5f2154"
     },
     {
       "path": "public/submission/index.html",
@@ -1510,8 +1520,8 @@
     },
     {
       "path": "public/submission/submission-text.txt",
-      "bytes": 13673,
-      "sha256": "1e8d6f3c1e6b0965cfd5b10c3bc0a36f379c4abc6e2cd6412de1116357bf0866"
+      "bytes": 14188,
+      "sha256": "cf82b556c2f0a3391855db849d85dec782d3baa910a8e725387d081b8569317d"
     },
     {
       "path": "public/submission/validation.txt",

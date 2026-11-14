@@ -15,6 +15,14 @@ current field-ID validation, explicit field numbering, country disagreement,
 unsupported allowed crops, provider failure and cancellation after manual edits.
 No generated code or model-selected actions are executed.
 
+Production verification also passed **31 public Chrome checks** on
+https://nasa-hackathon-three.vercel.app/ at source 4af1dab. The optional model loaded,
+inferred and unloaded, and chat completed India planning through step 4 using real
+NASA data. Twelve public files matched local build SHA-256 values; HTTP 200 assets
+include the source ZIP/PDF and model files. /api/health returns 404 for this static
+showcase. Checkpoint reports are docs/evidence/public-browser-validation.json and
+public-file-validation.json; docs/deployment.md records exact release attribution.
+
 ## Executed checks
 
 - `npm.cmd test`: **74 passing tests**. Adapter units/fill/absence, schema changes, cache/coalescing, failures, equal horizons, crop restrictions/country filters, family repeats, pH/drainage, rain-free exposure, leap/year boundaries, static build, model topology/weight integrity, embedding-gradient arithmetic, location-lookup races, process-memory bookkeeping and isolated startup reuse/port collision are covered. Offline scientific observations are explicitly labelled synthetic test inputs only.
@@ -44,7 +52,8 @@ The latest resumed benchmark adds process-memory evidence and is documented in t
 - The first new public release passed crop-country UI checks but its optional model
   failed to load: a broad models/ entry in .vercelignore also removed public/models.
   The ignore is now anchored to /models/. Deployment dry-run checks must explicitly
-  require the three model loading files; the live model path is rechecked after release.
+  require the three model loading files. The corrected release passed the complete
+  public browser flow, including actual model load/inference/unload.
 - The resumed clean-checkout run passed 36/37 tests: startup could serve HTTP 404 while a concurrent deployment test was still creating `dist/client`. Startup tests now serve isolated temporary fixtures. A third startup check verifies that a preview serving another directory is never reused. Normal `npm start` still serves `dist/client`.
 - A reproduced country-lookup race reused a previous location's pending request after coordinates changed. Lookups now coalesce only within the same location revision; an old completion cannot clear a newer task. Two UI regression tests cover moving during lookup and an outdated lookup failure. Evidence submissions also stop if inputs change while awaiting country identification.
 - Browser validation previously served the Node test harness despite production being static. It now builds and serves the actual static preview before checking the workflow, with the same Vercel headers.
@@ -67,7 +76,7 @@ Safari/WebKit, real mobile hardware, independent farmer-question evaluation, mea
 
 The exact challenge brief and supplied Explorer team page were successfully read from their public rendered-data streams. The team is Explorer, Singapore, and was unsubmitted at inspection. The general NASA November 15 local-time deadline and seven-slide/30-second format were verified from official sources; the team owner must check event-specific portal exceptions and perform submission.
 
-A live Vercel deployment is not claimed without authenticated account access and success evidence. Vercel settings are checked in; the earlier private Sites exploration was never published and its adapter was removed. No NASA submission was made by these tools.
+The live Vercel production deployment is verified in the current release record above. The earlier private Sites exploration was never published and its adapter was removed. No NASA submission was made by these tools.
 
 Final release checks: 64 own JavaScript files passed `node --check`; the static preview served the app, seven-page PDF, source ZIP and exact 116,800-byte model weights (HTTP 200). `/api/health` returned 404. The source ZIP was reopened and every file checked against its SHA-256 manifest; it excludes local browser profiles, dependencies, secrets and build outputs. Desktop and 390px screenshots were reviewed after the workflow changes. No public source push or production deployment is implied by local packaging.
 

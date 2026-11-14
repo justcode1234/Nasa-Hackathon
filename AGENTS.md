@@ -231,17 +231,21 @@ state. Do not leave another device relying on an earlier planning assumption.
   Recheck `vercel whoami` and linked project before deploying; never store credentials
   in this repository. The CLI-created .env.local and .vercel directory are ignored.
 - **Deployment:** existing public origin is https://nasa-hackathon-three.vercel.app/ .
-  Source commit a40e516 was pushed and Git integration published it. Public checks
-  caught an unanchored models/ ignore rule excluding public/models; the rule is now
-  root-anchored. Require model.json, tokenizer.json and weights.bin in the deploy
-  dry-run file list, then verify public model load before calling the release done.
-  A deployment
+  Source is pushed to main and Git integration deploys it automatically. The complete
+  31-check public workflow passed on commit 4af1dab, including model load/inference
+  and guided India planning through step 4. Twelve public assets matched the local
+  build hashes. Checkpoint reports are docs/evidence/public-*-validation.json;
+  docs/deployment.md records the deployment ID. Pull main before continuing elsewhere.
+  Public checks caught an unanchored models/ ignore rule excluding public/models;
+  it is now /models/. Require the three model-loading files in every upload dry run.
+  An earlier deployment
   dry run initially included local browser artifacts, so .vercelignore now excludes
   those, local dependencies, credentials and generated output. Build inputs and
   public showcase files remain included. Verify the dry-run file list before upload.
 - **Latest executed checks:** 74 offline tests, 31 static Chrome checks,
   17 Node-backed Chrome checks, 16 Firefox checks and 70 JavaScript syntax checks
   passed. Seven-slide PDF and source ZIP are regenerated before publishing.
+  The public origin also passed all 31 Chrome checks after the model upload fix.
   Reports live under docs/evidence; transient profiles/logs are ignored in artifacts.
   Rerun checks appropriate to future changes and record their actual results here.
 - **Still deferred/unverified:** CSS polishing, real mobile hardware, Safari/WebKit,

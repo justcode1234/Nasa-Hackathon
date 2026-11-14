@@ -36,9 +36,21 @@ an unauthenticated HTTP request on 2026-11-14:
 https://nasa-hackathon-three.vercel.app/ . It returned HTTP 200, but initially served
 the older source revision without the new country/region/town picker. The browser
 also showed Vercel's completed setup page for the same GitHub repository and main
-branch. The latest local crop-country conversation and guided step-4 workflow have
-passed local checks. Publication is pending; public file hashes and the deployed
-workflow must pass before these changes are declared live.
+branch. Git integration has now published the new release. On 2026-11-15 local time,
+all **31 public Chrome checks** passed against this unauthenticated production
+origin, including country/town selection, named crop-country conversation,
+optional model load/inference/unload and chat-driven execution through step 4 with
+real NASA observations. The full browser check used source commit
+`4af1dab0d200305c7eb084d96fc1e53329496961`, deployment
+`dpl_CDgfmouzDJyuRtfiDaEcBdzQJUjY` at
+`nasa-hackathon-8zcgh1l16-justcode1234s-projects.vercel.app`.
+
+Twelve public files matched the local build by SHA-256, including the app modules,
+core worker, GeoNames manifest, deck, source ZIP and all three model-loading files.
+The 116,800-byte weights returned HTTP 200; /api/health returned 404 as intended
+for the static showcase. Reports are docs/evidence/public-browser-validation.json
+and public-file-validation.json. These checkpoint reports identify the tested
+source; later documentation/source-package-only commits preserve the same app code.
 
 ## Publish
 
@@ -66,6 +78,7 @@ Recheck identity/project and inspect `vercel deploy --dry --json` before upload.
 Require public/models/fieldshift-mini/model.json, tokenizer.json and weights.bin
 in that file list. An initial public check caught a broad models/ ignore pattern
 excluding these assets; /models/ now targets only root experiment documentation.
+The corrected release passed public model loading and inference.
 
 An earlier private Sites project was provisioned while exploring hosting. It was
 never published; its hosting adapter was removed when the user chose Vercel.

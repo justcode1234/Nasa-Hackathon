@@ -60,6 +60,8 @@ The Vercel showcase architecture is static HTML/CSS/JavaScript with Leaflet and 
 - GBIF occurrence API: https://techdocs.gbif.org/en/openapi/v1/occurrence ; dataset attribution and licenses remain linked per example record.
 - FAO. 2025. FAOSTAT: Crops and livestock products. Accessed 14 November 2026. https://www.fao.org/faostat/en/#data/QCL . Licence: CC-BY-4.0 plus https://www.fao.org/contact-us/terms/db-terms-of-use/en/ . Adapted to a dated national crop-presence list; no FAO endorsement. UN M49/ISO country-code join: https://unstats.un.org/unsd/methodology/m49/overview/ .
 - UMN Extension crop records and Cornell Extension family-rotation guidance: full per-record source registry in docs/data-sources.md and the app.
+- NParks Singapore kai lan guidance: https://www.nparks.gov.sg/publications-resources/articles/growing-five-leafy-vegetables and https://www.nparks.gov.sg/publications-resources/articles/tips-on-growing-barssica-edibles . Gardening references, not global farm validation.
+- IRRI rice establishment: https://www.knowledgebank.irri.org/images/docs/planting-establishment.pdf ; wheat/tomato UMN knowledge profiles and source-region limits: docs/data-sources.md.
 - Fall armyworm hosts, IPPC/FAO: https://ippc.int/en/the-global-action-for-fall-armyworm-control/about-fall-armyworm/
 - Diamondback moth hosts, UF IFAS: https://ask.ifas.ufl.edu/publication/IN276
 - Leaflet 1.9.4, BSD-2-Clause; TensorFlow.js/WASM 4.22.0, Apache-2.0; esbuild build tooling. Third-party licenses remain applicable.
@@ -78,7 +80,7 @@ The compact model's vocabulary and template splits are optimistic development ch
 
 ## Submission links and portal steps
 
-The prepared demo is a seven-slide HTML presentation and an exactly seven-page PDF in public/submission/. Source, source archive, citations, validation reports and this copy accompany it. Use docs/deployment.md for actual publication status and Vercel settings. No production demo URL is invented while account access is unconfirmed.
+The prepared demo is a seven-slide HTML presentation and an exactly seven-page PDF in public/submission/. Source, source archive, citations, validation reports and this copy accompany it. The public demo is https://nasa-hackathon-three.vercel.app/ ; all 31 production browser checks passed, including guided chat through step 4. Use docs/deployment.md for release attribution and settings.
 
 The official challenge brief was read at the user's exact URL and explicitly lists NASA POWER. See docs/challenge-alignment.md. NASA's official discussion confirms up to seven slides OR a video of at most 30 seconds, English project text and AI disclosure: https://github.com/nasa/spaceapps/discussions/1973 . It states November 15, 2026, 11:59 PM local time. Explorer is registered under Singapore (UTC+8); confirm any event-specific portal exception before the deadline. The full current guide page was unavailable during retrieval, so no additional form limits are invented.
 

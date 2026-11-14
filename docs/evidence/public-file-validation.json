@@ -1,0 +1,108 @@
+{
+  "checkedAt": "2026-11-14T16:54:54.129Z",
+  "origin": "https://nasa-hackathon-three.vercel.app",
+  "commit": "4af1dab0d200305c7eb084d96fc1e53329496961",
+  "results": [
+    {
+      "path": "/index.html",
+      "status": 200,
+      "bytes": 13098,
+      "sha256": "f009e44291ea5c7329530da2a244a45387e534e7ea1cdf5cf1063fd8c520ab1c",
+      "expectedSha256": "f009e44291ea5c7329530da2a244a45387e534e7ea1cdf5cf1063fd8c520ab1c",
+      "matches": true
+    },
+    {
+      "path": "/js/app.js",
+      "status": 200,
+      "bytes": 11789,
+      "sha256": "929f469c306c69c1f49bab61b1ffe8aed382465b55958b95b32c0a87c0d941c9",
+      "expectedSha256": "929f469c306c69c1f49bab61b1ffe8aed382465b55958b95b32c0a87c0d941c9",
+      "matches": true
+    },
+    {
+      "path": "/js/modules/chat.js",
+      "status": 200,
+      "bytes": 12170,
+      "sha256": "cef614bc835eb881513f4d566b8f3248bb5be50efde14c635b11b9bc64829eb9",
+      "expectedSha256": "cef614bc835eb881513f4d566b8f3248bb5be50efde14c635b11b9bc64829eb9",
+      "matches": true
+    },
+    {
+      "path": "/js/modules/workflow-assistant.js",
+      "status": 200,
+      "bytes": 13962,
+      "sha256": "39d449ac2437c3b01a2cc80952b1628994633b8ef16c1bd58637c703e05784b5",
+      "expectedSha256": "39d449ac2437c3b01a2cc80952b1628994633b8ef16c1bd58637c703e05784b5",
+      "matches": true
+    },
+    {
+      "path": "/js/modules/location-picker.js",
+      "status": 200,
+      "bytes": 3919,
+      "sha256": "3be72ddebd78c817a55cb39782282e3b2fd59d119a1caef7d4b07738d162be6b",
+      "expectedSha256": "3be72ddebd78c817a55cb39782282e3b2fd59d119a1caef7d4b07738d162be6b",
+      "matches": true
+    },
+    {
+      "path": "/js/lib/core-worker.bundle.js",
+      "status": 200,
+      "bytes": 334361,
+      "sha256": "efe7c14c5d8aab0fca8fd2facd1879994cb4f5c6f9d20c35395c845694b0d137",
+      "expectedSha256": "efe7c14c5d8aab0fca8fd2facd1879994cb4f5c6f9d20c35395c845694b0d137",
+      "matches": true
+    },
+    {
+      "path": "/data/locations/manifest.json",
+      "status": 200,
+      "bytes": 41276,
+      "sha256": "131ebc97b434261b6880947fa3de1c0394cb8b6712554538ceca11045c39ba7d",
+      "expectedSha256": "131ebc97b434261b6880947fa3de1c0394cb8b6712554538ceca11045c39ba7d",
+      "matches": true
+    },
+    {
+      "path": "/submission/fieldshift-source.zip",
+      "status": 200,
+      "bytes": 2081418,
+      "sha256": "f5c2bb4aac3d9979ce7393e5261945d14b181c12b2d614e07863bc8c6e4ea56e",
+      "expectedSha256": "f5c2bb4aac3d9979ce7393e5261945d14b181c12b2d614e07863bc8c6e4ea56e",
+      "matches": true
+    },
+    {
+      "path": "/submission/fieldshift-deck.pdf",
+      "status": 200,
+      "bytes": 86631,
+      "sha256": "dd70e649d452d31b84d59820b7f2a96510548cf199ee6dac421169b3ec1855eb",
+      "expectedSha256": "dd70e649d452d31b84d59820b7f2a96510548cf199ee6dac421169b3ec1855eb",
+      "matches": true
+    },
+    {
+      "path": "/models/fieldshift-mini/model.json",
+      "status": 200,
+      "bytes": 2361,
+      "sha256": "1fac00ad8b01829edaa50a2ea337805414b74fff9a982471a34b2bcc1ae194f8",
+      "expectedSha256": "1fac00ad8b01829edaa50a2ea337805414b74fff9a982471a34b2bcc1ae194f8",
+      "matches": true
+    },
+    {
+      "path": "/models/fieldshift-mini/tokenizer.json",
+      "status": 200,
+      "bytes": 5441,
+      "sha256": "5d2f908797211736c802e1e30aa5256c690b0bff2e24f3afc25955f5ddc3be65",
+      "expectedSha256": "5d2f908797211736c802e1e30aa5256c690b0bff2e24f3afc25955f5ddc3be65",
+      "matches": true
+    },
+    {
+      "path": "/models/fieldshift-mini/weights.bin",
+      "status": 200,
+      "bytes": 116800,
+      "sha256": "87311c8b2e155102c8992e2894ba3c2c58a8de98603a479ce3ccbabd430484d2",
+      "expectedSha256": "87311c8b2e155102c8992e2894ba3c2c58a8de98603a479ce3ccbabd430484d2",
+      "matches": true
+    },
+    {
+      "path": "/api/health",
+      "status": 404,
+      "matches": true
+    }
+  ]
+}
