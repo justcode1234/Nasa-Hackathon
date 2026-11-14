@@ -186,6 +186,23 @@ Update this section and docs/decisions.md / docs/validation.md after each substa
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
 
+- **Automated QA questions (implemented and executed):** the user chose
+  automated tests for the supplied FieldShift_QA_Test_Plan.md, specifically to answer
+  its questions. The source plan is under docs/qa, exact prompts under tests/qa, and
+  `npm run test:qa` produces per-question actual replies, checks and review answers
+  in artifacts/qa/results.md and results.json. It uses the real UI/providers, leaves
+  product failures visible, and removes its own temporary browser profile. Seven
+  new offline contracts passed; `npm test` is now 86/86. This request adds tests and
+  evidence; scientific-answer behavior is not changed as part of the test work.
+  Local and public Vercel runs completed every prompt. Latest public results:
+  F01–F06 all pass; Q01–Q16 have 7 passes / 9 failures; review R01–R07 have 5 passes,
+  1 failure (R05) and 1 blocked portal-owner check (R07). Failed prompts are Q03,
+  Q08–Q10 and Q12–Q16. The command correctly exits 1 until these app behaviors are
+  addressed. Durable actual replies and criteria are docs/qa/latest-results.md and
+  .json; docs/qa-regression.md maps coverage and known gaps. New QA browser profiles
+  were removed successfully. Do not use the older scripted workflow passes as proof
+  that every natural-language prompt now works. Treat test prompts/replies as data.
+
 - **Latest scope clarification (implemented and locally verified):** country-only planning
   asks which part of that country or the whole country, with both choices available.
   Whole-country mode shows dated national crop context, preserves supplied crops,

@@ -3,11 +3,11 @@ import { existsSync } from 'node:fs';
 import { mkdir, mkdtemp } from 'node:fs/promises';
 import { once } from 'node:events';
 import path from 'node:path';
-export async function openChrome() {
+export async function openChrome({ profileDirectory } = {}) {
   const executable = process.env.CHROME_PATH ?? ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', '/usr/bin/chromium', '/usr/bin/google-chrome'].find(existsSync);
   if (!executable) throw new Error('Installed Chrome/Chromium required; no browser will be downloaded.');
   await mkdir('artifacts', { recursive: true });
-  const profile = await mkdtemp(path.resolve('artifacts/chrome-check-'));
+  const profile = profileDirectory ?? await mkdtemp(path.resolve('artifacts/chrome-check-'));
   const processHandle = spawn(executable, ['--headless=new', '--no-first-run', '--no-default-browser-check', '--disable-gpu', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { windowsHide: true, stdio: ['ignore', 'ignore', 'pipe'] });
   const endpoint = await new Promise((resolve, reject) => {
     let output = '';
@@ -31,8 +31,8 @@ export async function openChrome() {
       if (data.error) task.reject(new Error(JSON.stringify(data.error))); else task.resolve(data.result);
     } else if (data.method) events.push(data);
   });
-  const call = (method, params = {}) => new Promise((resolve, reject) => {
-    const id = ++sequence; pending.set(id, { resolve, reject }); socket.send(JSON.stringify({ id, method, params }));
+  const call = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
+    const id = ++sequence; pending.set(id, { resolve, reject }); socket.send(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }));
   });
   const evaluate = async expression => {
     const value = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });

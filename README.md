@@ -83,11 +83,17 @@ npm run test:live            # real NASA retrieval at three contrasting coordina
 npm run test:browser         # installed Chrome/Chromium/Edge, live sources and UI
 npm run test:node-browser    # Node-backed UI, real NASA and injected upstream failure
 npm run test:firefox         # installed Firefox, separate engine, real data and failure paths
+npm run test:qa              # exact QA-plan prompts, real UI/providers, answer-by-answer report
 node scripts/check-sourced-context.js
 node scripts/benchmark-mini-lm.js
 ```
 
 Browser checks use isolated profiles and built-in Chrome debugging; no browser is downloaded. `CHROME_PATH` can override discovery. Ignored `artifacts/` contains raw reports, screenshots and profiles. Static showcase tests verify no `/api` network requests; Node browser tests verify real `/api` calls and no browser-side NASA retrieval or data-worker load.
+
+The supplied [QA plan and automated answers](docs/qa-regression.md) have a separate
+acceptance runner. It records every actual reply and condition, and currently exits
+1 for nine unmet chatbot expectations. The saved [public report](docs/qa/latest-results.md)
+identifies the gaps. Its temporary browser profile is removed after each run.
 
 Firefox checks use native WebDriver BiDi with a separate temporary profile and no downloaded driver; `FIREFOX_PATH` can override discovery. Chrome process-memory snapshots are included in `node scripts/benchmark-mini-lm.js` on Windows. They count the isolated test browser and descendants, with explicit limits for shared pages and missed short-lived processes. See the [validation record](docs/validation.md).
 

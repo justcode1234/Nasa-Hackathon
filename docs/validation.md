@@ -2,6 +2,24 @@
 
 Date: 2026-11-15 (local). This section supersedes the earlier planning assumptions; the user selected a Node.js backend for local testing alongside a browser-only static Vercel showcase. Previously recorded styling is preserved; no CSS polishing was added.
 
+## Exact QA-plan questions — latest test work
+
+The supplied QA plan is now executable via `npm run test:qa`, with all 16 exact
+chatbot prompts and factual answers to its seven review questions. Seven new
+contract regressions brought `npm test` to **86/86 passing**. Local and public
+browser runs used actual NASA/provider responses and completed all requested cases.
+The public run passed **6/6 priority flows and 7/16 prompts**; nine prompt expectations
+remain unmet. Review questions: 5 pass, 1 fail, 1 blocked (owner portal verification).
+These failures include scope/coordinate parsing, missed crop-family/pH context,
+grain-maize distinction and absent explicit limits for yield/confidence/guarantees.
+Actual replies and per-condition grades are in [the saved report](qa/latest-results.md)
+and [JSON evidence](qa/latest-results.json). See [coverage and reproduction](qa-regression.md).
+The QA command exits 1 for these current failures. Temporary profiles were removed;
+no synthetic NASA observations entered the browser UI. This task adds tests and
+evidence rather than changing the scientific answer handlers.
+
+## Previously verified release workflow
+
 Latest chat/action verification: **79 offline tests, 33 static Chrome checks,
 19 Node-backed Chrome checks and 18 Firefox checks passed**. Both browser delivery
 paths completed the chat-only flow: choose India, ask for a specific location,
