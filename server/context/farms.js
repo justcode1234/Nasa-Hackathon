@@ -74,7 +74,8 @@ export function createPlaceClient({ fetchImpl = fetch, baseUrl = globalThis.proc
     const url = new URL(reverse ? '/reverse' : '/search', baseUrl);
     if (reverse) {
       const location = locationInput(input);
-      url.search = new URLSearchParams({ lat: location.latitude, lon: location.longitude, zoom: 3, format: 'jsonv2', addressdetails: 1 });
+      if (input.detail != null && input.detail !== 'region') throw new AppError('Choose the supported region detail option.');
+      url.search = new URLSearchParams({ lat: location.latitude, lon: location.longitude, zoom: input.detail === 'region' ? 10 : 3, format: 'jsonv2', addressdetails: 1, 'accept-language': 'en' });
     } else {
       if (typeof input.q !== 'string' || input.q.trim().length < 2 || input.q.length > 120) throw new AppError('Enter a place name of 2–120 characters.');
       url.search = new URLSearchParams({ q: input.q.trim(), format: 'jsonv2', addressdetails: 1, limit: 5 });
@@ -82,7 +83,8 @@ export function createPlaceClient({ fetchImpl = fetch, baseUrl = globalThis.proc
     const raw = await run(url);
     if ((!reverse && !Array.isArray(raw)) || (reverse && !raw.address)) throw new AppError('No place context was returned for this selection.', 404);
     const places = (reverse ? [raw] : raw).map(p => ({ name: p.display_name, latitude: Number(p.lat), longitude: Number(p.lon),
-      countryCode: p.address?.country_code?.toUpperCase() ?? null, country: p.address?.country ?? null }));
+      countryCode: p.address?.country_code?.toUpperCase() ?? null, country: p.address?.country ?? null,
+      region: p.address?.state ?? p.address?.region ?? null }));
     return { places, source: { title: 'OpenStreetMap / Nominatim', url: 'https://www.openstreetmap.org/copyright' }, retrievedAt: raw._fieldshiftRetrievedAt ?? new Date().toISOString() };
   };
 }

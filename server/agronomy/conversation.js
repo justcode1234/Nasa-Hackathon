@@ -91,7 +91,7 @@ export function answerConversation(question, { country: selectedCountry = '', co
   const push = (kind, text, sourceIds = []) => blocks.push({ kind, text, sourceIds });
   if (profile) {
     const fact = profile[topic === 'production' ? 'overview' : topic];
-    if (topic !== 'production') push(fact ? 'sourced crop facts' : 'evidence gap', fact ?? `I do not have a verified ${topic} rule for ${name}.`, fact ? profile.topicSourceIds?.[topic] ?? profile.sourceIds : []);
+    if (topic !== 'production') push(fact ? 'sourced crop facts' : 'evidence gap', (fact ?? `I do not have a verified ${topic} rule for ${name}.`) + (profile.screeningEligible === false && topic !== 'rotation' ? ` ${profile.limitation ?? `${name} has knowledge coverage but is not in the rotation-screening catalog.`}` : ''), fact ? profile.topicSourceIds?.[topic] ?? profile.sourceIds : []);
     if (country === 'SG' && profile.id === 'kai-lan') push('country context', 'NParks provides Singapore gardening guidance for kai lan. Local cultivar and farm conditions still need checking.', profile.sourceIds);
     else if (!record) push('reference scope', profile.referenceScope ?? `The growing reference is from ${COUNTRY_NAMES.of(profile.sourceCountry)}; ${countryName ?? 'your country'}-specific growing guidance is not verified here.`, []);
     if (topic === 'rotation') push('screening limit', profile.limitation ?? `${name} has knowledge coverage but is not in the four-crop rotation-screening catalog.`, []);

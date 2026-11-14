@@ -65,7 +65,7 @@ caches are not retained. No new browser, driver, model or dependency is download
 Real mobile hardware, independent agronomic assessment, subjective readability,
 and portal eligibility/submission remain outside automatic acceptance.
 
-## Current run
+## Initial baseline before assistant fixes
 
 The initial development-machine baseline was 79/79 passing. After adding the seven
 contract regressions, `npm.cmd test` passed 86/86. The runner completed all six
@@ -76,9 +76,9 @@ The seven review questions yielded five passes, one failure (R5, missing explici
 confidence limitations in Q14), and one blocked owner check (R7, portal submission).
 Both new temporary profiles were successfully removed.
 
-The saved [public answer report](qa/latest-results.md) and
-[full JSON evidence](qa/latest-results.json) preserve the latest verified run.
-The QA command currently exits **1** because these product behaviors remain unmet:
+The saved [baseline answer report](qa/baseline-results.md) and
+[full JSON evidence](qa/baseline-results.json) preserve the initial failed run.
+That baseline QA command exited **1** for the following behaviors:
 
 | IDs | Actual gap exposed by the exact prompt |
 | --- | --- |
@@ -90,6 +90,16 @@ The QA command currently exits **1** because these product behaviors remain unme
 | Q13/Q14/Q16 | Generic guidance/crop facts omit an explicit yield, confidence or guarantee limitation |
 | Q15 | The grain-maize versus sweet-corn question is routed into crop-list validation |
 
-These are recorded acceptance gaps; the report does not equate every failed
-condition with an invented scientific value. This change adds tests and evidence;
-it does not modify the app's scientific-answer behavior.
+These are recorded baseline gaps; the report does not equate every failed
+condition with an invented scientific value.
+
+## Assistant improvement verification
+
+The shared answer and workflow parsers now address all nine gaps. Current local
+model-disabled and model-enabled runs pass all sixteen questions and six flows.
+The test criteria and original question text have not been relaxed. Use
+`$env:QA_MODEL='1'; npm.cmd run test:qa` to require actual model loading/inference;
+omit QA_MODEL for deterministic fallback. Each report identifies the mode and
+captures model metrics alongside actual replies. Retrained weights and public
+deployment are still being evaluated; final reports will replace latest-results
+only after verification. Portal submission remains an owner check.

@@ -7,7 +7,7 @@ const kindFor={crops:['sourced crop facts'],soil:['regional soil model'],water:[
 async function score(question){
   const words=question.toLowerCase().match(/[a-z]+/g)??[];
   const q=encode(`question ${question} answer`);
-  if(q.length>22||!q.length||q.filter(id=>id===1).length/q.length>.5)return{topic:null,accepted:false};
+  if(q.length>tokenizer.length-16||!q.length||q.filter(id=>id===1).length/q.length>.5)return{topic:null,accepted:false};
   const rows=tokenizer.topics.map(topic=>[...q,...encode(topic.reply),2]);
   const input=tf.tensor2d(rows.map(ids=>Array.from({length:tokenizer.length},(_,i)=>ids[i]??0)),[rows.length,tokenizer.length],'int32');
   const output=model.predict(input), probabilities=await output.array();

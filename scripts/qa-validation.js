@@ -21,6 +21,7 @@ for (const item of plan.cases) {
   assert.ok(row?.includes('`'+item.prompt+'`') && row.includes(item.expected),`Fixture must preserve the supplied ${item.id} question and expectation`);
 }
 const results = [], reviews = [];
+const modelEnabled = process.env.QA_MODEL === '1';
 let browser, app, base = process.env.TEST_BASE_URL, cleanupError;
 const profileRoot = await realpath(tmpdir());
 const profile = await mkdtemp(path.join(profileRoot, 'fieldshift-qa-'));
@@ -51,16 +52,20 @@ try {
     await waitFor(`document.querySelector('#country-status').textContent.includes('crop production categories') && document.querySelector('#pest-country').value===${JSON.stringify(code)} && !document.querySelector('#place-region').disabled`);
   };
   const openChat = async () => {
-    await evaluate(`if(document.querySelector('#chat-panel').hidden)document.querySelector('#chat-toggle').click();document.querySelector('#unload-model').click();`);
+    await evaluate(`if(document.querySelector('#chat-panel').hidden)document.querySelector('#chat-toggle').click();`);
+    if(modelEnabled)await waitFor(`document.querySelector('#model-status').textContent.includes('model ready')`,30_000);
+    else await evaluate(`document.querySelector('#unload-model').click();`);
   };
   const answer = async question => {
+    const before = await evaluate('window.fieldshiftModelSelections ?? 0');
     await fill('question', question);
     await evaluate(`document.querySelector('#question-form').requestSubmit()`);
     await waitFor(`!document.querySelector('#ask').disabled && document.querySelector('#answer-status').textContent.startsWith('Answer ready')`, 90_000);
+    if(modelEnabled && !/^(?:hi|hello)[!. ]*$/i.test(question))await waitFor(`(window.fieldshiftModelSelections ?? 0)>${before}`,30_000);
     return evaluate(`(() => { const last=document.querySelector('#chat-history article:last-child');return {
       paragraphs:[...last.querySelectorAll(':scope > p')].map(node=>node.textContent),
       links:[...last.querySelectorAll('a')].map(node=>({title:node.textContent,url:node.href})),
-      buttons:[...last.querySelectorAll('button')].map(node=>node.textContent),
+      buttons:[...last.querySelectorAll('button')].map(node=>node.textContent),model:window.fieldshiftModelMetrics ?? null,
       state:{country:document.querySelector('#pest-country').value,latitude:document.querySelector('#latitude').value,longitude:document.querySelector('#longitude').value,
         scenarios:document.querySelectorAll('.scenario').length,evidenceElements:document.querySelector('#evidence-output').children.length}
     }; })()`);
@@ -180,7 +185,7 @@ finally {
 const counts = items => Object.fromEntries(['PASS','FAIL','BLOCKED'].map(status=>[status,items.filter(result=>result.status===status).length]));
 const summary = { ...counts(results), flows:counts(results.filter(result=>/^F\d/.test(result.id))), prompts:counts(results.filter(result=>/^Q\d/.test(result.id))), reviews:counts(reviews) };
 const report = { checkedAt:new Date().toISOString(),origin:base,sourcePlan:plan.source,sourcePlanSha256:plan.sourceSha256,
-  mode:'Actual browser UI, deterministic evidence mode; real providers, no synthetic NASA readings',
+  mode:`Actual browser UI, ${modelEnabled ? 'compact model loaded and inference executed' : 'model disabled, deterministic evidence mode'}; real providers, no synthetic NASA readings`,
   summary,profileCleanup:{removed:!cleanupError,error:cleanupError},reviews,results,
   limitations:['Explicit automated assertions, not an LLM judge or agronomic accuracy score.','One installed Chrome browser and one observed provider-availability run.','Portal submission, farmer validation and real-device usability are not inferred.'] };
 await writeFile(path.join(reportDirectory,'results.json'),JSON.stringify(report,null,2)+'\n');

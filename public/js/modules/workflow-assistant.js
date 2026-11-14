@@ -1,11 +1,12 @@
 import { api } from '../lib/api.js';
 import { COUNTRY_NAMES, findCountries, normalizeName } from '../lib/countries.js';
+import { isEvidenceQuestion } from '../lib/chat-intent.js';
 
 export function parseWorkflowMessage(question, active = false) {
   const text = normalizeName(question);
   if (/^(cancel|stop|cancel planning|stop planning)$/.test(text)) return active ? { cancel: true } : null;
   // Knowledge questions stay read-only, even during a guided planning session.
-  if (/^(tell me about|what is|what are|how long|why |hi\b|hello\b)/.test(text)) return null;
+  if (isEvidenceQuestion(question) || /^(hi|hello)\b/.test(text)) return null;
   const countries = findCountries(question);
   const wholeCountry = /\b(?:whole|entire) (?:country|nation)\b|\bnationwide\b|\bnational overview\b/.test(text) ||
     /^(?:all|whole|entire|all of it|whole thing)(?: please)?$/.test(text) || countries.some(country =>
@@ -13,13 +14,13 @@ export function parseWorkflowMessage(question, active = false) {
   const specificArea = /\b(?:specific|particular) (?:area|part|region)\b|^choose a (?:region|town|field)$/.test(text);
   const intent = /\b(help me|guide me|walk me|take me|pick|select|choose|find|use|set|plan|rotate|compare|continue|next|proceed)\b/.test(text);
   if (!active && !wholeCountry && !specificArea && !(intent && (/\b(farm|farmland|field|rotation|rotate|crops|baseline|compare|step|task|point|coordinates)\b/.test(text) || countries.length))) return null;
-  const point = /(?:^|\bat\s+|coordinates?\s*:?\s*)([-+]?\d{1,3}(?:\.\d+)?)\s*,\s*([-+]?\d{1,3}(?:\.\d+)?)(?=\s|[.;]|$)/i.exec(question);
+  const point = /(?:^|[^\d.\w+-])([-+]?\d{1,3}(?:\.\d+)?)\s*,\s*([-+]?\d{1,3}(?:\.\d+)?)(?=$|[\s,;!?)\]]|\.(?!\d))/i.exec(question);
   const location = point ? { latitude: Number(point[1]), longitude: Number(point[2]) } : null;
   const clause = /\b(?:crops|baseline|(?:existing )?rotation)\s*(?:are|is|:|=)\s*(.+)/i.exec(question)?.[1] ??
     /\b(?:with (?:the )?crops|based on (?:these crops[: ]+)?|rotate:|farmer provides|currently grow|i grow)\s*(.+)/i.exec(question)?.[1] ??
     (/\brotate\s+(.+[,→].+)/i.exec(question)?.[1]);
   let cropText = clause?.split(/[.;]|\b(?:in|at|near|irrigation|priority|starting|planning year|reference year|soil)\b/i)[0].trim();
-  if (!cropText && active && !location && /,|→|->|\bthen\b/.test(question) && !intent) cropText = question;
+  if (!cropText && active && !location && !wholeCountry && !specificArea && !countries.length && /,|→|->|\bthen\b/.test(question) && !intent && !/\b(?:i|want|country|farm|not|near|region|state)\b/i.test(question)) cropText = question;
   const baseline = cropText?.split(/\s*(?:,|→|->|\bthen\b|\bfollowed by\b|\band\b)\s*/i).map(s => s.trim()).filter(Boolean);
   const allowedText = /\b(?:allowed crops|alternatives)\s*(?:are|:|=)\s*(.+)/i.exec(question)?.[1]?.split(/[.;]/)[0];
   const allowed = allowedText?.split(/\s*(?:,|\band\b)\s*/i).filter(Boolean);
@@ -98,15 +99,27 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       if (state.location || state.farm || state.regionCode) { await run('chooseCountry', state.country); state = getState(); }
     }
     if (parsed.specificArea) { scope = 'area'; actions.showStep('location'); return areaPrompt(countryName); }
-    const explicitPoint = parsed.location || parsed.farmId || parsed.farmIndex || parsed.usePoint || parsed.useFarm || choice?.type === 'farm' || choice?.type === 'town';
+    const explicitPoint = parsed.location || parsed.farmId || parsed.farmIndex || (!parsed.wholeCountry && (parsed.usePoint || parsed.useFarm)) || choice?.type === 'farm' || choice?.type === 'town';
     if (parsed.wholeCountry && !explicitPoint) return countryOverview(state);
     if (parsed.location) {
       const { latitude, longitude } = parsed.location;
       if (!Number.isFinite(latitude) || Math.abs(latitude) > 90 || !Number.isFinite(longitude) || Math.abs(longitude) > 180) return reply('Those coordinates are outside the latitude/longitude range. Please give latitude, longitude in decimal degrees.');
       progress('Step 1: checking the country at those coordinates…');
-      const result = await request(`/api/places?${new URLSearchParams(parsed.location)}`); guard();
+      const result = await request(`/api/places?${new URLSearchParams({...parsed.location,detail:'region'})}`); guard();
       const foundCountry = result.places[0]?.countryCode;
       if (!foundCountry || foundCountry !== state.country) return reply(`Those coordinates ${foundCountry ? `were identified in ${COUNTRY_NAMES.of(foundCountry)}` : 'could not be assigned to a country'}. Please correct the point or country before I continue.`);
+      let list = locationLists.get(state.country);
+      if (!list) { list = await request(`/api/locations?country=${state.country}`); guard(); locationLists.set(state.country,list); while(locationLists.size>4)locationLists.delete(locationLists.keys().next().value); }
+      const q = normalizeName(question);
+      const regions = list.regions.filter(region=>normalizeName(region.name)!==normalizeName(countryName) && (` ${q} `).includes(` ${normalizeName(region.name)} `));
+      const fold = value=>normalizeName(value).normalize('NFD').replace(/\p{M}/gu,'');
+      if (regions.length>1) return reply('Several regions are named. Which region should the supplied point be in?');
+      if (regions.length===1 && (!result.places[0]?.region || fold(result.places[0].region)!==fold(regions[0].name))) return reply(`The point could not be verified in ${regions[0].name}. The reverse lookup reports ${result.places[0]?.region ?? 'no region'}. Please check the place and coordinates before I continue.`);
+      const towns = list.places.filter(place=>(!regions.length || place.regionCode===regions[0].id) && normalizeName(place.name).length>=3 && (` ${q} `).includes(` ${normalizeName(place.name)} `));
+      if (towns.length) {
+        const distance = place=>{const rad=Math.PI/180,dy=(place.latitude-latitude)*rad,dx=(place.longitude-longitude)*rad;const a=Math.sin(dy/2)**2+Math.cos(latitude*rad)*Math.cos(place.latitude*rad)*Math.sin(dx/2)**2;return 6371*2*Math.asin(Math.min(1,Math.sqrt(a)));};
+        if (!towns.some(place=>distance(place)<=50)) return reply(`Those coordinates are more than 50 km from the named town in the saved place list. Please confirm the town or point. This is a town-proximity check, not a farm-boundary measurement.`);
+      }
       await run('chooseLocation', parsed.location, foundCountry); pointAccepted = true; scope = 'area'; state = getState();
     }
     if (choice?.type === 'farm' || parsed.farmId || parsed.farmIndex) {

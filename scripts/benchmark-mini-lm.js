@@ -31,7 +31,7 @@ try{
     browserProcessMemory:summarizeMemory(memorySamples),browserProcessMemorySamples:memorySamples,
     limitations:['Development question wording is synthetic and not agronomist-reviewed.','Raw generated words never reach scientific UI output.','WASM heap capacity and tensor bytes are not total browser peak memory.']};
   await writeFile('artifacts/mini-lm-benchmark.json',JSON.stringify(result,null,2));
-  assert.ok(cold.weightBytes<150000);
+  assert.ok(cold.weightBytes<256*1024,'Keep this experimental model below its 256 KiB weight budget');
   assert.ok(firstAnswerMs<1000,'Evidence answer should not wait for neural inference');
   assert.ok(inference.inferenceMs<1000,'Compact-model inference target on this test machine');
   console.log(JSON.stringify({...result,browserProcessMemorySamples:undefined}));

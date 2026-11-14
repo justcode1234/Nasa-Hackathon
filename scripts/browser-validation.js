@@ -2,7 +2,8 @@
 import assert from 'node:assert/strict';
 import { validateConversation, validateGuidedWorkflow } from './chat-validation.js';
 import { spawn } from 'node:child_process';
-import { mkdir, mkdtemp, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, writeFile, readFile, realpath, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { once } from 'node:events';
@@ -16,7 +17,8 @@ const chromePath = process.env.CHROME_PATH ?? [
 ].find(existsSync);
 if (!chromePath) throw new Error('Set CHROME_PATH to an installed Chromium browser. No browser will be downloaded.');
 await mkdir('artifacts', { recursive: true });
-const profile = await mkdtemp(path.resolve('artifacts/chrome-validation-'));
+const profileRoot=await realpath(tmpdir());
+const profile = await mkdtemp(path.join(profileRoot,'fieldshift-validation-'));
 const externalBase = process.env.TEST_BASE_URL;
 let app, base;
 if (externalBase) {
@@ -288,7 +290,7 @@ try {
     const measured = await evaluate('window.fieldshiftModelMetrics');
     await writeFile('artifacts/browser-mini-model-check.json', JSON.stringify(measured, null, 2));
     assert.ok(measured.inferenceMs > 0);
-    assert.equal(measured.weightBytes, 116800);
+    assert.equal(measured.weightBytes, JSON.parse(await readFile('public/models/fieldshift-mini/evaluation.json','utf8')).weightBytes);
     check('custom compact browser language model loads and selects evidence with recorded metrics');
     await evaluate('document.querySelector("#unload-model").click()');
     assert.match(await evaluate('document.querySelector("#model-status").textContent'), /No model loaded/);
@@ -334,4 +336,7 @@ try {
   socket?.close(); browserSocket?.close();
   chrome.kill();
   if (app) await new Promise(resolve => app.close(resolve));
+  const target=await realpath(profile);
+  if(path.dirname(target)!==profileRoot || !path.basename(target).startsWith('fieldshift-validation-'))throw new Error('Temporary validation profile escaped its intended root');
+  await rm(target,{recursive:true,force:true,maxRetries:8,retryDelay:150});
 }

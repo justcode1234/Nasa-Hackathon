@@ -54,9 +54,9 @@ the allowed screened crops. Manual form edits cancel pending actions; say “con
 to use the current form. “Cancel” ends guided planning. Actions are fixed app code,
 independent of model generation, and use no arbitrary URLs or generated code.
 
-Chat renders sourced evidence immediately. A custom **29,200-parameter autoregressive word language model** loads in a worker when chat opens. Its trained weights are **116.8 KB**. It is an experimental small language model, not a general-purpose LLM or an agronomic authority. A relevance guard leaves inconclusive answers on deterministic retrieval; raw generated scientific statements are never displayed.
+Chat renders sourced evidence immediately. A custom **39,274-parameter autoregressive word language model** loads in a worker when chat opens. Its trained weights are **157.1 KB**. It is experimental, not a general-purpose LLM or agronomic authority. A relevance guard can prioritize existing retrieved evidence; raw generated scientific statements are never displayed. Model-disabled chat uses the same source facts and validated actions.
 
-One actual Chrome/WASM run measured about **0.90 s cold load**, **0.65 s warm load**, **84 ms inference**, and **10 ms to the first evidence answer**. Those are development-machine measurements, not device guarantees. The model got 75/90 development selections and only 9/18 free-form selections; those tests are not crop-recommendation accuracy. See [model card](models/README.md), [training notebook](notebooks/llm_training.ipynb) and [recorded validation](docs/validation.md).
+The retrained model matched **14/36 new free-form development questions**, versus **8/36** before; overall **85/126**, versus **83/126**. Legacy matches decreased from 75/90 to 71/90, so the improvement is modest. One Chrome/WASM run measured **3.26 s cold load**, **0.16 s warm load**, **20 ms inference**, and **4 ms first evidence response**. These are development measurements, not crop-recommendation accuracy or device guarantees. See the [model card](models/README.md), [training notebook](notebooks/llm_training.ipynb) and [validation record](docs/validation.md).
 
 The earlier 184 MB SmolLM2 experiment and a 12.5 MB TinyStories candidate were benchmarked. They are not the default assistant: the latter failed both evidence-following checks. No cloud model inference occurs.
 

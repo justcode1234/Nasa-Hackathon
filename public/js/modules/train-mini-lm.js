@@ -13,16 +13,17 @@ window.runMiniTraining = async () => {
   await tf.setBackend('wasm'); await tf.ready();
   const {registerEmbeddingGradient}=await import('./wasm-training-kernel.js');registerEmbeddingGradient(tf);
   const tokens = text => text.toLowerCase().match(/[a-z]+|[.?]/g) ?? [];
-  const vocabulary = ['<pad>', '<unk>', '<end>', ...new Set(corpus.rows.flatMap(row => tokens(`question ${row.question} answer ${row.reply}`)))];
-  const wordIndex = new Map(vocabulary.map((word, i) => [word, i]));
-  const encode = text => tokens(text).map(t => wordIndex.get(t) ?? 1);
-  const length = 40;
   const training = corpus.rows.filter(row => row.split === 'train');
   const validation = corpus.rows.filter(row => row.split === 'validation');
+  const vocabulary = ['<pad>', '<unk>', '<end>', ...new Set(training.flatMap(row => tokens(`question ${row.question} answer ${row.reply}`)))];
+  const wordIndex = new Map(vocabulary.map((word, i) => [word, i]));
+  const encode = text => tokens(text).map(t => wordIndex.get(t) ?? 1);
+  const length = 48;
   const makeData = rows => {
     const x=[], y=[];
     for (const row of rows) {
-      const ids=[...encode(`question ${row.question} answer ${row.reply}`), 2];
+      const prefix=encode(`question ${row.question} answer`);
+      const ids=[...prefix,...encode(row.reply), 2];
       x.push(Array.from({length},(_,i)=>ids[i]??0));
       y.push(Array.from({length},(_,i)=>ids[i+1]??0));
     }
@@ -38,32 +39,46 @@ window.runMiniTraining = async () => {
     return tf.metrics.categoricalCrossentropy(truth,prediction).mul(mask).sum().div(mask.sum().maximum(1));
   })});
   const start=performance.now();
-  await model.fit(data.x,data.y,{epochs:50,batchSize:32,shuffle:false,validationData:[val.x,val.y],callbacks:{onEpochEnd:async(epoch,logs)=>{
-    window.trainingProgress={epoch:epoch+1,loss:logs.loss,valLoss:logs.val_loss,elapsedMs:performance.now()-start,backend:tf.getBackend()};
+  const test=corpus.rows.filter(row=>row.split==='test');
+  const evaluateModel = async (candidate, words, sequenceLength, examples=test) => {
+    const ids=new Map(words.map((word,i)=>[word,i]));
+    const encodeWith=text=>tokens(text).map(word=>ids.get(word)??1);
+    const results=[];
+    for(const row of examples){
+      const prefix=encodeWith(`question ${row.question} answer`);
+      const sequences=corpus.topics.map(topic=>[...prefix,...encodeWith(topic.reply),2]);
+      const x=tf.tensor2d(sequences.map(seq=>Array.from({length:sequenceLength},(_,i)=>seq[i]??0)),[sequences.length,sequenceLength],'int32');
+      const prediction=candidate.predict(x), values=await prediction.array();
+      const scores=sequences.map((seq,r)=>{let total=0,n=0;for(let i=prefix.length-1;i<Math.min(sequenceLength,seq.length-1);i++){total-=Math.log(Math.max(values[r][i][seq[i+1]],1e-8));n++;}return total/Math.max(1,n);});
+      x.dispose();prediction.dispose();
+      results.push({question:row.question,expected:row.topic,predicted:corpus.topics[scores.indexOf(Math.min(...scores))].id,freeform:row.group.includes('freeform'),newHoldout:row.group.includes('v2-freeform')});
+    }
+    return {correct:results.filter(r=>r.expected===r.predicted).length,testExamples:results.length,newHoldoutCorrect:results.filter(r=>r.newHoldout&&r.expected===r.predicted).length,newHoldoutExamples:results.filter(r=>r.newHoldout).length,results};
+  };
+  const oldTokenizer=await(await fetch('/models/fieldshift-mini/tokenizer.json')).json();
+  const oldModel=await tf.loadLayersModel('/models/fieldshift-mini/model.json');
+  const baseline=await evaluateModel(oldModel,oldTokenizer.vocabulary,oldTokenizer.length);oldModel.dispose();
+  let best=null,bestLoss=Infinity,bestEpoch=0,bestValidationCorrect=-1;
+  // Checkpoints are selected using validation routing, never held-out answers.
+  await model.fit(data.x,data.y,{epochs:100,batchSize:32,shuffle:false,validationData:[val.x,val.y],callbacks:{onEpochEnd:async(epoch,logs)=>{
+    if((epoch+1)%5===0){
+      const scored=await evaluateModel(model,vocabulary,length,validation);
+      if(scored.correct>bestValidationCorrect || (scored.correct===bestValidationCorrect && logs.val_loss<bestLoss)){
+        best?.forEach(weight=>weight.dispose());best=model.getWeights().map(weight=>weight.clone());bestLoss=logs.val_loss;bestEpoch=epoch+1;bestValidationCorrect=scored.correct;
+      }
+    }
+    window.trainingProgress={epoch:epoch+1,loss:logs.loss,valLoss:logs.val_loss,bestEpoch,bestValidationCorrect,elapsedMs:performance.now()-start,backend:tf.getBackend()};
     await tf.nextFrame();
   }}});
-  // Score only answer words, so the model's likelihood of the question cannot bias routing.
-  const select = async question => {
-    const q=encode(`question ${question} answer`);
-    const sequences=corpus.topics.map(topic=>[...q,...encode(topic.reply),2]);
-    const input=tf.tensor2d(sequences.map(ids=>Array.from({length},(_,i)=>ids[i]??0)),[sequences.length,length],'int32');
-    const prediction=model.predict(input); const values=await prediction.array();
-    const scores=sequences.map((ids,row)=>{
-      let score=0,count=0;
-      for(let i=Math.max(0,q.length-1);i<Math.min(length,ids.length-1);i++){score-=Math.log(Math.max(values[row][i][ids[i+1]],1e-8));count++;}
-      return score/Math.max(1,count);
-    });
-    input.dispose();prediction.dispose();
-    return corpus.topics[scores.indexOf(Math.min(...scores))].id;
-  };
-  const test=corpus.rows.filter(row=>row.split==='test');
-  const results=[];
-  for(const row of test) results.push({question:row.question,expected:row.topic,predicted:await select(row.question),freeform:row.group.includes(':freeform:')});
+  model.setWeights(best);best.forEach(weight=>weight.dispose());
+  const evaluated=await evaluateModel(model,vocabulary,length),results=evaluated.results;
   let artifacts;
   await model.save(tf.io.withSaveHandler(async value=>{artifacts=value;return{modelArtifactsInfo:{dateSaved:new Date(),modelTopologyType:'JSON'}};}));
   const bytes=new Uint8Array(artifacts.weightData);let binary='';for(let i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);
   window.miniTrainingResult={modelTopology:artifacts.modelTopology,weightSpecs:artifacts.weightSpecs,weightBase64:btoa(binary),vocabulary,topics:corpus.topics,length,
     metrics:{parameters:model.countParams(),weightBytes:bytes.length,trainExamples:training.length,validationExamples:validation.length,testExamples:test.length,
-      correct:results.filter(r=>r.expected===r.predicted).length,freeformCorrect:results.filter(r=>r.freeform&&r.expected===r.predicted).length,
-      freeformExamples:results.filter(r=>r.freeform).length,trainingMs:performance.now()-start,results}};
+      correct:evaluated.correct,freeformCorrect:results.filter(r=>r.freeform&&r.expected===r.predicted).length,
+      freeformExamples:results.filter(r=>r.freeform).length,newHoldoutCorrect:evaluated.newHoldoutCorrect,newHoldoutExamples:evaluated.newHoldoutExamples,baseline,bestEpoch,bestValidationLoss:bestLoss,
+      bestValidationCorrect,checkpointSelection:'Validation continuation-selection correct count, then validation next-word loss; checked every five epochs.',
+      vocabularySource:corpus.vocabularySource,loss:'Next-word cross entropy across question and answer; padding masked. Routing scores answer continuations only.',trainingMs:performance.now()-start,results}};
 };

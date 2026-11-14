@@ -2,6 +2,19 @@
 
 ## Current accepted user decisions — supersede the earlier G0 plan
 
+- **Improve the assistant and retrain, rather than stop at QA (2026-11-15).**
+  The user expanded the earlier tests-only task to fixing the nine exposed gaps
+  and improving the optional tiny language model. Scientific capability limits
+  and farmer-input checks belong in the shared deterministic answer layer, before
+  conversational prose. Read-only questions cannot mutate the planning form.
+  Country-wide requests cannot retain point weather; combined place/coordinate
+  commands verify country, named region and town proximity before loading NASA.
+  Extra synthetic development wording is separate from the sixteen acceptance
+  questions. Vocabulary uses training rows only; checkpoints use validation data.
+  Candidate artifacts are reviewed in artifacts/mini-candidate before promotion.
+  Worse candidates are rejected. Test scores are not agronomic confidence.
+  Optional inference can prioritize an existing retrieved paragraph, retaining all
+  text and caveats; guarded input/limit answers and workflow actions are unchanged.
 - **Ask geographic scope before requesting coordinates (2026-11-15).** Country-only
   planning asks which part of the country or the whole country. Whole-country mode
   presents dated FAOSTAT context, preserves supplied crops and clears any old field

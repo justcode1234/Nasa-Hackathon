@@ -2,21 +2,42 @@
 
 Date: 2026-11-15 (local). This section supersedes the earlier planning assumptions; the user selected a Node.js backend for local testing alongside a browser-only static Vercel showcase. Previously recorded styling is preserved; no CSS polishing was added.
 
-## Exact QA-plan questions — latest test work
+## Assistant improvements — verification in progress
+
+The nine QA failures have targeted shared answer/parser fixes. The local showcase
+now passes **16/16 exact prompts and 6/6 flows**, both with the shipped compact
+model disabled and enabled. Both runs use real providers. `npm.cmd test` passes
+**93/93**, including additional phrasings, regional/coordinate disagreement,
+town-distance checks and explicit scientific capability limits. The Node-backed
+browser workflow also passes; current reports are in artifacts until final release
+verification. The accepted 39,274-parameter model has 157,096 weight bytes. It
+matched 14/36 new free-form development questions versus 8/36 before, and 85/126
+overall versus 83/126; legacy matches fell 75/90 to 71/90. Vocabulary uses training
+rows only, and checkpoint selection uses validation data. The first answer-only
+candidate was rejected. Exact comparison/failures and integrity hashes are in
+models/README.md and public/models/fieldshift-mini/evaluation.json.
+
+Current checks: 93 offline, 33 static Chrome, 19 Node-backed Chrome and 18 Firefox
+workflow checks passed, plus 16/16 QA questions and 6/6 flows with the accepted
+model enabled and disabled. The separate benchmark exercised actual generation,
+load, inference, reload and process-memory snapshots. All default Python cells in
+the three Jupyter notebooks passed; optional Python training remained disabled.
+Public deployment verification is next. No perfect-model claim is made.
+
+## Exact QA-plan questions — initial baseline before fixes
 
 The supplied QA plan is now executable via `npm run test:qa`, with all 16 exact
 chatbot prompts and factual answers to its seven review questions. Seven new
 contract regressions brought `npm test` to **86/86 passing**. Local and public
 browser runs used actual NASA/provider responses and completed all requested cases.
 The public run passed **6/6 priority flows and 7/16 prompts**; nine prompt expectations
-remain unmet. Review questions: 5 pass, 1 fail, 1 blocked (owner portal verification).
+were unmet. Review questions: 5 pass, 1 fail, 1 blocked (owner portal verification).
 These failures include scope/coordinate parsing, missed crop-family/pH context,
 grain-maize distinction and absent explicit limits for yield/confidence/guarantees.
-Actual replies and per-condition grades are in [the saved report](qa/latest-results.md)
-and [JSON evidence](qa/latest-results.json). See [coverage and reproduction](qa-regression.md).
-The QA command exits 1 for these current failures. Temporary profiles were removed;
-no synthetic NASA observations entered the browser UI. This task adds tests and
-evidence rather than changing the scientific answer handlers.
+Baseline replies and grades remain in [the saved report](qa/baseline-results.md)
+and [JSON evidence](qa/baseline-results.json). See [coverage](qa-regression.md).
+That baseline command exited 1. The subsequent fixes above close these acceptance
+gaps; the original failed evidence remains available for comparison.
 
 ## Previously verified release workflow
 

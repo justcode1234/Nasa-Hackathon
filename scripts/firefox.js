@@ -1,7 +1,8 @@
 // Native WebDriver BiDi: https://developer.mozilla.org/en-US/docs/Web/WebDriver/How_to/Create_BiDi_connection
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdir, mkdtemp } from 'node:fs/promises';
+import { mkdir, mkdtemp, realpath, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { once } from 'node:events';
 import path from 'node:path';
 
@@ -10,7 +11,13 @@ export async function openFirefox() {
     'C:/Program Files (x86)/Mozilla Firefox/firefox.exe', '/usr/bin/firefox'].find(existsSync);
   if (!executable) throw new Error('Installed Firefox required; no browser or driver will be downloaded.');
   await mkdir('artifacts', { recursive: true });
-  const profile = await mkdtemp(path.resolve('artifacts/firefox-check-'));
+  const profileRoot=await realpath(tmpdir());
+  const profile = await mkdtemp(path.join(profileRoot,'fieldshift-firefox-'));
+  async function removeProfile(){
+    const target=await realpath(profile);
+    if(path.dirname(target)!==profileRoot || !path.basename(target).startsWith('fieldshift-firefox-'))throw new Error('Temporary Firefox profile escaped its intended root');
+    await rm(target,{recursive:true,force:true,maxRetries:8,retryDelay:150});
+  }
   const processHandle = spawn(executable, ['--headless', '-no-remote', '-profile', profile, '--remote-debugging-port', '0', 'about:blank'],
     { windowsHide: true, stdio: ['ignore', 'ignore', 'pipe'] });
   let socket;
@@ -69,8 +76,8 @@ export async function openFirefox() {
       },
       async close() {
         try { await call('browser.close'); } catch { /* Closing the browser can close its socket first. */ }
-        socket.close(); processHandle.kill();
+        socket.close(); processHandle.kill();await removeProfile();
       }
     };
-  } catch (error) { socket?.close(); processHandle.kill(); throw error; }
+  } catch (error) { socket?.close(); processHandle.kill(); await removeProfile();throw error; }
 }

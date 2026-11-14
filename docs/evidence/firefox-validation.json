@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-14T17:09:40.086Z",
+  "checkedAt": "2026-11-14T19:14:15.735Z",
   "browser": {
     "acceptInsecureCerts": false,
     "browserName": "firefox",
@@ -10,8 +10,8 @@
     "moz:buildID": "20261104181552",
     "moz:headless": true,
     "moz:platformVersion": "10.0",
-    "moz:processID": 9656,
-    "moz:profile": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\firefox-check-GJfoQZ",
+    "moz:processID": 34920,
+    "moz:profile": "C:\\Users\\~\\AppData\\Local\\Temp\\fieldshift-firefox-8CVCuT",
     "moz:shutdownTimeout": 73000
   },
   "checks": [
@@ -42,14 +42,14 @@
   ],
   "modelMetrics": {
     "model": "FieldShift Mini word LM (experimental)",
-    "parameters": 29200,
-    "weightBytes": 116800,
-    "loadMs": 183,
+    "parameters": 39274,
+    "weightBytes": 157096,
+    "loadMs": 153,
     "backend": "wasm",
-    "tensorBytes": 116800,
+    "tensorBytes": 157096,
     "wasmHeapCapacityBytes": 16777216,
     "peakTotalBrowserMemoryBytes": null,
-    "inferenceMs": 15,
+    "inferenceMs": 18,
     "topic": "soil",
     "accepted": true
   },

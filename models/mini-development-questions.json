@@ -1,0 +1,50 @@
+{
+  "kind": "DEVELOPMENT synthetic wording; fixed held-out questions, not farmer validation",
+  "topics": {
+    "crops": {
+      "train": ["Are peas and snap beans related plants", "Does changing a crop name change its family", "Which family contains radish", "Is Chinese broccoli in the screened crop list", "Can a growing duration be used in every country", "Explain sweet corn versus grain maize", "Is rice a screened crop here", "Why are green beans called legumes"],
+      "validation": ["Which crops have supported records", "Explain a crop family and its reference duration"],
+      "test": ["Which family contains garden peas", "Tell me which vegetables have screened crop records", "What crop facts are known for snap beans", "Do radishes and kale share a plant family"]
+    },
+    "soil": {
+      "train": ["My soil test has a high pH", "The field floods and drains poorly", "Does clay on the map prove my soil type", "Explain the soil pH reference range", "Can regional soil estimates replace a local soil test", "How should I interpret mapped sand", "The drainage is poor after heavy rain", "Does waterlogging conflict with crop soil conditions"],
+      "validation": ["What does soil acidity mean here", "Is a mapped soil value a local test"],
+      "test": ["Explain what a high soil pH means for planting", "Is the mapped clay percentage a local measurement", "What should I check if water stands on my field", "Would a soil test help with poor drainage"]
+    },
+    "water": {
+      "train": ["Does rainfed mean irrigation is unavailable", "Show historical water applied to crops", "Can irrigation availability prove enough water", "Explain the annual watering benchmark", "I have irrigation but the volume is unknown", "What inputs establish crop water demand", "How do rainfall and irrigation differ", "Are national water totals a watering schedule"],
+      "validation": ["What do historical irrigation totals mean", "Is irrigation enough for this crop"],
+      "test": ["Where can I find historical irrigation use", "Can annual water totals tell me when to irrigate", "My farm is rainfed how should I think about watering", "Does rainfall show how much irrigation a crop requires"]
+    },
+    "pests": {
+      "train": ["Do related crops share pest hosts", "Would rotating legumes remove insect problems", "Does a country occurrence prove a field infestation", "Explain armyworm host evidence", "What is known about diamondback moth hosts", "Can a family break prevent every disease", "How can old pest records guide inspection", "Does a moth observation establish a current outbreak"],
+      "validation": ["How do shared hosts affect pest cycles", "Can national insects be assumed on this field"],
+      "test": ["Would changing plant families remove every pest", "How do country insect records relate to my field", "Where is the evidence for fall armyworm hosts", "Do moth records mean the crop is infested now"]
+    },
+    "weather": {
+      "train": ["What dates do the POWER observations cover", "Are the temperature values historical estimates", "Explain the precipitation units", "Where can I see solar radiation values", "Are missing rain values zero", "How are monthly weather values derived", "What is the regional grid resolution", "Does the latest observation mean current weather"],
+      "validation": ["How old is this NASA observation", "Where are temperature and rainfall sourced"],
+      "test": ["What is the observation period of the NASA weather series", "Where are the solar and precipitation units shown", "Are gridded temperature estimates current local conditions", "How do missing rain days affect the monthly chart"]
+    },
+    "rotation": {
+      "train": ["Why is my existing rotation kept", "Explain the order of alternative sequences", "How many planting slots are compared", "Does priority change the screening criteria", "Why are family repeats counted", "Compare crops on the same calendar horizon", "How are unknown baseline crops displayed", "What is the harvest turnaround assumption"],
+      "validation": ["Why do the rotation timelines have equal dates", "What breaks a tie between two alternatives"],
+      "test": ["Why does the comparison keep the original sequence", "Which factors sort the alternative crop timelines", "How many crop slots does the rotation use", "Would a water priority change the hard screening rules"]
+    },
+    "location": {
+      "train": ["Choose a country before selecting farmland", "I want a national overview rather than a field", "Use a state then choose a nearby town", "What point do these coordinates represent", "Is a town point a surveyed farm boundary", "Can I narrow the region on the map", "Are mapped fields available to rent", "How do I check a named place against coordinates"],
+      "validation": ["Show the whole country or a specific part", "Which region should I select before a town"],
+      "test": ["Help me choose a town before a field", "Can I look at an entire country instead of one farm", "How do I narrow the map to a region", "Are these field outlines proof that land is available"]
+    },
+    "limits": {
+      "train": ["Can the app promise a successful harvest", "Is any crop success probability calibrated", "Do language model scores measure farming accuracy", "Can a historical year guarantee future safety", "Is precise yield prediction supported here", "Could observations prove exact crop performance", "Can an unknown input justify a numerical prediction", "Would a confidence percentage be evidence for suitability"],
+      "validation": ["Can you guarantee crop performance", "Is future farm success a measured probability"],
+      "test": ["Is a crop success percentage supported by the evidence", "Can weather records predict an exact farm harvest", "Would any model score guarantee next season is safe", "Can you promise precise crop yield from these observations"]
+    },
+    "other": {
+      "train": ["Write a poem about a river", "Who is a famous movie actor", "Tell a funny story", "Recommend music for a holiday", "Explain football scores", "What fashion is popular", "Tell me about a shopping trip", "Suggest a film for tonight"],
+      "validation": ["What is a good comedy movie", "Tell a joke about a holiday"],
+      "test": ["Write a short song about the ocean", "Who will win a football match tonight", "Please suggest a movie to watch", "Can you tell a joke about computers"]
+    }
+  }
+}

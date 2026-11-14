@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 // DEVELOPMENT / synthetic question wording. Completions describe verified source/app
 // boundaries, not synthetic NASA observations. No agronomic reliability is inferred.
@@ -40,6 +40,25 @@ for (const topic of topics) {
 const corpus = { kind: 'DEVELOPMENT synthetic wording; source-linked explanatory continuations', reviewedByAgronomist: false,
   limitation: 'Template test wording shares vocabulary with training and is optimistic. Free-form cases are reported separately. This is not agronomic accuracy or a reliable general LLM.',
   topics, rows };
+const extra=JSON.parse(await readFile('models/mini-development-questions.json','utf8'));
+const acceptance=JSON.parse(await readFile('tests/qa/prompts.json','utf8')).cases.map(item=>item.prompt.toLowerCase().replace(/[^a-z]+/g,' ').trim());
+for(const topic of topics)for(const split of ['train','validation','test'])for(const [i,question] of extra.topics[topic.id][split].entries()) {
+  if(acceptance.includes(question.toLowerCase().replace(/[^a-z]+/g,' ').trim()))throw new Error('Acceptance prompt leaked into the model experiment');
+  rows.push({question,reply:topic.reply,topic:topic.id,split,group:`${topic.id}:v2-freeform:${split}:${i}`,sourceIds:topic.sources});
+}
+// The earlier template corpus had exact wording duplicated across splits. Keep
+// held-out rows and remove matching training rows instead of leaking their text.
+const unique=new Map(),priority={train:0,validation:1,test:2},originalCount=rows.length;
+for(const row of rows){const key=row.question.toLowerCase().replace(/[^a-z]+/g,' ').trim(),previous=unique.get(key);if(previous&&previous.topic!==row.topic)throw new Error(`Conflicting topic labels: ${row.question}`);if(!previous||priority[row.split]>priority[previous.split])unique.set(key,row);}
+rows.splice(0,rows.length,...unique.values());
+corpus.exactDuplicateRowsRemoved=originalCount-rows.length;
+const keys=split=>new Set(rows.filter(row=>row.split===split).map(row=>row.question.toLowerCase().replace(/[^a-z]+/g,' ').trim()));
+const train=keys('train'),validation=keys('validation');
+if(acceptance.some(question=>train.has(question)))throw new Error('Acceptance prompt leaked into training');
+if(rows.some(row=>row.split==='test'&&(train.has(row.question.toLowerCase().replace(/[^a-z]+/g,' ').trim())||validation.has(row.question.toLowerCase().replace(/[^a-z]+/g,' ').trim()))))throw new Error('Exact wording crosses the held-out split');
+corpus.version=2;
+corpus.vocabularySource='Training questions and replies only; validation/test wording is not used to construct vocabulary.';
+corpus.holdout='36 fixed additional free-form questions, frozen before retraining, plus the 90 legacy development cases. No supplied QA acceptance prompt is in the added model data.';
 await mkdir('public/models/fieldshift-mini', { recursive: true });
 await writeFile('public/models/fieldshift-mini/corpus.json', JSON.stringify(corpus, null, 2));
 console.log(`Prepared ${rows.length} next-word training examples with labelled development provenance.`);

@@ -1,5 +1,6 @@
 // Rebuild the checked-in Jupyter starting points without requiring Jupyter or TensorFlow.
-import { writeFile } from 'node:fs/promises';
+import { writeFile, readFile } from 'node:fs/promises';
+const miniEvaluation=JSON.parse(await readFile('public/models/fieldshift-mini/evaluation.json','utf8'));
 const md = source => ({ cell_type: 'markdown', metadata: {}, source: source.trim().split('\n').map(s => s + '\n') });
 const code = source => ({ cell_type: 'code', execution_count: null, metadata: {}, outputs: [], source: source.trim().split('\n').map(s => s + '\n') });
 async function notebook(name, cells) {
@@ -158,7 +159,7 @@ await notebook('llm_training', [
 
 This is the actual compact model used by the current app: a **word-level autoregressive recurrent language model**, trained with next-word cross-entropy. It is not a topic-classifier output layer or a general-purpose large language model. Production only uses its guarded response-topic selection with traceable retrieval. Raw generated words never become scientific advice.
 
-The model has 29,200 parameters and 116,800 bytes of float32 weights. The completed run trained in browser TensorFlow.js 4.22.0 / WASM, one thread, 50 epochs, seed-controlled initializers and no shuffling. Run measurements, dataset provenance, failures and artifacts are inspected below rather than invented.
+The model has ${miniEvaluation.parameters.toLocaleString('en-US')} parameters and ${miniEvaluation.weightBytes.toLocaleString('en-US')} bytes of float32 weights. Training used browser TensorFlow.js 4.22.0 / WASM, one thread, 100 epochs, seed-controlled initializers and no shuffling. Checkpoint selection used validation matches, then validation loss. Run evidence is inspected below.
 
 Node starts an isolated local test page and browser automation; training and production inference happen in the browser. No Python or Node inference server is deployed on Vercel.`),
   code(`from pathlib import Path
@@ -174,7 +175,7 @@ assert len(weights) == evaluation["weightBytes"]
 print({"python": sys.version, "parameters": evaluation["parameters"], "weight_bytes": len(weights), "sha256": hashlib.sha256(weights).hexdigest()})`),
   md(`## Data provenance and split limits
 
-The corpus contains development-only **synthetic question wording** with source-linked explanatory continuations. It contains no fabricated NASA observations. The phrasing is not agronomist-reviewed. Template train/validation/test examples share topic vocabulary, so template test results are optimistic. Free-form questions are reported separately. The completed run got 75/90 development topic selections and 9/18 free-form selections; these are not agronomic accuracy or recommendation-confidence claims.
+The corpus contains development-only **synthetic question wording**, not agronomist-reviewed farmer data or fabricated NASA observations. Vocabulary uses training rows only; template splits still share topic vocabulary. Accepted results: ${miniEvaluation.correct}/${miniEvaluation.testExamples} overall and ${miniEvaluation.newHoldoutCorrect}/${miniEvaluation.newHoldoutExamples} additional fixed free-form questions, versus ${miniEvaluation.baseline.correct}/${miniEvaluation.baseline.testExamples} and ${miniEvaluation.baseline.newHoldoutCorrect}/${miniEvaluation.baseline.newHoldoutExamples} before. Legacy matches decreased 75/90 to 71/90. Two candidates were evaluated; these are development comparisons, not an independent untouched study or agronomic accuracy.
 
 The full token vocabulary is built from the development corpus, including held-out wording; this is another limitation. A production experiment needs a vocabulary learned only from training data, truly independent farmer questions, region/source grouping, out-of-scope tests and independent review. The app does not treat this experiment as reliable free-form advice.`),
   code(`rows = corpus["rows"]
@@ -204,13 +205,12 @@ print("Weight tensors:", [(s["name"], s["shape"], s["dtype"]) for s in specs])`)
 
 Requires Node.js 22+, installed Chrome/Chromium/Edge and internet for pinned TensorFlow.js/WASM runtime files. The scripts never download a browser or invoke a cloud model. Training uses the small development corpus, not a pretrained weight download. It takes several minutes on the observed development machine; no hardware-independent guarantee is made.
 
-The first CPU run was interrupted during an attempted backend switch and produced no accepted artifact. A clean WASM run completed. TF.js WASM lacked UnsortedSegmentSum for embedding gradients; the small development-only row-sum kernel was added and tested before that run. Retraining overwrites the experimental model artifacts, so it is explicitly off by default.`),
+TF.js WASM lacked UnsortedSegmentSum for embedding gradients; the development-only kernel was added and tested. Retraining writes artifacts/mini-candidate only. The quality gate compares against the current shipped model; an equal reproduction can exit 1 because it is not a new improvement. Review results before separately promoting files and updating integrity hashes. Training is off by default.`),
   code(`RETRAIN = False
 if RETRAIN:
     subprocess.run(["node", "scripts/build-mini-corpus.js"], cwd=ROOT, check=True)
     subprocess.run(["node", "scripts/train-mini-lm.js"], cwd=ROOT, check=True)
-    subprocess.run(["node", "scripts/build-browser.js"], cwd=ROOT, check=True)
-    subprocess.run(["node", "scripts/benchmark-mini-lm.js"], cwd=ROOT, check=True)
+    print("Inspect artifacts/mini-candidate; shipped weights were not replaced.")
 else:
     print("Retraining disabled. Existing trained artifacts and recorded evaluations were inspected only.")`),
   md(`## TensorFlow/Keras reproduction path

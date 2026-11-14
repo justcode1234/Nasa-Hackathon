@@ -186,19 +186,40 @@ Update this section and docs/decisions.md / docs/validation.md after each substa
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
 
-- **Automated QA questions (implemented and executed):** the user chose
+- **Current user goal — resolve QA gaps and improve the tiny LM (in progress):**
+  fix all nine failed prompts in shared grounded answers and validated action
+  parsing; retrain/evaluate the optional small word LM using additional development
+  wording and a fixed held-out set, without training on the 16 acceptance prompts.
+  Require 16/16 prompts and 6/6 flows locally and on Vercel, model-on/model-off
+  verification, variant regressions, existing checks, and an honest model comparison.
+  Preserve scientific uncertainty and source limits. Do not label these checks
+  perfection or agronomic accuracy. The earlier foundation objective is complete;
+  the goal tool now tracks this explicit assistant/retraining/release objective.
+
+- **Assistant improvement checkpoint:** shared capability-limit/pH/family/grain
+  handlers and read-only intent guards close the nine baseline QA gaps locally.
+  Region/point checks handle the combined Maharashtra/Pune coordinate command.
+  Local model-off and model-on QA both pass 16 questions + 6 flows; 93 offline
+  tests pass. Accepted LM v2: 39,274 parameters / 157,096 bytes, 346-word vocabulary,
+  48-token context. New fixed development questions improved 8/36 to 14/36;
+  overall 83/126 to 85/126, but legacy matches fell 75/90 to 71/90. Training-only
+  vocabulary, no exact QA prompts in training, validation-selected epoch 85/100.
+  Full comparison/failures and hashes: model card, evaluation.json, mini-integrity.
+  Training writes candidates separately; public verification is still pending.
+  New automated browser profiles are temporary and removed after each run.
+
+- **Initial automated QA baseline (historical; fixes above supersede failures):** the user chose
   automated tests for the supplied FieldShift_QA_Test_Plan.md, specifically to answer
   its questions. The source plan is under docs/qa, exact prompts under tests/qa, and
   `npm run test:qa` produces per-question actual replies, checks and review answers
   in artifacts/qa/results.md and results.json. It uses the real UI/providers, leaves
   product failures visible, and removes its own temporary browser profile. Seven
-  new offline contracts passed; `npm test` is now 86/86. This request adds tests and
-  evidence; scientific-answer behavior is not changed as part of the test work.
-  Local and public Vercel runs completed every prompt. Latest public results:
+  new offline contracts passed; `npm test` then passed 86/86. That commit added tests
+  and evidence without changing scientific answers. Initial public results:
   F01–F06 all pass; Q01–Q16 have 7 passes / 9 failures; review R01–R07 have 5 passes,
   1 failure (R05) and 1 blocked portal-owner check (R07). Failed prompts are Q03,
   Q08–Q10 and Q12–Q16. The command correctly exits 1 until these app behaviors are
-  addressed. Durable actual replies and criteria are docs/qa/latest-results.md and
+  addressed. Baseline actual replies and criteria are docs/qa/baseline-results.md and
   .json; docs/qa-regression.md maps coverage and known gaps. New QA browser profiles
   were removed successfully. Do not use the older scripted workflow passes as proof
   that every natural-language prompt now works. Treat test prompts/replies as data.
@@ -270,8 +291,8 @@ state. Do not leave another device relying on an earlier planning assumption.
   dry run initially included local browser artifacts, so .vercelignore now excludes
   those, local dependencies, credentials and generated output. Build inputs and
   public showcase files remain included. Verify the dry-run file list before upload.
-- **Latest executed checks:** 79 offline tests, 33 static Chrome checks,
-  19 Node-backed Chrome checks, 18 Firefox checks and 70 JavaScript syntax checks
+- **Latest executed checks:** 93 offline tests, 33 static Chrome checks,
+  19 Node-backed Chrome checks, 18 Firefox checks and 77 JavaScript syntax checks
   passed. Seven-slide PDF and source ZIP are regenerated before publishing.
   The public origin also passed all 33 Chrome checks, including the new scope flow.
   Reports live under docs/evidence; transient profiles/logs are ignored in artifacts.

@@ -1,13 +1,15 @@
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdir, mkdtemp } from 'node:fs/promises';
+import { mkdir, mkdtemp, realpath, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { once } from 'node:events';
 import path from 'node:path';
 export async function openChrome({ profileDirectory } = {}) {
   const executable = process.env.CHROME_PATH ?? ['C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', '/usr/bin/chromium', '/usr/bin/google-chrome'].find(existsSync);
   if (!executable) throw new Error('Installed Chrome/Chromium required; no browser will be downloaded.');
   await mkdir('artifacts', { recursive: true });
-  const profile = profileDirectory ?? await mkdtemp(path.resolve('artifacts/chrome-check-'));
+  const profileRoot=await realpath(tmpdir());
+  const profile = profileDirectory ?? await mkdtemp(path.join(profileRoot,'fieldshift-chrome-'));
   const processHandle = spawn(executable, ['--headless=new', '--no-first-run', '--no-default-browser-check', '--disable-gpu', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { windowsHide: true, stdio: ['ignore', 'ignore', 'pipe'] });
   const endpoint = await new Promise((resolve, reject) => {
     let output = '';
@@ -49,6 +51,11 @@ export async function openChrome({ profileDirectory } = {}) {
     async close() {
       try { const browser = new WebSocket(endpoint); await once(browser, 'open'); browser.send(JSON.stringify({ id: 1, method: 'Browser.close' })); browser.close(); } catch {}
       socket.close(); processHandle.kill();
+      if(!profileDirectory){
+        const target=await realpath(profile);
+        if(path.dirname(target)!==profileRoot || !path.basename(target).startsWith('fieldshift-chrome-'))throw new Error('Temporary Chrome profile escaped its intended root');
+        await rm(target,{recursive:true,force:true,maxRetries:8,retryDelay:150});
+      }
     }
   };
 }

@@ -1,0 +1,1791 @@
+{
+  "parameters": 39274,
+  "weightBytes": 157096,
+  "trainExamples": 530,
+  "validationExamples": 90,
+  "testExamples": 126,
+  "correct": 54,
+  "freeformCorrect": 23,
+  "freeformExamples": 54,
+  "newHoldoutCorrect": 14,
+  "newHoldoutExamples": 36,
+  "baseline": {
+    "correct": 83,
+    "testExamples": 126,
+    "newHoldoutCorrect": 8,
+    "newHoldoutExamples": 36,
+    "results": [
+      {
+        "question": "can you describe peas",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe beans",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "tell me about sweet corn",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe sweet corn",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe radish",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe crop family",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe crop maturity",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe planting crops",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe legumes",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "which plants are legumes",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe soil",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe soil ph",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe sand",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe clay",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe drainage",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe soil test",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe soilgrids",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe soil type",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can i use the mapped clay estimate",
+        "expected": "soil",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "how do i know my soil type",
+        "expected": "soil",
+        "predicted": "soil",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe irrigation",
+        "expected": "water",
+        "predicted": "pests",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe water use",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe watering",
+        "expected": "water",
+        "predicted": "weather",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe rainfed farming",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe irrigation history",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe water demand",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe australian water use",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe water savings",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "do i have enough water",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can i save water",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe pests",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe fall armyworm",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe diamondback moth",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe insects",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe crop disease",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe pest records",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe country pests",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe infestation",
+        "expected": "pests",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "what insects eat crops",
+        "expected": "pests",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can rotation prevent disease",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe nasa data",
+        "expected": "weather",
+        "predicted": "weather",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe temperature",
+        "expected": "weather",
+        "predicted": "weather",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe rainfall",
+        "expected": "weather",
+        "predicted": "weather",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe precipitation",
+        "expected": "weather",
+        "predicted": "weather",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe solar radiation",
+        "expected": "weather",
+        "predicted": "water",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe frost",
+        "expected": "weather",
+        "predicted": "weather",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe weather observations",
+        "expected": "weather",
+        "predicted": "weather",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe nasa power",
+        "expected": "weather",
+        "predicted": "water",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "show historical rainfall",
+        "expected": "weather",
+        "predicted": "weather",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "what is the temperature source",
+        "expected": "weather",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe rotation",
+        "expected": "rotation",
+        "predicted": "weather",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe baseline rotation",
+        "expected": "rotation",
+        "predicted": "rotation",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe alternatives",
+        "expected": "rotation",
+        "predicted": "rotation",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe crop sequence",
+        "expected": "rotation",
+        "predicted": "rotation",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe family repeats",
+        "expected": "rotation",
+        "predicted": "rotation",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe comparison",
+        "expected": "rotation",
+        "predicted": "rotation",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe rotation strategy",
+        "expected": "rotation",
+        "predicted": "rotation",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe timeline",
+        "expected": "rotation",
+        "predicted": "rotation",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "what is a rotation timeline",
+        "expected": "rotation",
+        "predicted": "pests",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "how do you rank alternatives",
+        "expected": "rotation",
+        "predicted": "rotation",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe farmland",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe map",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe field outlines",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe place search",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe farm location",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe coordinates",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe mapped fields",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe openstreetmap",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "is this land available",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "how do i choose a field",
+        "expected": "location",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe uncertainty",
+        "expected": "limits",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe limitations",
+        "expected": "limits",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe confidence",
+        "expected": "limits",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe accuracy",
+        "expected": "limits",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe yield guarantee",
+        "expected": "limits",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe missing data",
+        "expected": "limits",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe unknown observations",
+        "expected": "limits",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe evidence gaps",
+        "expected": "limits",
+        "predicted": "limits",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "what can the app not conclude",
+        "expected": "limits",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "what are the risks",
+        "expected": "limits",
+        "predicted": "location",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe movie",
+        "expected": "other",
+        "predicted": "other",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe holiday",
+        "expected": "other",
+        "predicted": "other",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe football",
+        "expected": "other",
+        "predicted": "other",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe music",
+        "expected": "other",
+        "predicted": "other",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe celebrity",
+        "expected": "other",
+        "predicted": "other",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe fashion",
+        "expected": "other",
+        "predicted": "other",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe recipe",
+        "expected": "other",
+        "predicted": "other",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "can you describe shopping",
+        "expected": "other",
+        "predicted": "other",
+        "freeform": false,
+        "newHoldout": false
+      },
+      {
+        "question": "write a poem",
+        "expected": "other",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "what is the latest movie",
+        "expected": "other",
+        "predicted": "pests",
+        "freeform": true,
+        "newHoldout": false
+      },
+      {
+        "question": "Which family contains garden peas",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Tell me which vegetables have screened crop records",
+        "expected": "crops",
+        "predicted": "pests",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "What crop facts are known for snap beans",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Do radishes and kale share a plant family",
+        "expected": "crops",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Explain what a high soil pH means for planting",
+        "expected": "soil",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Is the mapped clay percentage a local measurement",
+        "expected": "soil",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "What should I check if water stands on my field",
+        "expected": "soil",
+        "predicted": "rotation",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Would a soil test help with poor drainage",
+        "expected": "soil",
+        "predicted": "limits",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Where can I find historical irrigation use",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Can annual water totals tell me when to irrigate",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "My farm is rainfed how should I think about watering",
+        "expected": "water",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Does rainfall show how much irrigation a crop requires",
+        "expected": "water",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Would changing plant families remove every pest",
+        "expected": "pests",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "How do country insect records relate to my field",
+        "expected": "pests",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Where is the evidence for fall armyworm hosts",
+        "expected": "pests",
+        "predicted": "pests",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Do moth records mean the crop is infested now",
+        "expected": "pests",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "What is the observation period of the NASA weather series",
+        "expected": "weather",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Where are the solar and precipitation units shown",
+        "expected": "weather",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Are gridded temperature estimates current local conditions",
+        "expected": "weather",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "How do missing rain days affect the monthly chart",
+        "expected": "weather",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Why does the comparison keep the original sequence",
+        "expected": "rotation",
+        "predicted": "soil",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Which factors sort the alternative crop timelines",
+        "expected": "rotation",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "How many crop slots does the rotation use",
+        "expected": "rotation",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Would a water priority change the hard screening rules",
+        "expected": "rotation",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Help me choose a town before a field",
+        "expected": "location",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Can I look at an entire country instead of one farm",
+        "expected": "location",
+        "predicted": "location",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "How do I narrow the map to a region",
+        "expected": "location",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Are these field outlines proof that land is available",
+        "expected": "location",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Is a crop success percentage supported by the evidence",
+        "expected": "limits",
+        "predicted": "other",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Can weather records predict an exact farm harvest",
+        "expected": "limits",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Would any model score guarantee next season is safe",
+        "expected": "limits",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Can you promise precise crop yield from these observations",
+        "expected": "limits",
+        "predicted": "crops",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Write a short song about the ocean",
+        "expected": "other",
+        "predicted": "location",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Who will win a football match tonight",
+        "expected": "other",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Please suggest a movie to watch",
+        "expected": "other",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      },
+      {
+        "question": "Can you tell a joke about computers",
+        "expected": "other",
+        "predicted": "water",
+        "freeform": true,
+        "newHoldout": true
+      }
+    ]
+  },
+  "bestEpoch": 50,
+  "bestValidationLoss": 0.18323856592178345,
+  "vocabularySource": "Training questions and replies only; validation/test wording is not used to construct vocabulary.",
+  "loss": "Answer-token-only conditional next-word cross entropy; question/padding targets masked.",
+  "trainingMs": 140578.5,
+  "results": [
+    {
+      "question": "can you describe peas",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe beans",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "tell me about sweet corn",
+      "expected": "crops",
+      "predicted": "crops",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe sweet corn",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe radish",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe crop family",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe crop maturity",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe planting crops",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe legumes",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "which plants are legumes",
+      "expected": "crops",
+      "predicted": "crops",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe soil",
+      "expected": "soil",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe soil ph",
+      "expected": "soil",
+      "predicted": "soil",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe sand",
+      "expected": "soil",
+      "predicted": "soil",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe clay",
+      "expected": "soil",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe drainage",
+      "expected": "soil",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe soil test",
+      "expected": "soil",
+      "predicted": "weather",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe soilgrids",
+      "expected": "soil",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe soil type",
+      "expected": "soil",
+      "predicted": "soil",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can i use the mapped clay estimate",
+      "expected": "soil",
+      "predicted": "location",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "how do i know my soil type",
+      "expected": "soil",
+      "predicted": "soil",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe irrigation",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe water use",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe watering",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe rainfed farming",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe irrigation history",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe water demand",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe australian water use",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe water savings",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "do i have enough water",
+      "expected": "water",
+      "predicted": "other",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can i save water",
+      "expected": "water",
+      "predicted": "pests",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe pests",
+      "expected": "pests",
+      "predicted": "pests",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe fall armyworm",
+      "expected": "pests",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe diamondback moth",
+      "expected": "pests",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe insects",
+      "expected": "pests",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe crop disease",
+      "expected": "pests",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe pest records",
+      "expected": "pests",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe country pests",
+      "expected": "pests",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe infestation",
+      "expected": "pests",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "what insects eat crops",
+      "expected": "pests",
+      "predicted": "pests",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can rotation prevent disease",
+      "expected": "pests",
+      "predicted": "rotation",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe nasa data",
+      "expected": "weather",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe temperature",
+      "expected": "weather",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe rainfall",
+      "expected": "weather",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe precipitation",
+      "expected": "weather",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe solar radiation",
+      "expected": "weather",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe frost",
+      "expected": "weather",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe weather observations",
+      "expected": "weather",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe nasa power",
+      "expected": "weather",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "show historical rainfall",
+      "expected": "weather",
+      "predicted": "weather",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "what is the temperature source",
+      "expected": "weather",
+      "predicted": "rotation",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe rotation",
+      "expected": "rotation",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe baseline rotation",
+      "expected": "rotation",
+      "predicted": "rotation",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe alternatives",
+      "expected": "rotation",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe crop sequence",
+      "expected": "rotation",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe family repeats",
+      "expected": "rotation",
+      "predicted": "rotation",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe comparison",
+      "expected": "rotation",
+      "predicted": "rotation",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe rotation strategy",
+      "expected": "rotation",
+      "predicted": "rotation",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe timeline",
+      "expected": "rotation",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "what is a rotation timeline",
+      "expected": "rotation",
+      "predicted": "rotation",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "how do you rank alternatives",
+      "expected": "rotation",
+      "predicted": "other",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe farmland",
+      "expected": "location",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe map",
+      "expected": "location",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe field outlines",
+      "expected": "location",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe place search",
+      "expected": "location",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe farm location",
+      "expected": "location",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe coordinates",
+      "expected": "location",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe mapped fields",
+      "expected": "location",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe openstreetmap",
+      "expected": "location",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "is this land available",
+      "expected": "location",
+      "predicted": "location",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "how do i choose a field",
+      "expected": "location",
+      "predicted": "location",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe uncertainty",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe limitations",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe confidence",
+      "expected": "limits",
+      "predicted": "water",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe accuracy",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe yield guarantee",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe missing data",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe unknown observations",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe evidence gaps",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "what can the app not conclude",
+      "expected": "limits",
+      "predicted": "rotation",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "what are the risks",
+      "expected": "limits",
+      "predicted": "rotation",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe movie",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe holiday",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe football",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe music",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe celebrity",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe fashion",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe recipe",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "can you describe shopping",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": false,
+      "newHoldout": false
+    },
+    {
+      "question": "write a poem",
+      "expected": "other",
+      "predicted": "soil",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "what is the latest movie",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": true,
+      "newHoldout": false
+    },
+    {
+      "question": "Which family contains garden peas",
+      "expected": "crops",
+      "predicted": "crops",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Tell me which vegetables have screened crop records",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "What crop facts are known for snap beans",
+      "expected": "crops",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Do radishes and kale share a plant family",
+      "expected": "crops",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Explain what a high soil pH means for planting",
+      "expected": "soil",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Is the mapped clay percentage a local measurement",
+      "expected": "soil",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "What should I check if water stands on my field",
+      "expected": "soil",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Would a soil test help with poor drainage",
+      "expected": "soil",
+      "predicted": "soil",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Where can I find historical irrigation use",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Can annual water totals tell me when to irrigate",
+      "expected": "water",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "My farm is rainfed how should I think about watering",
+      "expected": "water",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Does rainfall show how much irrigation a crop requires",
+      "expected": "water",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Would changing plant families remove every pest",
+      "expected": "pests",
+      "predicted": "pests",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "How do country insect records relate to my field",
+      "expected": "pests",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Where is the evidence for fall armyworm hosts",
+      "expected": "pests",
+      "predicted": "other",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Do moth records mean the crop is infested now",
+      "expected": "pests",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "What is the observation period of the NASA weather series",
+      "expected": "weather",
+      "predicted": "weather",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Where are the solar and precipitation units shown",
+      "expected": "weather",
+      "predicted": "weather",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Are gridded temperature estimates current local conditions",
+      "expected": "weather",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "How do missing rain days affect the monthly chart",
+      "expected": "weather",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Why does the comparison keep the original sequence",
+      "expected": "rotation",
+      "predicted": "rotation",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Which factors sort the alternative crop timelines",
+      "expected": "rotation",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "How many crop slots does the rotation use",
+      "expected": "rotation",
+      "predicted": "weather",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Would a water priority change the hard screening rules",
+      "expected": "rotation",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Help me choose a town before a field",
+      "expected": "location",
+      "predicted": "location",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Can I look at an entire country instead of one farm",
+      "expected": "location",
+      "predicted": "rotation",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "How do I narrow the map to a region",
+      "expected": "location",
+      "predicted": "pests",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Are these field outlines proof that land is available",
+      "expected": "location",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Is a crop success percentage supported by the evidence",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Can weather records predict an exact farm harvest",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Would any model score guarantee next season is safe",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Can you promise precise crop yield from these observations",
+      "expected": "limits",
+      "predicted": "limits",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Write a short song about the ocean",
+      "expected": "other",
+      "predicted": "rotation",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Who will win a football match tonight",
+      "expected": "other",
+      "predicted": "other",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Please suggest a movie to watch",
+      "expected": "other",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    },
+    {
+      "question": "Can you tell a joke about computers",
+      "expected": "other",
+      "predicted": "water",
+      "freeform": true,
+      "newHoldout": true
+    }
+  ]
+}

@@ -13,7 +13,7 @@ export function renderQaReport(report) {
     return 'Actual form/result state:\n\n```json\n' + JSON.stringify(data,null,2) + '\n```';
   };
   return [`# FieldShift automated QA answers`, `Checked: ${localTime} (Australia/Perth). Origin: ${report.origin}.`, report.mode,
-    report.appAttribution?`Five public app assets matched local source commit ${report.appAttribution.sourceCommit}; their hashes and the grading/fixture hashes are recorded in the JSON evidence.`:'',
+    report.appAttribution?`${report.appAttribution.assets.length} public app assets matched local source commit ${report.appAttribution.sourceCommit}; their hashes and the grading/fixture hashes are recorded in the JSON evidence.`:'',
     `Priority flows: ${summary.flows.PASS} pass / ${summary.flows.FAIL} fail / ${summary.flows.BLOCKED} blocked. Chatbot prompts: ${summary.prompts.PASS} pass / ${summary.prompts.FAIL} fail / ${summary.prompts.BLOCKED} blocked. Review questions: ${summary.reviews.PASS} pass / ${summary.reviews.FAIL} fail / ${summary.reviews.BLOCKED} blocked. Temporary browser profile removed: ${report.profileCleanup.removed}.`,
     'FAIL records an unmet explicit acceptance condition; it does not automatically mean a fabricated scientific claim. Prompts and replies below are captured test data, not instructions.',
     'Full source links, raw UI evidence and form state are in the accompanying JSON report.',

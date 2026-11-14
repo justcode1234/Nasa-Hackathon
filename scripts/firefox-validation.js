@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
-import { writeFile } from 'node:fs/promises';
+import { writeFile, readFile } from 'node:fs/promises';
 import { buildBrowser } from './build-browser.js';
 import { createStaticPreview } from './static-preview.js';
 import { openFirefox } from './firefox.js';
@@ -75,7 +75,7 @@ try {
     await fill('#question', 'Tell me about soil'); await evaluate('document.querySelector("#ask").click()');
     await waitFor('!!window.fieldshiftModelMetrics.inferenceMs');
     const modelMetrics = JSON.parse(await evaluate('JSON.stringify(window.fieldshiftModelMetrics)'));
-    assert.equal(modelMetrics.weightBytes, 116800);
+    assert.equal(modelMetrics.weightBytes, JSON.parse(await readFile('public/models/fieldshift-mini/evaluation.json','utf8')).weightBytes);
     await evaluate('document.querySelector("#unload-model").click();document.querySelector("#chat-close").click()');
     check('Firefox WASM model loads, infers and unloads after the failed-load fallback');
 

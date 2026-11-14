@@ -15,11 +15,25 @@ test('compact artifact is a trained word-level sequence LM with traceable weight
   assert.ok(layers[2].config.units>tokenizer.topics.length,'The output predicts words, not topic labels');
   assert.equal(weights.length,evaluation.weightBytes);
   assert.equal(weights.length,evaluation.parameters*4);
-  assert.equal(createHash('sha256').update(weights).digest('hex'),'87311c8b2e155102c8992e2894ba3c2c58a8de98603a479ce3ccbabd430484d2');
+  const integrity=JSON.parse(await readFile(new URL('../models/mini-integrity.json',import.meta.url),'utf8'));
+  for(const [file,hash] of Object.entries(integrity))assert.equal(createHash('sha256').update(await readFile(new URL(file,directory))).digest('hex'),hash,file);
   assert.ok(Array.from({length:weights.length/4},(_,i)=>weights.readFloatLE(i*4)).every(Number.isFinite));
   assert.match(corpus.kind,/DEVELOPMENT synthetic/);
   assert.equal(corpus.reviewedByAgronomist,false);
   assert.ok(evaluation.results.some(r=>r.freeform&&r.expected!==r.predicted),'Known free-form failures are retained');
+  assert.ok(evaluation.newHoldoutCorrect>evaluation.baseline.newHoldoutCorrect);
+  assert.ok(evaluation.correct>=evaluation.baseline.correct);
+  assert.equal(evaluation.newHoldoutExamples,36);
+  assert.match(corpus.vocabularySource,/Training questions and replies only/);
+  const tokens=text=>text.toLowerCase().match(/[a-z]+|[.?]/g)??[];
+  const trainWords=new Set(corpus.rows.filter(row=>row.split==='train').flatMap(row=>tokens(`question ${row.question} answer ${row.reply}`)));
+  assert.ok(tokenizer.vocabulary.slice(3).every(word=>trainWords.has(word)));
+  const normalize=text=>text.toLowerCase().replace(/[^a-z]+/g,' ').trim();
+  const heldout=new Set(corpus.rows.filter(row=>row.split==='test').map(row=>normalize(row.question)));
+  assert.ok(corpus.rows.filter(row=>row.split!=='test').every(row=>!heldout.has(normalize(row.question))));
+  const qa=JSON.parse(await readFile(new URL('qa/prompts.json',import.meta.url),'utf8'));
+  const questions=new Set(qa.cases.map(row=>normalize(row.prompt)));
+  assert.ok(corpus.rows.filter(row=>row.split==='train').every(row=>!questions.has(normalize(row.question))));
 });
 test('WASM embedding gradient sums repeated IDs correctly and ignores negative segment IDs',()=>{
   let registration;

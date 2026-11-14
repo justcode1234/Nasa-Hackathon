@@ -13,5 +13,6 @@ export function mentionedCrops(question) {
   }));
 }
 
-export const ambiguousCornQuestion = question => /\b(?:corn|maize)\b/i.test(question) && !mentionedCrops(question).some(crop => crop.id === 'sweet-corn');
+export const nonSweetCornQuestion = question => /\b(?:grain|field|dent|flint|silage)\s+(?:corn|maize)\b|\b(?:corn|maize)\s+(?:for\s+)?grain\b|\b(?:popcorn|fieldcorn|graincorn)\b/i.test(String(question).replace(/[-_]/g,' '));
+export const ambiguousCornQuestion = question => nonSweetCornQuestion(question) || (/\b(?:corn|maize)\b/i.test(question) && !mentionedCrops(question).some(crop => crop.id === 'sweet-corn'));
 export const cornScopeNotice = 'Only explicitly identified sweet corn has sourced starter rules here. Other or unspecified corn/maize types remain unassessed; sweet-corn maturity and suitability rules are not applied to them.';

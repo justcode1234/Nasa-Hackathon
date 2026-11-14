@@ -5,7 +5,7 @@ import { catalog } from '../server/agronomy/catalog.js';
 import { getCountryCrops } from '../server/context/crops.js';
 
 // These doubles test action sequencing, never stand in for observed NASA readings.
-function setup({ failEvidence = false, country = 'GB', point = true, waitEvidence, locations = { places: [], regions: [] } } = {}) {
+function setup({ failEvidence = false, country = 'GB', point = true, waitEvidence, locations = { places: [], regions: [] }, reverseRegion='Maharashtra' } = {}) {
   const calls = [];
   const state = { country, catalog, countryCrops: getCountryCrops({ country }), farm: null, farms: [],
     location: point ? { latitude: 52.19, longitude: 0.09 } : null, observations: null,
@@ -29,7 +29,7 @@ function setup({ failEvidence = false, country = 'GB', point = true, waitEvidenc
   const assistant = createWorkflowAssistant({ getState: () => state, actions,
     request: async path => {
       const url = new URL(path, 'https://test.invalid');
-      if (url.pathname === '/api/places') return { places: [{ countryCode: Number(url.searchParams.get('latitude')) > 40 ? 'GB' : 'IN' }] };
+      if (url.pathname === '/api/places') return { places: [{ countryCode: Number(url.searchParams.get('latitude')) > 40 ? 'GB' : 'IN',region:reverseRegion }] };
       if (url.pathname === '/api/locations') return locations;
       throw new Error('Unexpected test request');
     } });
@@ -69,7 +69,7 @@ test('country without a field asks for a point and retains supplied crops across
 });
 
 test('whole-country replies use national evidence without loading point weather or comparing', async () => {
-  for (const question of ['Whole India', 'all of India', 'the whole of India', 'entire country', 'nationwide']) {
+  for (const question of ['Whole India', 'all of India', 'the whole of India', 'entire country', 'nationwide', 'I want the whole country, not a farm', 'An overview of all India, not this field']) {
     const { assistant, calls, state } = setup();
     await assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
     const answer = await assistant.respond(question);
@@ -81,6 +81,26 @@ test('whole-country replies use national evidence without loading point weather 
     assert.equal(state.location, null);
     assert.ok(!calls.includes('NASA') && !calls.includes('compare'));
   }
+});
+
+test('combined place/coordinate sentences resolve a coherent point and reject region/town conflicts',async()=>{
+  const locations={regions:[{id:'16',name:'Maharashtra'}],places:[{id:'pune',name:'Pune',regionCode:'16',latitude:18.51957,longitude:73.85535}]};
+  for(const question of ['Use Maharashtra, near Pune, 18.5204, 73.8567','Use Pune (18.5204, 73.8567).']) {
+    const {assistant,state}=setup({locations});
+    await assistant.respond('Help me plan in India. Crops: rice, wheat, beans. Rainfed');
+    const answer=await assistant.respond(question);
+    assert.match(answer.blocks[0].text,/Step 4 is ready/);
+    assert.equal(state.location.latitude,18.5204);
+    assert.equal(state.planning.irrigation,'rainfed');
+  }
+  const mismatch=setup({locations,reverseRegion:'Punjab'});
+  await mismatch.assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
+  assert.match((await mismatch.assistant.respond('Use Maharashtra, near Pune, 18.5204, 73.8567')).blocks[0].text,/could not be verified in Maharashtra/);
+  assert.ok(!mismatch.calls.includes('NASA'));
+  const far=setup({locations});
+  await far.assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
+  assert.match((await far.assistant.respond('Use Pune at 19.076, 72.8777')).blocks[0].text,/more than 50 km/);
+  assert.ok(!far.calls.includes('NASA'));
 });
 
 test('national scope clears an existing field point and keeps the farmer sequence', async () => {

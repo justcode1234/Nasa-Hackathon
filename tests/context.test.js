@@ -44,6 +44,15 @@ test('place searches are validated and contain the country returned by Nominatim
   assert.equal(result.places[0].latitude, 1);
   await assert.rejects(getPlaces({ q: '*' }));
 });
+test('point verification requests regional detail from the fixed place service and retains its region',async()=>{
+  let observed;
+  const getPlaces=createPlaceClient({fetchImpl:async url=>{observed=new URL(url);return {ok:true,json:async()=>({display_name:'TEST reverse point',lat:'18.52',lon:'73.85',address:{country_code:'in',state:'Maharashtra'}})}}});
+  const result=await getPlaces({latitude:18.52,longitude:73.85,detail:'region',url:'https://untrusted.invalid'});
+  assert.equal(observed.hostname,'nominatim.openstreetmap.org');assert.equal(observed.pathname,'/reverse');
+  assert.equal(observed.searchParams.get('zoom'),'10');assert.equal(observed.searchParams.get('accept-language'),'en');
+  assert.equal(result.places[0].region,'Maharashtra');assert.equal(result.places[0].countryCode,'IN');
+  await assert.rejects(getPlaces({latitude:18.52,longitude:73.85,detail:'arbitrary'}),/supported region detail/);
+});
 test('pest occurrence counts are country records, zero means no records, and query failures stay unknown', async () => {
   let calls = 0;
   const getPests = createPestClient({ fetchImpl: async () => { calls++; return { ok: true, json: async () => ({ count: 0, results: [] }) }; } });

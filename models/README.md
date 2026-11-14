@@ -1,6 +1,54 @@
 ﻿# FieldShift Mini — model card
 
-## Current shipped experiment
+## Current shipped experiment — retrained 2026-11-15
+
+Word-level autoregressive LM: **346-word vocabulary → Embedding(24) → LSTM(48) →
+Dense(346-word softmax)**; 48-token context, **39,274 parameters / 157,096 weight
+bytes (157.1 KB)**. It remains an experimental language model, not a general-purpose
+LLM or validated agronomic model. An accepted topic selection can prioritize an
+existing retrieved paragraph without changing words or removing caveats. Input
+checks, capability limits and actions are deterministic. Raw generation is hidden.
+
+Corpus v2: **746 rows — 530 train, 90 validation, 126 test**. Vocabulary uses training
+rows only. One exact legacy cross-split duplicate was removed, retaining its test
+row. The 36 added free-form test questions were fixed before training; the sixteen
+QA acceptance questions are absent from training. Synthetic wording is not reviewed
+farmer data. Template vocabulary still overlaps across splits. Two candidates used
+this development test set; it is not an untouched independent study.
+
+| Same continuation-selection questions | Previous model | Accepted model |
+| --- | --- | --- |
+| New free-form development holdout | 8/36 | 14/36 |
+| All development tests | 83/126 | 85/126 |
+| All free-form tests | 17/54 | 23/54 |
+| Legacy tests alone | 75/90 | 71/90 |
+
+The modest overall improvement includes four fewer legacy matches. Errors remain
+in evaluation.json. An answer-token-only candidate scored 54/126 and was rejected.
+Accepted training restores full question/answer next-word loss, with padding masked.
+It runs 100 epochs, choosing epoch **85** by validation matches (58/90), then
+validation loss, checked every five epochs. Adam 0.004, seeds 42/43/44/45, batch 32,
+no shuffle, TF.js 4.22.0 CPU WASM, one thread. Training/evaluation took 309,147.6 ms.
+No external model weights or new dependency were downloaded.
+
+[mini-integrity.json](mini-integrity.json) records all five artifact hashes. Tests
+verify these, train-only vocabulary, split separation and QA prompt exclusion.
+Current weight SHA-256:
+`719822007d383409dcb223461cdc54019736f48dbeefdd33277ae69c983f33c6`.
+
+The new local benchmark measured 3,256 ms cold load, 155 ms warm load, 19.8 ms
+inference and 3.8 ms first evidence response. Largest sampled aggregate working set:
+754,790,400 bytes; summed observed process lifetime peaks: 808,001,536 bytes. Shared
+pages and non-simultaneous peaks limit interpretation; these are not exact browser
+peaks or mobile guarantees. See [current benchmark](../docs/evidence/mini-lm-benchmark-current.json).
+
+Training writes only `artifacts/mini-candidate`, never shipped files. Its exit gate
+requires better new-holdout matches and no loss overall against the currently
+shipped model. Reproducing an already-shipped candidate can therefore exit 1 with
+equal results. Review its saved evaluation before separately promoting files,
+updating integrity hashes and repeating build/browser QA.
+
+## Previous v1 experiment — historical measurements below
 
 A real small autoregressive **word language model**, not a classifier output layer or a general-purpose LLM. Architecture: 208-word vocabulary → Embedding(24) → LSTM(48, sequence output; tanh/hard-sigmoid) → Dense(208-word softmax). Next-word cross-entropy masks padding. It has **29,200 parameters**, **116,800 bytes** of float32 weights and a 40-token context. No pretrained weights are used by this model.
 

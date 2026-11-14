@@ -1,9 +1,12 @@
 import { once } from 'node:events';
-import { writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
 import { createApp } from '../server/index.js';
 import { openChrome } from './chrome.js';
 const app=createApp();app.listen(0,'127.0.0.1');await once(app,'listening');
-const browser=await openChrome();
+const root=await realpath(tmpdir()),profile=await mkdtemp(path.join(root,'fieldshift-training-'));
+const browser=await openChrome({profileDirectory:profile});
 try {
   await browser.call('Page.navigate',{url:`http://127.0.0.1:${app.address().port}`});
   await browser.waitFor('document.readyState === "complete"');
@@ -17,10 +20,12 @@ try {
     done=status.done;
   }
   const result=await browser.evaluate('window.miniTrainingResult');
-  const directory='public/models/fieldshift-mini';
+  const directory='artifacts/mini-candidate';await mkdir(directory,{recursive:true});
   await writeFile(`${directory}/weights.bin`,Buffer.from(result.weightBase64,'base64'));
   await writeFile(`${directory}/model.json`,JSON.stringify({format:'layers-model',generatedBy:'TensorFlow.js browser training',convertedBy:null,modelTopology:result.modelTopology,weightsManifest:[{paths:['weights.bin'],weights:result.weightSpecs}]}));
   await writeFile(`${directory}/tokenizer.json`,JSON.stringify({vocabulary:result.vocabulary,length:result.length,topics:result.topics}));
   await writeFile(`${directory}/evaluation.json`,JSON.stringify(result.metrics,null,2));
-  console.log(JSON.stringify({...result.metrics,results:undefined}));
-} finally {await browser.close();await new Promise(resolve=>app.close(resolve));}
+  await copyFile('public/models/fieldshift-mini/corpus.json',`${directory}/corpus.json`);
+  console.log(JSON.stringify({parameters:result.metrics.parameters,weightBytes:result.metrics.weightBytes,correct:result.metrics.correct,testExamples:result.metrics.testExamples,newHoldoutCorrect:result.metrics.newHoldoutCorrect,newHoldoutExamples:result.metrics.newHoldoutExamples,baselineCorrect:result.metrics.baseline.correct,baselineHoldoutCorrect:result.metrics.baseline.newHoldoutCorrect,bestEpoch:result.metrics.bestEpoch,trainingMs:result.metrics.trainingMs}));
+  if(result.metrics.newHoldoutCorrect<=result.metrics.baseline.newHoldoutCorrect || result.metrics.correct<result.metrics.baseline.correct)throw new Error('Candidate did not improve the fixed held-out comparison; production weights were not replaced');
+} finally {await browser.close();await new Promise(resolve=>app.close(resolve));const target=await realpath(profile);if(path.dirname(target)!==root||!path.basename(target).startsWith('fieldshift-training-'))throw new Error('Training profile escaped its intended root');await rm(target,{recursive:true,force:true,maxRetries:8,retryDelay:150});}

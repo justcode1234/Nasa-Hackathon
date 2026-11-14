@@ -404,8 +404,8 @@
       "question": "tell me about sweet corn",
       "reply": "crop families and growing times come from sourced crop records .",
       "topic": "crops",
-      "group": "crops:sweet corn",
-      "split": "train",
+      "group": "crops:freeform:3",
+      "split": "test",
       "sourceIds": [
         "umn-families",
         "umn-duration"
@@ -956,17 +956,6 @@
       "topic": "crops",
       "group": "crops:freeform:2",
       "split": "train",
-      "sourceIds": [
-        "umn-families",
-        "umn-duration"
-      ]
-    },
-    {
-      "question": "tell me about sweet corn",
-      "reply": "crop families and growing times come from sourced crop records .",
-      "topic": "crops",
-      "group": "crops:freeform:3",
-      "split": "test",
       "sourceIds": [
         "umn-families",
         "umn-duration"
@@ -6640,6 +6629,1312 @@
       "sourceIds": [
         "project-scope"
       ]
+    },
+    {
+      "question": "Are peas and snap beans related plants",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "train",
+      "group": "crops:v2-freeform:train:0",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Does changing a crop name change its family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "train",
+      "group": "crops:v2-freeform:train:1",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Which family contains radish",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "train",
+      "group": "crops:v2-freeform:train:2",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Is Chinese broccoli in the screened crop list",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "train",
+      "group": "crops:v2-freeform:train:3",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Can a growing duration be used in every country",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "train",
+      "group": "crops:v2-freeform:train:4",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Explain sweet corn versus grain maize",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "train",
+      "group": "crops:v2-freeform:train:5",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Is rice a screened crop here",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "train",
+      "group": "crops:v2-freeform:train:6",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Why are green beans called legumes",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "train",
+      "group": "crops:v2-freeform:train:7",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Which crops have supported records",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "validation",
+      "group": "crops:v2-freeform:validation:0",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Explain a crop family and its reference duration",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "validation",
+      "group": "crops:v2-freeform:validation:1",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Which family contains garden peas",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "test",
+      "group": "crops:v2-freeform:test:0",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Tell me which vegetables have screened crop records",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "test",
+      "group": "crops:v2-freeform:test:1",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "What crop facts are known for snap beans",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "test",
+      "group": "crops:v2-freeform:test:2",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "Do radishes and kale share a plant family",
+      "reply": "crop families and growing times come from sourced crop records .",
+      "topic": "crops",
+      "split": "test",
+      "group": "crops:v2-freeform:test:3",
+      "sourceIds": [
+        "umn-families",
+        "umn-duration"
+      ]
+    },
+    {
+      "question": "My soil test has a high pH",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "train",
+      "group": "soil:v2-freeform:train:0",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "The field floods and drains poorly",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "train",
+      "group": "soil:v2-freeform:train:1",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Does clay on the map prove my soil type",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "train",
+      "group": "soil:v2-freeform:train:2",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Explain the soil pH reference range",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "train",
+      "group": "soil:v2-freeform:train:3",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Can regional soil estimates replace a local soil test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "train",
+      "group": "soil:v2-freeform:train:4",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "How should I interpret mapped sand",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "train",
+      "group": "soil:v2-freeform:train:5",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "The drainage is poor after heavy rain",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "train",
+      "group": "soil:v2-freeform:train:6",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Does waterlogging conflict with crop soil conditions",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "train",
+      "group": "soil:v2-freeform:train:7",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "What does soil acidity mean here",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "validation",
+      "group": "soil:v2-freeform:validation:0",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Is a mapped soil value a local test",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "validation",
+      "group": "soil:v2-freeform:validation:1",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Explain what a high soil pH means for planting",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "test",
+      "group": "soil:v2-freeform:test:0",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Is the mapped clay percentage a local measurement",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "test",
+      "group": "soil:v2-freeform:test:1",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "What should I check if water stands on my field",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "test",
+      "group": "soil:v2-freeform:test:2",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Would a soil test help with poor drainage",
+      "reply": "regional soil estimates are not farm measurements . a local soil test is needed .",
+      "topic": "soil",
+      "split": "test",
+      "group": "soil:v2-freeform:test:3",
+      "sourceIds": [
+        "soilgrids"
+      ]
+    },
+    {
+      "question": "Does rainfed mean irrigation is unavailable",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "train",
+      "group": "water:v2-freeform:train:0",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Show historical water applied to crops",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "train",
+      "group": "water:v2-freeform:train:1",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Can irrigation availability prove enough water",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "train",
+      "group": "water:v2-freeform:train:2",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Explain the annual watering benchmark",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "train",
+      "group": "water:v2-freeform:train:3",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "I have irrigation but the volume is unknown",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "train",
+      "group": "water:v2-freeform:train:4",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "What inputs establish crop water demand",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "train",
+      "group": "water:v2-freeform:train:5",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "How do rainfall and irrigation differ",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "train",
+      "group": "water:v2-freeform:train:6",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Are national water totals a watering schedule",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "train",
+      "group": "water:v2-freeform:train:7",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "What do historical irrigation totals mean",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "validation",
+      "group": "water:v2-freeform:validation:0",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Is irrigation enough for this crop",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "validation",
+      "group": "water:v2-freeform:validation:1",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Where can I find historical irrigation use",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "test",
+      "group": "water:v2-freeform:test:0",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Can annual water totals tell me when to irrigate",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "test",
+      "group": "water:v2-freeform:test:1",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "My farm is rainfed how should I think about watering",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "test",
+      "group": "water:v2-freeform:test:2",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Does rainfall show how much irrigation a crop requires",
+      "reply": "historical irrigation records are context not a watering schedule .",
+      "topic": "water",
+      "split": "test",
+      "group": "water:v2-freeform:test:3",
+      "sourceIds": [
+        "abs-irrigation"
+      ]
+    },
+    {
+      "question": "Do related crops share pest hosts",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "train",
+      "group": "pests:v2-freeform:train:0",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Would rotating legumes remove insect problems",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "train",
+      "group": "pests:v2-freeform:train:1",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Does a country occurrence prove a field infestation",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "train",
+      "group": "pests:v2-freeform:train:2",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Explain armyworm host evidence",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "train",
+      "group": "pests:v2-freeform:train:3",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "What is known about diamondback moth hosts",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "train",
+      "group": "pests:v2-freeform:train:4",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Can a family break prevent every disease",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "train",
+      "group": "pests:v2-freeform:train:5",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "How can old pest records guide inspection",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "train",
+      "group": "pests:v2-freeform:train:6",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Does a moth observation establish a current outbreak",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "train",
+      "group": "pests:v2-freeform:train:7",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "How do shared hosts affect pest cycles",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "validation",
+      "group": "pests:v2-freeform:validation:0",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Can national insects be assumed on this field",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "validation",
+      "group": "pests:v2-freeform:validation:1",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Would changing plant families remove every pest",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "test",
+      "group": "pests:v2-freeform:test:0",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "How do country insect records relate to my field",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "test",
+      "group": "pests:v2-freeform:test:1",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Where is the evidence for fall armyworm hosts",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "test",
+      "group": "pests:v2-freeform:test:2",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "Do moth records mean the crop is infested now",
+      "reply": "country pest records do not confirm an infestation on this farm .",
+      "topic": "pests",
+      "split": "test",
+      "group": "pests:v2-freeform:test:3",
+      "sourceIds": [
+        "gbif",
+        "ippc",
+        "uf-ifas"
+      ]
+    },
+    {
+      "question": "What dates do the POWER observations cover",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "train",
+      "group": "weather:v2-freeform:train:0",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Are the temperature values historical estimates",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "train",
+      "group": "weather:v2-freeform:train:1",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Explain the precipitation units",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "train",
+      "group": "weather:v2-freeform:train:2",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Where can I see solar radiation values",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "train",
+      "group": "weather:v2-freeform:train:3",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Are missing rain values zero",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "train",
+      "group": "weather:v2-freeform:train:4",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "How are monthly weather values derived",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "train",
+      "group": "weather:v2-freeform:train:5",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "What is the regional grid resolution",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "train",
+      "group": "weather:v2-freeform:train:6",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Does the latest observation mean current weather",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "train",
+      "group": "weather:v2-freeform:train:7",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "How old is this NASA observation",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "validation",
+      "group": "weather:v2-freeform:validation:0",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Where are temperature and rainfall sourced",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "validation",
+      "group": "weather:v2-freeform:validation:1",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "What is the observation period of the NASA weather series",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "test",
+      "group": "weather:v2-freeform:test:0",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Where are the solar and precipitation units shown",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "test",
+      "group": "weather:v2-freeform:test:1",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Are gridded temperature estimates current local conditions",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "test",
+      "group": "weather:v2-freeform:test:2",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "How do missing rain days affect the monthly chart",
+      "reply": "nasa power supplies historical gridded temperature precipitation and solar data .",
+      "topic": "weather",
+      "split": "test",
+      "group": "weather:v2-freeform:test:3",
+      "sourceIds": [
+        "nasa-power"
+      ]
+    },
+    {
+      "question": "Why is my existing rotation kept",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "train",
+      "group": "rotation:v2-freeform:train:0",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Explain the order of alternative sequences",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "train",
+      "group": "rotation:v2-freeform:train:1",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "How many planting slots are compared",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "train",
+      "group": "rotation:v2-freeform:train:2",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Does priority change the screening criteria",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "train",
+      "group": "rotation:v2-freeform:train:3",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Why are family repeats counted",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "train",
+      "group": "rotation:v2-freeform:train:4",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Compare crops on the same calendar horizon",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "train",
+      "group": "rotation:v2-freeform:train:5",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "How are unknown baseline crops displayed",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "train",
+      "group": "rotation:v2-freeform:train:6",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "What is the harvest turnaround assumption",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "train",
+      "group": "rotation:v2-freeform:train:7",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Why do the rotation timelines have equal dates",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "validation",
+      "group": "rotation:v2-freeform:validation:0",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "What breaks a tie between two alternatives",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "validation",
+      "group": "rotation:v2-freeform:validation:1",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Why does the comparison keep the original sequence",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "test",
+      "group": "rotation:v2-freeform:test:0",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Which factors sort the alternative crop timelines",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "test",
+      "group": "rotation:v2-freeform:test:1",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "How many crop slots does the rotation use",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "test",
+      "group": "rotation:v2-freeform:test:2",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Would a water priority change the hard screening rules",
+      "reply": "compare the existing rotation with two alternatives over the same time horizon .",
+      "topic": "rotation",
+      "split": "test",
+      "group": "rotation:v2-freeform:test:3",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Choose a country before selecting farmland",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "train",
+      "group": "location:v2-freeform:train:0",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "I want a national overview rather than a field",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "train",
+      "group": "location:v2-freeform:train:1",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Use a state then choose a nearby town",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "train",
+      "group": "location:v2-freeform:train:2",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "What point do these coordinates represent",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "train",
+      "group": "location:v2-freeform:train:3",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Is a town point a surveyed farm boundary",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "train",
+      "group": "location:v2-freeform:train:4",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Can I narrow the region on the map",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "train",
+      "group": "location:v2-freeform:train:5",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Are mapped fields available to rent",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "train",
+      "group": "location:v2-freeform:train:6",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "How do I check a named place against coordinates",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "train",
+      "group": "location:v2-freeform:train:7",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Show the whole country or a specific part",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "validation",
+      "group": "location:v2-freeform:validation:0",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Which region should I select before a town",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "validation",
+      "group": "location:v2-freeform:validation:1",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Help me choose a town before a field",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "test",
+      "group": "location:v2-freeform:test:0",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Can I look at an entire country instead of one farm",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "test",
+      "group": "location:v2-freeform:test:1",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "How do I narrow the map to a region",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "test",
+      "group": "location:v2-freeform:test:2",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Are these field outlines proof that land is available",
+      "reply": "search for a place and choose mapped farmland . ownership and access are unknown .",
+      "topic": "location",
+      "split": "test",
+      "group": "location:v2-freeform:test:3",
+      "sourceIds": [
+        "osm"
+      ]
+    },
+    {
+      "question": "Can the app promise a successful harvest",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "train",
+      "group": "limits:v2-freeform:train:0",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Is any crop success probability calibrated",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "train",
+      "group": "limits:v2-freeform:train:1",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Do language model scores measure farming accuracy",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "train",
+      "group": "limits:v2-freeform:train:2",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Can a historical year guarantee future safety",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "train",
+      "group": "limits:v2-freeform:train:3",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Is precise yield prediction supported here",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "train",
+      "group": "limits:v2-freeform:train:4",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Could observations prove exact crop performance",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "train",
+      "group": "limits:v2-freeform:train:5",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Can an unknown input justify a numerical prediction",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "train",
+      "group": "limits:v2-freeform:train:6",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Would a confidence percentage be evidence for suitability",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "train",
+      "group": "limits:v2-freeform:train:7",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Can you guarantee crop performance",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "validation",
+      "group": "limits:v2-freeform:validation:0",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Is future farm success a measured probability",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "validation",
+      "group": "limits:v2-freeform:validation:1",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Is a crop success percentage supported by the evidence",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "test",
+      "group": "limits:v2-freeform:test:0",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Can weather records predict an exact farm harvest",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "test",
+      "group": "limits:v2-freeform:test:1",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Would any model score guarantee next season is safe",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "test",
+      "group": "limits:v2-freeform:test:2",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Can you promise precise crop yield from these observations",
+      "reply": "unknown evidence cannot justify yield confidence or savings claims .",
+      "topic": "limits",
+      "split": "test",
+      "group": "limits:v2-freeform:test:3",
+      "sourceIds": [
+        "project-rules"
+      ]
+    },
+    {
+      "question": "Write a poem about a river",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "train",
+      "group": "other:v2-freeform:train:0",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Who is a famous movie actor",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "train",
+      "group": "other:v2-freeform:train:1",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Tell a funny story",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "train",
+      "group": "other:v2-freeform:train:2",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Recommend music for a holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "train",
+      "group": "other:v2-freeform:train:3",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Explain football scores",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "train",
+      "group": "other:v2-freeform:train:4",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "What fashion is popular",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "train",
+      "group": "other:v2-freeform:train:5",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Tell me about a shopping trip",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "train",
+      "group": "other:v2-freeform:train:6",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Suggest a film for tonight",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "train",
+      "group": "other:v2-freeform:train:7",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "What is a good comedy movie",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "validation",
+      "group": "other:v2-freeform:validation:0",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Tell a joke about a holiday",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "validation",
+      "group": "other:v2-freeform:validation:1",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Write a short song about the ocean",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "test",
+      "group": "other:v2-freeform:test:0",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Who will win a football match tonight",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "test",
+      "group": "other:v2-freeform:test:1",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Please suggest a movie to watch",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "test",
+      "group": "other:v2-freeform:test:2",
+      "sourceIds": [
+        "project-scope"
+      ]
+    },
+    {
+      "question": "Can you tell a joke about computers",
+      "reply": "this assistant supports fieldshift crop soil water weather and rotation evidence .",
+      "topic": "other",
+      "split": "test",
+      "group": "other:v2-freeform:test:3",
+      "sourceIds": [
+        "project-scope"
+      ]
     }
-  ]
+  ],
+  "exactDuplicateRowsRemoved": 1,
+  "version": 2,
+  "vocabularySource": "Training questions and replies only; validation/test wording is not used to construct vocabulary.",
+  "holdout": "36 fixed additional free-form questions, frozen before retraining, plus the 90 legacy development cases. No supplied QA acceptance prompt is in the added model data."
 }

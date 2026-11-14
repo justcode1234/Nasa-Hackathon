@@ -3,7 +3,7 @@ import { createPowerClient } from './nasa/power.js';
 import { catalog } from './agronomy/catalog.js';
 import { createFarmClient, createPlaceClient } from './context/farms.js';
 import { createPestClient } from './context/pests.js';
-import { answerCatalogQuestion } from './agronomy/answers.js';
+import { answerCatalogQuestion, answerGroundedQuestion } from './agronomy/answers.js';
 import { validateInputs, compareRotations, answerQuestion } from './agronomy/rotation.js';
 import { createSoilClient } from './context/soil.js';
 import { getWaterContext } from './context/water.js';
@@ -37,6 +37,8 @@ export function createApiHandler({ getObservations = createPowerClient(), getFar
       if (!body || typeof body !== 'object' || Array.isArray(body)) throw new AppError('Provide a planning or question object.');
       if (url.pathname === '/api/ask' && (typeof body.question !== 'string' || !body.question.trim() || body.question.length > 500)) throw new AppError('Enter a question of 1–500 characters.');
       if (url.pathname === '/api/ask') {
+        const grounded = answerGroundedQuestion(body.question, body);
+        if (grounded) return grounded;
         const conversation = answerConversation(body.question, { country: body.country ?? body.selectedCountry, context: body.chatContext });
         if (conversation) return conversation;
       }

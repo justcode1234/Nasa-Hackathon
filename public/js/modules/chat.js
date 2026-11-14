@@ -36,8 +36,8 @@ export function initChat(getState, actions) {
     worker.onmessage = event => {
       const data = event.data;
       if (data.type === 'progress') setStatus(`Loading local model · ${data.text}`);
-      if (data.type === 'ready') { ready = true; setStatus(`Compact model ready · 116.8 KB weights · ${(data.metrics.loadMs / 1000).toFixed(1)}s load · experimental`); window.fieldshiftModelMetrics = data.metrics; }
-      if (data.type === 'selection') { window.fieldshiftModelMetrics = data.metrics; selections.get(data.id)?.(data.index); selections.delete(data.id); }
+      if (data.type === 'ready') { ready = true; setStatus(`Compact model ready · ${(data.metrics.weightBytes / 1000).toFixed(1)} KB weights · ${(data.metrics.loadMs / 1000).toFixed(1)}s load · experimental`); window.fieldshiftModelMetrics = data.metrics; }
+      if (data.type === 'selection') { window.fieldshiftModelMetrics = data.metrics; window.fieldshiftModelSelections = (window.fieldshiftModelSelections ?? 0) + 1; selections.get(data.id)?.(data.index); selections.delete(data.id); }
       if (data.type === 'error') {
         if (data.id) { selections.get(data.id)?.(null); selections.delete(data.id); }
         else { unload(); setStatus(`Model unavailable: ${data.message}. Evidence chat still works.`); }
@@ -142,7 +142,13 @@ export function initChat(getState, actions) {
       // The evidence answer is visible before optional neural inference finishes.
       const renderedAt=performance.now();
       window.fieldshiftAnswerLatencyMs=renderedAt-startedAt;
-      if(ready && answer.topic !== 'greeting') select(question,answer.blocks).catch(() => {});
+      if(ready && answer.topic !== 'greeting') select(question,answer.blocks).then(index => {
+        // The model may prioritize an existing retrieved paragraph. It cannot
+        // alter text, remove caveats, reorder guarded input checks or run actions.
+        if(answer.useSelectedLocation===false || version!==revision || serial!==messageSerial || !response.isConnected || !Number.isInteger(index) || index<=0 || answer.blocks[index]?.kind==='limitation')return;
+        const paragraphs=response.querySelectorAll(':scope > p');
+        if(paragraphs[index])response.insertBefore(paragraphs[index],paragraphs[0]);
+      }).catch(() => {});
       // Keep a bounded conversation in memory; nothing is sent to a cloud model.
       while (log.children.length > 20) log.firstElementChild.remove();
       log.scrollTop = log.scrollHeight;

@@ -1,36 +1,36 @@
 {
-  "checkedAt": "2026-11-14T15:09:25.795Z",
-  "firstEvidenceAnswerMs": 2.300000011920929,
+  "checkedAt": "2026-11-14T19:13:13.500Z",
+  "firstEvidenceAnswerMs": 3.800000011920929,
   "coldLoad": {
     "model": "FieldShift Mini word LM (experimental)",
-    "parameters": 29200,
-    "weightBytes": 116800,
-    "loadMs": 228.19999998807907,
+    "parameters": 39274,
+    "weightBytes": 157096,
+    "loadMs": 3256.300000011921,
     "backend": "wasm",
-    "tensorBytes": 116800,
+    "tensorBytes": 157096,
     "wasmHeapCapacityBytes": 16777216,
     "peakTotalBrowserMemoryBytes": null
   },
   "warmLoad": {
     "model": "FieldShift Mini word LM (experimental)",
-    "parameters": 29200,
-    "weightBytes": 116800,
-    "loadMs": 184,
+    "parameters": 39274,
+    "weightBytes": 157096,
+    "loadMs": 155.30000001192093,
     "backend": "wasm",
-    "tensorBytes": 116800,
+    "tensorBytes": 157096,
     "wasmHeapCapacityBytes": 16777216,
     "peakTotalBrowserMemoryBytes": null
   },
   "inference": {
     "model": "FieldShift Mini word LM (experimental)",
-    "parameters": 29200,
-    "weightBytes": 116800,
-    "loadMs": 228.19999998807907,
+    "parameters": 39274,
+    "weightBytes": 157096,
+    "loadMs": 3256.300000011921,
     "backend": "wasm",
-    "tensorBytes": 116800,
+    "tensorBytes": 157096,
     "wasmHeapCapacityBytes": 16777216,
     "peakTotalBrowserMemoryBytes": null,
-    "inferenceMs": 13.799999982118607,
+    "inferenceMs": 19.799999982118607,
     "topic": "soil",
     "accepted": true
   },
@@ -38,34 +38,34 @@
   "browserProcessMemory": {
     "supported": true,
     "method": "Windows .NET process counters for the isolated browser and descendants; snapshots at workflow phases.",
-    "maxSampledWorkingSetBytes": 748978176,
-    "maxSampledPrivateBytes": 354177024,
-    "sumObservedProcessPeakWorkingSetsBytes": 798654464,
+    "maxSampledWorkingSetBytes": 754790400,
+    "maxSampledPrivateBytes": 356552704,
+    "sumObservedProcessPeakWorkingSetsBytes": 808001536,
     "observedProcessCount": 14,
     "snapshots": [
       {
         "phase": "before model load",
-        "startedAt": "2026-11-14T15:09:23.3865247Z",
-        "finishedAt": "2026-11-14T15:09:23.7774659Z",
+        "startedAt": "2026-11-14T19:13:07.9757007Z",
+        "finishedAt": "2026-11-14T19:13:08.3976810Z",
         "processCount": 11,
-        "workingSetBytes": 556417024,
-        "privateBytes": 226488320
+        "workingSetBytes": 563605504,
+        "privateBytes": 232562688
       },
       {
         "phase": "after model load and inference",
-        "startedAt": "2026-11-14T15:09:24.5446613Z",
-        "finishedAt": "2026-11-14T15:09:24.7577770Z",
-        "processCount": 11,
-        "workingSetBytes": 607367168,
-        "privateBytes": 278147072
+        "startedAt": "2026-11-14T19:13:12.2517834Z",
+        "finishedAt": "2026-11-14T19:13:12.4823077Z",
+        "processCount": 13,
+        "workingSetBytes": 740929536,
+        "privateBytes": 341622784
       },
       {
         "phase": "after developer generation and app model reload",
-        "startedAt": "2026-11-14T15:09:25.5279643Z",
-        "finishedAt": "2026-11-14T15:09:25.7527583Z",
+        "startedAt": "2026-11-14T19:13:13.2324272Z",
+        "finishedAt": "2026-11-14T19:13:13.4587615Z",
         "processCount": 13,
-        "workingSetBytes": 748978176,
-        "privateBytes": 354177024
+        "workingSetBytes": 754790400,
+        "privateBytes": 356552704
       }
     ],
     "limitations": [
@@ -77,307 +77,323 @@
   },
   "browserProcessMemorySamples": [
     {
-      "startedAt": "2026-11-14T15:09:23.3865247Z",
-      "finishedAt": "2026-11-14T15:09:23.7774659Z",
-      "rootProcessId": 36304,
+      "startedAt": "2026-11-14T19:13:07.9757007Z",
+      "finishedAt": "2026-11-14T19:13:08.3976810Z",
+      "rootProcessId": 15472,
       "processes": [
         {
-          "id": 36304,
-          "parentId": 34672,
-          "startedAt": "2026-11-14T15:09:22.5919069Z",
-          "workingSetBytes": 135655424,
-          "privateBytes": 41168896,
-          "peakWorkingSetBytes": 135655424
+          "id": 15472,
+          "parentId": 22828,
+          "startedAt": "2026-11-14T19:13:07.1887185Z",
+          "workingSetBytes": 136171520,
+          "privateBytes": 40988672,
+          "peakWorkingSetBytes": 136171520
         },
         {
-          "id": 18492,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6029152Z",
-          "workingSetBytes": 9981952,
-          "privateBytes": 2744320,
-          "peakWorkingSetBytes": 9981952
+          "id": 25972,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.1994330Z",
+          "workingSetBytes": 10461184,
+          "privateBytes": 2760704,
+          "peakWorkingSetBytes": 10461184
         },
         {
-          "id": 2716,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6907109Z",
-          "workingSetBytes": 40194048,
-          "privateBytes": 15056896,
-          "peakWorkingSetBytes": 40194048
+          "id": 21408,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2801737Z",
+          "workingSetBytes": 40947712,
+          "privateBytes": 15142912,
+          "peakWorkingSetBytes": 40947712
         },
         {
-          "id": 16860,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6954406Z",
-          "workingSetBytes": 41689088,
-          "privateBytes": 14712832,
-          "peakWorkingSetBytes": 41836544
+          "id": 23192,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2850345Z",
+          "workingSetBytes": 40443904,
+          "privateBytes": 14397440,
+          "peakWorkingSetBytes": 40734720
         },
         {
-          "id": 27168,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7111677Z",
-          "workingSetBytes": 17649664,
-          "privateBytes": 8028160,
-          "peakWorkingSetBytes": 17649664
+          "id": 17860,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2999664Z",
+          "workingSetBytes": 17838080,
+          "privateBytes": 7987200,
+          "peakWorkingSetBytes": 17838080
         },
         {
-          "id": 38080,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7550967Z",
-          "workingSetBytes": 65531904,
+          "id": 27140,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3431780Z",
+          "workingSetBytes": 65757184,
           "privateBytes": 29220864,
-          "peakWorkingSetBytes": 65531904
+          "peakWorkingSetBytes": 65757184
         },
         {
-          "id": 26024,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7793720Z",
-          "workingSetBytes": 30924800,
-          "privateBytes": 15007744,
-          "peakWorkingSetBytes": 30924800
+          "id": 24496,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3680711Z",
+          "workingSetBytes": 31158272,
+          "privateBytes": 15020032,
+          "peakWorkingSetBytes": 31158272
         },
         {
-          "id": 14624,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7798154Z",
-          "workingSetBytes": 91308032,
-          "privateBytes": 37810176,
-          "peakWorkingSetBytes": 91308032
+          "id": 27564,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3685001Z",
+          "workingSetBytes": 93896704,
+          "privateBytes": 41484288,
+          "peakWorkingSetBytes": 93896704
         },
         {
-          "id": 38512,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.8682954Z",
-          "workingSetBytes": 42311680,
-          "privateBytes": 22646784,
-          "peakWorkingSetBytes": 42311680
+          "id": 37416,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4570795Z",
+          "workingSetBytes": 42582016,
+          "privateBytes": 22695936,
+          "peakWorkingSetBytes": 42582016
         },
         {
-          "id": 34844,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.8936575Z",
-          "workingSetBytes": 39329792,
-          "privateBytes": 19681280,
-          "peakWorkingSetBytes": 39329792
+          "id": 38468,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4804634Z",
+          "workingSetBytes": 39534592,
+          "privateBytes": 19615744,
+          "peakWorkingSetBytes": 39534592
         },
         {
-          "id": 13324,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.9182316Z",
-          "workingSetBytes": 41840640,
-          "privateBytes": 20410368,
-          "peakWorkingSetBytes": 41840640
+          "id": 18504,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.5015371Z",
+          "workingSetBytes": 44814336,
+          "privateBytes": 23248896,
+          "peakWorkingSetBytes": 44814336
         }
       ],
       "phase": "before model load",
       "supported": true
     },
     {
-      "startedAt": "2026-11-14T15:09:24.5446613Z",
-      "finishedAt": "2026-11-14T15:09:24.7577770Z",
-      "rootProcessId": 36304,
+      "startedAt": "2026-11-14T19:13:12.2517834Z",
+      "finishedAt": "2026-11-14T19:13:12.4823077Z",
+      "rootProcessId": 15472,
       "processes": [
         {
-          "id": 36304,
-          "parentId": 34672,
-          "startedAt": "2026-11-14T15:09:22.5919069Z",
-          "workingSetBytes": 137547776,
-          "privateBytes": 41988096,
-          "peakWorkingSetBytes": 137547776
+          "id": 15472,
+          "parentId": 22828,
+          "startedAt": "2026-11-14T19:13:07.1887185Z",
+          "workingSetBytes": 158920704,
+          "privateBytes": 53673984,
+          "peakWorkingSetBytes": 160727040
         },
         {
-          "id": 18492,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6029152Z",
-          "workingSetBytes": 9981952,
-          "privateBytes": 2744320,
-          "peakWorkingSetBytes": 9981952
+          "id": 25972,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.1994330Z",
+          "workingSetBytes": 10477568,
+          "privateBytes": 2777088,
+          "peakWorkingSetBytes": 10477568
         },
         {
-          "id": 2716,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6907109Z",
-          "workingSetBytes": 43995136,
-          "privateBytes": 15286272,
-          "peakWorkingSetBytes": 43995136
+          "id": 21408,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2801737Z",
+          "workingSetBytes": 45379584,
+          "privateBytes": 15618048,
+          "peakWorkingSetBytes": 45379584
         },
         {
-          "id": 16860,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6954406Z",
-          "workingSetBytes": 42225664,
-          "privateBytes": 14770176,
-          "peakWorkingSetBytes": 45617152
+          "id": 23192,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2850345Z",
+          "workingSetBytes": 41639936,
+          "privateBytes": 14839808,
+          "peakWorkingSetBytes": 45047808
         },
         {
-          "id": 27168,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7111677Z",
-          "workingSetBytes": 17649664,
-          "privateBytes": 8028160,
-          "peakWorkingSetBytes": 17649664
+          "id": 17860,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2999664Z",
+          "workingSetBytes": 18042880,
+          "privateBytes": 8040448,
+          "peakWorkingSetBytes": 18042880
         },
         {
-          "id": 38080,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7550967Z",
-          "workingSetBytes": 65531904,
-          "privateBytes": 29220864,
-          "peakWorkingSetBytes": 65531904
+          "id": 27140,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3431780Z",
+          "workingSetBytes": 66101248,
+          "privateBytes": 29265920,
+          "peakWorkingSetBytes": 66101248
         },
         {
-          "id": 26024,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7793720Z",
-          "workingSetBytes": 30924800,
-          "privateBytes": 15007744,
-          "peakWorkingSetBytes": 30924800
+          "id": 27564,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3685001Z",
+          "workingSetBytes": 142921728,
+          "privateBytes": 92024832,
+          "peakWorkingSetBytes": 142921728
         },
         {
-          "id": 14624,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7798154Z",
-          "workingSetBytes": 136028160,
-          "privateBytes": 88363008,
-          "peakWorkingSetBytes": 136028160
+          "id": 37416,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4570795Z",
+          "workingSetBytes": 42934272,
+          "privateBytes": 22753280,
+          "peakWorkingSetBytes": 42934272
         },
         {
-          "id": 38512,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.8682954Z",
-          "workingSetBytes": 42311680,
-          "privateBytes": 22646784,
-          "peakWorkingSetBytes": 42311680
+          "id": 38468,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4804634Z",
+          "workingSetBytes": 39936000,
+          "privateBytes": 19689472,
+          "peakWorkingSetBytes": 39936000
         },
         {
-          "id": 34844,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.8936575Z",
-          "workingSetBytes": 39329792,
-          "privateBytes": 19681280,
-          "peakWorkingSetBytes": 39329792
+          "id": 18504,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.5015371Z",
+          "workingSetBytes": 45158400,
+          "privateBytes": 23306240,
+          "peakWorkingSetBytes": 45158400
         },
         {
-          "id": 13324,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.9182316Z",
-          "workingSetBytes": 41840640,
-          "privateBytes": 20410368,
-          "peakWorkingSetBytes": 41840640
+          "id": 34352,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.8566380Z",
+          "workingSetBytes": 52740096,
+          "privateBytes": 22679552,
+          "peakWorkingSetBytes": 52740096
+        },
+        {
+          "id": 13072,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.9528328Z",
+          "workingSetBytes": 31383552,
+          "privateBytes": 15056896,
+          "peakWorkingSetBytes": 31383552
+        },
+        {
+          "id": 13216,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.9904038Z",
+          "workingSetBytes": 45293568,
+          "privateBytes": 21897216,
+          "peakWorkingSetBytes": 45895680
         }
       ],
       "phase": "after model load and inference",
       "supported": true
     },
     {
-      "startedAt": "2026-11-14T15:09:25.5279643Z",
-      "finishedAt": "2026-11-14T15:09:25.7527583Z",
-      "rootProcessId": 36304,
+      "startedAt": "2026-11-14T19:13:13.2324272Z",
+      "finishedAt": "2026-11-14T19:13:13.4587615Z",
+      "rootProcessId": 15472,
       "processes": [
         {
-          "id": 36304,
-          "parentId": 34672,
-          "startedAt": "2026-11-14T15:09:22.5919069Z",
-          "workingSetBytes": 157556736,
-          "privateBytes": 53874688,
-          "peakWorkingSetBytes": 160239616
+          "id": 15472,
+          "parentId": 22828,
+          "startedAt": "2026-11-14T19:13:07.1887185Z",
+          "workingSetBytes": 157970432,
+          "privateBytes": 53768192,
+          "peakWorkingSetBytes": 160727040
         },
         {
-          "id": 18492,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6029152Z",
-          "workingSetBytes": 9998336,
-          "privateBytes": 2760704,
-          "peakWorkingSetBytes": 9998336
+          "id": 25972,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.1994330Z",
+          "workingSetBytes": 10477568,
+          "privateBytes": 2777088,
+          "peakWorkingSetBytes": 10477568
         },
         {
-          "id": 2716,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6907109Z",
-          "workingSetBytes": 44560384,
-          "privateBytes": 15429632,
-          "peakWorkingSetBytes": 44580864
+          "id": 21408,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2801737Z",
+          "workingSetBytes": 45379584,
+          "privateBytes": 15618048,
+          "peakWorkingSetBytes": 45379584
         },
         {
-          "id": 16860,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.6954406Z",
-          "workingSetBytes": 43163648,
-          "privateBytes": 15511552,
-          "peakWorkingSetBytes": 45674496
+          "id": 23192,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2850345Z",
+          "workingSetBytes": 41689088,
+          "privateBytes": 14893056,
+          "peakWorkingSetBytes": 45047808
         },
         {
-          "id": 27168,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7111677Z",
-          "workingSetBytes": 17850368,
-          "privateBytes": 8081408,
-          "peakWorkingSetBytes": 17850368
+          "id": 17860,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2999664Z",
+          "workingSetBytes": 18042880,
+          "privateBytes": 8040448,
+          "peakWorkingSetBytes": 18042880
         },
         {
-          "id": 38080,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7550967Z",
-          "workingSetBytes": 65859584,
-          "privateBytes": 29270016,
-          "peakWorkingSetBytes": 65859584
+          "id": 27140,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3431780Z",
+          "workingSetBytes": 66101248,
+          "privateBytes": 29265920,
+          "peakWorkingSetBytes": 66101248
         },
         {
-          "id": 14624,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.7798154Z",
-          "workingSetBytes": 153145344,
-          "privateBytes": 103370752,
-          "peakWorkingSetBytes": 166076416
+          "id": 27564,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3685001Z",
+          "workingSetBytes": 157683712,
+          "privateBytes": 106807296,
+          "peakWorkingSetBytes": 173019136
         },
         {
-          "id": 38512,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.8682954Z",
-          "workingSetBytes": 42688512,
-          "privateBytes": 22724608,
-          "peakWorkingSetBytes": 42688512
+          "id": 37416,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4570795Z",
+          "workingSetBytes": 42934272,
+          "privateBytes": 22753280,
+          "peakWorkingSetBytes": 42934272
         },
         {
-          "id": 34844,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.8936575Z",
-          "workingSetBytes": 39710720,
-          "privateBytes": 19750912,
-          "peakWorkingSetBytes": 39710720
+          "id": 38468,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4804634Z",
+          "workingSetBytes": 39936000,
+          "privateBytes": 19689472,
+          "peakWorkingSetBytes": 39936000
         },
         {
-          "id": 13324,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:22.9182316Z",
-          "workingSetBytes": 42180608,
-          "privateBytes": 20463616,
-          "peakWorkingSetBytes": 42180608
+          "id": 18504,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.5015371Z",
+          "workingSetBytes": 45158400,
+          "privateBytes": 23306240,
+          "peakWorkingSetBytes": 45158400
         },
         {
-          "id": 38176,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:25.2371197Z",
-          "workingSetBytes": 52531200,
-          "privateBytes": 22700032,
-          "peakWorkingSetBytes": 52531200
+          "id": 34352,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.8566380Z",
+          "workingSetBytes": 52740096,
+          "privateBytes": 22679552,
+          "peakWorkingSetBytes": 52740096
         },
         {
-          "id": 27400,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:25.3601317Z",
-          "workingSetBytes": 31195136,
-          "privateBytes": 15052800,
-          "peakWorkingSetBytes": 31195136
+          "id": 13072,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.9528328Z",
+          "workingSetBytes": 31383552,
+          "privateBytes": 15056896,
+          "peakWorkingSetBytes": 31383552
         },
         {
-          "id": 21132,
-          "parentId": 36304,
-          "startedAt": "2026-11-14T15:09:25.4125019Z",
-          "workingSetBytes": 48537600,
-          "privateBytes": 25186304,
-          "peakWorkingSetBytes": 49143808
+          "id": 13216,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.9904038Z",
+          "workingSetBytes": 45293568,
+          "privateBytes": 21897216,
+          "peakWorkingSetBytes": 45895680
         }
       ],
       "phase": "after developer generation and app model reload",
