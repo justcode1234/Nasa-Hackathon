@@ -100,6 +100,10 @@ model-disabled and model-enabled runs pass all sixteen questions and six flows.
 The test criteria and original question text have not been relaxed. Use
 `$env:QA_MODEL='1'; npm.cmd run test:qa` to require actual model loading/inference;
 omit QA_MODEL for deterministic fallback. Each report identifies the mode and
-captures model metrics alongside actual replies. Retrained weights and public
-deployment are still being evaluated; final reports will replace latest-results
-only after verification. Portal submission remains an owner check.
+captures model metrics alongside actual replies. The accepted retrained model and
+public deployment now pass 16/16 prompts and 6/6 flows in both modes. Review checks:
+six pass, zero fail, one owner-only portal check unverified. The latest-results
+files contain model-on public answers; public-model-off-results contains the
+public fallback run. Local mode reports and the original baseline remain beside
+them. Fifteen deployment assets matched app source 0d2c717. These explicit tests
+do not establish unrestricted language understanding or agronomic accuracy.

@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { writeFile } from 'node:fs/promises';
 import { createStaticPreview } from './static-preview.js';
+import { createApp } from '../server/index.js';
 import { openChrome } from './chrome.js';
 import { sampleBrowserMemory, summarizeMemory } from './browser-memory.js';
-const app=createStaticPreview();app.listen(0,'127.0.0.1');await once(app,'listening');const browser=await openChrome();
+const nodeMode=process.env.BENCH_NODE==='1';
+const app=nodeMode?createApp():createStaticPreview();app.listen(0,'127.0.0.1');await once(app,'listening');const browser=await openChrome();
 const memorySamples=[];
 try{
   const url=`http://127.0.0.1:${app.address().port}`;
@@ -27,10 +29,10 @@ try{
   await browser.waitFor('document.querySelector("#model-status").textContent.includes("ready")',30000);
   const warm=await browser.evaluate('window.fieldshiftModelMetrics');
   memorySamples.push(await sampleBrowserMemory(browser.processId,'after developer generation and app model reload'));
-  const result={checkedAt:new Date().toISOString(),firstEvidenceAnswerMs:firstAnswerMs,coldLoad:cold,warmLoad:warm,inference,rawGenerationForEvaluationOnly:generation,
+  const result={checkedAt:new Date().toISOString(),runtime:nodeMode?'Node HTTP API':'static browser worker',firstEvidenceAnswerMs:firstAnswerMs,coldLoad:cold,warmLoad:warm,inference,rawGenerationForEvaluationOnly:generation,
     browserProcessMemory:summarizeMemory(memorySamples),browserProcessMemorySamples:memorySamples,
     limitations:['Development question wording is synthetic and not agronomist-reviewed.','Raw generated words never reach scientific UI output.','WASM heap capacity and tensor bytes are not total browser peak memory.']};
-  await writeFile('artifacts/mini-lm-benchmark.json',JSON.stringify(result,null,2));
+  await writeFile(nodeMode?'artifacts/mini-lm-node-benchmark.json':'artifacts/mini-lm-benchmark.json',JSON.stringify(result,null,2));
   assert.ok(cold.weightBytes<256*1024,'Keep this experimental model below its 256 KiB weight budget');
   assert.ok(firstAnswerMs<1000,'Evidence answer should not wait for neural inference');
   assert.ok(inference.inferenceMs<1000,'Compact-model inference target on this test machine');

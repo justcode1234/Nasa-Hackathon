@@ -11,6 +11,6 @@ All default Python code cells executed successfully with Python 3.14.7. They ins
 
 To open: create an isolated environment, install notebook, and run `python -m notebook notebooks/llm_training.ipynb`. Proposed Python TensorFlow environments inside the optional notebooks require their own compatibility checks. Do not assume the system Python 3.14 supports them or that TF.js, Keras, ONNX and WebLLM artifacts are interchangeable.
 
-Retraining is off by default. Browser training is reproducible with `node scripts/build-mini-corpus.js` and `node scripts/train-mini-lm.js`, then `npm run build` and `node scripts/benchmark-mini-lm.js`. Corpus wording is explicitly developmental/synthetic, not human-reviewed farmer data or fabricated NASA observations.
+Retraining is off by default. Run `node scripts/build-mini-corpus.js` and `node scripts/train-mini-lm.js` to write a separate candidate. Training never promotes weights; an equal reproduction can fail the new-improvement exit gate. Review artifacts/mini-candidate, then explicitly promote, update models/mini-integrity.json and rerun build/QA. Corpus wording is developmental/synthetic, not reviewed farmer data or fabricated NASA observations. `BENCH_NODE=1` runs the compact-model benchmark through the Node frontend; default benchmarking uses the static showcase.
 
 `node scripts/build-notebooks.js` regenerates all three notebooks. Source/data schemas are in data/README.md; [models/README.md](../models/README.md) records actual measurements and limitations.

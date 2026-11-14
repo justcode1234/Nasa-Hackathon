@@ -186,7 +186,7 @@ Update this section and docs/decisions.md / docs/validation.md after each substa
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
 
-- **Current user goal — resolve QA gaps and improve the tiny LM (in progress):**
+- **Current user goal — resolve QA gaps and improve the tiny LM (verified release):**
   fix all nine failed prompts in shared grounded answers and validated action
   parsing; retrain/evaluate the optional small word LM using additional development
   wording and a fixed held-out set, without training on the 16 acceptance prompts.
@@ -205,7 +205,14 @@ state. Do not leave another device relying on an earlier planning assumption.
   overall 83/126 to 85/126, but legacy matches fell 75/90 to 71/90. Training-only
   vocabulary, no exact QA prompts in training, validation-selected epoch 85/100.
   Full comparison/failures and hashes: model card, evaluation.json, mini-integrity.
-  Training writes candidates separately; public verification is still pending.
+  Training writes candidates separately. Public app source 0d2c717 passed all
+  16 exact questions and six flows with the model enabled and disabled, plus
+  33 public Chrome checks. Fifteen public files matched the build. Deployment:
+  dpl_EerXCncopFA9U7H6UZXG6AoTkBuw. Latest actual replies are in docs/qa/latest-results;
+  public-model-off-results retains the fallback run; baseline-results preserves
+  the original nine failures. Six review checks pass; NASA portal submission is
+  still an owner-only unverified check. Node mode also passed actual compact-model
+  load/inference/reload and evidence-answer timing (BENCH_NODE=1 benchmark).
   New automated browser profiles are temporary and removed after each run.
 
 - **Initial automated QA baseline (historical; fixes above supersede failures):** the user chose

@@ -20,8 +20,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 26809,
-      "sha256": "3fcbd6f65c5e91bcbbd0ffa30af9183c60c47d5ff7b47e0f79a0aaf6aec59682"
+      "bytes": 27378,
+      "sha256": "233383bc9bff7ec82350f19df929280e74618ee6fc7ff8e0602d060d2c8c869a"
     },
     {
       "path": "docs/challenge-alignment.md",
@@ -45,8 +45,8 @@
     },
     {
       "path": "docs/deployment.md",
-      "bytes": 5984,
-      "sha256": "313c4d8a6a3fc7d0fe5be4374813a61ad9522fe66943713a2d043caf9e335c26"
+      "bytes": 6784,
+      "sha256": "1f6c66011a2dd5064b474635bfd6086861d87161a0bd64701cc31ab8517a6934"
     },
     {
       "path": "docs/evidence/browser-validation.json",
@@ -84,6 +84,11 @@
       "sha256": "baba84472ffb242cf5d7623de4ef7f5c30366c09cbc10adb0cfd7db518b168db"
     },
     {
+      "path": "docs/evidence/mini-lm-node-benchmark.json",
+      "bytes": 12373,
+      "sha256": "ce9689c54605e27dafbae370b5ea864e2a731b2de0a90d1ac636f4f584daa5d5"
+    },
+    {
       "path": "docs/evidence/mini-lm-rejected-answer-only.json",
       "bytes": 46366,
       "sha256": "aeac357168d05086fb916dd06f520d8abffa7a26c907d6e8b257d5f081589e43"
@@ -99,9 +104,14 @@
       "sha256": "d1e47628c581b161a14f91f6fac880cf82d4552a3fef781ff97129d438cb7889"
     },
     {
+      "path": "docs/evidence/public-assets-current.json",
+      "bytes": 4271,
+      "sha256": "5b7222488d93c60717d0a117683936b78a3081a81551e1f20bac5e535cdcc7f4"
+    },
+    {
       "path": "docs/evidence/public-browser-validation.json",
       "bytes": 3454,
-      "sha256": "22a46e6f575b5ad6c796ed25342a73d7ff0bfa655e3e30f830f2d08de5682c61"
+      "sha256": "3a209568c04894e68b2f87dd9c9212209540842c5312b8c69e61b87acf2d552f"
     },
     {
       "path": "docs/evidence/public-file-validation.json",
@@ -130,13 +140,13 @@
     },
     {
       "path": "docs/qa/latest-results.json",
-      "bytes": 55909,
-      "sha256": "9882164f09fda856aea1ccc96b1ca4e1136abeb6728f7e74b3fadf848fa7e437"
+      "bytes": 66659,
+      "sha256": "91a5e9fa9e058fa40649ea7a6d0b46f7644ca5574ea687139b1a46fd8ef178fc"
     },
     {
       "path": "docs/qa/latest-results.md",
-      "bytes": 16084,
-      "sha256": "263c2ad1e9f8ca05678c6f035f5a7d93c0df6b2cb5d5462867c4359f871f4fce"
+      "bytes": 17285,
+      "sha256": "8b830a3055f4e5aa35afb7e94465914845f603af69a1c1bb9289f9c765cfd0e8"
     },
     {
       "path": "docs/qa/local-model-off-results.json",
@@ -159,9 +169,29 @@
       "sha256": "3b935e67dfe97d3eb1443cc32814c6a60b41a60ffe7172edee94b6afef56faf7"
     },
     {
+      "path": "docs/qa/public-model-off-results.json",
+      "bytes": 59971,
+      "sha256": "469b4c5c8ea890c2a34f23df8482b70d104175728a288628514e3e15af649eac"
+    },
+    {
+      "path": "docs/qa/public-model-off-results.md",
+      "bytes": 17285,
+      "sha256": "3823be1fb2ef7ce19e2c175e446f98d70fabefe270e78c7782a263b260e078d5"
+    },
+    {
+      "path": "docs/qa/public-model-on-results.json",
+      "bytes": 66659,
+      "sha256": "91a5e9fa9e058fa40649ea7a6d0b46f7644ca5574ea687139b1a46fd8ef178fc"
+    },
+    {
+      "path": "docs/qa/public-model-on-results.md",
+      "bytes": 17285,
+      "sha256": "8b830a3055f4e5aa35afb7e94465914845f603af69a1c1bb9289f9c765cfd0e8"
+    },
+    {
       "path": "docs/qa-regression.md",
-      "bytes": 6087,
-      "sha256": "fa693e0f779366fde4b57438919a1df3cb43cbeff1ea8e357fb1a9e3b63af2d4"
+      "bytes": 6423,
+      "sha256": "8d56abdd193428ee4c39de2ce28f82772374609d8179afc1549a6a1fd5a4cd05"
     },
     {
       "path": "docs/submission.md",
@@ -170,8 +200,8 @@
     },
     {
       "path": "docs/validation.md",
-      "bytes": 21396,
-      "sha256": "088df8d2c228e47975df322decb0dfeae07c087018214804ac511236305d7fa7"
+      "bytes": 22429,
+      "sha256": "684846591f6c384f76d171e6fda1ae97ee94dd9c41d834a4ded7d732674599d5"
     },
     {
       "path": "models/mini-development-questions.json",
@@ -205,8 +235,8 @@
     },
     {
       "path": "notebooks/README.md",
-      "bytes": 1948,
-      "sha256": "350235c4160894bfbfd317df99a8b9ad21f555933f79bd15a70cc90342626015"
+      "bytes": 2194,
+      "sha256": "2f828a01c2a069bc175097cb260f75501a053c78bd01ab6673de73e07396221c"
     },
     {
       "path": "notebooks/si_experiments.ipynb",
@@ -1591,7 +1621,7 @@
     {
       "path": "public/submission/fieldshift-deck.pdf",
       "bytes": 86896,
-      "sha256": "3ba1bdd562f92f2c9eed398d43f4e2b204c85103c71857618e2693a65f4cff67"
+      "sha256": "aa4eb0c8cfeb1c63b88ee8b076524a07a7ede11bb557a7a00cd88640f019568d"
     },
     {
       "path": "public/submission/index.html",
@@ -1620,8 +1650,8 @@
     },
     {
       "path": "scripts/benchmark-mini-lm.js",
-      "bytes": 3678,
-      "sha256": "27c9ee963593853beadca2f874a19fd563e1c790e33d60c29055727f9f595ef2"
+      "bytes": 3898,
+      "sha256": "d7aa1e785ead1c0b8ee6d3c44e06afdbaf7e2cd324e5305b111ca0cd9d34337e"
     },
     {
       "path": "scripts/browser-memory.js",

@@ -2,15 +2,15 @@
 
 Date: 2026-11-15 (local). This section supersedes the earlier planning assumptions; the user selected a Node.js backend for local testing alongside a browser-only static Vercel showcase. Previously recorded styling is preserved; no CSS polishing was added.
 
-## Assistant improvements — verification in progress
+## Assistant improvements — verified local and public release
 
 The nine QA failures have targeted shared answer/parser fixes. The local showcase
 now passes **16/16 exact prompts and 6/6 flows**, both with the shipped compact
 model disabled and enabled. Both runs use real providers. `npm.cmd test` passes
 **93/93**, including additional phrasings, regional/coordinate disagreement,
 town-distance checks and explicit scientific capability limits. The Node-backed
-browser workflow also passes; current reports are in artifacts until final release
-verification. The accepted 39,274-parameter model has 157,096 weight bytes. It
+browser workflow also passes; durable reports are under docs/evidence and docs/qa.
+The accepted 39,274-parameter model has 157,096 weight bytes. It
 matched 14/36 new free-form development questions versus 8/36 before, and 85/126
 overall versus 83/126; legacy matches fell 75/90 to 71/90. Vocabulary uses training
 rows only, and checkpoint selection uses validation data. The first answer-only
@@ -22,7 +22,22 @@ workflow checks passed, plus 16/16 QA questions and 6/6 flows with the accepted
 model enabled and disabled. The separate benchmark exercised actual generation,
 load, inference, reload and process-memory snapshots. All default Python cells in
 the three Jupyter notebooks passed; optional Python training remained disabled.
-Public deployment verification is next. No perfect-model claim is made.
+The public Vercel origin passes all sixteen questions and six flows with the model
+enabled and disabled, and all 33 full Chrome checks. Fifteen public assets matched
+the build for app source `0d2c71789951e9eead08e0b6139a4938b7cf6ced`; production
+deployment `dpl_EerXCncopFA9U7H6UZXG6AoTkBuw`. The [latest answer report](qa/latest-results.md)
+contains actual public replies and asset/fixture/grader attribution; the
+[model-off report](qa/public-model-off-results.md) verifies fallback. All temporary
+profiles were removed. Six review checks pass; R07 portal submission remains
+unverified and owner-controlled. No perfect-model or independent agronomic
+validation claim is made.
+
+Node mode separately passed actual compact-model load, inference, generation,
+unload/reload and immediate evidence answers: 157,096 weight bytes, 16.5 ms
+inference, 6.7 ms evidence response in that observed run. Reproduce with
+`$env:BENCH_NODE='1'; node scripts/benchmark-mini-lm.js`. Raw evidence:
+docs/evidence/mini-lm-node-benchmark.json. Model-on static benchmark and memory
+limitations remain in the model card.
 
 ## Exact QA-plan questions — initial baseline before fixes
 

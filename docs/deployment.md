@@ -31,6 +31,19 @@ on preferred port 3001; its `/api/health` returns 200. Both can run together.
 
 ## Public host and release
 
+**Assistant/model release, 2026-11-15 local:** app source
+`0d2c71789951e9eead08e0b6139a4938b7cf6ced` is deployed at the same public origin,
+deployment `dpl_EerXCncopFA9U7H6UZXG6AoTkBuw`,
+`nasa-hackathon-lpnu5dlhq-justcode1234s-projects.vercel.app`. All sixteen exact QA
+questions and six flows pass with compact model enabled and disabled; 33 broader
+public Chrome checks also pass. Fifteen public assets matched the build, including
+157,096-byte weights, model metadata, worker, deck and source package. The CLI
+identity was reverified as justcode1234. Raw reports: docs/qa/latest-results,
+docs/qa/public-model-off-results and docs/evidence/public-assets-current.json.
+Subsequent handoff/report/package updates retain these tested app/model bytes.
+
+The following records the earlier scope release:
+
 The existing public origin was discovered in the user's browser and checked with
 an unauthenticated HTTP request on 2026-11-14:
 https://nasa-hackathon-three.vercel.app/ . It returned HTTP 200, but initially served

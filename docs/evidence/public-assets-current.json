@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-11-14T19:21:46.929Z",
+  "origin": "https://nasa-hackathon-three.vercel.app",
+  "sourceCommit": "0d2c71789951e9eead08e0b6139a4938b7cf6ced",
+  "assets": [
+    {
+      "path": "/index.html",
+      "status": 200,
+      "sha256": "4b9b22634b555a3ebf662f98cc019eb86f6ece8d4577902414de7abcfe3e5c11",
+      "expected": "4b9b22634b555a3ebf662f98cc019eb86f6ece8d4577902414de7abcfe3e5c11",
+      "matched": true
+    },
+    {
+      "path": "/js/app.js",
+      "status": 200,
+      "sha256": "19bec53a57de3ffcc2cbff3551961a1df015e39b148af539bbbb0e5d5a4641c4",
+      "expected": "19bec53a57de3ffcc2cbff3551961a1df015e39b148af539bbbb0e5d5a4641c4",
+      "matched": true
+    },
+    {
+      "path": "/js/modules/chat.js",
+      "status": 200,
+      "sha256": "9bc7fa58be551636b6593d39eb990f75b4efd75d6cfd15f25aa15e627ac55afb",
+      "expected": "9bc7fa58be551636b6593d39eb990f75b4efd75d6cfd15f25aa15e627ac55afb",
+      "matched": true
+    },
+    {
+      "path": "/js/modules/workflow-assistant.js",
+      "status": 200,
+      "sha256": "02e2bfd3cfc3fae66d9b26c4dcd3978822901a12b00fca4e05903d64a58bd317",
+      "expected": "02e2bfd3cfc3fae66d9b26c4dcd3978822901a12b00fca4e05903d64a58bd317",
+      "matched": true
+    },
+    {
+      "path": "/js/modules/mini-lm-worker.js",
+      "status": 200,
+      "sha256": "ae81a29011d683247d3ba834c518b47ebef3996a045dcc9d0f39a4dde3ec6505",
+      "expected": "ae81a29011d683247d3ba834c518b47ebef3996a045dcc9d0f39a4dde3ec6505",
+      "matched": true
+    },
+    {
+      "path": "/js/lib/chat-intent.js",
+      "status": 200,
+      "sha256": "b6b162c5672f6ae2530801848f2113d9e764465a78b0ea61e31e662a91e8df57",
+      "expected": "b6b162c5672f6ae2530801848f2113d9e764465a78b0ea61e31e662a91e8df57",
+      "matched": true
+    },
+    {
+      "path": "/js/lib/core-worker.bundle.js",
+      "status": 200,
+      "sha256": "512996ce1c22421055d04fa0892ba394b2df95d7a44fe21a0deead5894be02c4",
+      "expected": "512996ce1c22421055d04fa0892ba394b2df95d7a44fe21a0deead5894be02c4",
+      "matched": true
+    },
+    {
+      "path": "/models/fieldshift-mini/model.json",
+      "status": 200,
+      "sha256": "6752c266a71cfc3ec24d934b1a4b775d46045d69cf5e8d201af74485a565db03",
+      "expected": "6752c266a71cfc3ec24d934b1a4b775d46045d69cf5e8d201af74485a565db03",
+      "matched": true
+    },
+    {
+      "path": "/models/fieldshift-mini/tokenizer.json",
+      "status": 200,
+      "sha256": "5ae04a94f226cf20822029d4cefd5ff38d9fe60e9b971e5b166f89aeb40e9a84",
+      "expected": "5ae04a94f226cf20822029d4cefd5ff38d9fe60e9b971e5b166f89aeb40e9a84",
+      "matched": true
+    },
+    {
+      "path": "/models/fieldshift-mini/weights.bin",
+      "status": 200,
+      "sha256": "719822007d383409dcb223461cdc54019736f48dbeefdd33277ae69c983f33c6",
+      "expected": "719822007d383409dcb223461cdc54019736f48dbeefdd33277ae69c983f33c6",
+      "matched": true
+    },
+    {
+      "path": "/models/fieldshift-mini/evaluation.json",
+      "status": 200,
+      "sha256": "15653a1936b71cdb483296ef52f76d223b61644b70c332b8b7314a98cdb33777",
+      "expected": "15653a1936b71cdb483296ef52f76d223b61644b70c332b8b7314a98cdb33777",
+      "matched": true
+    },
+    {
+      "path": "/models/fieldshift-mini/corpus.json",
+      "status": 200,
+      "sha256": "b3d5e95be491e904ab7c2446a3fa844371a0d49eebc665b305199b4ee2672c5a",
+      "expected": "b3d5e95be491e904ab7c2446a3fa844371a0d49eebc665b305199b4ee2672c5a",
+      "matched": true
+    },
+    {
+      "path": "/submission/fieldshift-deck.pdf",
+      "status": 200,
+      "sha256": "3ba1bdd562f92f2c9eed398d43f4e2b204c85103c71857618e2693a65f4cff67",
+      "expected": "3ba1bdd562f92f2c9eed398d43f4e2b204c85103c71857618e2693a65f4cff67",
+      "matched": true
+    },
+    {
+      "path": "/submission/fieldshift-source.zip",
+      "status": 200,
+      "sha256": "8929c9aa839a5acf4e2f0faf14a08b5004629919d236e3f605f27b3db7de591f",
+      "expected": "8929c9aa839a5acf4e2f0faf14a08b5004629919d236e3f605f27b3db7de591f",
+      "matched": true
+    },
+    {
+      "path": "/submission/source-manifest.json",
+      "status": 200,
+      "sha256": "3a668ae8e962e9d3036e31a838e0c7ff6d870f9754c02b87b36aa4e4ba04bf6a",
+      "expected": "3a668ae8e962e9d3036e31a838e0c7ff6d870f9754c02b87b36aa4e4ba04bf6a",
+      "matched": true
+    }
+  ]
+}
