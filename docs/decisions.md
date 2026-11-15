@@ -591,3 +591,11 @@ so it is not wired into the app. The held-out set was evaluated twice; this is
 recorded. @tensorflow/tfjs 4.22.0 was added as a development-only dependency for
 training in Node. Python TensorFlow is not installed on this machine, so the
 notebook-based Keras route in section 5 was not used for this experiment.
+
+
+## Final quality handoff - 15 November 2026
+
+The user asked Claude Code to stop implementing and hand over to Codex. The active plan is
+docs/plans/codex-final-quality-handoff.md (AGENTS.md section 12). No code changed in this step.
+Open user decisions are listed in section 9 of that plan. Production stays frozen at Phase A
+until the user explicitly approves a release.

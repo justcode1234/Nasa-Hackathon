@@ -5,11 +5,12 @@
 > **Current implementation and cross-device handoff:** read section 10 at the end
 > before resuming work. It records later user decisions and current verified state.
 >
-> **Next work (start here):** section 11 is the active plan from the 2026-11-15 review:
-> pre-deadline fixes, then crop coverage, accessibility, licences and tests, then a 3D
-> evidence map. Full detail: docs/plans/2026-11-15-review-fixes-and-3d-plan.md.
-> Phase A is released and verified; section 10 records executed verification. Later
-> phases remain proposed until their checks and approval gates pass.
+> **Next work (start here):** section 12 and
+> **docs/plans/codex-final-quality-handoff.md** are the active plan (final quality
+> review before the NASA deadline). Section 11 and the older plan file are implemented
+> history. Section 10 records verified state. Earlier user decisions remain in force.
+> Never merge or deploy to production, or touch the NASA submission, without the
+> user's explicit approval.
 
 ## 1. Mission and product rules
 
@@ -480,3 +481,34 @@ module:**
 - Gates: V0 spike + feasibility doc + user approval → V1 columns → V2 GIBS →
   V3 terrain/field → V4 step-4 link → V5 validation and design review. Build on branch
   `feature/3d-evidence-map` and deploy previews only.
+
+## 12. Active plan - final quality handoff (proposed 15 November 2026)
+
+Full detail, file lists, commands and acceptance criteria:
+**docs/plans/codex-final-quality-handoff.md**. Status: proposed; nothing in it is
+implemented until recorded in section 10 with executed checks.
+
+**Verified starting point:** branch feature/3d-evidence-map at 638431a (pushed, clean);
+release gate 117 offline + 116 browser green; production still Phase A (main f4c4fef),
+16/16 public cases logged out; preview is login-protected; the public NASA team page
+showed the project as an unsubmitted draft with empty references fields.
+
+**Order of work:**
+1. P0.1 Report team-page status and give paste-ready submission fields. Do not submit.
+2. P0.2 Ask the user: keep Phase A public (default), release the branch, or make the
+   preview public. Wait for an explicit answer before any production change.
+3. Baseline `npm test` and `npm run test:release`; save evidence.
+4. P0.3 scientific wording audit; P0.4 re-verify the three new crops against sources;
+   P0.6 unexpected-question sweep for the assistant; P0.5 run and repair the legacy
+   Chrome/Node/Firefox/QA scripts on this branch.
+5. P1 screenshot-based CSS/UX review: declutter the chat panel, voice download notice,
+   one spacing/control system, accessibility of new UI, plain-language explanations.
+   Show before/after screenshots to the user before large CSS changes.
+6. Full release gate, then docs. Release only with approval, following the plan's
+   deployment and rollback steps.
+7. P2 measurements, cache headers, real-phone session; P3 optional experiments.
+
+**Standing limits:** keep the typed-judgment classifier unwired unless a fresh test set
+shows it beats the rules. Field lookup depends on shared public Overpass services;
+report busy-service failures as failures with their cause. Real phones, Safari, real
+microphones and audible read-aloud remain unverified.
