@@ -8,7 +8,7 @@
 > **Next work (start here):** section 11 is the active plan from the 2026-11-15 review:
 > pre-deadline fixes, then crop coverage, accessibility, licences and tests, then a 3D
 > evidence map. Full detail: docs/plans/2026-11-15-review-fixes-and-3d-plan.md.
-> Phase A is being implemented; section 10 records executed verification. Later
+> Phase A is released and verified; section 10 records executed verification. Later
 > phases remain proposed until their checks and approval gates pass.
 
 ## 1. Mission and product rules
@@ -192,7 +192,7 @@ Update this section and docs/decisions.md / docs/validation.md after each substa
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
 
-- **Review plan execution, Phase A in progress:** submission example now uses
+- **Review plan execution, Phase A released:** submission example now uses
   enterable York/Australia baseline and allowed crops, with saved real NASA/engine
   output. New rural Ames and Naivasha points returned 11 and 8 complete OSM fields
   in Node probes. Chat Send focus, labelled uncertainty, readable runtime/footer,
@@ -201,9 +201,14 @@ state. Do not leave another device relying on an earlier planning assumption.
   both runtimes and viewports. All four examples return at least 3 complete fields;
   the fixture's exact sequences match the live UI. At 683×384, 640×360 and 844×390,
   measured usable height is 73.0%, 65.7% and 68.8%, with no horizontal overflow.
-  Seven-slide layout/PDF checks pass. Public release verification is pending.
+  Seven-slide layout/PDF checks pass. Public app source 70eafb1 passed 16
+  desktop/mobile Playwright cases, exit 0; all 21 checked public app, licence,
+  model and submission assets match the build. Reports: phase-a-playwright-local,
+  phase-a-playwright-public and phase-a-public-assets under docs/evidence.
   MIT/third-party delivery (B4) is pulled forward because A6 needs a real credits
-  link. Main production is not updated yet; Phase B/C stay proposed.
+  link. This Phase A release is the submission candidate. Freeze production after
+  this checkpoint; Phase B/C work belongs on feature branches and Vercel previews.
+  Only the owner submits through NASA's portal; portal submission is unverified.
 
 - **Current goal: Next/Compare fix and Playwright flow tests (verified release).** The user
   reproduced a blocked step-3 screen. Earlier coverage tests checked that Compare
@@ -360,7 +365,8 @@ state. Do not leave another device relying on an earlier planning assumption.
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry
-it out. **Status: proposed, not implemented.** The tree was left clean at 8b53619, where
+it out. **Status: Phase A released and verified; Phase B/C pending.** The review
+baseline was 8b53619, where
 `npm test` passed 95/95 and `npm run test:e2e` passed 16/16 locally. Detail, evidence,
 exact file locations, verified source quotes and ready-to-apply crop entries are in
 **docs/plans/2026-11-15-review-fixes-and-3d-plan.md**. Read it before starting. Update

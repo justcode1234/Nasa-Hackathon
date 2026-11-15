@@ -2,7 +2,7 @@
 
 Date: 2026-11-15 (local). This section supersedes the earlier planning assumptions; the user selected a Node.js backend for local testing alongside a browser-only static Vercel showcase. Previously recorded styling is preserved; no CSS polishing was added.
 
-## Review-plan Phase A — in progress
+## Review-plan Phase A — released and verified
 
 The deck now uses York/Australia, a country-validated three-crop fixture and real
 NASA POWER 2025 observations; the generated engine result is saved under
@@ -18,8 +18,12 @@ across all four runtime/viewport projects. Send/Escape, all four examples and ex
 submission sequences pass. Usable height is 73.0%, 65.7%, 68.8% at the three specified
 short viewports, all with document scrolling and no horizontal overflow. Full
 Leaflet/MIT licence content is asserted, and the Node credit/licence routes pass.
-Raw report: docs/evidence/phase-a-playwright-local.json. Credits are implemented;
-production is unchanged until the full suite and public checks pass.
+Raw report: docs/evidence/phase-a-playwright-local.json. The public deployment of
+70eafb1 passes all 16 desktop/mobile cases, exit 0, with no skips/flaky/unexpected
+results. All 21 app, model, licence and submission assets match the build. Raw
+public cases: phase-a-playwright-public.json; hashes: phase-a-public-assets.json.
+This is the submission candidate; further B/C work uses previews to keep production
+fixed. Owner portal submission remains unverified and is not implied by deployment.
 
 ## Next/Compare regression and Playwright release gate
 

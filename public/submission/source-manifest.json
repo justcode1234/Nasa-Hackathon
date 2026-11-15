@@ -20,8 +20,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 35836,
-      "sha256": "12aff7e10ce3996c626ca8dfb866bc95bc87e115ff14657d4870e53cffedfec7"
+      "bytes": 36266,
+      "sha256": "1ffd177b5d9d6a608dc76a96c2acfe0cf75c895729e2b9cac348576d9bd8dfb7"
     },
     {
       "path": "docs/challenge-alignment.md",
@@ -119,6 +119,16 @@
       "sha256": "5504382cf3acf12756b0d8682ac3034ae31fda33250511231ecdbffc3fbc4fff"
     },
     {
+      "path": "docs/evidence/phase-a-playwright-public.json",
+      "bytes": 89031,
+      "sha256": "70f8cd5af3b9924fe922d3127c0a9e8b72d592d4cdd72df188f0d82c48326096"
+    },
+    {
+      "path": "docs/evidence/phase-a-public-assets.json",
+      "bytes": 4049,
+      "sha256": "09b090c87a3d1cd8be8d9a2b1fec6a7da39e0fda64bf85e30f94c75d2ffd8c57"
+    },
+    {
       "path": "docs/evidence/playwright-before-fix.json",
       "bytes": 11108,
       "sha256": "4f5d682d12f2809ba97d47f39d45d994e59eafaebd178169179e338ab496197c"
@@ -165,8 +175,8 @@
     },
     {
       "path": "docs/plans/2026-11-15-review-fixes-and-3d-plan.md",
-      "bytes": 24652,
-      "sha256": "c03d1d88fed921a4409a71d1718aac32062f37a789036dbcfcc78aea29473398"
+      "bytes": 24832,
+      "sha256": "880d5d4e1ff89f8f545a55d65363faba44eda2dab40a28868417ece333979218"
     },
     {
       "path": "docs/playwright.md",
@@ -250,8 +260,8 @@
     },
     {
       "path": "docs/validation.md",
-      "bytes": 26958,
-      "sha256": "66202bab978044f24c1eaac57f891f9c53e1a7975345b172b5cc9e3656e372e0"
+      "bytes": 27315,
+      "sha256": "c7769997f9cdddc849f08d18b5690ceac1a02ceae49b399f5615fdf1552482ec"
     },
     {
       "path": "LICENSE",

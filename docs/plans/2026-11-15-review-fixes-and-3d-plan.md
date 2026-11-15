@@ -2,9 +2,11 @@
 
 Written for Codex (and the team) to continue. Source: a Claude Code review of commit
 8b53619 (tests, browser walkthrough, accessibility scan, licence check, source
-verification). **Nothing in this file is implemented yet.** The working tree was left
-clean at 8b53619 with `npm test` passing 95/95. Treat every item as proposed until it
-is built, tested and recorded in section 10 of AGENTS.md.
+verification). **Phase A is now implemented and verified** (app source 70eafb1):
+95 offline tests, 32 local Playwright cases and 16 public cases passed. The review
+baseline was 8b53619 with 95/95 tests. B4 licence/credit delivery was pulled forward
+to give A6 a working link. Other Phase B/C items remain proposed until built and
+verified; see section 10 of AGENTS.md and the phase-a reports in docs/evidence.
 
 ## 0. Deadline and order of work
 
