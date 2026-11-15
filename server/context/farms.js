@@ -11,6 +11,7 @@ export function locationInput(input) {
 }
 
 export function normalizeFarms(raw, center, retrievedAt) {
+  if (raw?.remark) throw new AppError('The field service returned an incomplete query. Retry the field search.', 502, 'CONTEXT_UNAVAILABLE');
   if (!Array.isArray(raw?.elements)) throw new AppError('Unrecognised OSM response.', 502, 'CONTEXT_SCHEMA');
   const nodes = new Map(raw.elements.filter(e => e.type === 'node').map(n => [n.id, [n.lon, n.lat]]));
   const farms = raw.elements.filter(e => e.type === 'way' && ['farmland', 'orchard', 'vineyard', 'plant_nursery'].includes(e.tags?.landuse)).flatMap(way => {
@@ -35,19 +36,50 @@ export function normalizeFarms(raw, center, retrievedAt) {
       'Only complete closed OSM ways are drawn; relation-only boundaries and incomplete ways are omitted. Representative points are bounding-box centers, not surveyed field centroids.'] };
 }
 
-export function createFarmClient(options = {}) {
+// Public Overpass instances, in preference order. They are shared community services
+// that are often at capacity, so one slow or failed attempt must not end the lookup.
+export const OVERPASS_HOSTS = ['overpass-api.de', 'overpass.private.coffee', 'maps.mail.ru/osm/tools/overpass'];
+export function createFarmClient({ deadlineMs = 75_000, staggerMs = 6_000, backoffMs = 3_000, maxAttempts = 3, hosts = OVERPASS_HOSTS, ...options } = {}) {
   const request = createCachedJson(options);
   return async input => {
     const center = locationInput(input);
     // Quantise only the discovery search center for cache reuse, never NASA coordinates.
     const latitude = Math.round(center.latitude * 100) / 100, longitude = Math.round(center.longitude * 100) / 100;
     if (Math.abs(latitude) > 85 || Math.abs(longitude) > 179.98) throw new AppError('This bounded farmland search does not support the poles or antimeridian. Select a nearby place.');
-    const bbox = [longitude - .01, latitude - .01, longitude + .01, latitude + .01].map(v => v.toFixed(4)).join(',');
-    const url = `https://api.openstreetmap.org/api/0.6/map.json?bbox=${bbox}`;
-    const raw = await request(url);
-    const result = normalizeFarms(raw, { latitude, longitude }, new Date().toISOString());
-    return { ...result, sourceUrl: url, retrievedAt: raw._fieldshiftRetrievedAt ?? result.retrievedAt,
-      bounds: { south: latitude - .01, west: longitude - .01, north: latitude + .01, east: longitude + .01 } };
+    const bounds = { south: latitude - .02, west: longitude - .02, north: latitude + .02, east: longitude + .02 };
+    const bbox = [bounds.south, bounds.west, bounds.north, bounds.east].map(v => v.toFixed(4)).join(',');
+    const query = `[out:json][timeout:25];way["landuse"~"^(farmland|orchard|vineyard|plant_nursery)$"](${bbox});out meta geom;`;
+    // Hedged lookup: the preferred service starts first; the next one joins when the
+    // previous has failed or after a stagger. Failed services retry with exponential
+    // backoff (as the services request) until one shared deadline. The first complete
+    // real response wins. Nothing is substituted when every service fails.
+    const startedAt = Date.now(), remaining = () => deadlineMs - (Date.now() - startedAt);
+    let settled = false, wakeAll = [];
+    const pause = ms => new Promise(resolve => { const timer = setTimeout(done, ms); function done() { clearTimeout(timer); resolve(); } wakeAll.push(done); });
+    const attempts = [];
+    const tryHost = async (host, index, previousFailed) => {
+      if (index) await Promise.race([pause(staggerMs * index), previousFailed]);
+      for (let wait = backoffMs, attempt = 1; !settled && remaining() > 1_000; wait *= 2, attempt++) {
+        const url = `https://${host}/api/interpreter?data=${encodeURIComponent(query)}`;
+        attempts.push(host);
+        try {
+          const raw = await request(url, { timeoutMs: Math.max(1_000, Math.min(45_000, remaining())) });
+          const result = normalizeFarms(raw, { latitude, longitude }, new Date().toISOString());
+          return { ...result, sourceUrl: url, retrievedAt: raw._fieldshiftRetrievedAt ?? result.retrievedAt, bounds };
+        } catch (error) {
+          failed[index]?.();
+          if (settled || attempt >= maxAttempts || remaining() <= wait) break;
+          await pause(wait);
+        }
+      }
+      throw new Error(`${host} unavailable`);
+    };
+    const failed = [], failedSignals = hosts.map((_, i) => new Promise(resolve => { failed[i] = resolve; }));
+    try {
+      return await Promise.any(hosts.map((host, i) => tryHost(host, i, i ? failedSignals[i - 1] : null)));
+    } catch {
+      throw new AppError(`The field lookup services are busy or unavailable (${attempts.length} attempts across ${new Set(attempts).size} services). No fields were invented. Retry the field search.`, 502, 'CONTEXT_UNAVAILABLE');
+    } finally { settled = true; wakeAll.forEach(wake => wake()); }
   };
 }
 

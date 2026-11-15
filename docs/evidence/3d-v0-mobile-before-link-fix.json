@@ -1,0 +1,86 @@
+{
+  "checkedAt": "2026-11-15T04:16:00.971Z",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "emulatedNotPhoneHardware": true,
+  "reducedMotion": true,
+  "horizontalOverflow": false,
+  "policyErrors": [],
+  "metrics": {
+    "errors": [],
+    "requestsBeforeOpen": [
+      "http://127.0.0.1:4175/app.css",
+      "http://127.0.0.1:4175/spike.js"
+    ],
+    "interactiveMs": 1628.2999999998137,
+    "renderer": "WebKit WebGL"
+  },
+  "axeViolations": [
+    {
+      "id": "link-in-text-block",
+      "impact": "serious",
+      "tags": [
+        "cat.color",
+        "wcag2a",
+        "wcag141",
+        "TTv5",
+        "TT13.a",
+        "EN-301-549",
+        "EN-9.1.4.1"
+      ],
+      "description": "Ensure links are distinguished from surrounding text in a way that does not rely on color",
+      "help": "Links must be distinguishable without relying on color",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/link-in-text-block?application=axeAPI",
+      "nodes": [
+        {
+          "any": [
+            {
+              "id": "link-in-text-block",
+              "data": {
+                "messageKey": "fgContrast",
+                "contrastRatio": 2.02,
+                "requiredContrastRatio": 3,
+                "nodeColor": "#404040",
+                "parentColor": "#000000"
+              },
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"maplibregl-ctrl-attrib-inner\">© OpenStreetMap contributors | Terrain Tiles / USGS SRTM; complete credits below | <a href=\"https://maplibre.org/\" target=\"_blank\">MapLibre</a></div>",
+                  "target": [
+                    ".maplibregl-ctrl-attrib-inner"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "The link has insufficient color contrast of 2.02:1 with the surrounding text. (Minimum contrast is 3:1, link text: #404040, surrounding text: #000000)"
+            },
+            {
+              "id": "link-in-text-block-style",
+              "data": null,
+              "relatedNodes": [
+                {
+                  "html": "<div class=\"maplibregl-ctrl-attrib-inner\">© OpenStreetMap contributors | Terrain Tiles / USGS SRTM; complete credits below | <a href=\"https://maplibre.org/\" target=\"_blank\">MapLibre</a></div>",
+                  "target": [
+                    ".maplibregl-ctrl-attrib-inner"
+                  ]
+                }
+              ],
+              "impact": "serious",
+              "message": "The link has no styling (such as underline) to distinguish it from the surrounding text"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": "serious",
+          "html": "<a href=\"https://maplibre.org/\" target=\"_blank\">MapLibre</a>",
+          "target": [
+            "a[href$=\"maplibre.org/\"]"
+          ],
+          "failureSummary": "Fix any of the following:\n  The link has insufficient color contrast of 2.02:1 with the surrounding text. (Minimum contrast is 3:1, link text: #404040, surrounding text: #000000)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "view": "globe",
+    "canvasRGBStandardDeviation": [
+      91.10415259794233,
+      87.95033620041296,
+      73.65685958909232
+    ],
+    "nonBlank": true
+  },
+  {
+    "view": "terrain",
+    "canvasRGBStandardDeviation": [
+      17.673013311125754,
+      18.02172238200988,
+      21.735828817684073
+    ],
+    "nonBlank": true
+  }
+]

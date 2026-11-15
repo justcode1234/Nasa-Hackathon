@@ -3,7 +3,7 @@ import { initMap } from './modules/map.js';
 import { renderEvidence } from './modules/data-flow.js';
 import { renderStrategy } from './modules/strategy.js';
 import { renderCatalog, updateCropChoices } from './modules/si.js';
-import { initTabs } from './lib/tabs.js';
+import { initTabs, setNavigationLabel } from './lib/tabs.js';
 import { initContext } from './modules/context.js';
 import { initChat } from './modules/chat.js';
 import { resolveCropInput } from './modules/workflow-assistant.js';
@@ -12,6 +12,49 @@ import { comparisonReadiness } from './lib/comparison-readiness.js';
 const $ = selector => document.querySelector(selector);
 $('#runtime-status').textContent = getTransport() === 'http' ? 'Node.js testing mode' : 'Runs in your browser · no account needed';
 let observations = null;
+$('#temperature-unit').addEventListener('change',()=>{if(observations)renderEvidence(observations);});
+function setLocationMethod(value){$('#location-method').value=value;$('#place-inputs').hidden=value==='coordinates';$('#coordinate-inputs').hidden=value!=='coordinates';$('#example-location').closest('label').hidden=value==='coordinates';}
+$('#location-method').addEventListener('change',()=>setLocationMethod($('#location-method').value));
+function validLocation(report=false){
+  const valid=$('#latitude').value!==''&&$('#longitude').value!==''&&$('#latitude').checkValidity()&&$('#longitude').checkValidity();
+  if(!valid&&report){status('#place-status','Choose a town or map point, or switch to Enter coordinates and provide a valid latitude/longitude.',true);
+    if($('#location-method').value==='coordinates')$('#latitude').focus();else if(!$('#pest-country').value)$('#pest-country').focus();else $('#place-town').focus();}
+  return valid;
+}
+let evidenceMap3D=null,map3DVersion=0;
+function closeMap3D(){
+  const wasOpen=!$('#map3d-panel').hidden||$('#open-map3d').disabled;
+  map3DVersion++;evidenceMap3D?.close();evidenceMap3D=null;
+  $('#map3d-panel').hidden=true;$('#map').hidden=false;$('#open-map3d').disabled=false;
+  $('#open-map3d').setAttribute('aria-expanded','false');
+  if(wasOpen)$('#map3d-notice').textContent='3D closed. The 2D map is available.';
+  window.dispatchEvent(new Event('fieldshift:tabchange'));
+}
+async function openEvidenceMap3D(){
+  if(evidenceMap3D){await evidenceMap3D.ready;return evidenceMap3D;}
+  if($('#latitude').value===''||$('#longitude').value===''||!$('#location-form').checkValidity()){
+    $('#map3d-notice').textContent='Select a town, map point or valid coordinates first.';$('#latitude').focus();return;
+  }
+  const version=++map3DVersion;$('#open-map3d').disabled=true;$('#map3d-notice').textContent='Opening the optional 3D view…';
+  try{
+    const module=await import('./modules/map3d.js');if(version!==map3DVersion)return;
+    $('#map3d-panel').hidden=false;$('#map').hidden=true;$('#open-map3d').setAttribute('aria-expanded','true');
+    const instance=await module.createEvidenceMap({getState:()=>({location:$('#latitude').value===''||$('#longitude').value===''?null:{latitude:Number($('#latitude').value),longitude:Number($('#longitude').value)},year:Number($('#reference-year').value),observations,farm:selectedFarm}),onClose:()=>{closeMap3D();$('#open-map3d').focus();}});
+    if(version!==map3DVersion){instance.close();await instance.ready.catch(()=>{});return;}evidenceMap3D=instance;
+    await instance.ready;
+    if(version===map3DVersion){$('#map3d-notice').textContent='3D evidence view open. Use Return to 2D at any time.';return instance;}
+  }catch(error){if(version===map3DVersion){closeMap3D();$('#map3d-notice').textContent=error.message;}}
+}
+$('#open-map3d').addEventListener('click',()=>openEvidenceMap3D());
+window.addEventListener('fieldshift:weather-window',async event=>{
+  const version=revision,{slot,scenarioLabel,inputs}=event.detail;
+  if(!comparedInputs||JSON.stringify(inputs)!==JSON.stringify(comparedInputs))return;
+  activateTab('location');
+  try{
+    const instance=await openEvidenceMap3D();
+    if(instance&&version===revision){instance.showWindow(slot,scenarioLabel);document.querySelector('#map3d-window').focus();}
+  }catch(error){$('#map3d-notice').textContent=error.message;}
+});
 let comparedInputs = null;
 let catalogReady = false;
 let catalogFailed = false;
@@ -36,6 +79,7 @@ function status(selector, message, error = false) {
   node.classList.toggle('error', error);
 }
 function syncControls() {
+  syncAllowedCrops();
   const gate = getComparisonReadiness();
   $('#compare').disabled = !gate.ready || comparing;
   $('#compare').setAttribute('aria-describedby', 'comparison-readiness');
@@ -44,16 +88,26 @@ function syncControls() {
   $('#flow-blocker').hidden = !planning || gate.ready;
   $('#flow-blocker').textContent = gate.ready ? '' : gate.message;
   $('#flow-next').disabled = planning && (gate.code === 'catalog' || comparing);
-  if (planning) $('#flow-next').textContent = comparing ? 'Comparing…' : gate.label;
+  if (planning) setNavigationLabel($('#flow-next'),comparing ? 'Comparing…' : gate.label);
   $('#flow-next').setAttribute('aria-describedby', planning && !gate.ready ? 'flow-blocker' : 'flow-progress');
+}
+function syncAllowedCrops(){
+  const selected=[1,2,3].map(i=>$(`#baseline-${i}`).value);
+  const missing=selected.filter(value=>value&&!catalogData?.crops.some(crop=>crop.id===value));
+  const note=$('#crop-selection-status');
+  if(missing.length){note.dataset.selectionWarning='true';note.hidden=false;note.textContent=`${missing.length} of your selected baseline crops lack annual screening rules. They will stay visible with an explanation of the missing evidence. This planner does not model orchard replacement or invent crop requirements. You must explicitly choose any additional crops for alternatives.`;}
+  else if(note.dataset.selectionWarning){delete note.dataset.selectionWarning;note.textContent=countryCrops?.regionalContext?'Official regional crop records are available as unassessed baseline choices; no alternative screening rules have been added.':'';note.hidden=!note.textContent;}
+  if($('#alternative-scope').value!=='baseline')return;
+  document.querySelectorAll('[name=allowedCrops]').forEach(input=>input.checked=selected.includes(input.value));
 }
 function getComparisonReadiness() {
   return comparisonReadiness({catalogReady,catalogFailed,country:countryCrops,observations,
     allowedCount:document.querySelectorAll('[name="allowedCrops"]:checked').length});
 }
-window.addEventListener('fieldshift:tabchange', syncControls);
+window.addEventListener('fieldshift:tabchange',()=>{syncControls();evidenceMap3D?.resize();});
 function invalidate(clearEvidence, options = {}) {
   revision++;
+  evidenceMap3D?.clearWindow();
   controller?.abort();
   comparing = false;
   comparedInputs = null;
@@ -61,6 +115,7 @@ function invalidate(clearEvidence, options = {}) {
   $('#strategy-output').textContent = 'Inputs changed. Compare again to see results for the current inputs.';
   status('#comparison-status', clearEvidence ? 'Load evidence for the selected coordinates and year.' : 'Constraints changed. Compare again.');
   if (clearEvidence) {
+    closeMap3D();
     observations = null;
     $('#retry-evidence').hidden = true;
     $('#evidence-output').replaceChildren();
@@ -105,7 +160,7 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
   regionCode: $('#place-region').value === '__all__' ? null : $('#place-region').value || null }), {
   chooseCountry: code => context.chooseCountry(code, { fromAssistant: true }),
   chooseRegion: code => context.chooseRegion(code, { fromAssistant: true }),
-  chooseLocation: (point, countryCode) => selectLocation(point.latitude, point.longitude, { pan: true, countryCode, fromAssistant: true }),
+  chooseLocation: (point, countryCode) => {if(!point.id)setLocationMethod('coordinates');return selectLocation(point.latitude, point.longitude, { pan: true, countryCode, fromAssistant: true });},
   chooseFarm: id => context.selectFarm(id, { fromAssistant: true }),
   loadFarms: () => context.loadFarms(),
   showStep: activateTab, loadEvidence: () => loadEvidence({ fromAssistant: true }),
@@ -122,6 +177,7 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
       planningYear: '#planning-year', startMonth: '#start-month', referenceYear: '#reference-year' };
     for (const [key, value] of Object.entries(constraints ?? {})) if (controls[key]) $(controls[key]).value = value;
     if (allowed) {
+      $('#alternative-scope').value='custom';
       const ids = allowed.map(name => resolveCropInput(name, catalogData, countryCrops).id);
       document.querySelectorAll('[name=allowedCrops]').forEach(input => { input.checked = ids.includes(input.value); });
     }
@@ -148,9 +204,9 @@ $('#example-location').addEventListener('change', () => {
   context.locationChanged({ countryCode });
   context.loadFarms();
 });
-$('#planning-form').addEventListener('input', () => invalidate(false));
+$('#planning-form').addEventListener('input', event => {if(event.target.name==='allowedCrops')$('#alternative-scope').value='custom';invalidate(false);});
 async function loadEvidence(options = {}) {
-  if (!$('#location-form').checkValidity()) return false;
+  if (!validLocation(true)||!$('#location-form').reportValidity()) return false;
   const selectionVersion = revision;
   await context.ensureCountry(options);
   if (selectionVersion !== revision) return;
@@ -191,7 +247,7 @@ function readInputs() {
 }
 activateTab.beforeNext = from => {
   if (from === 'location' && !observations) {
-    if ($('#location-form').reportValidity()) $('#location-form').requestSubmit();
+    if (validLocation(true)&&$('#location-form').reportValidity()) $('#location-form').requestSubmit();
     return false;
   }
   if (from === 'si') {
@@ -200,7 +256,7 @@ activateTab.beforeNext = from => {
       status('#comparison-status', gate.message, true);
       if (gate.code === 'country' || gate.code === 'coverage' || gate.code === 'evidence') {
         activateTab('location');
-        $(gate.code === 'evidence' ? '#load-evidence' : '#pest-country').focus();
+        if(gate.code==='evidence')$('#flow-next').focus();else {setLocationMethod('places');$('#pest-country').focus();}
       } else if (gate.code === 'allowed') {
         $('#allowed-crops').closest('fieldset').scrollIntoView({block:'center'});
         document.querySelector('[name="allowedCrops"]')?.focus();
@@ -226,7 +282,7 @@ async function runComparison(options = {}) {
     const result = await api('/api/compare', { method: 'POST', body: inputs, signal: controller.signal });
     if (version !== revision) return;
     renderStrategy(result);
-    comparedInputs = inputs;
+    comparedInputs = result.inputs;
     status('#comparison-status', 'Baseline and two alternatives ready. Review the trade-offs in module 04.');
     status('#answer-status', 'Ask about a catalog crop, water, soil, pest limits or the comparison.');
     activateTab('strategy');

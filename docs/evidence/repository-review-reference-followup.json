@@ -1,0 +1,40 @@
+{
+  "checkedAt": "2026-11-15T12:10:44.220Z",
+  "direct": [
+    {
+      "requested": "https://www.knowledgebank.irri.org/images/docs/planting-establishment.pdf",
+      "status": null,
+      "error": "fetch failed",
+      "cause": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "requested": "https://ask.ifas.ufl.edu/publication/IN276",
+      "status": null,
+      "error": "fetch failed",
+      "cause": "TypeError"
+    },
+    {
+      "requested": "https://edis.ifas.ufl.edu/publication/IN276/pdf",
+      "status": 200,
+      "url": "https://ask.ifas.ufl.edu/publication/IN276/pdf"
+    }
+  ],
+  "webReader": [
+    {
+      "url": "https://www.knowledgebank.irri.org/images/docs/planting-establishment.pdf",
+      "status": "timeout"
+    },
+    {
+      "url": "https://ask.ifas.ufl.edu/publication/IN276",
+      "status": "redirect loop; official search text accessible"
+    },
+    {
+      "url": "https://edis.ifas.ufl.edu/publication/IN276/pdf",
+      "status": "PDF retrieved; four pages; host scope on page 2"
+    },
+    {
+      "url": "https://extension.umn.edu/agriculture/specialty-crops/vegetable-farming/climate-resilience-resources-for-vegetable-growers-in-minnesota",
+      "status": "Retrieved; maturity table matches four starter crop ranges despite direct-GET 403"
+    }
+  ]
+}

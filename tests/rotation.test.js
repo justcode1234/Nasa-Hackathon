@@ -108,7 +108,7 @@ test('input validation rejects missing constraints, oversized text and impossibl
 });
 test('priority changes the documented tie-break ordering, not safety checks', () => {
   const scenario = { criteria: { unsupportedCrops: 1, calendarOverruns: 2, missingEvidenceDays: 3, frostRiskDays: 4,
-    repeatedFamilies: 5, peaDaysAboveIdeal: 6, maturityUpperDays: 7 } };
+    repeatedFamilies: 5, daysAboveIdealAir: 6, maturityUpperDays: 7 } };
   assert.deepEqual(rankingVector(scenario, 'family'), [1, 2, 3, 4, 0, 5, 6, 7]);
   assert.deepEqual(rankingVector(scenario, 'short-season'), [1, 2, 3, 4, 0, 7, 5, 6]);
 });

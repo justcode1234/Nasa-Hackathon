@@ -41,7 +41,7 @@ test('HTTP end to end: static modules, local map assets, NASA contract, comparis
     const crops = await (await fetch(base + '/api/crops')).json();
     assert.match(await (await fetch(base + '/')).text(), /name="fieldshift-transport" content="http"/);
     assert.match(await (await fetch(base + '/index.html')).text(), /name="fieldshift-transport" content="http"/);
-    assert.equal(crops.crops.length, 4);
+    assert.equal(crops.crops.length, 7);
     const places = await (await fetch(base + '/api/locations?country=AU')).json();
     assert.ok(places.places.some(place => place.name === 'Perth'));
     assert.equal(places.source.license, 'CC BY 4.0');

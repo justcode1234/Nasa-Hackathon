@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 const root=path.resolve(fileURLToPath(new URL('../dist/client/',import.meta.url)));
-const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.bin':'application/octet-stream','.png':'image/png','.svg':'image/svg+xml','.pdf':'application/pdf','.zip':'application/zip','.txt':'text/plain; charset=utf-8'};
+const types={'.wasm':'application/wasm','.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json','.bin':'application/octet-stream','.png':'image/png','.svg':'image/svg+xml','.pdf':'application/pdf','.zip':'application/zip','.txt':'text/plain; charset=utf-8'};
 const config=JSON.parse(await readFile(new URL('../vercel.json',import.meta.url),'utf8'));
 const identity=directory=>createHash('sha256').update(directory).digest('hex').slice(0,16);
 export function createStaticPreview({directory=root}={}){

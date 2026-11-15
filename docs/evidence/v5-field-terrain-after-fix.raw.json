@@ -1,0 +1,408 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/field-terrain.spec.js"
+    ],
+    "configFile": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\playwright.config.js",
+    "rootDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "static-desktop",
+        "name": "static-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "static-mobile",
+        "name": "static-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "node-desktop",
+        "name": "node-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "node-mobile",
+        "name": "node-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "static-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "static-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "static-mobile",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "static-mobile"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "node-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "node-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "node-mobile",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "node-mobile"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        {
+          "printSteps": true
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts/playwright/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "artifacts/playwright/report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "field-terrain.spec.js",
+      "file": "field-terrain.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "a live-discovered Ames field renders on terrain with derived slope context",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-desktop",
+              "projectName": "static-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 38808,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T08:39:42.643Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Live-discovered field terrain context",
+                      "contentType": "application/json",
+                      "body": "ewogICJpZCI6ICJ0ZXJyYWluLWNvbnRleHQiLAogICJwcm9kdWN0IjogIlRlcnJhaW4gVGlsZXMgVGVycmFyaXVtIERFTSBtb3NhaWMiLAogICJraW5kIjogImRlcml2ZWQiLAogICJ1bml0cyI6IHsKICAgICJlbGV2YXRpb24iOiAibSIsCiAgICAic2xvcGUiOiAiZGVncmVlcyIsCiAgICAiYXNwZWN0IjogImRlZ3JlZXMgY2xvY2t3aXNlIGZyb20gbm9ydGgiCiAgfSwKICAiZGF0ZSI6IG51bGwsCiAgIm9ic2VydmF0aW9uRGF0ZSI6IG51bGwsCiAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDA6MjEuMTczWiIsCiAgInNwYXRpYWxSZXNvbHV0aW9uIjogewogICAgInpvb20iOiAxMiwKICAgICJ0aWxlUGl4ZWxzIjogMjU2CiAgfSwKICAiYXR0cmlidXRpb24iOiAiTWFwemVuIFRlcnJhaW4gVGlsZXMgLyBjb250cmlidXRpbmcgZGF0YXNldHMgaW5jbHVkaW5nIFVTR1MgU1JUTSIsCiAgInVybCI6ICJodHRwczovL3JlZ2lzdHJ5Lm9wZW5kYXRhLmF3cy90ZXJyYWluLXRpbGVzLyIsCiAgInNvdXJjZVRpbGVzIjogWwogICAgewogICAgICAidXJsIjogImh0dHBzOi8vZWxldmF0aW9uLXRpbGVzLXByb2QuczMuYW1hem9uYXdzLmNvbS90ZXJyYXJpdW0vMTIvOTgxLzE1MjAucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDA6MjEuMDM0WiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJTdW4sIDEyIE5vdiAyMDE3IDA5OjQ2OjAxIEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJuZWQvbmVkMTlfbjQyeDAwX3cwOTN4NzVfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYsIG5lZC9uZWQxOV9uNDJ4MDBfdzA5NHgwMF9pYV9jZW50cmFsX25vcnRoY2VudHJhbF8yMDA4LnRpZiwgbmVkL25lZDE5X240MngyNV93MDkzeDc1X2lhX2NlbnRyYWxfbm9ydGhjZW50cmFsXzIwMDgudGlmLCBuZWQvbmVkMTlfbjQyeDI1X3cwOTR4MDBfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYiCiAgICB9LAogICAgewogICAgICAidXJsIjogImh0dHBzOi8vZWxldmF0aW9uLXRpbGVzLXByb2QuczMuYW1hem9uYXdzLmNvbS90ZXJyYXJpdW0vMTIvOTgyLzE1MjAucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDA6MjEuMTczWiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJTdW4sIDEyIE5vdiAyMDE3IDA5OjQ2OjA1IEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJuZWQvbmVkMTlfbjQyeDAwX3cwOTN4NzVfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYsIG5lZC9uZWQxOV9uNDJ4MjVfdzA5M3g3NV9pYV9jZW50cmFsX25vcnRoY2VudHJhbF8yMDA4LnRpZiIKICAgIH0KICBdLAogICJtaXNzaW5nbmVzcyI6ICJNaXNzaW5nIERFTSBwaXhlbHMgYW5kIGdyYWRpZW50cyBzdGF5IHVua25vd24uIFNvdXJjZSBoZWFkZXJzIGNhbiBiZSB1bmF2YWlsYWJsZSB0byBicm93c2VyIGNsaWVudHMuIiwKICAibm90aWNlcyI6IFsKICAgICJIaXN0b3JpY2FsIERFTSBtb3NhaWMgaW5jbHVkaW5nIFNSVE0gYW5kIG90aGVyIHByb3ZpZGVycywgbm90IGEgc3VydmV5ZWQgZmFybSBoZWlnaHQgb3IgY3VycmVudCBvYnNlcnZhdGlvbi4iLAogICAgIlRpbGUgc2FtcGxpbmcgc3BhY2luZyBpcyBub3Qgc291cmNlIGFjY3VyYWN5LiBFbGV2YXRpb24gZGF0dW0sIHNvdXJjZSByZXNvbHV0aW9uIGFuZCBhZ2UgY2FuIHZhcnkuIiwKICAgICJTbG9wZSB1c2VzIGNlbnRyYWwgZGlmZmVyZW5jZXMgb2YgdW5leGFnZ2VyYXRlZCBlbGV2YXRpb24gYW5kIG5laWdoYm91cmluZyBwaXhlbHM7IGFzcGVjdCBpcyBkb3duaGlsbCwgY2xvY2t3aXNlIGZyb20gbm9ydGguIiwKICAgICJPbmx5IERFTSBwaXhlbCBjZW50cmVzIGluc2lkZSB0aGUgc3VwcGxpZWQgcG9seWdvbiwgZXhjbHVkaW5nIGhvbGVzLCBhcmUgc3VtbWFyaXNlZC4gQm91bmRhcmllcyBhcmUgYXBwcm94aW1hdGUuIiwKICAgICJUcmFuc3BhcmVudCBhbmQgbG93ZXN0IGVuY29kZWQgZWxldmF0aW9uIHBpeGVscyByZW1haW4gbWlzc2luZy4gRmV3ZXIgdGhhbiBuaW5lIHZhbGlkIGludGVyaW9yIGdyYWRpZW50cyBsZWF2ZSBzbG9wZS9hc3BlY3QgdW5hc3Nlc3NlZC4iLAogICAgIlRlcnJhaW4gaXMgY29udGV4dCBvbmx5OiBubyBlcm9zaW9uIHByZWRpY3Rpb24sIGNyb3Agc3VpdGFiaWxpdHksIG93bmVyc2hpcCBvciBhY2Nlc3MgaXMgZXN0YWJsaXNoZWQuIgogIF0sCiAgImZpZWxkSWQiOiAid2F5LzczMjAyNjAyOSIsCiAgImFzc2Vzc2VkIjogdHJ1ZSwKICAiaW50ZXJpb3JQaXhlbHMiOiA5MDcsCiAgInZhbGlkRWxldmF0aW9uUGl4ZWxzIjogOTA3LAogICJ2YWxpZEdyYWRpZW50UGl4ZWxzIjogOTA3LAogICJtaXNzaW5nR3JhZGllbnRQaXhlbHMiOiAwLAogICJlbGV2YXRpb25NaW5NIjogMzA4LjE4MzU5Mzc1LAogICJlbGV2YXRpb25NYXhNIjogMzE4Ljg0NzY1NjI1LAogICJzbG9wZU1lZGlhbkRlZ3JlZXMiOiAwLjk3Njc3MjI0MzI4NjU5NjYsCiAgInNsb3BlTWF4RGVncmVlcyI6IDQuNTMxMjk5MDk5OTU1NjY4LAogICJhc3BlY3RNZWFuRGVncmVlcyI6IDc3Ljk1ODI2MzA5MjUwMTY4LAogICJub25GbGF0QXNwZWN0UGl4ZWxzIjogOTA3LAogICJzYW1wbGVTcGFjaW5nTSI6IFsKICAgIDI4LjM5OTc1MzAyMDgxNzA3NywKICAgIDI4LjQwNDUzNTg2NzgzNDExMwogIF0KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-mobile",
+              "projectName": "static-mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 41741,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T08:40:22.297Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Live-discovered field terrain context",
+                      "contentType": "application/json",
+                      "body": "ewogICJpZCI6ICJ0ZXJyYWluLWNvbnRleHQiLAogICJwcm9kdWN0IjogIlRlcnJhaW4gVGlsZXMgVGVycmFyaXVtIERFTSBtb3NhaWMiLAogICJraW5kIjogImRlcml2ZWQiLAogICJ1bml0cyI6IHsKICAgICJlbGV2YXRpb24iOiAibSIsCiAgICAic2xvcGUiOiAiZGVncmVlcyIsCiAgICAiYXNwZWN0IjogImRlZ3JlZXMgY2xvY2t3aXNlIGZyb20gbm9ydGgiCiAgfSwKICAiZGF0ZSI6IG51bGwsCiAgIm9ic2VydmF0aW9uRGF0ZSI6IG51bGwsCiAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MDMuNjU3WiIsCiAgInNwYXRpYWxSZXNvbHV0aW9uIjogewogICAgInpvb20iOiAxMiwKICAgICJ0aWxlUGl4ZWxzIjogMjU2CiAgfSwKICAiYXR0cmlidXRpb24iOiAiTWFwemVuIFRlcnJhaW4gVGlsZXMgLyBjb250cmlidXRpbmcgZGF0YXNldHMgaW5jbHVkaW5nIFVTR1MgU1JUTSIsCiAgInVybCI6ICJodHRwczovL3JlZ2lzdHJ5Lm9wZW5kYXRhLmF3cy90ZXJyYWluLXRpbGVzLyIsCiAgInNvdXJjZVRpbGVzIjogWwogICAgewogICAgICAidXJsIjogImh0dHBzOi8vZWxldmF0aW9uLXRpbGVzLXByb2QuczMuYW1hem9uYXdzLmNvbS90ZXJyYXJpdW0vMTIvOTgxLzE1MjAucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MDMuNjA0WiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJTdW4sIDEyIE5vdiAyMDE3IDA5OjQ2OjAxIEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJuZWQvbmVkMTlfbjQyeDAwX3cwOTN4NzVfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYsIG5lZC9uZWQxOV9uNDJ4MDBfdzA5NHgwMF9pYV9jZW50cmFsX25vcnRoY2VudHJhbF8yMDA4LnRpZiwgbmVkL25lZDE5X240MngyNV93MDkzeDc1X2lhX2NlbnRyYWxfbm9ydGhjZW50cmFsXzIwMDgudGlmLCBuZWQvbmVkMTlfbjQyeDI1X3cwOTR4MDBfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYiCiAgICB9LAogICAgewogICAgICAidXJsIjogImh0dHBzOi8vZWxldmF0aW9uLXRpbGVzLXByb2QuczMuYW1hem9uYXdzLmNvbS90ZXJyYXJpdW0vMTIvOTgyLzE1MjAucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MDMuNjU3WiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJTdW4sIDEyIE5vdiAyMDE3IDA5OjQ2OjA1IEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJuZWQvbmVkMTlfbjQyeDAwX3cwOTN4NzVfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYsIG5lZC9uZWQxOV9uNDJ4MjVfdzA5M3g3NV9pYV9jZW50cmFsX25vcnRoY2VudHJhbF8yMDA4LnRpZiIKICAgIH0KICBdLAogICJtaXNzaW5nbmVzcyI6ICJNaXNzaW5nIERFTSBwaXhlbHMgYW5kIGdyYWRpZW50cyBzdGF5IHVua25vd24uIFNvdXJjZSBoZWFkZXJzIGNhbiBiZSB1bmF2YWlsYWJsZSB0byBicm93c2VyIGNsaWVudHMuIiwKICAibm90aWNlcyI6IFsKICAgICJIaXN0b3JpY2FsIERFTSBtb3NhaWMgaW5jbHVkaW5nIFNSVE0gYW5kIG90aGVyIHByb3ZpZGVycywgbm90IGEgc3VydmV5ZWQgZmFybSBoZWlnaHQgb3IgY3VycmVudCBvYnNlcnZhdGlvbi4iLAogICAgIlRpbGUgc2FtcGxpbmcgc3BhY2luZyBpcyBub3Qgc291cmNlIGFjY3VyYWN5LiBFbGV2YXRpb24gZGF0dW0sIHNvdXJjZSByZXNvbHV0aW9uIGFuZCBhZ2UgY2FuIHZhcnkuIiwKICAgICJTbG9wZSB1c2VzIGNlbnRyYWwgZGlmZmVyZW5jZXMgb2YgdW5leGFnZ2VyYXRlZCBlbGV2YXRpb24gYW5kIG5laWdoYm91cmluZyBwaXhlbHM7IGFzcGVjdCBpcyBkb3duaGlsbCwgY2xvY2t3aXNlIGZyb20gbm9ydGguIiwKICAgICJPbmx5IERFTSBwaXhlbCBjZW50cmVzIGluc2lkZSB0aGUgc3VwcGxpZWQgcG9seWdvbiwgZXhjbHVkaW5nIGhvbGVzLCBhcmUgc3VtbWFyaXNlZC4gQm91bmRhcmllcyBhcmUgYXBwcm94aW1hdGUuIiwKICAgICJUcmFuc3BhcmVudCBhbmQgbG93ZXN0IGVuY29kZWQgZWxldmF0aW9uIHBpeGVscyByZW1haW4gbWlzc2luZy4gRmV3ZXIgdGhhbiBuaW5lIHZhbGlkIGludGVyaW9yIGdyYWRpZW50cyBsZWF2ZSBzbG9wZS9hc3BlY3QgdW5hc3Nlc3NlZC4iLAogICAgIlRlcnJhaW4gaXMgY29udGV4dCBvbmx5OiBubyBlcm9zaW9uIHByZWRpY3Rpb24sIGNyb3Agc3VpdGFiaWxpdHksIG93bmVyc2hpcCBvciBhY2Nlc3MgaXMgZXN0YWJsaXNoZWQuIgogIF0sCiAgImZpZWxkSWQiOiAid2F5LzczMjAyNjAyOSIsCiAgImFzc2Vzc2VkIjogdHJ1ZSwKICAiaW50ZXJpb3JQaXhlbHMiOiA5MDcsCiAgInZhbGlkRWxldmF0aW9uUGl4ZWxzIjogOTA3LAogICJ2YWxpZEdyYWRpZW50UGl4ZWxzIjogOTA3LAogICJtaXNzaW5nR3JhZGllbnRQaXhlbHMiOiAwLAogICJlbGV2YXRpb25NaW5NIjogMzA4LjE4MzU5Mzc1LAogICJlbGV2YXRpb25NYXhNIjogMzE4Ljg0NzY1NjI1LAogICJzbG9wZU1lZGlhbkRlZ3JlZXMiOiAwLjk3Njc3MjI0MzI4NjU5NjYsCiAgInNsb3BlTWF4RGVncmVlcyI6IDQuNTMxMjk5MDk5OTU1NjY4LAogICJhc3BlY3RNZWFuRGVncmVlcyI6IDc3Ljk1ODI2MzA5MjUwMTY4LAogICJub25GbGF0QXNwZWN0UGl4ZWxzIjogOTA3LAogICJzYW1wbGVTcGFjaW5nTSI6IFsKICAgIDI4LjM5OTc1MzAyMDgxNzA3NywKICAgIDI4LjQwNDUzNTg2NzgzNDExMwogIF0KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-desktop",
+              "projectName": "node-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 35013,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T08:41:04.899Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Live-discovered field terrain context",
+                      "contentType": "application/json",
+                      "body": "ewogICJpZCI6ICJ0ZXJyYWluLWNvbnRleHQiLAogICJwcm9kdWN0IjogIlRlcnJhaW4gVGlsZXMgVGVycmFyaXVtIERFTSBtb3NhaWMiLAogICJraW5kIjogImRlcml2ZWQiLAogICJ1bml0cyI6IHsKICAgICJlbGV2YXRpb24iOiAibSIsCiAgICAic2xvcGUiOiAiZGVncmVlcyIsCiAgICAiYXNwZWN0IjogImRlZ3JlZXMgY2xvY2t3aXNlIGZyb20gbm9ydGgiCiAgfSwKICAiZGF0ZSI6IG51bGwsCiAgIm9ic2VydmF0aW9uRGF0ZSI6IG51bGwsCiAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MzkuMzg2WiIsCiAgInNwYXRpYWxSZXNvbHV0aW9uIjogewogICAgInpvb20iOiAxMiwKICAgICJ0aWxlUGl4ZWxzIjogMjU2CiAgfSwKICAiYXR0cmlidXRpb24iOiAiTWFwemVuIFRlcnJhaW4gVGlsZXMgLyBjb250cmlidXRpbmcgZGF0YXNldHMgaW5jbHVkaW5nIFVTR1MgU1JUTSIsCiAgInVybCI6ICJodHRwczovL3JlZ2lzdHJ5Lm9wZW5kYXRhLmF3cy90ZXJyYWluLXRpbGVzLyIsCiAgInNvdXJjZVRpbGVzIjogWwogICAgewogICAgICAidXJsIjogImh0dHBzOi8vZWxldmF0aW9uLXRpbGVzLXByb2QuczMuYW1hem9uYXdzLmNvbS90ZXJyYXJpdW0vMTIvOTgxLzE1MjAucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MzkuMTEzWiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJTdW4sIDEyIE5vdiAyMDE3IDA5OjQ2OjAxIEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJuZWQvbmVkMTlfbjQyeDAwX3cwOTN4NzVfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYsIG5lZC9uZWQxOV9uNDJ4MDBfdzA5NHgwMF9pYV9jZW50cmFsX25vcnRoY2VudHJhbF8yMDA4LnRpZiwgbmVkL25lZDE5X240MngyNV93MDkzeDc1X2lhX2NlbnRyYWxfbm9ydGhjZW50cmFsXzIwMDgudGlmLCBuZWQvbmVkMTlfbjQyeDI1X3cwOTR4MDBfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYiCiAgICB9LAogICAgewogICAgICAidXJsIjogImh0dHBzOi8vZWxldmF0aW9uLXRpbGVzLXByb2QuczMuYW1hem9uYXdzLmNvbS90ZXJyYXJpdW0vMTIvOTgyLzE1MjAucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MzkuMzg2WiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJTdW4sIDEyIE5vdiAyMDE3IDA5OjQ2OjA1IEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJuZWQvbmVkMTlfbjQyeDAwX3cwOTN4NzVfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYsIG5lZC9uZWQxOV9uNDJ4MjVfdzA5M3g3NV9pYV9jZW50cmFsX25vcnRoY2VudHJhbF8yMDA4LnRpZiIKICAgIH0KICBdLAogICJtaXNzaW5nbmVzcyI6ICJNaXNzaW5nIERFTSBwaXhlbHMgYW5kIGdyYWRpZW50cyBzdGF5IHVua25vd24uIFNvdXJjZSBoZWFkZXJzIGNhbiBiZSB1bmF2YWlsYWJsZSB0byBicm93c2VyIGNsaWVudHMuIiwKICAibm90aWNlcyI6IFsKICAgICJIaXN0b3JpY2FsIERFTSBtb3NhaWMgaW5jbHVkaW5nIFNSVE0gYW5kIG90aGVyIHByb3ZpZGVycywgbm90IGEgc3VydmV5ZWQgZmFybSBoZWlnaHQgb3IgY3VycmVudCBvYnNlcnZhdGlvbi4iLAogICAgIlRpbGUgc2FtcGxpbmcgc3BhY2luZyBpcyBub3Qgc291cmNlIGFjY3VyYWN5LiBFbGV2YXRpb24gZGF0dW0sIHNvdXJjZSByZXNvbHV0aW9uIGFuZCBhZ2UgY2FuIHZhcnkuIiwKICAgICJTbG9wZSB1c2VzIGNlbnRyYWwgZGlmZmVyZW5jZXMgb2YgdW5leGFnZ2VyYXRlZCBlbGV2YXRpb24gYW5kIG5laWdoYm91cmluZyBwaXhlbHM7IGFzcGVjdCBpcyBkb3duaGlsbCwgY2xvY2t3aXNlIGZyb20gbm9ydGguIiwKICAgICJPbmx5IERFTSBwaXhlbCBjZW50cmVzIGluc2lkZSB0aGUgc3VwcGxpZWQgcG9seWdvbiwgZXhjbHVkaW5nIGhvbGVzLCBhcmUgc3VtbWFyaXNlZC4gQm91bmRhcmllcyBhcmUgYXBwcm94aW1hdGUuIiwKICAgICJUcmFuc3BhcmVudCBhbmQgbG93ZXN0IGVuY29kZWQgZWxldmF0aW9uIHBpeGVscyByZW1haW4gbWlzc2luZy4gRmV3ZXIgdGhhbiBuaW5lIHZhbGlkIGludGVyaW9yIGdyYWRpZW50cyBsZWF2ZSBzbG9wZS9hc3BlY3QgdW5hc3Nlc3NlZC4iLAogICAgIlRlcnJhaW4gaXMgY29udGV4dCBvbmx5OiBubyBlcm9zaW9uIHByZWRpY3Rpb24sIGNyb3Agc3VpdGFiaWxpdHksIG93bmVyc2hpcCBvciBhY2Nlc3MgaXMgZXN0YWJsaXNoZWQuIgogIF0sCiAgImZpZWxkSWQiOiAid2F5LzczMjAyNjAyOSIsCiAgImFzc2Vzc2VkIjogdHJ1ZSwKICAiaW50ZXJpb3JQaXhlbHMiOiA5MDcsCiAgInZhbGlkRWxldmF0aW9uUGl4ZWxzIjogOTA3LAogICJ2YWxpZEdyYWRpZW50UGl4ZWxzIjogOTA3LAogICJtaXNzaW5nR3JhZGllbnRQaXhlbHMiOiAwLAogICJlbGV2YXRpb25NaW5NIjogMzA4LjE4MzU5Mzc1LAogICJlbGV2YXRpb25NYXhNIjogMzE4Ljg0NzY1NjI1LAogICJzbG9wZU1lZGlhbkRlZ3JlZXMiOiAwLjk3Njc3MjI0MzI4NjU5NjYsCiAgInNsb3BlTWF4RGVncmVlcyI6IDQuNTMxMjk5MDk5OTU1NjY4LAogICJhc3BlY3RNZWFuRGVncmVlcyI6IDc3Ljk1ODI2MzA5MjUwMTY4LAogICJub25GbGF0QXNwZWN0UGl4ZWxzIjogOTA3LAogICJzYW1wbGVTcGFjaW5nTSI6IFsKICAgIDI4LjM5OTc1MzAyMDgxNzA3NywKICAgIDI4LjQwNDUzNTg2NzgzNDExMwogIF0KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-mobile",
+              "projectName": "node-mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3481,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T08:41:40.744Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Live-discovered field terrain context",
+                      "contentType": "application/json",
+                      "body": "ewogICJpZCI6ICJ0ZXJyYWluLWNvbnRleHQiLAogICJwcm9kdWN0IjogIlRlcnJhaW4gVGlsZXMgVGVycmFyaXVtIERFTSBtb3NhaWMiLAogICJraW5kIjogImRlcml2ZWQiLAogICJ1bml0cyI6IHsKICAgICJlbGV2YXRpb24iOiAibSIsCiAgICAic2xvcGUiOiAiZGVncmVlcyIsCiAgICAiYXNwZWN0IjogImRlZ3JlZXMgY2xvY2t3aXNlIGZyb20gbm9ydGgiCiAgfSwKICAiZGF0ZSI6IG51bGwsCiAgIm9ic2VydmF0aW9uRGF0ZSI6IG51bGwsCiAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MzkuMzg2WiIsCiAgInNwYXRpYWxSZXNvbHV0aW9uIjogewogICAgInpvb20iOiAxMiwKICAgICJ0aWxlUGl4ZWxzIjogMjU2CiAgfSwKICAiYXR0cmlidXRpb24iOiAiTWFwemVuIFRlcnJhaW4gVGlsZXMgLyBjb250cmlidXRpbmcgZGF0YXNldHMgaW5jbHVkaW5nIFVTR1MgU1JUTSIsCiAgInVybCI6ICJodHRwczovL3JlZ2lzdHJ5Lm9wZW5kYXRhLmF3cy90ZXJyYWluLXRpbGVzLyIsCiAgInNvdXJjZVRpbGVzIjogWwogICAgewogICAgICAidXJsIjogImh0dHBzOi8vZWxldmF0aW9uLXRpbGVzLXByb2QuczMuYW1hem9uYXdzLmNvbS90ZXJyYXJpdW0vMTIvOTgxLzE1MjAucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MzkuMTEzWiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJTdW4sIDEyIE5vdiAyMDE3IDA5OjQ2OjAxIEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJuZWQvbmVkMTlfbjQyeDAwX3cwOTN4NzVfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYsIG5lZC9uZWQxOV9uNDJ4MDBfdzA5NHgwMF9pYV9jZW50cmFsX25vcnRoY2VudHJhbF8yMDA4LnRpZiwgbmVkL25lZDE5X240MngyNV93MDkzeDc1X2lhX2NlbnRyYWxfbm9ydGhjZW50cmFsXzIwMDgudGlmLCBuZWQvbmVkMTlfbjQyeDI1X3cwOTR4MDBfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYiCiAgICB9LAogICAgewogICAgICAidXJsIjogImh0dHBzOi8vZWxldmF0aW9uLXRpbGVzLXByb2QuczMuYW1hem9uYXdzLmNvbS90ZXJyYXJpdW0vMTIvOTgyLzE1MjAucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDg6NDE6MzkuMzg2WiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJTdW4sIDEyIE5vdiAyMDE3IDA5OjQ2OjA1IEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJuZWQvbmVkMTlfbjQyeDAwX3cwOTN4NzVfaWFfY2VudHJhbF9ub3J0aGNlbnRyYWxfMjAwOC50aWYsIG5lZC9uZWQxOV9uNDJ4MjVfdzA5M3g3NV9pYV9jZW50cmFsX25vcnRoY2VudHJhbF8yMDA4LnRpZiIKICAgIH0KICBdLAogICJtaXNzaW5nbmVzcyI6ICJNaXNzaW5nIERFTSBwaXhlbHMgYW5kIGdyYWRpZW50cyBzdGF5IHVua25vd24uIFNvdXJjZSBoZWFkZXJzIGNhbiBiZSB1bmF2YWlsYWJsZSB0byBicm93c2VyIGNsaWVudHMuIiwKICAibm90aWNlcyI6IFsKICAgICJIaXN0b3JpY2FsIERFTSBtb3NhaWMgaW5jbHVkaW5nIFNSVE0gYW5kIG90aGVyIHByb3ZpZGVycywgbm90IGEgc3VydmV5ZWQgZmFybSBoZWlnaHQgb3IgY3VycmVudCBvYnNlcnZhdGlvbi4iLAogICAgIlRpbGUgc2FtcGxpbmcgc3BhY2luZyBpcyBub3Qgc291cmNlIGFjY3VyYWN5LiBFbGV2YXRpb24gZGF0dW0sIHNvdXJjZSByZXNvbHV0aW9uIGFuZCBhZ2UgY2FuIHZhcnkuIiwKICAgICJTbG9wZSB1c2VzIGNlbnRyYWwgZGlmZmVyZW5jZXMgb2YgdW5leGFnZ2VyYXRlZCBlbGV2YXRpb24gYW5kIG5laWdoYm91cmluZyBwaXhlbHM7IGFzcGVjdCBpcyBkb3duaGlsbCwgY2xvY2t3aXNlIGZyb20gbm9ydGguIiwKICAgICJPbmx5IERFTSBwaXhlbCBjZW50cmVzIGluc2lkZSB0aGUgc3VwcGxpZWQgcG9seWdvbiwgZXhjbHVkaW5nIGhvbGVzLCBhcmUgc3VtbWFyaXNlZC4gQm91bmRhcmllcyBhcmUgYXBwcm94aW1hdGUuIiwKICAgICJUcmFuc3BhcmVudCBhbmQgbG93ZXN0IGVuY29kZWQgZWxldmF0aW9uIHBpeGVscyByZW1haW4gbWlzc2luZy4gRmV3ZXIgdGhhbiBuaW5lIHZhbGlkIGludGVyaW9yIGdyYWRpZW50cyBsZWF2ZSBzbG9wZS9hc3BlY3QgdW5hc3Nlc3NlZC4iLAogICAgIlRlcnJhaW4gaXMgY29udGV4dCBvbmx5OiBubyBlcm9zaW9uIHByZWRpY3Rpb24sIGNyb3Agc3VpdGFiaWxpdHksIG93bmVyc2hpcCBvciBhY2Nlc3MgaXMgZXN0YWJsaXNoZWQuIgogIF0sCiAgImZpZWxkSWQiOiAid2F5LzczMjAyNjAyOSIsCiAgImFzc2Vzc2VkIjogdHJ1ZSwKICAiaW50ZXJpb3JQaXhlbHMiOiA5MDcsCiAgInZhbGlkRWxldmF0aW9uUGl4ZWxzIjogOTA3LAogICJ2YWxpZEdyYWRpZW50UGl4ZWxzIjogOTA3LAogICJtaXNzaW5nR3JhZGllbnRQaXhlbHMiOiAwLAogICJlbGV2YXRpb25NaW5NIjogMzA4LjE4MzU5Mzc1LAogICJlbGV2YXRpb25NYXhNIjogMzE4Ljg0NzY1NjI1LAogICJzbG9wZU1lZGlhbkRlZ3JlZXMiOiAwLjk3Njc3MjI0MzI4NjU5NjYsCiAgInNsb3BlTWF4RGVncmVlcyI6IDQuNTMxMjk5MDk5OTU1NjY4LAogICJhc3BlY3RNZWFuRGVncmVlcyI6IDc3Ljk1ODI2MzA5MjUwMTY4LAogICJub25GbGF0QXNwZWN0UGl4ZWxzIjogOTA3LAogICJzYW1wbGVTcGFjaW5nTSI6IFsKICAgIDI4LjM5OTc1MzAyMDgxNzA3NywKICAgIDI4LjQwNDUzNTg2NzgzNDExMwogIF0KfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "82f1d96ddf48c10094bf-749fb55e996a57621d14",
+          "file": "field-terrain.spec.js",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T08:39:41.119Z",
+    "duration": 123621.08499999999,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

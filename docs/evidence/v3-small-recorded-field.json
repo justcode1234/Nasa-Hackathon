@@ -1,0 +1,55 @@
+{
+  "label": "VALIDATION ONLY: one known OSM object, not a product field-discovery fallback",
+  "url": "https://api.openstreetmap.org/api/0.6/way/1055111745/full.json",
+  "retrievedAt": "2026-11-15T07:26:21.798Z",
+  "field": {
+    "id": "way/1055111745",
+    "name": "Mapped farmland · OSM 1055111745",
+    "kind": "community-mapped land-use polygon",
+    "landuse": "farmland",
+    "crops": [],
+    "cropEvidence": "No crop tag recorded",
+    "updatedAt": "2023-05-31T13:58:54Z",
+    "version": 3,
+    "sourceUrl": "https://www.openstreetmap.org/way/1055111745",
+    "representativePoint": {
+      "latitude": -0.7695648,
+      "longitude": 36.42238465
+    },
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [
+            36.4222712,
+            -0.7690183
+          ],
+          [
+            36.4227419,
+            -0.7691804
+          ],
+          [
+            36.4224532,
+            -0.7701113
+          ],
+          [
+            36.4220274,
+            -0.7699453
+          ],
+          [
+            36.4222151,
+            -0.7694329
+          ],
+          [
+            36.4221179,
+            -0.7694021
+          ],
+          [
+            36.4222712,
+            -0.7690183
+          ]
+        ]
+      ]
+    }
+  }
+}

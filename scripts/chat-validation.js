@@ -54,7 +54,7 @@ export async function validateGuidedWorkflow({ evaluate, waitFor, fill, check, c
   assert.equal(await evaluate('document.querySelector("#pest-country").value'), 'IN');
   assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
   assert.match(await evaluate(`${last}.textContent`), /Which part of India.*whole country/);
-  assert.equal(await evaluate(`JSON.stringify([...${last}.querySelectorAll('button')].map(button=>button.textContent))`), JSON.stringify(['Whole India', 'A specific area']));
+  assert.equal(await evaluate(`JSON.stringify([...${last}.querySelectorAll('[role=group] button')].map(button=>button.textContent))`), JSON.stringify(['Whole India', 'A specific area']));
   assert.equal(await evaluate('document.querySelectorAll(".scenario").length'), 0);
   check('a country-only planning request asks which part or the whole country with both scope choices');
 
@@ -75,6 +75,7 @@ export async function validateGuidedWorkflow({ evaluate, waitFor, fill, check, c
   assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
   check('choosing a specific area accepts a sourced Indian state and filters the town dropdown');
 
+  await ask('Allowed crops: bush snap bean, garden pea');
   await ask('at 18.5204, 73.8567');
   assert.match(await evaluate(`${last}.textContent`), /Step 4 is ready/);
   assert.equal(await evaluate('document.querySelector("#strategy").hidden'), false);

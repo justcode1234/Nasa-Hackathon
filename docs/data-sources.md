@@ -1,5 +1,31 @@
 # Sources and scientific scope
 
+**Current version-aware inventory:** [references.md](references.md) distinguishes
+public Phase A sources, preview imagery/terrain, licences and access failures.
+The dated implementation notes below preserve history; earlier statements that
+SMAP/GPM/MODIS are not integrated refer to Phase A, while later GIBS entries refer
+to preview imagery only. They do not establish numerical crop-model integration.
+ISRIC's product page currently announces a SoilGrids REST pause (checked
+15 November 2026); an implemented adapter does not guarantee service availability.
+
+## Phase B branch: sourced expansion and read-service migration - 15 November
+
+The local preview branch has seven screening crops and 166/197 comparable countries;
+production remains the Phase A four-crop release. Tomato: Clemson 52-90 days to first
+harvest, starting method unspecified, pH 6-6.5. Head cabbage: Clemson 60-80 days after
+transplanting, pH 5.8-6.5, ideal air 60-65 F. Bulb onion: USU 100-120 days, start basis
+unspecified; Clemson Onions/Soil pH 6.2-6.5; NC State Amaryllidaceae taxonomy. These
+are regional US reference bounds, not local calendars or globally validated advice.
+Napa/Chinese cabbage and green onions are excluded from the new crop aliases.
+New sources and live HTTP checks: docs/evidence/phase-b-source-checks.json.
+
+The branch replaces the OSM editing API with bounded Overpass reads (25-second
+requests, one fallback, +/-0.02-degree box, one-day cache, complete closed ways only).
+Both services failed live probes on this device. Do not treat the historical Phase A
+field counts below as successful Overpass verification. The failed live field tests
+block a Phase B behavior release; retry remains visible and no fields are substituted.
+
+
 ## Example-region verification — 15 November 2026
 
 The Ames example now uses 42.00°, −93.69° (farmland west of Ames), returning 11
@@ -147,3 +173,69 @@ are deliberately absent. No rainfall sufficiency or excess-water threshold is in
 Legumes may fix nitrogen with compatible rhizobia; harvested biomass and management
 affect any subsequent benefit. No nitrogen credits, soil improvement, pest reductions,
 yield, water savings or economic estimates are computed.
+
+## V2 dated NASA imagery - locally verified, 15 November
+
+Added on-demand GIBS controls inside the existing 3D map: NDVI, SMAP L4 surface
+soil moisture, IMERG precipitation rate and MODIS daytime land-surface temperature.
+Node and browser worker share /api/gibs-layers. The adapter parses current WMTS
+capabilities into a fixed product allowlist, native product resolution, exact
+availability intervals/default dates, maximum tile zoom, templates and legends.
+Gaps and invalid dates are rejected; XML entities/foreign resource hosts are not
+accepted. Metadata is cached with its original retrieval time. Units/resolution
+were checked against NASA Worldview's own product descriptions: NDVI 250 m;
+SMAP model-derived top-5-cm moisture 9 km in m3/m3; IMERG 0.1-degree source grid
+in mm/hour; MODIS LST 1 km in K. Tile zoom is not native product resolution.
+
+Layers are labelled imagery, values not extracted; POWER data and crop screening
+never read map colours. The user chooses an advertised date, can adjust opacity,
+and can turn imagery off. Coverage and overzoom limits remain visible. Metadata
+failures have a real retry; tile failures leave a visible notice and the rain table.
+No provider failures are replaced with made-up imagery or dates.
+
+Executed: 107/107 offline tests; 12/12 GIBS browser cases across four projects,
+covering all four real products (16 selections), real metadata retry and aborted
+tile transport. V1's 16-case report is retained separately. Three-dimensional tests
+deliberately abort unrelated field transport rather than hammering Overpass; the
+eight separate real-field success checks remain mandatory release blockers.
+Reports: docs/evidence/v2-playwright-complete.json and v2-gibs-metadata.json.
+Small subsequent lifecycle guards avoid updates after map closure. A final complete
+release/a11y/performance run is still required after V3/V4. Production is frozen.
+
+## V3 terrain and field context - implemented, partial live verification
+
+Added shared Node/worker terrain-point and terrain-context endpoints. Terrarium
+PNG decoding validates CRCs, dimensions, filters, bounded decompression and missing
+pixels with no new dependency. Field context masks pixel centres against a Polygon
+and its holes; gradients use unexaggerated central differences with actual Web
+Mercator ground sampling. Circular aspect handles north wrapping and cancellation.
+Fewer than nine valid gradients leaves slope/aspect unassessed; nine is an
+engineering support threshold, not agronomic validation or a confidence percentage.
+Analysis is limited to 1,000 vertices, 50,000 candidate pixels and nine zoom-12 tiles.
+Dateline-crossing fields and non-Mercator polar areas remain explicitly unsupported.
+
+The optional view has DEM terrain, hillshade, an explicit x1/x2/x3 exaggeration
+control, selected-point marker and selected-field fill/outline when present.
+Terrain view hides scaled rain columns; returning to regional/globe restores them.
+Exaggeration changes display only. Missing terrain has an actual retry and no
+substituted values. Full provider attribution is shipped and linked. The DEM is a
+mosaic including SRTM and other sources, not uniformly NASA, a current survey or
+an erosion/crop prediction. Per-tile source headers are retained when exposed;
+file modification dates are not acquisition dates.
+
+Executed: 112/112 offline tests, including known RGB pixels independently checked
+with Pillow, malformed PNG rejection, synthetic plane slopes/aspects, hole masks,
+small-field gaps and cache/failure contracts. Eight real-terrain browser cases pass
+across static/Node and desktop/mobile: actual pixels, sampling, x1 default, numeric
+invariance under x2, explicit no-field gap, tile/API failure and real retry.
+
+A one-object provenance check (not a discovery fallback) captured two previously
+known OSM outlines. The Ames Node HTTP endpoint assessed 907 gradients, median
+slope 0.9768 degrees, circular aspect 77.96 degrees, using NED mosaic tiles.
+The Naivasha outline had only five gradients and correctly stayed unassessed;
+its sources include SRTM/GMTED. These are derived DEM examples, not surveyed farm
+facts. The actual browser field-selection/drape path is still unverified because
+Overpass has not returned the field list. Those original live success tests are
+unchanged and still block release. No recorded outline substitutes for them.
+Evidence: docs/evidence/v3-*. V4 strategy linkage and V5 full validation remain;
+production is frozen and no new branch has been deployed.

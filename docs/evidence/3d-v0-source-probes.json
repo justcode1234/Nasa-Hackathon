@@ -1,0 +1,46 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "id": "power-region",
+      "url": "https://power.larc.nasa.gov/api/temporal/daily/regional?parameters=T2M&community=AG&latitude-min=-32.5&latitude-max=-31.0&longitude-min=116&longitude-max=117.5&start=20250101&end=20250131&format=JSON&time-standard=LST",
+      "status": 422,
+      "bytes": 346,
+      "elapsedMs": 643,
+      "retrievedAt": "2026-11-15T03:58:43.805Z"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "id": "gibs-capabilities",
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+      "status": 200,
+      "bytes": 5842320,
+      "elapsedMs": 1154,
+      "retrievedAt": "2026-11-15T03:58:44.378Z"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "id": "terrain-attribution",
+      "url": "https://raw.githubusercontent.com/tilezen/joerd/master/docs/attribution.md",
+      "status": 200,
+      "bytes": 12300,
+      "elapsedMs": 279,
+      "retrievedAt": "2026-11-15T03:58:43.504Z"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "id": "terrain-sources",
+      "url": "https://raw.githubusercontent.com/tilezen/joerd/master/docs/data-sources.md",
+      "status": 200,
+      "bytes": 12162,
+      "elapsedMs": 279,
+      "retrievedAt": "2026-11-15T03:58:43.505Z"
+    }
+  }
+]

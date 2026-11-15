@@ -1,0 +1,1238 @@
+{
+ "kind": "DEVELOPMENT experiment: typed chat-message judgments. Not Jev; not agronomic accuracy or crop-success confidence.",
+ "trainedAt": "2026-11-15T09:03:41.501Z",
+ "framework": "TensorFlow.js 4.22.0 Layers API (Keras-compatible), backend cpu",
+ "seed": 20261115,
+ "architecture": "hashed word/bigram/char-trigram features (1024) -> Dropout(0.2) -> Dense(32, relu, L2 1e-4) -> Dropout(0.5) -> three linear heads",
+ "parameters": 33229,
+ "weightBytes": 132916,
+ "weightsSha256": "3664fb91e9dbdeb67d59ba2739a172711321007b47c2d859628844c377a2ba0b",
+ "weightShapes": [
+  [
+   1024,
+   32
+  ],
+  [
+   32
+  ],
+  [
+   32,
+   2
+  ],
+  [
+   2
+  ],
+  [
+   32,
+   2
+  ],
+  [
+   2
+  ],
+  [
+   32,
+   9
+  ],
+  [
+   9
+  ]
+ ],
+ "data": {
+  "train": 521,
+  "validation": 121,
+  "heldOut": 95,
+  "split": "train/validation by wording template; held-out hand-written; evaluated twice (see training.heldOutEvaluations)",
+  "acceptancePromptsExcluded": true,
+  "labelAuthor": "AI-assisted authored labels; not independently reviewed"
+ },
+ "training": {
+  "epochsRun": 120,
+  "selectedEpoch": 117,
+  "selection": "highest mean validation accuracy across heads",
+  "validationLossAndAccuracyByEpoch": [
+   [
+    0.6092,
+    0.5785
+   ],
+   [
+    0.5673,
+    0.6336
+   ],
+   [
+    0.5424,
+    0.6419
+   ],
+   [
+    0.5099,
+    0.6391
+   ],
+   [
+    0.4776,
+    0.6474
+   ],
+   [
+    0.4479,
+    0.6584
+   ],
+   [
+    0.4225,
+    0.6722
+   ],
+   [
+    0.4029,
+    0.708
+   ],
+   [
+    0.392,
+    0.7383
+   ],
+   [
+    0.3861,
+    0.7438
+   ],
+   [
+    0.3801,
+    0.7521
+   ],
+   [
+    0.3798,
+    0.7576
+   ],
+   [
+    0.3779,
+    0.7631
+   ],
+   [
+    0.3786,
+    0.7631
+   ],
+   [
+    0.379,
+    0.7686
+   ],
+   [
+    0.3806,
+    0.7741
+   ],
+   [
+    0.3813,
+    0.7713
+   ],
+   [
+    0.3839,
+    0.7769
+   ],
+   [
+    0.3861,
+    0.7741
+   ],
+   [
+    0.3883,
+    0.7741
+   ],
+   [
+    0.39,
+    0.7741
+   ],
+   [
+    0.3937,
+    0.7769
+   ],
+   [
+    0.3949,
+    0.7796
+   ],
+   [
+    0.396,
+    0.7796
+   ],
+   [
+    0.3979,
+    0.7851
+   ],
+   [
+    0.4015,
+    0.7824
+   ],
+   [
+    0.4037,
+    0.7851
+   ],
+   [
+    0.4054,
+    0.7851
+   ],
+   [
+    0.4079,
+    0.7879
+   ],
+   [
+    0.4103,
+    0.7851
+   ],
+   [
+    0.4112,
+    0.7851
+   ],
+   [
+    0.4136,
+    0.7851
+   ],
+   [
+    0.4121,
+    0.7906
+   ],
+   [
+    0.4139,
+    0.7879
+   ],
+   [
+    0.414,
+    0.7879
+   ],
+   [
+    0.4156,
+    0.7906
+   ],
+   [
+    0.4168,
+    0.7934
+   ],
+   [
+    0.4178,
+    0.7934
+   ],
+   [
+    0.4196,
+    0.7934
+   ],
+   [
+    0.4199,
+    0.7934
+   ],
+   [
+    0.4201,
+    0.7934
+   ],
+   [
+    0.4202,
+    0.7934
+   ],
+   [
+    0.4221,
+    0.7934
+   ],
+   [
+    0.4217,
+    0.7934
+   ],
+   [
+    0.423,
+    0.7906
+   ],
+   [
+    0.4228,
+    0.7906
+   ],
+   [
+    0.4236,
+    0.7934
+   ],
+   [
+    0.4237,
+    0.7961
+   ],
+   [
+    0.4238,
+    0.7961
+   ],
+   [
+    0.4244,
+    0.7961
+   ],
+   [
+    0.4245,
+    0.7961
+   ],
+   [
+    0.4242,
+    0.7961
+   ],
+   [
+    0.4252,
+    0.7961
+   ],
+   [
+    0.4251,
+    0.7961
+   ],
+   [
+    0.4254,
+    0.7989
+   ],
+   [
+    0.4246,
+    0.8017
+   ],
+   [
+    0.4259,
+    0.8017
+   ],
+   [
+    0.4261,
+    0.8017
+   ],
+   [
+    0.4258,
+    0.8017
+   ],
+   [
+    0.4265,
+    0.8044
+   ],
+   [
+    0.4252,
+    0.8044
+   ],
+   [
+    0.4255,
+    0.8044
+   ],
+   [
+    0.4254,
+    0.8072
+   ],
+   [
+    0.4262,
+    0.8072
+   ],
+   [
+    0.4256,
+    0.8072
+   ],
+   [
+    0.4265,
+    0.8072
+   ],
+   [
+    0.426,
+    0.8072
+   ],
+   [
+    0.4258,
+    0.8072
+   ],
+   [
+    0.4243,
+    0.8072
+   ],
+   [
+    0.4255,
+    0.8072
+   ],
+   [
+    0.4248,
+    0.8072
+   ],
+   [
+    0.425,
+    0.8072
+   ],
+   [
+    0.4244,
+    0.8072
+   ],
+   [
+    0.4245,
+    0.8072
+   ],
+   [
+    0.4246,
+    0.8072
+   ],
+   [
+    0.4239,
+    0.8072
+   ],
+   [
+    0.423,
+    0.8072
+   ],
+   [
+    0.423,
+    0.8072
+   ],
+   [
+    0.4236,
+    0.8072
+   ],
+   [
+    0.4227,
+    0.8072
+   ],
+   [
+    0.4214,
+    0.8072
+   ],
+   [
+    0.4219,
+    0.8072
+   ],
+   [
+    0.4222,
+    0.8072
+   ],
+   [
+    0.4216,
+    0.8072
+   ],
+   [
+    0.4215,
+    0.8072
+   ],
+   [
+    0.4213,
+    0.8099
+   ],
+   [
+    0.4204,
+    0.8099
+   ],
+   [
+    0.4207,
+    0.8099
+   ],
+   [
+    0.4211,
+    0.8099
+   ],
+   [
+    0.4191,
+    0.8099
+   ],
+   [
+    0.4198,
+    0.8072
+   ],
+   [
+    0.4196,
+    0.8099
+   ],
+   [
+    0.4193,
+    0.8099
+   ],
+   [
+    0.4182,
+    0.8099
+   ],
+   [
+    0.4184,
+    0.8099
+   ],
+   [
+    0.4177,
+    0.8099
+   ],
+   [
+    0.4173,
+    0.8099
+   ],
+   [
+    0.4179,
+    0.8099
+   ],
+   [
+    0.4176,
+    0.8099
+   ],
+   [
+    0.4172,
+    0.8127
+   ],
+   [
+    0.4173,
+    0.8127
+   ],
+   [
+    0.4157,
+    0.8099
+   ],
+   [
+    0.4168,
+    0.8099
+   ],
+   [
+    0.4154,
+    0.8127
+   ],
+   [
+    0.4151,
+    0.8127
+   ],
+   [
+    0.416,
+    0.8127
+   ],
+   [
+    0.4154,
+    0.8127
+   ],
+   [
+    0.4159,
+    0.8127
+   ],
+   [
+    0.4146,
+    0.8154
+   ],
+   [
+    0.4146,
+    0.8127
+   ],
+   [
+    0.4145,
+    0.8154
+   ],
+   [
+    0.4141,
+    0.8154
+   ],
+   [
+    0.4145,
+    0.8154
+   ],
+   [
+    0.4145,
+    0.8154
+   ],
+   [
+    0.4142,
+    0.8154
+   ],
+   [
+    0.4137,
+    0.8154
+   ],
+   [
+    0.4136,
+    0.8154
+   ],
+   [
+    0.4131,
+    0.8154
+   ],
+   [
+    0.4131,
+    0.8154
+   ],
+   [
+    0.4129,
+    0.8154
+   ]
+  ],
+  "heldOutEvaluations": "Second evaluation on this held-out set. Run 1 (fewer templates, loss-selected) scored action 73/95, unsupported 78/95, topic 31/95, each at or below the majority-class rate. Changes for run 2 were chosen from validation behaviour only, but the held-out set is no longer untouched."
+ },
+ "calibration": {
+  "action": {
+   "temperature": 1.9,
+   "abstainBelow": 0.85,
+   "validationAccuracy": 0.8677685950413223
+  },
+  "unsupported": {
+   "temperature": 3.1,
+   "abstainBelow": 0.95,
+   "validationAccuracy": 0.8842975206611571
+  },
+  "topic": {
+   "temperature": 1.1,
+   "abstainBelow": 0.9,
+   "validationAccuracy": 0.6942148760330579
+  }
+ },
+ "latency": {
+  "modelMsPerMessage": 0.421,
+  "ruleBaselineMsPerMessage": 0.0529,
+  "note": "Development machine, Node, pure-JS CPU backend. The rules are faster; no speed-up is claimed."
+ },
+ "evaluation": {
+  "action": {
+   "options": [
+    "read_only",
+    "app_action"
+   ],
+   "heldOutExamples": 95,
+   "modelCorrect": 77,
+   "ruleBaselineCorrect": 75,
+   "majorityClassCorrect": 73,
+   "expectedCalibrationError": 0.0701,
+   "uncalibratedExpectedCalibrationError": 0.1129,
+   "abstention": {
+    "threshold": 0.85,
+    "answered": 57,
+    "answeredCorrect": 54,
+    "abstained": 38
+   },
+   "modelRightRuleWrong": 6,
+   "ruleRightModelWrong": 4,
+   "failures": [
+    {
+     "text": "are lentils and chickpeas in the same plant family?",
+     "expected": "read_only",
+     "predicted": "app_action",
+     "probability": 0.788,
+     "abstained": true
+    },
+    {
+     "text": "has armyworm been seen in Zambia",
+     "expected": "read_only",
+     "predicted": "app_action",
+     "probability": 0.713,
+     "abstained": true
+    },
+    {
+     "text": "can you set me up somewhere in Tanzania",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.944,
+     "abstained": false
+    },
+    {
+     "text": "let's work on my plot outside Chiang Mai",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.78,
+     "abstained": true
+    },
+    {
+     "text": "drop the pin at -1.29, 36.82",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.761,
+     "abstained": true
+    },
+    {
+     "text": "grab the nearest mapped field for me",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.768,
+     "abstained": true
+    },
+    {
+     "text": "I'd like to start with a farm in northern France, sort that out",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.55,
+     "abstained": true
+    },
+    {
+     "text": "make it the entire country rather than one farm",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.524,
+     "abstained": true
+    },
+    {
+     "text": "put down maize, beans and cabbage as what I grow now",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.824,
+     "abstained": true
+    },
+    {
+     "text": "swap my third crop for onions",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.866,
+     "abstained": false
+    },
+    {
+     "text": "record my pH as 6.8",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.745,
+     "abstained": true
+    },
+    {
+     "text": "pull in the NASA numbers for this field",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.532,
+     "abstained": true
+    },
+    {
+     "text": "try the evidence download again",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.885,
+     "abstained": false
+    },
+    {
+     "text": "bring up the climate record for my pin",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.738,
+     "abstained": true
+    },
+    {
+     "text": "okay do the comparison",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.586,
+     "abstained": true
+    },
+    {
+     "text": "run it again but favour shorter seasons",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.526,
+     "abstained": true
+    },
+    {
+     "text": "move on and show me the three rotations",
+     "expected": "app_action",
+     "predicted": "read_only",
+     "probability": 0.624,
+     "abstained": true
+    },
+    {
+     "text": "???",
+     "expected": "read_only",
+     "predicted": "app_action",
+     "probability": 0.548,
+     "abstained": true
+    }
+   ]
+  },
+  "unsupported": {
+   "options": [
+    "answerable_or_other",
+    "unsupported_claim"
+   ],
+   "heldOutExamples": 95,
+   "modelCorrect": 80,
+   "ruleBaselineCorrect": 81,
+   "majorityClassCorrect": 78,
+   "expectedCalibrationError": 0.0665,
+   "uncalibratedExpectedCalibrationError": 0.1293,
+   "abstention": {
+    "threshold": 0.95,
+    "answered": 3,
+    "answeredCorrect": 3,
+    "abstained": 92
+   },
+   "modelRightRuleWrong": 3,
+   "ruleRightModelWrong": 4,
+   "failures": [
+    {
+     "text": "so what tonnage per hectare am I looking at for tomatoes",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.676,
+     "abstained": true
+    },
+    {
+     "text": "just give me a number: odds my cabbage makes it",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.568,
+     "abstained": true
+    },
+    {
+     "text": "can you swear the onions won't fail",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.89,
+     "abstained": true
+    },
+    {
+     "text": "how many dollars will the bean crop bring in",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.563,
+     "abstained": true
+    },
+    {
+     "text": "be honest, are you 90 percent sure about peas",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.847,
+     "abstained": true
+    },
+    {
+     "text": "what's the precise harvest weight I should expect from sweet corn",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.544,
+     "abstained": true
+    },
+    {
+     "text": "work out the cubic metres of water I'd save",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.885,
+     "abstained": true
+    },
+    {
+     "text": "tell me precisely how long to run the sprinklers every morning",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.803,
+     "abstained": true
+    },
+    {
+     "text": "assure me the wells won't run dry",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.74,
+     "abstained": true
+    },
+    {
+     "text": "what are the odds of a locust swarm this year",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.554,
+     "abstained": true
+    },
+    {
+     "text": "can you certify the rotation wipes out nematodes",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.875,
+     "abstained": true
+    },
+    {
+     "text": "promise there won't be a heatwave",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.835,
+     "abstained": true
+    },
+    {
+     "text": "how much will my soil organic matter rise with alternative 2, in percent",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.529,
+     "abstained": true
+    },
+    {
+     "text": "rank them by guaranteed profit",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.849,
+     "abstained": true
+    },
+    {
+     "text": "what's your accuracy score for this recommendation",
+     "expected": "unsupported_claim",
+     "predicted": "answerable_or_other",
+     "probability": 0.763,
+     "abstained": true
+    }
+   ]
+  },
+  "topic": {
+   "options": [
+    "greeting",
+    "crops",
+    "weather",
+    "soil",
+    "water",
+    "pests",
+    "comparison",
+    "location",
+    "other"
+   ],
+   "heldOutExamples": 95,
+   "modelCorrect": 43,
+   "ruleBaselineCorrect": 50,
+   "majorityClassCorrect": 22,
+   "expectedCalibrationError": 0.1449,
+   "uncalibratedExpectedCalibrationError": 0.1705,
+   "abstention": {
+    "threshold": 0.9,
+    "answered": 13,
+    "answeredCorrect": 11,
+    "abstained": 82
+   },
+   "modelRightRuleWrong": 14,
+   "ruleRightModelWrong": 21,
+   "failures": [
+    {
+     "text": "yo",
+     "expected": "greeting",
+     "predicted": "crops",
+     "probability": 0.228,
+     "abstained": true
+    },
+    {
+     "text": "morning!",
+     "expected": "greeting",
+     "predicted": "location",
+     "probability": 0.333,
+     "abstained": true
+    },
+    {
+     "text": "hiya, anyone there?",
+     "expected": "greeting",
+     "predicted": "crops",
+     "probability": 0.297,
+     "abstained": true
+    },
+    {
+     "text": "ok thanks, bye",
+     "expected": "greeting",
+     "predicted": "location",
+     "probability": 0.265,
+     "abstained": true
+    },
+    {
+     "text": "much appreciated",
+     "expected": "greeting",
+     "predicted": "weather",
+     "probability": 0.293,
+     "abstained": true
+    },
+    {
+     "text": "howdy",
+     "expected": "greeting",
+     "predicted": "location",
+     "probability": 0.245,
+     "abstained": true
+    },
+    {
+     "text": "what's the sunniest part of the year according to your data",
+     "expected": "weather",
+     "predicted": "crops",
+     "probability": 0.357,
+     "abstained": true
+    },
+    {
+     "text": "any long dry stretch during the pea window?",
+     "expected": "weather",
+     "predicted": "crops",
+     "probability": 0.503,
+     "abstained": true
+    },
+    {
+     "text": "my soil test came back at 5.4, is that bad for cabbage",
+     "expected": "soil",
+     "predicted": "crops",
+     "probability": 0.489,
+     "abstained": true
+    },
+    {
+     "text": "is the ground here mostly clay or sand",
+     "expected": "soil",
+     "predicted": "pests",
+     "probability": 0.266,
+     "abstained": true
+    },
+    {
+     "text": "water sits on my field after storms, does that matter for onions",
+     "expected": "soil",
+     "predicted": "crops",
+     "probability": 0.445,
+     "abstained": true
+    },
+    {
+     "text": "can I trust the mapped pH for my own plot",
+     "expected": "soil",
+     "predicted": "crops",
+     "probability": 0.256,
+     "abstained": true
+    },
+    {
+     "text": "which of these crops tolerates alkaline ground",
+     "expected": "soil",
+     "predicted": "crops",
+     "probability": 0.552,
+     "abstained": true
+    },
+    {
+     "text": "what's meant by well-drained",
+     "expected": "soil",
+     "predicted": "crops",
+     "probability": 0.649,
+     "abstained": true
+    },
+    {
+     "text": "we only rely on rain, how is that handled",
+     "expected": "water",
+     "predicted": "weather",
+     "probability": 0.315,
+     "abstained": true
+    },
+    {
+     "text": "are tomatoes thirsty plants",
+     "expected": "water",
+     "predicted": "crops",
+     "probability": 0.932,
+     "abstained": false
+    },
+    {
+     "text": "does a 13 day rain-free run mean my crop would have died",
+     "expected": "water",
+     "predicted": "crops",
+     "probability": 0.416,
+     "abstained": true
+    },
+    {
+     "text": "has armyworm been seen in Zambia",
+     "expected": "pests",
+     "predicted": "crops",
+     "probability": 0.425,
+     "abstained": true
+    },
+    {
+     "text": "would swapping cabbage for radish break a pest cycle",
+     "expected": "pests",
+     "predicted": "crops",
+     "probability": 0.84,
+     "abstained": true
+    },
+    {
+     "text": "what bugs go for brassicas",
+     "expected": "pests",
+     "predicted": "crops",
+     "probability": 0.273,
+     "abstained": true
+    },
+    {
+     "text": "do your pest numbers mean my farm is infested",
+     "expected": "pests",
+     "predicted": "other",
+     "probability": 0.329,
+     "abstained": true
+    },
+    {
+     "text": "I had moth damage last year, is that used anywhere",
+     "expected": "pests",
+     "predicted": "crops",
+     "probability": 0.679,
+     "abstained": true
+    },
+    {
+     "text": "what makes option two worse than option one",
+     "expected": "comparison",
+     "predicted": "crops",
+     "probability": 0.566,
+     "abstained": true
+    },
+    {
+     "text": "why didn't you just pick the best rotation for me",
+     "expected": "comparison",
+     "predicted": "pests",
+     "probability": 0.227,
+     "abstained": true
+    },
+    {
+     "text": "what assumptions sit behind these timelines",
+     "expected": "comparison",
+     "predicted": "crops",
+     "probability": 0.582,
+     "abstained": true
+    },
+    {
+     "text": "is the ranking based on yield",
+     "expected": "comparison",
+     "predicted": "pests",
+     "probability": 0.204,
+     "abstained": true
+    },
+    {
+     "text": "can you set me up somewhere in Tanzania",
+     "expected": "location",
+     "predicted": "crops",
+     "probability": 0.746,
+     "abstained": true
+    },
+    {
+     "text": "let's work on my plot outside Chiang Mai",
+     "expected": "location",
+     "predicted": "crops",
+     "probability": 0.699,
+     "abstained": true
+    },
+    {
+     "text": "drop the pin at -1.29, 36.82",
+     "expected": "location",
+     "predicted": "crops",
+     "probability": 0.301,
+     "abstained": true
+    },
+    {
+     "text": "grab the nearest mapped field for me",
+     "expected": "location",
+     "predicted": "weather",
+     "probability": 0.322,
+     "abstained": true
+    },
+    {
+     "text": "make it the entire country rather than one farm",
+     "expected": "location",
+     "predicted": "weather",
+     "probability": 0.382,
+     "abstained": true
+    },
+    {
+     "text": "start the plan in September instead",
+     "expected": "crops",
+     "predicted": "location",
+     "probability": 0.44,
+     "abstained": true
+    },
+    {
+     "text": "run it again but favour shorter seasons",
+     "expected": "comparison",
+     "predicted": "crops",
+     "probability": 0.678,
+     "abstained": true
+    },
+    {
+     "text": "move on and show me the three rotations",
+     "expected": "comparison",
+     "predicted": "crops",
+     "probability": 0.478,
+     "abstained": true
+    },
+    {
+     "text": "tell me precisely how long to run the sprinklers every morning",
+     "expected": "water",
+     "predicted": "crops",
+     "probability": 0.724,
+     "abstained": true
+    },
+    {
+     "text": "assure me the wells won't run dry",
+     "expected": "water",
+     "predicted": "crops",
+     "probability": 0.418,
+     "abstained": true
+    },
+    {
+     "text": "what are the odds of a locust swarm this year",
+     "expected": "pests",
+     "predicted": "crops",
+     "probability": 0.963,
+     "abstained": false
+    },
+    {
+     "text": "can you certify the rotation wipes out nematodes",
+     "expected": "pests",
+     "predicted": "crops",
+     "probability": 0.843,
+     "abstained": true
+    },
+    {
+     "text": "give me next season's temperatures",
+     "expected": "weather",
+     "predicted": "crops",
+     "probability": 0.654,
+     "abstained": true
+    },
+    {
+     "text": "promise there won't be a heatwave",
+     "expected": "weather",
+     "predicted": "crops",
+     "probability": 0.421,
+     "abstained": true
+    },
+    {
+     "text": "how much will my soil organic matter rise with alternative 2, in percent",
+     "expected": "comparison",
+     "predicted": "crops",
+     "probability": 0.783,
+     "abstained": true
+    },
+    {
+     "text": "rank them by guaranteed profit",
+     "expected": "comparison",
+     "predicted": "weather",
+     "probability": 0.342,
+     "abstained": true
+    },
+    {
+     "text": "what's your accuracy score for this recommendation",
+     "expected": "comparison",
+     "predicted": "crops",
+     "probability": 0.429,
+     "abstained": true
+    },
+    {
+     "text": "what's the tallest mountain in Africa",
+     "expected": "other",
+     "predicted": "crops",
+     "probability": 0.477,
+     "abstained": true
+    },
+    {
+     "text": "can you draft an email to my bank",
+     "expected": "other",
+     "predicted": "crops",
+     "probability": 0.788,
+     "abstained": true
+    },
+    {
+     "text": "sing happy birthday",
+     "expected": "other",
+     "predicted": "crops",
+     "probability": 0.34,
+     "abstained": true
+    },
+    {
+     "text": "which phone should I buy",
+     "expected": "other",
+     "predicted": "crops",
+     "probability": 0.282,
+     "abstained": true
+    },
+    {
+     "text": "what does this app do",
+     "expected": "other",
+     "predicted": "crops",
+     "probability": 0.312,
+     "abstained": true
+    },
+    {
+     "text": "how do I change a tyre",
+     "expected": "other",
+     "predicted": "crops",
+     "probability": 0.404,
+     "abstained": true
+    },
+    {
+     "text": "convert 5 miles to kilometres",
+     "expected": "other",
+     "predicted": "crops",
+     "probability": 0.647,
+     "abstained": true
+    },
+    {
+     "text": "asdf qwer zxcv",
+     "expected": "other",
+     "predicted": "crops",
+     "probability": 0.498,
+     "abstained": true
+    },
+    {
+     "text": "???",
+     "expected": "other",
+     "predicted": "location",
+     "probability": 0.499,
+     "abstained": true
+    }
+   ]
+  }
+ },
+ "miniLmComparison": {
+  "note": "Existing FieldShift Mini word LM on the same held-out rows, excluding greeting rows (no such LM topic) and unsupported-claim rows (scored separately). Not an agronomic measure.",
+  "topicRows": 72,
+  "topicTop1Correct": 10,
+  "acceptedByRelevanceGuard": 3,
+  "acceptedCorrect": 3,
+  "unsupportedRows": 17,
+  "unsupportedRowsRankedAsLimits": 2,
+  "msPerMessage": 107.49
+ }
+}

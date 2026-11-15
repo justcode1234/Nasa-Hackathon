@@ -1,0 +1,59 @@
+{
+  "fieldSource": {
+    "url": "https://api.openstreetmap.org/api/0.6/way/1055111745/full.json",
+    "retrievedAt": "2026-11-15T07:26:21.798Z",
+    "id": "way/1055111745"
+  },
+  "terrain": {
+    "id": "terrain-context",
+    "product": "Terrain Tiles Terrarium DEM mosaic",
+    "kind": "derived",
+    "units": {
+      "elevation": "m",
+      "slope": "degrees",
+      "aspect": "degrees clockwise from north"
+    },
+    "date": null,
+    "observationDate": null,
+    "retrievedAt": "2026-11-15T07:26:22.866Z",
+    "spatialResolution": {
+      "zoom": 12,
+      "tilePixels": 256
+    },
+    "attribution": "Mapzen Terrain Tiles / contributing datasets including USGS SRTM",
+    "url": "https://registry.opendata.aws/terrain-tiles/",
+    "sourceTiles": [
+      {
+        "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/2462/2056.png",
+        "retrievedAt": "2026-11-15T07:26:22.866Z",
+        "fileModifiedAt": "Fri, 17 Nov 2017 04:32:05 GMT",
+        "sourceFiles": "srtm/S01E036.tif, gmted/10S030E_20101117_gmted_mea075.tif"
+      }
+    ],
+    "missingness": "Missing DEM pixels and gradients stay unknown. Source headers can be unavailable to browser clients.",
+    "notices": [
+      "Historical DEM mosaic including SRTM and other providers, not a surveyed farm height or current observation.",
+      "Tile sampling spacing is not source accuracy. Elevation datum, source resolution and age can vary.",
+      "Slope uses central differences of unexaggerated elevation and neighbouring pixels; aspect is downhill, clockwise from north.",
+      "Only DEM pixel centres inside the supplied polygon, excluding holes, are summarised. Boundaries are approximate.",
+      "Transparent and lowest encoded elevation pixels remain missing. Fewer than nine valid interior gradients leave slope/aspect unassessed.",
+      "Terrain is context only: no erosion prediction, crop suitability, ownership or access is established."
+    ],
+    "fieldId": "way/1055111745",
+    "assessed": false,
+    "interiorPixels": 5,
+    "validElevationPixels": 5,
+    "validGradientPixels": 5,
+    "missingGradientPixels": 0,
+    "elevationMinM": 1890,
+    "elevationMaxM": 1894,
+    "slopeMedianDegrees": null,
+    "slopeMaxDegrees": null,
+    "aspectMeanDegrees": null,
+    "nonFlatAspectPixels": 5,
+    "sampleSpacingM": [
+      38.215064008739056,
+      38.215070159617724
+    ]
+  }
+}

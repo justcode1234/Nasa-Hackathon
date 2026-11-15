@@ -1,0 +1,38 @@
+
+> fieldshift@0.1.0 test:browser
+> node scripts/browser-validation.js
+
+Built static browser app in dist/client. No server functions or /api network calls.
+PASS: four numbered steps, empty initial location, no generic crop list or automatic NASA/model download
+PASS: editing coordinates while country identification is pending cancels the earlier evidence submission
+PASS: persistent Next/Back controls follow workflow order and validate missing inputs
+PASS: tabs switch modules without page scrolling; inactive panels are hidden
+PASS: country, region and town dropdowns select a real sourced point without typing a place name
+PASS: country selection updates real crop lists, clears foreign selections and blocks insufficient screening coverage
+PASS: actual map click selects a coordinate and updates the coordinate form
+PASS: place-name search returns real Nominatim place choices
+PASS: real OSM field polygons and dropdown select a field with dated metadata and unknown crop labels
+PASS: real NASA year loads with units, source timestamps, daily metadata, monthly charts and tables
+PASS: country pest query displays sourced hosts and GBIF historical occurrence context
+PASS: baseline + two distinct alternatives render nine dated crop slots with risks and evidence
+PASS: a greeting receives one brief friendly reply without scientific data or sources
+PASS: kai lan in Singapore has traceable facts and a working focused growing-conditions follow-up
+PASS: a crop-country question and country-evidence follow-up work independently of the current map selection
+PASS: asking about another country never appends the selected map location’s weather
+PASS: assistant fallback answers crop question with source links and no model
+PASS: constraint edits immediately clear outdated comparison and answer
+PASS: unsupported baseline crop stays visible without invented family or weather fit
+PASS: 390px mobile layout has no page-wide horizontal overflow
+PASS: arrow-key navigation selects and focuses the next tab
+PASS: different coordinates clear prior evidence and load a different real NASA location
+PASS: coordinates and NASA evidence work with map library and tiles unavailable
+PASS: custom compact browser language model loads and selects evidence with recorded metrics
+PASS: model unload returns to working evidence mode
+PASS: network failure produces visible error and prevents stale-evidence comparisons
+PASS: all data and comparison calls stay in the browser; no server /api request occurred
+PASS: a country-only planning request asks which part or the whole country with both scope choices
+PASS: Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison
+PASS: choosing a specific area accepts a sourced Indian state and filters the town dropdown
+PASS: chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4
+PASS: seven-slide deck has no clipped content and exports exactly seven PDF pages
+PASS: no uncaught JavaScript exceptions or CSP violations

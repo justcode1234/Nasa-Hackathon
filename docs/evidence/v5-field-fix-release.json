@@ -1,0 +1,43 @@
+{
+ "source": "console list reporter of npm run test:release started 2026-11-15T08:42Z; complete log in v5-field-fix-release.log.gz (the JSON report was overwritten by a later --list command)",
+ "offlineTests": {
+  "passed": 114,
+  "failed": 0
+ },
+ "browser": {
+  "total": 96,
+  "passed": 95,
+  "failed": 1,
+  "skipped": 0,
+  "reporterSummary": [
+   "1 failed",
+   "95 passed (16.4m)"
+  ]
+ },
+ "projects": {
+  "static-desktop": {
+   "passed": 24,
+   "failed": 0
+  },
+  "static-mobile": {
+   "passed": 23,
+   "failed": 1
+  },
+  "node-desktop": {
+   "passed": 24,
+   "failed": 0
+  },
+  "node-mobile": {
+   "passed": 24,
+   "failed": 0
+  }
+ },
+ "failures": [
+  {
+   "project": "static-mobile",
+   "test": "tests\\e2e\\review-phase-a.spec.js:33:1 › every example region returns at least three complete mapped fields (2.2m)"
+  }
+ ],
+ "failureDetail": "App status after the 75 s deadline: The field lookup services are busy or unavailable (7 attempts across 3 services). No fields were invented. Retry the field search.",
+ "previous": "v5-release-summary.json: 84/92, eight field failures"
+}

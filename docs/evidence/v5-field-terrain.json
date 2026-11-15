@@ -1,0 +1,544 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "tests/e2e/field-terrain.spec.js"
+    ],
+    "configFile": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\playwright.config.js",
+    "rootDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "static-desktop",
+        "name": "static-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "static-mobile",
+        "name": "static-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "node-desktop",
+        "name": "node-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "node-mobile",
+        "name": "node-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "static-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "static-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "static-mobile",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "static-mobile"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "node-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "node-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "node-mobile",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "node-mobile"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        {
+          "printSteps": true
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts/playwright/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "artifacts/playwright/report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "field-terrain.spec.js",
+      "file": "field-terrain.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "a live-discovered Ames field renders on terrain with derived slope context",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-desktop",
+              "projectName": "static-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 60687,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js:7:77",
+                    "location": {
+                      "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                      "column": 77,
+                      "line": 7
+                    },
+                    "snippet": " \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m{waitUntil\u001b[33m:\u001b[39m\u001b[32m'domcontentloaded'\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m  6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Explore an example farming region'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'42,-93.69'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Mapped field'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoBeEnabled({timeout\u001b[33m:\u001b[39m\u001b[35m60_000\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[90m// This must be returned by live discovery, never injected from a saved outline.\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Mapped field'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'way/732026029'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'View mapped field and history'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'href'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'https://www.openstreetmap.org/way/732026029'\u001b[39m)\u001b[33m;\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                        "column": 77,
+                        "line": 7
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n\n\n   5 |   await page.goto('/',{waitUntil:'domcontentloaded'});\n   6 |   await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption('42,-93.69');\n>  7 |   await expect(page.getByRole('combobox',{name:'Mapped field',exact:true})).toBeEnabled({timeout:60_000});\n     |                                                                             ^\n   8 |   // This must be returned by live discovery, never injected from a saved outline.\n   9 |   await page.getByRole('combobox',{name:'Mapped field',exact:true}).selectOption('way/732026029');\n  10 |   await expect(page.getByRole('link',{name:'View mapped field and history',exact:true})).toHaveAttribute('href','https://www.openstreetmap.org/way/732026029');\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js:7:77"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T08:24:26.136Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-static-desktop\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-static-desktop\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-static-desktop\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                    "column": 77,
+                    "line": 7
+                  }
+                }
+              ],
+              "status": "unexpected"
+            },
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-mobile",
+              "projectName": "static-mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 60538,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js:7:77",
+                    "location": {
+                      "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                      "column": 77,
+                      "line": 7
+                    },
+                    "snippet": " \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m{waitUntil\u001b[33m:\u001b[39m\u001b[32m'domcontentloaded'\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m  6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Explore an example farming region'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'42,-93.69'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Mapped field'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoBeEnabled({timeout\u001b[33m:\u001b[39m\u001b[35m60_000\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[90m// This must be returned by live discovery, never injected from a saved outline.\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Mapped field'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'way/732026029'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'View mapped field and history'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'href'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'https://www.openstreetmap.org/way/732026029'\u001b[39m)\u001b[33m;\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                        "column": 77,
+                        "line": 7
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n\n\n   5 |   await page.goto('/',{waitUntil:'domcontentloaded'});\n   6 |   await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption('42,-93.69');\n>  7 |   await expect(page.getByRole('combobox',{name:'Mapped field',exact:true})).toBeEnabled({timeout:60_000});\n     |                                                                             ^\n   8 |   // This must be returned by live discovery, never injected from a saved outline.\n   9 |   await page.getByRole('combobox',{name:'Mapped field',exact:true}).selectOption('way/732026029');\n  10 |   await expect(page.getByRole('link',{name:'View mapped field and history',exact:true})).toHaveAttribute('href','https://www.openstreetmap.org/way/732026029');\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js:7:77"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T08:25:27.769Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-static-mobile\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-static-mobile\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-static-mobile\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                    "column": 77,
+                    "line": 7
+                  }
+                }
+              ],
+              "status": "unexpected"
+            },
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-desktop",
+              "projectName": "node-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 60631,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js:7:77",
+                    "location": {
+                      "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                      "column": 77,
+                      "line": 7
+                    },
+                    "snippet": " \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m{waitUntil\u001b[33m:\u001b[39m\u001b[32m'domcontentloaded'\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m  6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Explore an example farming region'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'42,-93.69'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Mapped field'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoBeEnabled({timeout\u001b[33m:\u001b[39m\u001b[35m60_000\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[90m// This must be returned by live discovery, never injected from a saved outline.\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Mapped field'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'way/732026029'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'View mapped field and history'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'href'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'https://www.openstreetmap.org/way/732026029'\u001b[39m)\u001b[33m;\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                        "column": 77,
+                        "line": 7
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n\n\n   5 |   await page.goto('/',{waitUntil:'domcontentloaded'});\n   6 |   await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption('42,-93.69');\n>  7 |   await expect(page.getByRole('combobox',{name:'Mapped field',exact:true})).toBeEnabled({timeout:60_000});\n     |                                                                             ^\n   8 |   // This must be returned by live discovery, never injected from a saved outline.\n   9 |   await page.getByRole('combobox',{name:'Mapped field',exact:true}).selectOption('way/732026029');\n  10 |   await expect(page.getByRole('link',{name:'View mapped field and history',exact:true})).toHaveAttribute('href','https://www.openstreetmap.org/way/732026029');\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js:7:77"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T08:26:29.191Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-node-desktop\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-node-desktop\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-node-desktop\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                    "column": 77,
+                    "line": 7
+                  }
+                }
+              ],
+              "status": "unexpected"
+            },
+            {
+              "timeout": 240000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-mobile",
+              "projectName": "node-mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 60841,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js:7:77",
+                    "location": {
+                      "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                      "column": 77,
+                      "line": 7
+                    },
+                    "snippet": " \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m{waitUntil\u001b[33m:\u001b[39m\u001b[32m'domcontentloaded'\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m  6 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Explore an example farming region'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'42,-93.69'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Mapped field'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoBeEnabled({timeout\u001b[33m:\u001b[39m\u001b[35m60_000\u001b[39m})\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[90m// This must be returned by live discovery, never injected from a saved outline.\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'combobox'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'Mapped field'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m})\u001b[33m.\u001b[39mselectOption(\u001b[32m'way/732026029'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m{name\u001b[33m:\u001b[39m\u001b[32m'View mapped field and history'\u001b[39m\u001b[33m,\u001b[39mexact\u001b[33m:\u001b[39m\u001b[36mtrue\u001b[39m}))\u001b[33m.\u001b[39mtoHaveAttribute(\u001b[32m'href'\u001b[39m\u001b[33m,\u001b[39m\u001b[32m'https://www.openstreetmap.org/way/732026029'\u001b[39m)\u001b[33m;\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                        "column": 77,
+                        "line": 7
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n\n\n   5 |   await page.goto('/',{waitUntil:'domcontentloaded'});\n   6 |   await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption('42,-93.69');\n>  7 |   await expect(page.getByRole('combobox',{name:'Mapped field',exact:true})).toBeEnabled({timeout:60_000});\n     |                                                                             ^\n   8 |   // This must be returned by live discovery, never injected from a saved outline.\n   9 |   await page.getByRole('combobox',{name:'Mapped field',exact:true}).selectOption('way/732026029');\n  10 |   await expect(page.getByRole('link',{name:'View mapped field and history',exact:true})).toHaveAttribute('href','https://www.openstreetmap.org/way/732026029');\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js:7:77"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T08:27:30.792Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-node-mobile\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-node-mobile\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\field-terrain-a-live-disco-584bf--with-derived-slope-context-node-mobile\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\field-terrain.spec.js",
+                    "column": 77,
+                    "line": 7
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "82f1d96ddf48c10094bf-749fb55e996a57621d14",
+          "file": "field-terrain.spec.js",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T08:24:24.621Z",
+    "duration": 247572.552,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

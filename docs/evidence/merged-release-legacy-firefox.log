@@ -1,0 +1,23 @@
+
+> fieldshift@0.1.0 test:firefox
+> node scripts/firefox-validation.js
+
+Built static browser app in dist/client. No server functions or /api network calls.
+PASS: Firefox loads the four modules and data worker with an empty initial location
+PASS: country crop choices load from recorded categories without a generic fallback
+PASS: real historical NASA evidence renders with charts, units and retrieval metadata
+PASS: baseline and two alternatives render equal dated timelines, risks and sources
+PASS: blocked model runtime shows an unavailable state while sourced evidence chat still answers
+PASS: a greeting receives one brief friendly reply without scientific data or sources
+PASS: kai lan in Singapore has traceable facts and a working focused growing-conditions follow-up
+PASS: a crop-country question and country-evidence follow-up work independently of the current map selection
+PASS: asking about another country never appends the selected map location’s weather
+PASS: Firefox WASM model loads, infers and unloads after the failed-load fallback
+PASS: edited constraints invalidate results and unsupported wheat stays unassessed
+PASS: 390px Firefox layout fits the viewport and real arrow-key tab navigation works
+PASS: blocking the actual worker NASA request shows an error and prevents stale comparison
+PASS: a country-only planning request asks which part or the whole country with both scope choices
+PASS: Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison
+PASS: choosing a specific area accepts a sourced Indian state and filters the town dropdown
+PASS: chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4
+PASS: no backend /api requests or uncaught JavaScript exceptions occurred in Firefox

@@ -12,7 +12,7 @@ export function initLocationPicker({ request, onTown, onRegion }) {
     $('place-town').disabled = !places.length;
     $('place-town').value = places.some(place => place.id === placeId) ? placeId : '';
     $('location-list-status').textContent = places.length ?
-      `${places.length.toLocaleString('en')} listed towns/cities ${regionCode === null ? 'in this country' : `in ${regionName(regionCode)}`}. Choose a town or change the region filter.` :
+      `${places.length.toLocaleString('en')} listed towns/cities ${regionCode === null ? 'in this country' : `in ${regionName(regionCode)}`}. ${data?.regions.some(region=>region.name) ? 'Choose a town or change the region filter.' : 'No named regions are available in this place list; choose a town directly, use the map or enter coordinates.'}` :
       'No towns are listed for this selection. Search a place, pick the map or enter coordinates.';
   }
   async function setCountry(nextCountry, { regionCode = null, placeId = '' } = {}) {
@@ -22,6 +22,7 @@ export function initLocationPicker({ request, onTown, onRegion }) {
     $('place-region').replaceChildren(el('option', country ? 'Loading regions…' : 'Choose a country first', { value: '' }));
     $('place-town').replaceChildren(el('option', country ? 'Loading towns…' : 'Choose a country first', { value: '' }));
     $('place-region').disabled = true; $('place-town').disabled = true;
+    $('place-region').closest('label').hidden=false;
     $('location-list-source').replaceChildren();
     $('location-list-status').textContent = country ? 'Loading the saved region and town list…' : 'Choose a country to browse regions and towns. No place name is needed.';
     if (!country) return;
@@ -33,7 +34,9 @@ export function initLocationPicker({ request, onTown, onRegion }) {
       $('place-region').replaceChildren(el('option', 'All regions', { value: '__all__' }));
       [...data.regions].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')).forEach(region =>
         $('place-region').append(el('option', region.name ?? 'Region not recorded', { value: region.id })));
-      $('place-region').disabled = !data.places.length;
+      const namedRegions=data.regions.some(region=>region.name);
+      $('place-region').disabled = !data.places.length||!namedRegions;
+      $('place-region').closest('label').hidden=!namedRegions;
       $('place-region').value = data.regions.some(region => region.id === regionCode) ? regionCode : '__all__';
       renderTowns($('place-region').value === '__all__' ? null : $('place-region').value, placeId);
       $('location-list-source').replaceChildren(el('p', `${data.source.title} · ${data.source.license} · snapshot retrieved ${data.source.retrievedAt}. ${data.source.coverage}`),

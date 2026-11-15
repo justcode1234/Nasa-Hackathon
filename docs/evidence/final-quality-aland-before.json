@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-15T10:15:38.514Z",
+  "question": "why i cant choose my first crop?",
+  "actual": {
+    "country": "AX",
+    "catalog": "AX: 0 recorded crop categories; 0 have starter screening rules. Choose from this country's list. At least two crops with rules are needed to compare alternatives; this country currently has insufficient screening coverage.",
+    "firstCrop": {
+      "disabled": true,
+      "options": [
+        {
+          "text": "Choose a country in step 01",
+          "value": ""
+        }
+      ]
+    },
+    "answer": [
+      "Select a place, load NASA evidence, enter the baseline and compare. Sourced crop records cover Bush snap bean, Garden pea, Sweet corn, Radish, Tomato, Cabbage, Bulb onion. Field tags and national pest records are context, not planting recommendations.",
+      "No location-specific comparison is attached to this message. Crop references are not global agronomic validation. Create a comparison for historical weather context."
+    ],
+    "latitude": "",
+    "scenarios": 0
+  }
+}

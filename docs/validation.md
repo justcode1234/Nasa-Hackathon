@@ -1,4 +1,37 @@
-﻿# Validation record — current release candidate
+# Validation record — current release candidate
+
+## Repository documentation review - 15 November 2026
+
+On separate branch `review/submission-accuracy`, application source base `4f9b8b3`:
+
+- `npm ci --ignore-scripts`: pinned dependencies installed, 0 audit vulnerabilities.
+- `npm.cmd run test:release`: **119/119 offline and 116/116 Playwright**, exit 0,
+  no skipped/flaky/unexpected results; browser duration 19.8 minutes. Static and
+  Node runtimes at desktop/mobile widths exercise the four-module workflow, real
+  field discovery, real NASA retrieval/retry, exact baseline preservation and two
+  alternatives, invalidation, accessibility, preview 3D/GIBS/terrain and speech fixtures.
+- Separate logged-out production run of workflow.spec.js, review-phase-a.spec.js
+  and assistant.spec.js: **16/16** desktop/mobile cases, 32 original QA question
+  executions, no skipped/flaky/unexpected results. Public source remains Phase A;
+  these cases do not claim public 3D/voice support.
+- Fourteen selected public assets match main f4c4fef by SHA-256; eleven protected
+  submission/licence/package/config files match the review base byte for byte.
+- New documentation local links and checker syntax pass. External references:
+  35/45 ordinary GETs reachable; eight 403 restrictions and two connection/redirect
+  failures remain flagged. UMN's maturity table and an official UF/IFAS PDF were
+  independently retrieved through the web reader; IRRI remained unavailable.
+- Singapore's confusing whole-country to region prompt reproduced in fresh public
+  contexts at both widths, with no page errors and no assumed field coordinates.
+  This documentation review records the issue; it does not fix that product flow.
+
+Raw log, summary, all 116 original browser results (gzip), public report, source
+hashes, URL outcomes and screenshots: [repository accuracy report](submission-accuracy-review.md#verification)
+and `docs/evidence/repository-review-*`. No tests weakened/removed, no dependencies
+added, no CSS/application edits, no merge/deployment/portal edit. This review did
+not run fresh Firefox/Safari/real-phone or real-microphone/audible-speech checks.
+
+The following sections preserve earlier release/feature checkpoints; their counts
+describe those dated runs, not the fresh review above.
 
 Date: 2026-11-15 (local). This section supersedes the earlier planning assumptions; the user selected a Node.js backend for local testing alongside a browser-only static Vercel showcase. Previously recorded styling is preserved; no CSS polishing was added.
 
@@ -245,3 +278,390 @@ Defects found (see docs/plans/2026-11-15-review-fixes-and-3d-plan.md, section 1)
 - Step-4 uncertainty text is unlabelled.
 
 These are open until fixed and re-tested.
+
+## Phase B checkpoint - 2026-11-15
+
+Work is isolated on feature/review-phase-b. Production stays frozen at f4c4fef.
+Seven sourced screening crops now cover 166/197 countries. Generic maize, Napa
+cabbage and green onions remain distinct. Results/evidence wording, archived unused
+workers, tighter CSP, favicon/arrows and axe licence delivery are implemented.
+CSS consolidation produced identical computed styles/geometry and pixel-identical
+initial/planning screenshots at 1366x768, 1280x1000 and 390x844.
+
+Executed: 99 offline tests pass. The first focused desktop run passed axe in all five
+states and actual model-on Q01/Q03/Q16; the human field path failed. Overpass has
+25-second timeouts, one fallback, partial-response rejection and visible retry, but
+real probes failed for all four examples on both providers. The full release suite
+is running; failed live fields must stay red. No fabricated replacement fields or
+production deployment. V0-only MapLibre feasibility measurements may proceed; the
+application dependency and V1 still need the plan's explicit approval.
+
+## Verified Phase B / V0 checkpoint - 15 November 2026
+
+`npm.cmd run test:release` exited 1: 99/99 offline pass; 36/44 Playwright pass,
+8 fail, 0 skipped/flaky. All failures are live field selection/example checks on
+both runtimes and viewports. All 20 axe scans and model-on Q01/Q03/Q16 in all four
+projects pass. An additional four field transport-failure/retry UI tests pass.
+Raw reports: docs/evidence/phase-b-playwright-local.json and phase-b-playwright-retry.json.
+No Phase B behavior release or deployment is authorized while the gate is red.
+Production remains f4c4fef. The source/PDF submission artifacts remain the frozen
+Phase A version; regenerate them only for a qualified later release.
+
+V0 has measured real globe/terrain rendering, source metadata, native POWER centres
+and WebGL-disabled fallback; see docs/3d-feasibility.md. It downloads pinned renderer
+files only into ignored artifacts, never public or package.json. Approval of the
+application dependency is pending. V1-V5 remain unimplemented.
+
+## Field outage follow-up - 15 November, 04:23 UTC
+
+A fresh actual-browser probe captured both Overpass requests ending with
+net::ERR_ABORTED at the configured 25-second deadlines, with no console/CSP errors.
+Both service status endpoints also failed 10-second probes from this device.
+This does not establish global service availability; it identifies the current
+local request failure. Evidence: phase-b-field-network-diagnostic.json and
+phase-b-service-status-recheck.json under docs/evidence.
+
+The field error now explains that the user can continue with the selected point.
+The enhanced failure case exercises Retry, preserves coordinates, loads real NASA
+data and completes a tomato/cabbage/onion baseline comparison in all four projects:
+4/4 pass, 0 skips/flaky outcomes (phase-b-playwright-field-degradation.json).
+The first test draft used a role locator after its panel became hidden; that test
+locator was corrected before the accepted 4/4 run. Actual-field success checks
+remain unchanged and still block release. The complete suite enumerates 48 cases;
+no complete green 48-case run is claimed.
+
+Production index/CSS/app/core-worker hashes were rechecked against the frozen Phase A
+manifest; all four match (phase-a-freeze-recheck.json). A reusable real-browser
+diagnostic is scripts/diagnose-fields.js (writes artifacts/field-network-diagnostic.json
+and exits nonzero if fewer than three fields return). The original browser probe
+was executed; the reusable wrapper has syntax validation. The V0 benchmark's
+Playwright timeout argument was corrected to the options position; the previously
+measured fast rendering result is unchanged. MapLibre approval remains pending.
+
+## Preview approval and security fix - 15 November 2026
+
+The user approved preview implementation, keeping Leaflet default. Installing the
+approved 5.24.0 package revealed CVE-2026-85061 (GHSA-jrc7-96c5-q579), a critical
+attribution sanitizer bypass affecting versions through 6.4.0. The upstream fix
+starts at 6.4.1: https://github.com/advisories/GHSA-jrc7-96c5-q579 . We switched to
+exact 6.4.1 to fix the approved dependency, rather than shipping the vulnerable
+version. This is the same optional MapLibre renderer, with no new service/account.
+`npm audit` reports zero vulnerabilities. The release predates the two-week gate.
+
+Repeated isolated desktop measurements: 1.68 seconds interactive, 60 fps, 672.3 MB
+maximum sampled process working set. JS/CSS/modules total 1,150,828 bytes raw and
+293,319 bytes gzip. Version 6 uses three ES modules and a same-origin module worker;
+the initial terrain benchmark exposed a missing self permission in the experiment
+worker CSP. Fixing that permission and setting projection before terrain restored
+actual terrain rendering. A console favicon 404 in that run was fixed afterward.
+Raw results: docs/evidence/maplibre-6.4.1-benchmark.json and package-size.json.
+These replace the 5.24 measurements for the approved preview; real-phone and
+combined-model memory remain unmeasured. Production remains frozen.
+
+## V1 native rainfall columns - verified locally, 15 November
+
+The approved optional map is now inside the existing geospatial step, with Leaflet
+2D default. MapLibre 6.4.1 (security-fixed) and its three ES modules/CSS/licence
+are vendored and lazy-loaded. Both Node and worker use the new bounded
+/api/power-grid adapter. Native MERRA-2 centres use the documented origin and
+spacing; midpoint bounds wrap the date line and clip at poles. Date-line requests
+show one actual native-centre point response rather than invented neighbours.
+
+Monthly rain columns have a zero baseline and an explicitly labelled display scale.
+Null and true zero differ; missing months hatch, partial sums keep valid-day counts.
+The month control synchronises exact selected-cell values and the existing evidence
+table highlight. The API retains units, dates, source, native spacing, retrieval
+time and missingness. No crop recommendation or imagery-derived value was added.
+Changing point/year closes stale 3D state. Rapid close/reopen cleanup is isolated
+per renderer instance so an old load cannot remove a newer map.
+
+Executed: npm test 104/104; full V1 Playwright 16/16 across static/Node and
+desktop/mobile, with no skips/flaky results. This includes real NASA values,
+nonblank screenshot pixels, slider/table equality, blocked WebGL fallback, provider
+failure/real retry, and delayed-module location-change races. npm audit: zero
+vulnerabilities. Reports: v1-playwright-complete.json, v1-native-rain-fixture.json
+and maplibre-6.4.1-audit.json under docs/evidence. The first pixel test read a
+renderer framebuffer before paint; it now checks actual screenshot pixels.
+
+No deployment: Phase B's actual field-success gate still fails. A fresh 06:47 UTC
+status probe still timed out at both Overpass hosts from this device. V2 imagery,
+V3 terrain/field context, V4 strategy linkage and V5 complete validation remain.
+
+## V2 dated NASA imagery - locally verified, 15 November
+
+Added on-demand GIBS controls inside the existing 3D map: NDVI, SMAP L4 surface
+soil moisture, IMERG precipitation rate and MODIS daytime land-surface temperature.
+Node and browser worker share /api/gibs-layers. The adapter parses current WMTS
+capabilities into a fixed product allowlist, native product resolution, exact
+availability intervals/default dates, maximum tile zoom, templates and legends.
+Gaps and invalid dates are rejected; XML entities/foreign resource hosts are not
+accepted. Metadata is cached with its original retrieval time. Units/resolution
+were checked against NASA Worldview's own product descriptions: NDVI 250 m;
+SMAP model-derived top-5-cm moisture 9 km in m3/m3; IMERG 0.1-degree source grid
+in mm/hour; MODIS LST 1 km in K. Tile zoom is not native product resolution.
+
+Layers are labelled imagery, values not extracted; POWER data and crop screening
+never read map colours. The user chooses an advertised date, can adjust opacity,
+and can turn imagery off. Coverage and overzoom limits remain visible. Metadata
+failures have a real retry; tile failures leave a visible notice and the rain table.
+No provider failures are replaced with made-up imagery or dates.
+
+Executed: 107/107 offline tests; 12/12 GIBS browser cases across four projects,
+covering all four real products (16 selections), real metadata retry and aborted
+tile transport. V1's 16-case report is retained separately. Three-dimensional tests
+deliberately abort unrelated field transport rather than hammering Overpass; the
+eight separate real-field success checks remain mandatory release blockers.
+Reports: docs/evidence/v2-playwright-complete.json and v2-gibs-metadata.json.
+Small subsequent lifecycle guards avoid updates after map closure. A final complete
+release/a11y/performance run is still required after V3/V4. Production is frozen.
+
+## V3 terrain and field context - implemented, partial live verification
+
+Added shared Node/worker terrain-point and terrain-context endpoints. Terrarium
+PNG decoding validates CRCs, dimensions, filters, bounded decompression and missing
+pixels with no new dependency. Field context masks pixel centres against a Polygon
+and its holes; gradients use unexaggerated central differences with actual Web
+Mercator ground sampling. Circular aspect handles north wrapping and cancellation.
+Fewer than nine valid gradients leaves slope/aspect unassessed; nine is an
+engineering support threshold, not agronomic validation or a confidence percentage.
+Analysis is limited to 1,000 vertices, 50,000 candidate pixels and nine zoom-12 tiles.
+Dateline-crossing fields and non-Mercator polar areas remain explicitly unsupported.
+
+The optional view has DEM terrain, hillshade, an explicit x1/x2/x3 exaggeration
+control, selected-point marker and selected-field fill/outline when present.
+Terrain view hides scaled rain columns; returning to regional/globe restores them.
+Exaggeration changes display only. Missing terrain has an actual retry and no
+substituted values. Full provider attribution is shipped and linked. The DEM is a
+mosaic including SRTM and other sources, not uniformly NASA, a current survey or
+an erosion/crop prediction. Per-tile source headers are retained when exposed;
+file modification dates are not acquisition dates.
+
+Executed: 112/112 offline tests, including known RGB pixels independently checked
+with Pillow, malformed PNG rejection, synthetic plane slopes/aspects, hole masks,
+small-field gaps and cache/failure contracts. Eight real-terrain browser cases pass
+across static/Node and desktop/mobile: actual pixels, sampling, x1 default, numeric
+invariance under x2, explicit no-field gap, tile/API failure and real retry.
+
+A one-object provenance check (not a discovery fallback) captured two previously
+known OSM outlines. The Ames Node HTTP endpoint assessed 907 gradients, median
+slope 0.9768 degrees, circular aspect 77.96 degrees, using NED mosaic tiles.
+The Naivasha outline had only five gradients and correctly stayed unassessed;
+its sources include SRTM/GMTED. These are derived DEM examples, not surveyed farm
+facts. The actual browser field-selection/drape path is still unverified because
+Overpass has not returned the field list. Those original live success tests are
+unchanged and still block release. No recorded outline substitutes for them.
+Evidence: docs/evidence/v3-*. V4 strategy linkage and V5 full validation remain;
+production is frozen and no new branch has been deployed.
+
+
+## V4 exact strategy weather windows; V5 focused review - 15 November 2026
+
+A supported crop-slot button opens 3D at the exact upper-maturity assessment
+window used by the strategy. Shared historicalWindow/rainIndicators functions
+serve both paths; the UI does not approximate the four-month slot. Daily selected
+cell/point equality and exact strategy sum, valid-day, partial, zero-run and leap
+checks reject stale or different weather. Reference calendar dates wrap December;
+a missing reference leap day maps to February 28 exactly as before. The map table,
+legend and overlapping full-month evidence rows follow the window, with an explicit
+warning that whole-month rows are not partial-window totals. Monthly browsing is
+paused/hidden until Return to monthly view. Constraint edits remove the linked
+window; location/year changes still close and dispose 3D. Unsupported slots have
+no invented weather-window action.
+
+Executed: npm test 114/114; focused weather-window + map3d-review Playwright 8/8
+across all four projects, including 24 axe scans, no CSP/page errors, reduced
+motion, no idle camera movement, short-screen layout and focus return. The review
+caught a real missing OSM connect-src permission (MapLibre uses fetch rather than
+Leaflet image loading); both Node/static policies now allow the exact tile host.
+The before-fix failure is retained in v5-csp-regression-before-fix.json; passing
+focused report is v4-v5-playwright-focused.json. A later tiny UI change hides the
+paused month control; the complete release run will recheck it.
+
+The actual full application benchmark, including native POWER data, dated NDVI,
+terrain and a loaded compact model with actual inference, measured 2.899 s desktop
+and 1.619 s phone-sized open-to-data, about 60 fps, and 846.6 / 762.0 MB maximum
+sampled working set. Zero renderer requests before opt-in; zero page/CSP errors or
+observed HTTP error responses. Model inference completed but its proposed topic
+was rejected by the grounded-answer guard; this is not model accuracy evidence.
+The 293,319-byte gzip lazy renderer remains unchanged. Report and screenshots:
+docs/evidence/v5-app-*. Both runs used desktop headless Chrome; real phone memory,
+exact full-session peak and the live-field path are unverified. Benchmark script:
+node scripts/benchmark-3d-app.js (build first). Its first attempt failed at a wrong
+Close-button locator; the corrected run completed both viewports.
+
+The existing real-example field test now also requires the live-returned Ames
+outline to render on terrain with derived slope context; no fixture can satisfy
+it. This new section has not yet executed past discovery. The 07:58 UTC curl status
+probe received HTTP 406 from overpass-api.de; earlier app probes timed out. Do not
+try alternate identities to bypass rejection. The required full release, real
+field selection/drape, user visual signoff and preview delivery remain open.
+Production remains frozen at Phase A and nothing was pushed or deployed.
+
+
+## V5 full-run checkpoint and visual approval
+
+The user approved the current actual 3D visuals for preview on 15 November 2026.
+No further visual approval is needed for this reviewed layout. Production remains
+frozen; this approval does not waive the failed release gate.
+
+npm run test:release completed: 114/114 offline and 84/92 browser cases passed,
+eight field-lookup failures, zero skips/flaky cases. Each project has 21 passes and
+two field failures. All original 16 QA prompts ran in every project (64 executions),
+and the four model-on cases ran Q01/Q03/Q16 (12 executions). All 44 axe state scans
+passed: 20 existing flow states and 24 3D/crop-window states. All point terrain,
+GIBS, native-cell, exact crop-window, fallback, retry, focus and reduced-motion
+cases passed in the complete run. Current product sources were unchanged during
+the run except the branch-only Git deployment suppression metadata.
+
+The Node desktop trace shows Cambridge /api/farms returned 200 and its field count
+passed before York returned 502; service availability is partial/unreliable, not
+proven globally down. The Ames drape assertion was unreachable behind earlier
+example failures, so it has been moved into a standalone real-discovery test.
+The original every-example and human-path success requirements remain intact.
+The new standalone four-project run is in progress. No saved outline is injected.
+
+Complete failure summary: docs/evidence/v5-release-summary.json. The report with
+actual replies/values is v5-release.json; the original report is preserved losslessly
+as v5-release.raw.json.gz with its SHA-256. Large passed-rule axe node lists are
+compacted only in the readable copy; failure details and raw evidence are retained.
+This avoids committing repeated multi-megabyte passed-node lists. Current public
+core assets still match Phase A (v5-production-freeze.json); remote main remains
+f4c4fef. No behavior release has been made.
+
+
+## Added user requests - 15 November 2026
+
+The user approved the 3D visual direction for preview. The separate live Ames
+field-terrain test failed in all four projects at field discovery (v5-field-terrain.json).
+The live field-selection/drape path remains unverified; future full release now
+contains 96 browser cases, including the standalone field case. Do not deploy.
+
+New authorized work: add small English-only STT and TTS with a mic icon/control in
+chat, loaded on demand, and investigate/train a compact local classification/
+decision model inspired by TypeSafe AI Jev. The user corrected the earlier JEPA/
+LeJEPA interpretation: do NOT build JEPA. Reference supplied: https://jevtypesafe.org/ .
+That page identifies itself as an unofficial third-party host, so verify TypeSafe's
+own documentation before making claims. Do not call a locally trained classifier
+Jev, claim access to proprietary weights, or assume exponential speedup. Benchmark
+schema correctness, held-out performance, abstention and latency against the existing
+rule engine and tiny language model. Keep validated actions/scientific rules final.
+No cloud model/account/paid service is authorized by these requests; prefer local.
+Speech transcripts should be editable before Send; voice playback must use the
+actual grounded response and have Stop/Unload controls. Real microphone permission
+comes only from an explicit mic click. No audio was recorded in the research step.
+
+Research so far: OpenAI whisper-tiny.en explicitly has English-only training and
+39M parameters; Xenova provides ONNX exports for Transformers.js. KittenTTS Nano
+int8 advertises 15M parameters and about 25 MB, but its exact English-only training
+provenance/runtime still needs verification. The official KittenTTS web SDK docs
+mention optional analytics (must be off); npm @kittentts/web currently returns 404,
+so do not pretend that advertised install works. No new speech dependency has yet
+been installed. Current registry Transformers.js is 4.3.2; evaluate/pin only after
+review and browser feasibility. The previous HF workers remain archived; any new
+speech-only runtime needs an explicit narrow CSP and licence update.
+
+
+## Green release gate, field fix, voice and judgment checks - 15 November 2026
+
+Executed in this session (development desktop, installed Chrome via Playwright):
+
+| Check | Result |
+| --- | --- |
+| Live Ames field -> terrain drape -> slope, four projects (after lookup fix) | 4/4 passed (was 0/4) |
+| Full release after lookup fix | 114/114 offline; 95/96 browser. One example-regions case failed when all three Overpass services stayed busy for 75 s (7 attempts) |
+| Speech specs, four projects | 20/20 passed |
+| **Final `npm run test:release`** | **117/117 offline; 116/116 browser; 0 skipped; 0 flaky; 0 user retries needed** |
+| npm audit | 0 vulnerabilities |
+
+Evidence: docs/evidence/v5-field-fix-release.json, v5-field-terrain-after-fix.raw.json,
+v5-green-release-summary.json (+ .raw.json.gz, .log.gz), speech-playwright.raw.json.gz.
+
+Voice input measurements (same machine, each project): transcript exactly "Tell me
+about tomatoes in Kenya."; model download 43,536,374 bytes; load 3.3-3.5 s; inference
+1.67-1.74 s for about 4 s of audio. The runtime WASM (26.9 MB) is additional. Tests
+assert that no non-GET request leaves the machine during dictation, that no chat
+message is sent, that no country is selected, and that a refused microphone triggers
+no model download.
+
+Typed-judgment experiment, 95 held-out messages (second evaluation; see
+models/judgment/README.md): action 77 (rules 75, majority 73), unsupported 80 (81, 78),
+topic 43 (50, 22). Not wired into the app.
+
+Not verified: real phones or tablets, real microphones, accents and noise, memory
+use of the speech model, Safari/Firefox voice input, audible read-aloud output (only
+text, voice choice and Stop are checked), availability of the public field services
+at any other time, and independent review of classifier labels.
+
+## Logged-out public check and document reconciliation - 15 November 2026 (about 09:50 UTC)
+
+- Production https://nasa-hackathon-three.vercel.app/ : the Phase A Playwright suite
+  (commit f4c4fef) passed 16/16 desktop and mobile cases from fresh, logged-out
+  browser contexts. The app, deck page, seven-page PDF, credits page and source ZIP
+  all returned HTTP 200 without login. Production serves Phase A (no 3D view, no
+  voice input). Evidence: docs/evidence/public-logged-out-check-2026-11-15.json.
+- **NASA team page (public data, not logged in): `isSubmitted: false`,
+  `submittedAt: null`, last saved 2026-11-15T07:53Z; the data-references and
+  project-references fields were empty.** The project is a saved draft, not a
+  submission. Only the team owner can submit; the deadline is 23:59 Singapore time
+  on 15 November.
+- README, docs/playwright.md, docs/3d-validation.md and AGENTS.md section 10 were
+  reconciled with the green release gate. Older failing results are kept as history
+  and marked superseded.
+- The typed-judgment classifier remains an experiment; the validated rules stay in
+  charge of routing.
+
+
+## Final quality handoff: baseline, submission support and P0.3
+
+At start the tree was clean on feature/3d-evidence-map at 25e9476; local/remote main
+were f4c4fef. The user chose to keep Phase A public and retain all three existing
+Overpass services. No merge, deployment, project setting or NASA portal edit was made.
+The 09:55 UTC public NASA page still showed an unsubmitted draft and empty references;
+paste-ready Phase A fields were prepared in docs/submission-fields-2026-11-15.md.
+Baseline commands actually passed: npm test 117/117; npm run test:release 117 offline
+and 116 browser, zero skips/flaky/unexpected. Evidence: final-quality-baseline-*.
+P0.3 reviewed all ten named scientific presentation modules. The kai-lan catalog
+claim now says sourced instead of validated; npm test again passed 117/117.
+See docs/final-quality-review.md. User-reported Aland crop selection/chat failure
+was reproduced on this branch and is not fixed yet; sourced regional context and
+new prompt regressions are next. The classifier remains unwired. No dependency added.
+
+
+## P0.4 completed - new crop source and exclusion checks
+
+Live primary-source numbers match the stored tomato, head-cabbage and bulb-onion
+entries; no numeric crop rules changed. Added duration-basis/pH/temperature checks
+and an actual comparison contract proving Chinese cabbage, bok choy and spring
+onion remain unassessed. An initial added wording assertion omitted the existing
+qualifier head-cabbage; corrected that test defect to require head-cabbage
+transplants. Final npm test: 119/119 pass. Source and both test-run reports are
+under docs/evidence/final-quality-crop-source-probes-* and final-quality-p04-*.
+The user also requested sourced local crop-type suggestions for empty areas,
+aligned Back/Next controls that open chat cannot cover, and three clickable chat
+starter examples. These are included in the remaining P0.6/P1 work. All three field
+services are retained by explicit user decision. No new dependency or deployment.
+
+## 15 November 2026 - merged release checkpoint (final gate pending)
+
+Current application checkpoint: 3e82b2c; final behavior hashes are retained in
+merged-release-application-source.json. All previous branch histories are ancestors
+of this checkpoint. Main and production remain f4c4fef until the authorized gate
+passes. 128 offline tests pass; legacy Chrome model-on 33, Node Chrome 19 and
+Firefox 18 checks passed before the final small launcher correction. Original
+QA 16 questions + six flows pass with model off/on (22/22 each). Their separate
+review checklist has five passes and two blocked items (local run cannot establish
+public-origin CORS or authenticated portal status). Independent public NASA status
+is recorded separately, not retroactively inserted into those results.
+
+Five-size before/after review covers all four steps and chat, with 3D/terrain after
+captures. It caught a closed-launcher overlap on short screens, now fixed and
+asserted. Two mobile prompt-sweep failures were test interactions under open chat;
+close/change/reopen repairs the harness without removing answer or state checks.
+Interrupted/failing logs are preserved. The fresh 152-case four-project gate is
+running; do not treat a partial run as a release pass.
+
+Durable review and actual QA replies: docs/merged-release-review.md and
+merged-release-* evidence. Real phones, Safari/WebKit, microphone/accent/noise,
+audible voice quality, exact session memory peaks and agronomic validation remain
+unverified. Installed English TTS training provenance is unverified and explicitly
+accepted for this release. No dependency or classifier activation was added.

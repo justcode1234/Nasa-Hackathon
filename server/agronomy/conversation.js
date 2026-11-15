@@ -1,6 +1,6 @@
 import { catalog, mentionedCrops, ambiguousCornQuestion, cornScopeNotice } from './catalog.js';
 import knowledge from './knowledge.json' with { type: 'json' };
-import { getCountryCrops, cropItems } from '../context/crops.js';
+import { getCountryCrops, cropItems, screeningItemIds } from '../context/crops.js';
 import { COUNTRY_CODES, COUNTRY_NAMES, findCountries } from '../../public/js/lib/countries.js';
 
 const normal = value => String(value ?? '').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
@@ -79,8 +79,8 @@ export function answerConversation(question, { country: selectedCountry = '', co
   const countryName = country ? COUNTRY_NAMES.of(country) : null;
   const scope = country ? getCountryCrops({ country }) : null;
   if (starter) {
-    const ids = { 'bush-bean': ['414', '423'], pea: ['417'], 'sweet-corn': ['446'], radish: [] }[starter.id];
-    item = cropItems.find(item => ids.includes(item.id));
+    const ids = screeningItemIds(starter.id);
+    item = cropItems.find(item => ids.includes(item.id) && scope?.records.some(record=>String(record.itemCode)===item.id)) ?? cropItems.find(item => ids.includes(item.id));
   }
   // Only explicitly mapped profiles receive commodity totals. Kai lan must not
   // inherit the broader broccoli/cabbage category's national production.
@@ -94,7 +94,7 @@ export function answerConversation(question, { country: selectedCountry = '', co
     if (topic !== 'production') push(fact ? 'sourced crop facts' : 'evidence gap', (fact ?? `I do not have a verified ${topic} rule for ${name}.`) + (profile.screeningEligible === false && topic !== 'rotation' ? ` ${profile.limitation ?? `${name} has knowledge coverage but is not in the rotation-screening catalog.`}` : ''), fact ? profile.topicSourceIds?.[topic] ?? profile.sourceIds : []);
     if (country === 'SG' && profile.id === 'kai-lan') push('country context', 'NParks provides Singapore gardening guidance for kai lan. Local cultivar and farm conditions still need checking.', profile.sourceIds);
     else if (!record) push('reference scope', profile.referenceScope ?? `The growing reference is from ${COUNTRY_NAMES.of(profile.sourceCountry)}; ${countryName ?? 'your country'}-specific growing guidance is not verified here.`, []);
-    if (topic === 'rotation') push('screening limit', profile.limitation ?? `${name} has knowledge coverage but is not in the four-crop rotation-screening catalog.`, []);
+    if (topic === 'rotation' && profile.screeningEligible === false) push('screening limit', profile.limitation ?? `${name} has knowledge coverage but is not in the rotation-screening catalog.`, []);
   } else if (starter) {
     if (topic === 'harvest') push('sourced crop facts', `${name}: the starter reference gives ${starter.maturityDays.join('–')} days to maturity. This reference range does not predict your harvest date.`, starter.sourceIds);
     else if (topic === 'rotation') push('sourced crop facts', `${name} belongs to ${starter.family}. Family repetition is one rotation check; it cannot establish pest prevention or the required local break period.`, [...starter.sourceIds, 'cornell-rotation']);
@@ -104,7 +104,7 @@ export function answerConversation(question, { country: selectedCountry = '', co
   if (record) {
     if (topic === 'production' || (!profile && !starter)) push('national production evidence',
       `${countryName}: FAOSTAT records ${record.tonnes.toLocaleString('en-US')} t of ${record.name} nationally in ${record.year} (${record.flagDescription}). Source snapshot retrieved ${scope.source.retrievedAt.slice(0, 10)}. This is national production, not field yield or a planting recommendation.`, ['faostat-qcl']);
-    else push('country context', `${countryName} has a ${record.year} FAOSTAT production record for ${record.name}. ${profile?.referenceScope ?? 'The growing reference is from Minnesota.'} National records do not verify local suitability.`, ['faostat-qcl']);
+    else push('country context', `${countryName} has a ${record.year} FAOSTAT production record for ${record.name}. ${profile?.referenceScope ?? 'The growing references are regional extension examples, not globally validated crop rules.'} National records do not verify local suitability.`, ['faostat-qcl']);
   } else if (item && country) push('evidence gap', `The saved FAOSTAT extract has no matching positive ${item.name} record for ${countryName} in 2020–2024. That is missing coverage, not proof the crop cannot grow there.`, ['faostat-qcl']);
   else if (!country) push('clarification', `Which country would you like to discuss ${name} in?`, []);
   if (profile?.id === 'kai-lan' && topic === 'production') push('evidence gap', `I have no kai-lan-specific national production series${countryName ? ` for ${countryName}` : ''}. A total for cabbage or broccoli would cover a different category.`, []);

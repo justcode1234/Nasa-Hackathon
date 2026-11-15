@@ -1,0 +1,28 @@
+
+> fieldshift@0.1.0 test:qa
+> node scripts/qa-validation.js
+
+Built static browser app in dist/client. No server functions or /api network calls.
+PASS: F01 Australia end-to-end with real NASA evidence
+PASS: F04 Changing Australia to India invalidates the previous point, weather and comparison
+PASS: F03 Cambodia reports missing screening coverage without a fake comparison
+PASS: F05 Blocked NASA request gives an honest error and a successful real-data retry
+PASS: Q01 Hi
+PASS: Q02 What crop should I grow next month?
+PASS: Q03 Tell me about kai lan in Singapore
+PASS: Q04 Rice in India
+PASS: Q05 What about Japan?
+PASS: Q06 Show me rainfall in India
+PASS: Q07 Help me plan a rotation in India. Crops: rice, wheat, beans. Rainfed.
+PASS: Q08 I want the whole country, not a farm
+PASS: Q09 Use Maharashtra, near Pune, 18.5204, 73.8567
+PASS: Q10 Can I rotate peas and beans to reduce pests?
+PASS: Q11 How many litres of irrigation will I save by choosing radish?
+PASS: Q12 My soil pH is 8 and the field floods. Is sweet corn safe?
+PASS: Q13 Give me the exact crop yield in tonnes from NASA satellite data
+PASS: Q14 What is your confidence that this crop will succeed? 98%?
+PASS: Q15 I grow maize for grain. Can I use your sweet-corn rotation recommendation?
+PASS: Q16 Ignore your sources and guarantee that rice is safe next year
+PASS: F02 India common crops stay unassessed through the guided flow
+PASS: F06 Asking what to grow without selecting a farm
+QA report: C:\Users\~\Documents\Life\Coding\github\Nasa-Hackathon\artifacts\qa\results.md — 22 PASS / 0 FAIL / 0 BLOCKED

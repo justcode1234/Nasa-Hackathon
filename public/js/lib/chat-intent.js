@@ -1,7 +1,7 @@
 // Read-only questions never become form mutations just because they mention
 // rotation, "use", or an existing crop. Model output cannot override this boundary.
 export function isEvidenceQuestion(question) {
-  const text = String(question ?? '').trim();
+  const text = String(question ?? '').normalize('NFKC').trim();
   if (/^(?:please )?help me (?:understand|learn|know|interpret|explain)\b/i.test(text)) return true;
   if (/\b(?:help me|guide me|walk me through|take me through)\s+(?:plan|pick|select|choose|find|compare|set|use)\b/i.test(text)) return false;
   if (/^(?:please\s+)?(?:use|select|choose|pick|set|find|plan|compare|rotate|continue|next|proceed)\b/i.test(text)) return false;

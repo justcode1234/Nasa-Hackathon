@@ -1,0 +1,4523 @@
+{
+ "kind": "DEVELOPMENT synthetic wording with authored labels; not independently reviewed",
+ "schema": {
+  "action": [
+   "read_only",
+   "app_action"
+  ],
+  "unsupported": [
+   "answerable_or_other",
+   "unsupported_claim"
+  ],
+  "topic": [
+   "greeting",
+   "crops",
+   "weather",
+   "soil",
+   "water",
+   "pests",
+   "comparison",
+   "location",
+   "other"
+  ]
+ },
+ "split": "train/validation split by wording template; held-out set is separate hand-written wording",
+ "train": [
+  {
+   "text": "hello",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.1"
+  },
+  {
+   "text": "hello there",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.2"
+  },
+  {
+   "text": "hey",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.3"
+  },
+  {
+   "text": "good morning",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.4"
+  },
+  {
+   "text": "hi there",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.6"
+  },
+  {
+   "text": "thanks",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.7"
+  },
+  {
+   "text": "thank you",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.8"
+  },
+  {
+   "text": "cheers",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.9"
+  },
+  {
+   "text": "good afternoon",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.11"
+  },
+  {
+   "text": "thanks a lot",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.12"
+  },
+  {
+   "text": "hello again",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.13"
+  },
+  {
+   "text": "tell me about sweet corn in India",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.0"
+  },
+  {
+   "text": "tell me about soybeans in Kenya",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.0"
+  },
+  {
+   "text": "tell me about cabbage in Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.0"
+  },
+  {
+   "text": "tell me about radish in Brazil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.0"
+  },
+  {
+   "text": "what family is maize in",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.1"
+  },
+  {
+   "text": "what family is wheat in",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.1"
+  },
+  {
+   "text": "what family is beans in",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.1"
+  },
+  {
+   "text": "what family is potatoes in",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.1"
+  },
+  {
+   "text": "how long does carrots take to mature",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.2"
+  },
+  {
+   "text": "how long does onions take to mature",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.2"
+  },
+  {
+   "text": "how long does cassava take to mature",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.2"
+  },
+  {
+   "text": "how long does rice take to mature",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.2"
+  },
+  {
+   "text": "what do you know about tomato",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.3"
+  },
+  {
+   "text": "what do you know about sweet corn",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.3"
+  },
+  {
+   "text": "what do you know about soybeans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.3"
+  },
+  {
+   "text": "what do you know about cabbage",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.3"
+  },
+  {
+   "text": "is radish a legume",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.5"
+  },
+  {
+   "text": "is carrots a legume",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.5"
+  },
+  {
+   "text": "is onions a legume",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.5"
+  },
+  {
+   "text": "is cassava a legume",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.5"
+  },
+  {
+   "text": "which crops are related to potatoes",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.6"
+  },
+  {
+   "text": "which crops are related to tomato",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.6"
+  },
+  {
+   "text": "which crops are related to sweet corn",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.6"
+  },
+  {
+   "text": "which crops are related to soybeans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.6"
+  },
+  {
+   "text": "describe rice as a rotation crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.7"
+  },
+  {
+   "text": "describe peas as a rotation crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.7"
+  },
+  {
+   "text": "describe maize as a rotation crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.7"
+  },
+  {
+   "text": "describe wheat as a rotation crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.7"
+  },
+  {
+   "text": "what growing conditions does cabbage need in India",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.8"
+  },
+  {
+   "text": "what growing conditions does radish need in Kenya",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.8"
+  },
+  {
+   "text": "what growing conditions does carrots need in Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.8"
+  },
+  {
+   "text": "what growing conditions does onions need in Brazil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.8"
+  },
+  {
+   "text": "does Mexico grow cassava",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.10"
+  },
+  {
+   "text": "does Thailand grow rice",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.10"
+  },
+  {
+   "text": "does Ghana grow peas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.10"
+  },
+  {
+   "text": "does Peru grow maize",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.10"
+  },
+  {
+   "text": "what production records exist for soybeans in Peru",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.11"
+  },
+  {
+   "text": "what production records exist for cabbage in Egypt",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.11"
+  },
+  {
+   "text": "what production records exist for radish in Vietnam",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.11"
+  },
+  {
+   "text": "what production records exist for carrots in India",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.11"
+  },
+  {
+   "text": "give me the basics on wheat",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.12"
+  },
+  {
+   "text": "give me the basics on beans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.12"
+  },
+  {
+   "text": "give me the basics on potatoes",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.12"
+  },
+  {
+   "text": "give me the basics on tomato",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.12"
+  },
+  {
+   "text": "when is onions usually harvested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.13"
+  },
+  {
+   "text": "when is cassava usually harvested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.13"
+  },
+  {
+   "text": "when is rice usually harvested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.13"
+  },
+  {
+   "text": "when is peas usually harvested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.13"
+  },
+  {
+   "text": "show me rainfall in Vietnam",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.0"
+  },
+  {
+   "text": "show me rainfall in Kenya",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.0"
+  },
+  {
+   "text": "show me rainfall in Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.0"
+  },
+  {
+   "text": "what was the temperature here last year",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.1"
+  },
+  {
+   "text": "how much rain fell in December",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.2"
+  },
+  {
+   "text": "how much rain fell in October",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.2"
+  },
+  {
+   "text": "how much rain fell in August",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.2"
+  },
+  {
+   "text": "how much rain fell in June",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.2"
+  },
+  {
+   "text": "how hot did it get in December",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.4"
+  },
+  {
+   "text": "how hot did it get in October",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.4"
+  },
+  {
+   "text": "how hot did it get in August",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.4"
+  },
+  {
+   "text": "how hot did it get in June",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.4"
+  },
+  {
+   "text": "what does the nasa data say about rain",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.5"
+  },
+  {
+   "text": "show the solar radiation for this point",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.6"
+  },
+  {
+   "text": "were there dry spells in June",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.7"
+  },
+  {
+   "text": "were there dry spells in March",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.7"
+  },
+  {
+   "text": "were there dry spells in January",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.7"
+  },
+  {
+   "text": "were there dry spells in December",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.7"
+  },
+  {
+   "text": "what is the weather evidence for Kumasi",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.9"
+  },
+  {
+   "text": "what is the weather evidence for Nakuru",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.9"
+  },
+  {
+   "text": "what is the weather evidence for Pune",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.9"
+  },
+  {
+   "text": "what is the weather evidence for Perth",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.9"
+  },
+  {
+   "text": "which month was wettest",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.10"
+  },
+  {
+   "text": "explain the temperature chart",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.11"
+  },
+  {
+   "text": "how many days had no rain",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.12"
+  },
+  {
+   "text": "what is the soil ph here",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.0"
+  },
+  {
+   "text": "is my soil too sandy for maize",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.1"
+  },
+  {
+   "text": "is my soil too sandy for wheat",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.1"
+  },
+  {
+   "text": "is my soil too sandy for beans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.1"
+  },
+  {
+   "text": "is my soil too sandy for potatoes",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.1"
+  },
+  {
+   "text": "what does the soil estimate show",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.3"
+  },
+  {
+   "text": "does peas need well drained soil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.4"
+  },
+  {
+   "text": "does maize need well drained soil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.4"
+  },
+  {
+   "text": "does wheat need well drained soil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.4"
+  },
+  {
+   "text": "does beans need well drained soil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.4"
+  },
+  {
+   "text": "my field has clay soil what does that mean for radish",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.5"
+  },
+  {
+   "text": "my field has clay soil what does that mean for carrots",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.5"
+  },
+  {
+   "text": "my field has clay soil what does that mean for onions",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.5"
+  },
+  {
+   "text": "my field has clay soil what does that mean for cassava",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.5"
+  },
+  {
+   "text": "is acidic soil a problem for potatoes",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.6"
+  },
+  {
+   "text": "is acidic soil a problem for tomato",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.6"
+  },
+  {
+   "text": "is acidic soil a problem for sweet corn",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.6"
+  },
+  {
+   "text": "is acidic soil a problem for soybeans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.6"
+  },
+  {
+   "text": "the field drains poorly is cabbage affected",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.8"
+  },
+  {
+   "text": "the field drains poorly is radish affected",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.8"
+  },
+  {
+   "text": "the field drains poorly is carrots affected",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.8"
+  },
+  {
+   "text": "the field drains poorly is onions affected",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.8"
+  },
+  {
+   "text": "how reliable is the soil map",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.9"
+  },
+  {
+   "text": "what ph range suits cassava",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.10"
+  },
+  {
+   "text": "what ph range suits rice",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.10"
+  },
+  {
+   "text": "what ph range suits peas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.10"
+  },
+  {
+   "text": "what ph range suits maize",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.10"
+  },
+  {
+   "text": "does soilgrids measure my farm",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.11"
+  },
+  {
+   "text": "does rice need a lot of water",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.0"
+  },
+  {
+   "text": "does peas need a lot of water",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.0"
+  },
+  {
+   "text": "does maize need a lot of water",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.0"
+  },
+  {
+   "text": "does wheat need a lot of water",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.0"
+  },
+  {
+   "text": "what does rainfed mean for beans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.2"
+  },
+  {
+   "text": "what does rainfed mean for potatoes",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.2"
+  },
+  {
+   "text": "what does rainfed mean for tomato",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.2"
+  },
+  {
+   "text": "what does rainfed mean for sweet corn",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.2"
+  },
+  {
+   "text": "how is water availability considered",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.3"
+  },
+  {
+   "text": "what irrigation records do you have",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.4"
+  },
+  {
+   "text": "is the rain enough context for wheat",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.5"
+  },
+  {
+   "text": "is the rain enough context for beans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.5"
+  },
+  {
+   "text": "is the rain enough context for potatoes",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.5"
+  },
+  {
+   "text": "is the rain enough context for tomato",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.5"
+  },
+  {
+   "text": "how do you treat irrigation in the comparison",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.7"
+  },
+  {
+   "text": "can drought be assessed here",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.8"
+  },
+  {
+   "text": "what does a zero rain run mean",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.9"
+  },
+  {
+   "text": "is tomato more drought exposed than other crops",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.10"
+  },
+  {
+   "text": "is sweet corn more drought exposed than other crops",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.10"
+  },
+  {
+   "text": "is soybeans more drought exposed than other crops",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.10"
+  },
+  {
+   "text": "is cabbage more drought exposed than other crops",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.10"
+  },
+  {
+   "text": "is fall armyworm recorded in Vietnam",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.1"
+  },
+  {
+   "text": "is fall armyworm recorded in India",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.1"
+  },
+  {
+   "text": "is fall armyworm recorded in Kenya",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.1"
+  },
+  {
+   "text": "is fall armyworm recorded in Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.1"
+  },
+  {
+   "text": "what pests are known in Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.2"
+  },
+  {
+   "text": "what pests are known in Brazil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.2"
+  },
+  {
+   "text": "what pests are known in Australia",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.2"
+  },
+  {
+   "text": "what pests are known in France",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.2"
+  },
+  {
+   "text": "does rotating tomato help with pests",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.3"
+  },
+  {
+   "text": "does rotating sweet corn help with pests",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.3"
+  },
+  {
+   "text": "does rotating soybeans help with pests",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.3"
+  },
+  {
+   "text": "does rotating cabbage help with pests",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.3"
+  },
+  {
+   "text": "is diamondback moth a risk for peas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.4"
+  },
+  {
+   "text": "is diamondback moth a risk for maize",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.4"
+  },
+  {
+   "text": "is diamondback moth a risk for wheat",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.4"
+  },
+  {
+   "text": "is diamondback moth a risk for beans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.4"
+  },
+  {
+   "text": "are there disease concerns after potatoes",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.6"
+  },
+  {
+   "text": "are there disease concerns after tomato",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.6"
+  },
+  {
+   "text": "are there disease concerns after sweet corn",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.6"
+  },
+  {
+   "text": "are there disease concerns after soybeans",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.6"
+  },
+  {
+   "text": "which insects are recorded near France",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.7"
+  },
+  {
+   "text": "which insects are recorded near Mexico",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.7"
+  },
+  {
+   "text": "which insects are recorded near Thailand",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.7"
+  },
+  {
+   "text": "which insects are recorded near Ghana",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.7"
+  },
+  {
+   "text": "how do crop families relate to pests",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.8"
+  },
+  {
+   "text": "do the records show an outbreak",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.9"
+  },
+  {
+   "text": "why is alternative 1 ranked first",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.0"
+  },
+  {
+   "text": "explain the difference between my baseline and alternative 2",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.1"
+  },
+  {
+   "text": "what are the risks of the second scenario",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.2"
+  },
+  {
+   "text": "how were the alternatives ordered",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.3"
+  },
+  {
+   "text": "what does calendar overrun mean",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.5"
+  },
+  {
+   "text": "which scenario has less heat exposure",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.6"
+  },
+  {
+   "text": "summarise the comparison",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.7"
+  },
+  {
+   "text": "what are the gaps in this comparison",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.8"
+  },
+  {
+   "text": "what does the uncertainty note mean",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.10"
+  },
+  {
+   "text": "how do the three rotations differ",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.11"
+  },
+  {
+   "text": "help me plan a rotation in Mexico",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.0"
+  },
+  {
+   "text": "help me plan a rotation in Thailand",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.0"
+  },
+  {
+   "text": "help me plan a rotation in Ghana",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.0"
+  },
+  {
+   "text": "help me plan a rotation in Peru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.0"
+  },
+  {
+   "text": "select Peru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.1"
+  },
+  {
+   "text": "select Egypt",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.1"
+  },
+  {
+   "text": "select Vietnam",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.1"
+  },
+  {
+   "text": "select India",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.1"
+  },
+  {
+   "text": "use the field near Kumasi",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.2"
+  },
+  {
+   "text": "use the field near Nakuru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.2"
+  },
+  {
+   "text": "use the field near Pune",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.2"
+  },
+  {
+   "text": "use the field near Perth",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.2"
+  },
+  {
+   "text": "choose Ames as my location",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.4"
+  },
+  {
+   "text": "choose Cambridge as my location",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.4"
+  },
+  {
+   "text": "choose Chiang Mai as my location",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.4"
+  },
+  {
+   "text": "choose Kumasi as my location",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.4"
+  },
+  {
+   "text": "find farmland around Chiang Mai",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.5"
+  },
+  {
+   "text": "find farmland around Kumasi",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.5"
+  },
+  {
+   "text": "find farmland around Nakuru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.5"
+  },
+  {
+   "text": "find farmland around Pune",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.5"
+  },
+  {
+   "text": "use coordinates 18.52, 73.85",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.6"
+  },
+  {
+   "text": "set the country to Brazil",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.7"
+  },
+  {
+   "text": "set the country to Australia",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.7"
+  },
+  {
+   "text": "set the country to France",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.7"
+  },
+  {
+   "text": "set the country to Mexico",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.7"
+  },
+  {
+   "text": "go to Kumasi and find fields",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.9"
+  },
+  {
+   "text": "go to Nakuru and find fields",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.9"
+  },
+  {
+   "text": "go to Pune and find fields",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.9"
+  },
+  {
+   "text": "go to Perth and find fields",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.9"
+  },
+  {
+   "text": "use the whole country",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.10"
+  },
+  {
+   "text": "choose a region in Brazil",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.11"
+  },
+  {
+   "text": "choose a region in Australia",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.11"
+  },
+  {
+   "text": "choose a region in France",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.11"
+  },
+  {
+   "text": "choose a region in Mexico",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.11"
+  },
+  {
+   "text": "take me to a farm in Mexico",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.12"
+  },
+  {
+   "text": "take me to a farm in Thailand",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.12"
+  },
+  {
+   "text": "take me to a farm in Ghana",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.12"
+  },
+  {
+   "text": "take me to a farm in Peru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.12"
+  },
+  {
+   "text": "set crops: rice, wheat, beans",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.0"
+  },
+  {
+   "text": "set crops: peas, wheat, beans",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.0"
+  },
+  {
+   "text": "set crops: maize, wheat, beans",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.0"
+  },
+  {
+   "text": "set crops: wheat, wheat, beans",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.0"
+  },
+  {
+   "text": "my rotation is cabbage, peas, tomato",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.1"
+  },
+  {
+   "text": "my rotation is radish, peas, tomato",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.1"
+  },
+  {
+   "text": "my rotation is carrots, peas, tomato",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.1"
+  },
+  {
+   "text": "my rotation is onions, peas, tomato",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.1"
+  },
+  {
+   "text": "set irrigation to rainfed",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.3"
+  },
+  {
+   "text": "set soil ph to 6.5",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.4"
+  },
+  {
+   "text": "allowed crops are wheat and peas",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.5"
+  },
+  {
+   "text": "allowed crops are beans and peas",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.5"
+  },
+  {
+   "text": "allowed crops are potatoes and peas",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.5"
+  },
+  {
+   "text": "allowed crops are tomato and peas",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.5"
+  },
+  {
+   "text": "plan with crops onions, rice, maize",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.6"
+  },
+  {
+   "text": "plan with crops cassava, rice, maize",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.6"
+  },
+  {
+   "text": "plan with crops rice, rice, maize",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.6"
+  },
+  {
+   "text": "plan with crops peas, rice, maize",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.6"
+  },
+  {
+   "text": "use loam soil for the plan",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.8"
+  },
+  {
+   "text": "set the planning year to 2028",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.9"
+  },
+  {
+   "text": "load the nasa evidence",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.0"
+  },
+  {
+   "text": "fetch the historical data for Kumasi",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.2"
+  },
+  {
+   "text": "fetch the historical data for Nakuru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.2"
+  },
+  {
+   "text": "fetch the historical data for Pune",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.2"
+  },
+  {
+   "text": "fetch the historical data for Perth",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.2"
+  },
+  {
+   "text": "use 2023 as the reference year and load evidence",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.3"
+  },
+  {
+   "text": "retry loading nasa data",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.4"
+  },
+  {
+   "text": "get the nasa evidence for the selected field",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.5"
+  },
+  {
+   "text": "run the comparison",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "10.1"
+  },
+  {
+   "text": "compare baseline and alternatives",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "10.2"
+  },
+  {
+   "text": "go to step 4 and compare",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "10.3"
+  },
+  {
+   "text": "continue to the comparison",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "10.4"
+  },
+  {
+   "text": "compare again with water as the priority",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "10.6"
+  },
+  {
+   "text": "next step please compare",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "10.7"
+  },
+  {
+   "text": "how many tonnes of sweet corn will i harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.0"
+  },
+  {
+   "text": "how many tonnes of soybeans will i harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.0"
+  },
+  {
+   "text": "how many tonnes of cabbage will i harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.0"
+  },
+  {
+   "text": "how many tonnes of radish will i harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.0"
+  },
+  {
+   "text": "predict my maize yield exactly",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.1"
+  },
+  {
+   "text": "predict my wheat yield exactly",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.1"
+  },
+  {
+   "text": "predict my beans yield exactly",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.1"
+  },
+  {
+   "text": "predict my potatoes yield exactly",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.1"
+  },
+  {
+   "text": "give me the exact yield of carrots from satellite data",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.2"
+  },
+  {
+   "text": "give me the exact yield of onions from satellite data",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.2"
+  },
+  {
+   "text": "give me the exact yield of cassava from satellite data",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.2"
+  },
+  {
+   "text": "give me the exact yield of rice from satellite data",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.2"
+  },
+  {
+   "text": "what yield will tomato give next season",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.3"
+  },
+  {
+   "text": "what yield will sweet corn give next season",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.3"
+  },
+  {
+   "text": "what yield will soybeans give next season",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.3"
+  },
+  {
+   "text": "what yield will cabbage give next season",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.3"
+  },
+  {
+   "text": "promise me radish is safe to plant",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.5"
+  },
+  {
+   "text": "promise me carrots is safe to plant",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.5"
+  },
+  {
+   "text": "promise me onions is safe to plant",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.5"
+  },
+  {
+   "text": "promise me cassava is safe to plant",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.5"
+  },
+  {
+   "text": "what is the probability that potatoes succeeds",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.6"
+  },
+  {
+   "text": "what is the probability that tomato succeeds",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.6"
+  },
+  {
+   "text": "what is the probability that sweet corn succeeds",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.6"
+  },
+  {
+   "text": "what is the probability that soybeans succeeds",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.6"
+  },
+  {
+   "text": "are you 95% confident rice will work",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.7"
+  },
+  {
+   "text": "are you 95% confident peas will work",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.7"
+  },
+  {
+   "text": "are you 95% confident maize will work",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.7"
+  },
+  {
+   "text": "are you 95% confident wheat will work",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.7"
+  },
+  {
+   "text": "give me a success percentage for cabbage",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.8"
+  },
+  {
+   "text": "give me a success percentage for radish",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.8"
+  },
+  {
+   "text": "give me a success percentage for carrots",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.8"
+  },
+  {
+   "text": "give me a success percentage for onions",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.8"
+  },
+  {
+   "text": "what income will i get from cassava",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.10"
+  },
+  {
+   "text": "what income will i get from rice",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.10"
+  },
+  {
+   "text": "what income will i get from peas",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.10"
+  },
+  {
+   "text": "what income will i get from maize",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.10"
+  },
+  {
+   "text": "tell me for certain that soybeans will not fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.11"
+  },
+  {
+   "text": "tell me for certain that cabbage will not fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.11"
+  },
+  {
+   "text": "tell me for certain that radish will not fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.11"
+  },
+  {
+   "text": "tell me for certain that carrots will not fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.11"
+  },
+  {
+   "text": "exactly how many litres will i save with rice",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.0"
+  },
+  {
+   "text": "exactly how many litres will i save with peas",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.0"
+  },
+  {
+   "text": "exactly how many litres will i save with maize",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.0"
+  },
+  {
+   "text": "exactly how many litres will i save with wheat",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.0"
+  },
+  {
+   "text": "calculate my irrigation savings",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.1"
+  },
+  {
+   "text": "how much water will i save by switching to beans",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.2"
+  },
+  {
+   "text": "how much water will i save by switching to potatoes",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.2"
+  },
+  {
+   "text": "how much water will i save by switching to tomato",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.2"
+  },
+  {
+   "text": "how much water will i save by switching to sweet corn",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.2"
+  },
+  {
+   "text": "how many litres should i apply each day",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.4"
+  },
+  {
+   "text": "guarantee that the rain will be enough",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.5"
+  },
+  {
+   "text": "guarantee there will be no pests next year",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests",
+   "template": "13.0"
+  },
+  {
+   "text": "promise the rotation will stop disease",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests",
+   "template": "13.1"
+  },
+  {
+   "text": "certify my field is pest free",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests",
+   "template": "13.3"
+  },
+  {
+   "text": "predict exactly when pests will arrive",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests",
+   "template": "13.4"
+  },
+  {
+   "text": "forecast the rainfall for next December",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "14.0"
+  },
+  {
+   "text": "forecast the rainfall for next October",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "14.0"
+  },
+  {
+   "text": "forecast the rainfall for next August",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "14.0"
+  },
+  {
+   "text": "forecast the rainfall for next June",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "14.0"
+  },
+  {
+   "text": "guarantee no frost next season",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "14.2"
+  },
+  {
+   "text": "predict the weather for my harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "14.3"
+  },
+  {
+   "text": "give me a confidence score for alternative 1",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "15.1"
+  },
+  {
+   "text": "what percent better is alternative 2",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "15.2"
+  },
+  {
+   "text": "prove that the first alternative will improve my soil",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "15.3"
+  },
+  {
+   "text": "how much more money does alternative 1 make",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "15.4"
+  },
+  {
+   "text": "i want to know more about rice",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.0"
+  },
+  {
+   "text": "i want to know more about peas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.0"
+  },
+  {
+   "text": "i want to know more about maize",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.0"
+  },
+  {
+   "text": "i want to know more about wheat",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.0"
+  },
+  {
+   "text": "any facts on cabbage for India",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.1"
+  },
+  {
+   "text": "any facts on radish for Kenya",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.1"
+  },
+  {
+   "text": "any facts on carrots for Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.1"
+  },
+  {
+   "text": "any facts on onions for Brazil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.1"
+  },
+  {
+   "text": "is beans grown much in Brazil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.2"
+  },
+  {
+   "text": "is potatoes grown much in Australia",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.2"
+  },
+  {
+   "text": "is tomato grown much in France",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.2"
+  },
+  {
+   "text": "is sweet corn grown much in Mexico",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.2"
+  },
+  {
+   "text": "explain where cassava sits among plant families",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.3"
+  },
+  {
+   "text": "explain where rice sits among plant families",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.3"
+  },
+  {
+   "text": "explain where peas sits among plant families",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.3"
+  },
+  {
+   "text": "explain where maize sits among plant families",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.3"
+  },
+  {
+   "text": "would wheat be a good break crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.5"
+  },
+  {
+   "text": "would beans be a good break crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.5"
+  },
+  {
+   "text": "would potatoes be a good break crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.5"
+  },
+  {
+   "text": "would tomato be a good break crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.5"
+  },
+  {
+   "text": "what should i know before planting onions",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.6"
+  },
+  {
+   "text": "what should i know before planting cassava",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.6"
+  },
+  {
+   "text": "what should i know before planting rice",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.6"
+  },
+  {
+   "text": "what should i know before planting peas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.6"
+  },
+  {
+   "text": "can you compare sweet corn with wheat as crops",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.7"
+  },
+  {
+   "text": "can you compare soybeans with wheat as crops",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.7"
+  },
+  {
+   "text": "can you compare cabbage with wheat as crops",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.7"
+  },
+  {
+   "text": "can you compare radish with wheat as crops",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.7"
+  },
+  {
+   "text": "is maize a warm season or cool season crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.8"
+  },
+  {
+   "text": "is wheat a warm season or cool season crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.8"
+  },
+  {
+   "text": "is beans a warm season or cool season crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.8"
+  },
+  {
+   "text": "is potatoes a warm season or cool season crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.8"
+  },
+  {
+   "text": "did it rain much here in June",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.0"
+  },
+  {
+   "text": "did it rain much here in March",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.0"
+  },
+  {
+   "text": "did it rain much here in January",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.0"
+  },
+  {
+   "text": "did it rain much here in December",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.0"
+  },
+  {
+   "text": "how warm was December on average",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.1"
+  },
+  {
+   "text": "how warm was October on average",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.1"
+  },
+  {
+   "text": "how warm was August on average",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.1"
+  },
+  {
+   "text": "how warm was June on average",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.1"
+  },
+  {
+   "text": "what is the driest period in the record",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.2"
+  },
+  {
+   "text": "how old is this weather data",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.4"
+  },
+  {
+   "text": "what area does the temperature value represent",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.5"
+  },
+  {
+   "text": "is this a forecast or history",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.6"
+  },
+  {
+   "text": "give me the rain picture for Perth",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.7"
+  },
+  {
+   "text": "give me the rain picture for Ames",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.7"
+  },
+  {
+   "text": "give me the rain picture for Cambridge",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.7"
+  },
+  {
+   "text": "give me the rain picture for Chiang Mai",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.7"
+  },
+  {
+   "text": "my ph reading is 5.8 what does that mean for rice",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.0"
+  },
+  {
+   "text": "my ph reading is 5.8 what does that mean for peas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.0"
+  },
+  {
+   "text": "my ph reading is 5.8 what does that mean for maize",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.0"
+  },
+  {
+   "text": "my ph reading is 5.8 what does that mean for wheat",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.0"
+  },
+  {
+   "text": "the plot floods sometimes, is cabbage ok with that",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.1"
+  },
+  {
+   "text": "the plot floods sometimes, is radish ok with that",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.1"
+  },
+  {
+   "text": "the plot floods sometimes, is carrots ok with that",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.1"
+  },
+  {
+   "text": "the plot floods sometimes, is onions ok with that",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.1"
+  },
+  {
+   "text": "heavy clay here, any concern for cassava",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.3"
+  },
+  {
+   "text": "heavy clay here, any concern for rice",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.3"
+  },
+  {
+   "text": "heavy clay here, any concern for peas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.3"
+  },
+  {
+   "text": "heavy clay here, any concern for maize",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.3"
+  },
+  {
+   "text": "which crops here have a ph range",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.4"
+  },
+  {
+   "text": "does poor drainage matter",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.5"
+  },
+  {
+   "text": "we have no irrigation, how is that treated",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.0"
+  },
+  {
+   "text": "what do the water figures mean",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.2"
+  },
+  {
+   "text": "does rain alone tell you if tomato has enough water",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.3"
+  },
+  {
+   "text": "does rain alone tell you if sweet corn has enough water",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.3"
+  },
+  {
+   "text": "does rain alone tell you if soybeans has enough water",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.3"
+  },
+  {
+   "text": "does rain alone tell you if cabbage has enough water",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.3"
+  },
+  {
+   "text": "how is a dry run counted",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.4"
+  },
+  {
+   "text": "is there any record of armyworm near Ghana",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.1"
+  },
+  {
+   "text": "is there any record of armyworm near Peru",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.1"
+  },
+  {
+   "text": "is there any record of armyworm near Egypt",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.1"
+  },
+  {
+   "text": "is there any record of armyworm near Vietnam",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.1"
+  },
+  {
+   "text": "does changing crop family reduce pest carryover",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.2"
+  },
+  {
+   "text": "are pest counts the same as an infestation",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.3"
+  },
+  {
+   "text": "i saw caterpillars last season, do you use that",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.4"
+  },
+  {
+   "text": "why is the first option ahead of the second",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "21.0"
+  },
+  {
+   "text": "walk me through the results table",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "21.1"
+  },
+  {
+   "text": "what is different about option 2",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "21.2"
+  },
+  {
+   "text": "does the ordering use profit or yield",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "21.3"
+  },
+  {
+   "text": "what do the counts in the table mean",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "21.5"
+  },
+  {
+   "text": "why not recommend a single best rotation",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "21.6"
+  },
+  {
+   "text": "lets work in Brazil",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.0"
+  },
+  {
+   "text": "lets work in Australia",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.0"
+  },
+  {
+   "text": "lets work in France",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.0"
+  },
+  {
+   "text": "lets work in Mexico",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.0"
+  },
+  {
+   "text": "i want to plan for a farm near Cambridge",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.1"
+  },
+  {
+   "text": "i want to plan for a farm near Chiang Mai",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.1"
+  },
+  {
+   "text": "i want to plan for a farm near Kumasi",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.1"
+  },
+  {
+   "text": "i want to plan for a farm near Nakuru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.1"
+  },
+  {
+   "text": "move the location to Peru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.2"
+  },
+  {
+   "text": "move the location to Egypt",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.2"
+  },
+  {
+   "text": "move the location to Vietnam",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.2"
+  },
+  {
+   "text": "move the location to India",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.2"
+  },
+  {
+   "text": "look for fields close to Ames",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.4"
+  },
+  {
+   "text": "look for fields close to Cambridge",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.4"
+  },
+  {
+   "text": "look for fields close to Chiang Mai",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.4"
+  },
+  {
+   "text": "look for fields close to Kumasi",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.4"
+  },
+  {
+   "text": "start with Chiang Mai, Mexico",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.5"
+  },
+  {
+   "text": "start with Kumasi, Thailand",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.5"
+  },
+  {
+   "text": "start with Nakuru, Ghana",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.5"
+  },
+  {
+   "text": "start with Pune, Peru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.5"
+  },
+  {
+   "text": "pick any mapped field there for me",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.6"
+  },
+  {
+   "text": "switch to the whole of India",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.7"
+  },
+  {
+   "text": "switch to the whole of Kenya",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.7"
+  },
+  {
+   "text": "switch to the whole of Japan",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.7"
+  },
+  {
+   "text": "switch to the whole of Brazil",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.7"
+  },
+  {
+   "text": "set my place as Kumasi",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.9"
+  },
+  {
+   "text": "set my place as Nakuru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.9"
+  },
+  {
+   "text": "set my place as Pune",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.9"
+  },
+  {
+   "text": "set my place as Perth",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.9"
+  },
+  {
+   "text": "i currently grow sweet corn, maize and beans, enter that",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.0"
+  },
+  {
+   "text": "i currently grow soybeans, maize and beans, enter that",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.0"
+  },
+  {
+   "text": "i currently grow cabbage, maize and beans, enter that",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.0"
+  },
+  {
+   "text": "i currently grow radish, maize and beans, enter that",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.0"
+  },
+  {
+   "text": "enter maize, tomato, onions as the existing rotation",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.1"
+  },
+  {
+   "text": "enter wheat, tomato, onions as the existing rotation",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.1"
+  },
+  {
+   "text": "enter beans, tomato, onions as the existing rotation",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.1"
+  },
+  {
+   "text": "enter potatoes, tomato, onions as the existing rotation",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.1"
+  },
+  {
+   "text": "record that the farm is rainfed",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.3"
+  },
+  {
+   "text": "put in a soil ph of 7.1",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.4"
+  },
+  {
+   "text": "limit alternatives to radish and cabbage",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.5"
+  },
+  {
+   "text": "limit alternatives to carrots and cabbage",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.5"
+  },
+  {
+   "text": "limit alternatives to onions and cabbage",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.5"
+  },
+  {
+   "text": "limit alternatives to cassava and cabbage",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.5"
+  },
+  {
+   "text": "begin planting in June",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.6"
+  },
+  {
+   "text": "begin planting in March",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.6"
+  },
+  {
+   "text": "begin planting in January",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.6"
+  },
+  {
+   "text": "begin planting in December",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.6"
+  },
+  {
+   "text": "bring in the nasa data now",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "24.0"
+  },
+  {
+   "text": "reload the evidence",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "24.2"
+  },
+  {
+   "text": "get last years nasa numbers for Pune",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "24.3"
+  },
+  {
+   "text": "get last years nasa numbers for Perth",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "24.3"
+  },
+  {
+   "text": "get last years nasa numbers for Ames",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "24.3"
+  },
+  {
+   "text": "get last years nasa numbers for Cambridge",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "24.3"
+  },
+  {
+   "text": "please fetch the climate evidence",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "24.4"
+  },
+  {
+   "text": "show me the alternatives now",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "25.1"
+  },
+  {
+   "text": "rerun with fewer family repeats as priority",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "25.2"
+  },
+  {
+   "text": "finish the plan and compare",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "25.3"
+  },
+  {
+   "text": "ok compare them",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "25.4"
+  },
+  {
+   "text": "how many kilograms of rice per hectare will i get",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.0"
+  },
+  {
+   "text": "how many kilograms of peas per hectare will i get",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.0"
+  },
+  {
+   "text": "how many kilograms of maize per hectare will i get",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.0"
+  },
+  {
+   "text": "how many kilograms of wheat per hectare will i get",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.0"
+  },
+  {
+   "text": "what are the odds cabbage does well",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.1"
+  },
+  {
+   "text": "what are the odds radish does well",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.1"
+  },
+  {
+   "text": "what are the odds carrots does well",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.1"
+  },
+  {
+   "text": "what are the odds onions does well",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.1"
+  },
+  {
+   "text": "can you assure me beans will not fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.2"
+  },
+  {
+   "text": "can you assure me potatoes will not fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.2"
+  },
+  {
+   "text": "can you assure me tomato will not fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.2"
+  },
+  {
+   "text": "can you assure me sweet corn will not fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.2"
+  },
+  {
+   "text": "put a number on my cassava harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.3"
+  },
+  {
+   "text": "put a number on my rice harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.3"
+  },
+  {
+   "text": "put a number on my peas harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.3"
+  },
+  {
+   "text": "put a number on my maize harvest",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.3"
+  },
+  {
+   "text": "what will wheat earn me",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.5"
+  },
+  {
+   "text": "what will beans earn me",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.5"
+  },
+  {
+   "text": "what will potatoes earn me",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.5"
+  },
+  {
+   "text": "what will tomato earn me",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.5"
+  },
+  {
+   "text": "is onions certain to succeed",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.6"
+  },
+  {
+   "text": "is cassava certain to succeed",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.6"
+  },
+  {
+   "text": "is rice certain to succeed",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.6"
+  },
+  {
+   "text": "is peas certain to succeed",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.6"
+  },
+  {
+   "text": "state the expected tonnage for sweet corn",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.7"
+  },
+  {
+   "text": "state the expected tonnage for soybeans",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.7"
+  },
+  {
+   "text": "state the expected tonnage for cabbage",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.7"
+  },
+  {
+   "text": "state the expected tonnage for radish",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.7"
+  },
+  {
+   "text": "what volume of water will this rotation save",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "27.0"
+  },
+  {
+   "text": "give me a daily watering schedule in litres",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "27.1"
+  },
+  {
+   "text": "assure me there will be enough rain",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "27.2"
+  },
+  {
+   "text": "what is the likelihood of an outbreak next season",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests",
+   "template": "28.0"
+  },
+  {
+   "text": "assure me pests will be gone after rotating",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests",
+   "template": "28.1"
+  },
+  {
+   "text": "what will the temperature be next June",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "29.0"
+  },
+  {
+   "text": "what will the temperature be next March",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "29.0"
+  },
+  {
+   "text": "what will the temperature be next January",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "29.0"
+  },
+  {
+   "text": "what will the temperature be next December",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "29.0"
+  },
+  {
+   "text": "give me a rain forecast for the season ahead",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "29.2"
+  },
+  {
+   "text": "assure me next year is not a drought",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "29.3"
+  },
+  {
+   "text": "which option is certain to earn more",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "30.1"
+  },
+  {
+   "text": "by how many percent will soil health improve under option 1",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "30.2"
+  },
+  {
+   "text": "give each rotation a success probability",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "30.3"
+  },
+  {
+   "text": "hey how are you",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "31.0"
+  },
+  {
+   "text": "good day",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "31.1"
+  },
+  {
+   "text": "hello assistant",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "31.2"
+  },
+  {
+   "text": "thanks that helps",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "31.3"
+  },
+  {
+   "text": "bye for now",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "31.5"
+  },
+  {
+   "text": "what is the population of France",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.0"
+  },
+  {
+   "text": "what is the population of Mexico",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.0"
+  },
+  {
+   "text": "what is the population of Thailand",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.0"
+  },
+  {
+   "text": "what is the population of Ghana",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.0"
+  },
+  {
+   "text": "help me write a cover letter",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.1"
+  },
+  {
+   "text": "play some music",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.2"
+  },
+  {
+   "text": "who invented the telephone",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.4"
+  },
+  {
+   "text": "what should i cook tonight",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.5"
+  },
+  {
+   "text": "is it going to be a good football season",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.6"
+  },
+  {
+   "text": "explain how a car engine works",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.7"
+  },
+  {
+   "text": "are you an ai",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.9"
+  },
+  {
+   "text": "what is the capital of Australia",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.0"
+  },
+  {
+   "text": "what is the capital of France",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.0"
+  },
+  {
+   "text": "what is the capital of Mexico",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.0"
+  },
+  {
+   "text": "what is the capital of Thailand",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.0"
+  },
+  {
+   "text": "write me a poem",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.1"
+  },
+  {
+   "text": "tell me a joke",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.3"
+  },
+  {
+   "text": "what time is it",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.4"
+  },
+  {
+   "text": "translate hello into french",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.5"
+  },
+  {
+   "text": "how do i fix my tractor engine",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.6"
+  },
+  {
+   "text": "recommend a movie",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.8"
+  },
+  {
+   "text": "who are you",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.9"
+  },
+  {
+   "text": "what can you do",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.10"
+  },
+  {
+   "text": "book me a flight to Kenya",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.11"
+  },
+  {
+   "text": "book me a flight to Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.11"
+  },
+  {
+   "text": "book me a flight to Brazil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.11"
+  },
+  {
+   "text": "book me a flight to Australia",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.11"
+  },
+  {
+   "text": "what is the news today",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.13"
+  }
+ ],
+ "validation": [
+  {
+   "text": "good evening",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.5"
+  },
+  {
+   "text": "hey there",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "0.10"
+  },
+  {
+   "text": "peas in India",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.4"
+  },
+  {
+   "text": "maize in Kenya",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.4"
+  },
+  {
+   "text": "wheat in Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.4"
+  },
+  {
+   "text": "beans in Brazil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.4"
+  },
+  {
+   "text": "how many days until beans can be harvested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.9"
+  },
+  {
+   "text": "how many days until potatoes can be harvested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.9"
+  },
+  {
+   "text": "how many days until tomato can be harvested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.9"
+  },
+  {
+   "text": "how many days until sweet corn can be harvested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.9"
+  },
+  {
+   "text": "what can follow sweet corn in a rotation",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.14"
+  },
+  {
+   "text": "what can follow soybeans in a rotation",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.14"
+  },
+  {
+   "text": "what can follow cabbage in a rotation",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.14"
+  },
+  {
+   "text": "what can follow radish in a rotation",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "1.14"
+  },
+  {
+   "text": "is there frost risk at this location",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.3"
+  },
+  {
+   "text": "how cold are the nights in December",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.8"
+  },
+  {
+   "text": "how cold are the nights in October",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.8"
+  },
+  {
+   "text": "how cold are the nights in August",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.8"
+  },
+  {
+   "text": "how cold are the nights in June",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.8"
+  },
+  {
+   "text": "what does nasa power measure",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "2.13"
+  },
+  {
+   "text": "my soil ph is 7.5 is carrots ok",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.2"
+  },
+  {
+   "text": "my soil ph is 7.5 is onions ok",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.2"
+  },
+  {
+   "text": "my soil ph is 7.5 is cassava ok",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.2"
+  },
+  {
+   "text": "my soil ph is 7.5 is rice ok",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.2"
+  },
+  {
+   "text": "what is the sand and clay fraction here",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "3.7"
+  },
+  {
+   "text": "is irrigation common in India",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.1"
+  },
+  {
+   "text": "is irrigation common in Kenya",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.1"
+  },
+  {
+   "text": "is irrigation common in Japan",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.1"
+  },
+  {
+   "text": "is irrigation common in Brazil",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.1"
+  },
+  {
+   "text": "what do the australian irrigation statistics show",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "4.6"
+  },
+  {
+   "text": "which pests attack sweet corn in Ghana",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.0"
+  },
+  {
+   "text": "which pests attack soybeans in Peru",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.0"
+  },
+  {
+   "text": "which pests attack cabbage in Egypt",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.0"
+  },
+  {
+   "text": "which pests attack radish in Vietnam",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.0"
+  },
+  {
+   "text": "what do the pest records mean",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "5.5"
+  },
+  {
+   "text": "why does my rotation have a family repeat",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.4"
+  },
+  {
+   "text": "why was my baseline kept",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "6.9"
+  },
+  {
+   "text": "pick the first mapped field",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.3"
+  },
+  {
+   "text": "help me pick a field in Mexico",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.8"
+  },
+  {
+   "text": "help me pick a field in Thailand",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.8"
+  },
+  {
+   "text": "help me pick a field in Ghana",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.8"
+  },
+  {
+   "text": "help me pick a field in Peru",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.8"
+  },
+  {
+   "text": "pick a town in Peru for me to plan",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.13"
+  },
+  {
+   "text": "pick a town in Egypt for me to plan",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.13"
+  },
+  {
+   "text": "pick a town in Vietnam for me to plan",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.13"
+  },
+  {
+   "text": "pick a town in India for me to plan",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "7.13"
+  },
+  {
+   "text": "use beans then cabbage then onions as my baseline",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.2"
+  },
+  {
+   "text": "use potatoes then cabbage then onions as my baseline",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.2"
+  },
+  {
+   "text": "use tomato then cabbage then onions as my baseline",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.2"
+  },
+  {
+   "text": "use sweet corn then cabbage then onions as my baseline",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.2"
+  },
+  {
+   "text": "change the first crop to sweet corn",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.7"
+  },
+  {
+   "text": "change the first crop to soybeans",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.7"
+  },
+  {
+   "text": "change the first crop to cabbage",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.7"
+  },
+  {
+   "text": "change the first crop to radish",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "8.7"
+  },
+  {
+   "text": "load weather for this point",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "9.1"
+  },
+  {
+   "text": "compare my rotation now",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "10.0"
+  },
+  {
+   "text": "proceed and compare the rotations",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "10.5"
+  },
+  {
+   "text": "guarantee that peas will succeed",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.4"
+  },
+  {
+   "text": "guarantee that maize will succeed",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.4"
+  },
+  {
+   "text": "guarantee that wheat will succeed",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.4"
+  },
+  {
+   "text": "guarantee that beans will succeed",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.4"
+  },
+  {
+   "text": "how much profit will beans make",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.9"
+  },
+  {
+   "text": "how much profit will potatoes make",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.9"
+  },
+  {
+   "text": "how much profit will tomato make",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.9"
+  },
+  {
+   "text": "how much profit will sweet corn make",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "11.9"
+  },
+  {
+   "text": "tell me the exact irrigation amount for cassava",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.3"
+  },
+  {
+   "text": "tell me the exact irrigation amount for rice",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.3"
+  },
+  {
+   "text": "tell me the exact irrigation amount for peas",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.3"
+  },
+  {
+   "text": "tell me the exact irrigation amount for maize",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "12.3"
+  },
+  {
+   "text": "what is the chance of an armyworm outbreak",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests",
+   "template": "13.2"
+  },
+  {
+   "text": "tell me exactly how hot next year will be",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "14.1"
+  },
+  {
+   "text": "which rotation is guaranteed to be best",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "15.0"
+  },
+  {
+   "text": "how quickly does soybeans grow",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.4"
+  },
+  {
+   "text": "how quickly does cabbage grow",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.4"
+  },
+  {
+   "text": "how quickly does radish grow",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.4"
+  },
+  {
+   "text": "how quickly does carrots grow",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.4"
+  },
+  {
+   "text": "carrots, what family",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.9"
+  },
+  {
+   "text": "onions, what family",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.9"
+  },
+  {
+   "text": "cassava, what family",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.9"
+  },
+  {
+   "text": "rice, what family",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "16.9"
+  },
+  {
+   "text": "does the record show any freezing nights",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "17.3"
+  },
+  {
+   "text": "is the soil estimate for my exact field",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil",
+   "template": "18.2"
+  },
+  {
+   "text": "is maize a heavy water user",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.1"
+  },
+  {
+   "text": "is wheat a heavy water user",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.1"
+  },
+  {
+   "text": "is beans a heavy water user",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.1"
+  },
+  {
+   "text": "is potatoes a heavy water user",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water",
+   "template": "19.1"
+  },
+  {
+   "text": "what insects trouble rice",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.0"
+  },
+  {
+   "text": "what insects trouble peas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.0"
+  },
+  {
+   "text": "what insects trouble maize",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.0"
+  },
+  {
+   "text": "what insects trouble wheat",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests",
+   "template": "20.0"
+  },
+  {
+   "text": "which rotation has more warnings",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "21.4"
+  },
+  {
+   "text": "put the marker at 12.97, 77.59",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.3"
+  },
+  {
+   "text": "please open Cambridge on the map and select it",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.8"
+  },
+  {
+   "text": "please open Chiang Mai on the map and select it",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.8"
+  },
+  {
+   "text": "please open Kumasi on the map and select it",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.8"
+  },
+  {
+   "text": "please open Nakuru on the map and select it",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location",
+   "template": "22.8"
+  },
+  {
+   "text": "make the second crop carrots",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.2"
+  },
+  {
+   "text": "make the second crop onions",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.2"
+  },
+  {
+   "text": "make the second crop cassava",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.2"
+  },
+  {
+   "text": "make the second crop rice",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.2"
+  },
+  {
+   "text": "note that drainage is poor",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops",
+   "template": "23.7"
+  },
+  {
+   "text": "download the weather record for my point",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather",
+   "template": "24.1"
+  },
+  {
+   "text": "do the comparison for me",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "25.0"
+  },
+  {
+   "text": "carry on to the results",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison",
+   "template": "25.5"
+  },
+  {
+   "text": "how sure are you about soybeans, in percent",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.4"
+  },
+  {
+   "text": "how sure are you about cabbage, in percent",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.4"
+  },
+  {
+   "text": "how sure are you about radish, in percent",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.4"
+  },
+  {
+   "text": "how sure are you about carrots, in percent",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops",
+   "template": "26.4"
+  },
+  {
+   "text": "compute the irrigation i can cut",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water",
+   "template": "27.3"
+  },
+  {
+   "text": "tell me exactly which week the moths arrive",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests",
+   "template": "28.2"
+  },
+  {
+   "text": "will there be frost next year",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather",
+   "template": "29.1"
+  },
+  {
+   "text": "how accurate is this ranking in percent",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison",
+   "template": "30.0"
+  },
+  {
+   "text": "ok thank you",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting",
+   "template": "31.4"
+  },
+  {
+   "text": "what is 15 percent of 80",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.3"
+  },
+  {
+   "text": "what language is spoken in France",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.8"
+  },
+  {
+   "text": "what language is spoken in Mexico",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.8"
+  },
+  {
+   "text": "what language is spoken in Thailand",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.8"
+  },
+  {
+   "text": "what language is spoken in Ghana",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "32.8"
+  },
+  {
+   "text": "who won the world cup",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.2"
+  },
+  {
+   "text": "what is the price of bitcoin",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.7"
+  },
+  {
+   "text": "solve 12 times 7",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other",
+   "template": "33.12"
+  }
+ ]
+}

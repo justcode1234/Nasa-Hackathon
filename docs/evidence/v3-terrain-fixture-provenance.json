@@ -1,0 +1,8 @@
+{
+  "label": "Recorded real DEM tile for offline decoder regression; no synthetic terrain readings",
+  "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3376/2431.png",
+  "retrievedAt": "2026-11-15T07:28:34.884Z",
+  "sha256": "2f17184d894399f06d977ec355b9b5d2a47f1de7ecb12b16fdf59216bac7c202",
+  "sourceFiles": "srtm/S32E116.tif",
+  "fileModifiedAt": "Mon, 20 Nov 2017 04:14:12 GMT"
+}

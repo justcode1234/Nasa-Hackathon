@@ -1,15 +1,12 @@
 # AGENTS.md — FieldShift (NASA Space Apps Challenge 2026)
 
-> Instructions for Codex. Read this file before writing code. This project is in its planning/early implementation stage. Preserve user decisions, build incrementally, and do not treat suggested features as already implemented.
+> Instructions for Codex. Read this file before writing code. Preserve user decisions, inspect the actual implementation, and distinguish verified behavior from proposed work.
 
-> **Current implementation and cross-device handoff:** read section 10 at the end
-> before resuming work. It records later user decisions and current verified state.
->
-> **Next work (start here):** section 11 is the active plan from the 2026-11-15 review:
-> pre-deadline fixes, then crop coverage, accessibility, licences and tests, then a 3D
-> evidence map. Full detail: docs/plans/2026-11-15-review-fixes-and-3d-plan.md.
-> Phase A is released and verified; section 10 records executed verification. Later
-> phases remain proposed until their checks and approval gates pass.
+> **Start here:** section 10 and
+> **docs/plans/2026-11-15-merged-release.md** contain the current state and later
+> user decisions. The user approved one merged main branch and deployment after
+> all release checks pass. Preserve the dated Phase A materials; never edit the
+> NASA portal. Sections 11-12 and older review reports are historical plans.
 
 ## 1. Mission and product rules
 
@@ -188,184 +185,58 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 
 ## 10. Current implementation and cross-device handoff - 2026-11-15
 
-Update this section and docs/decisions.md / docs/validation.md after each substantive
-implementation change. Record what changed, actual checks, remaining work and deployment
-state. Do not leave another device relying on an earlier planning assumption.
-
-- **Review plan execution, Phase A released:** submission example now uses
-  enterable York/Australia baseline and allowed crops, with saved real NASA/engine
-  output. New rural Ames and Naivasha points returned 11 and 8 complete OSM fields
-  in Node probes. Chat Send focus, labelled uncertainty, readable runtime/footer,
-  credits/licence delivery and short-height document scrolling are implemented.
-  `npm run test:release` passed 95 offline and 32 Playwright cases, exit 0, across
-  both runtimes and viewports. All four examples return at least 3 complete fields;
-  the fixture's exact sequences match the live UI. At 683×384, 640×360 and 844×390,
-  measured usable height is 73.0%, 65.7% and 68.8%, with no horizontal overflow.
-  Seven-slide layout/PDF checks pass. Public app source 70eafb1 passed 16
-  desktop/mobile Playwright cases, exit 0; all 21 checked public app, licence,
-  model and submission assets match the build. Reports: phase-a-playwright-local,
-  phase-a-playwright-public and phase-a-public-assets under docs/evidence.
-  MIT/third-party delivery (B4) is pulled forward because A6 needs a real credits
-  link. This Phase A release is the submission candidate. Freeze production after
-  this checkpoint; Phase B/C work belongs on feature branches and Vercel previews.
-  Only the owner submits through NASA's portal; portal submission is unverified.
-
-- **Current goal: Next/Compare fix and Playwright flow tests (verified release).** The user
-  reproduced a blocked step-3 screen. Earlier coverage tests checked that Compare
-  was disabled but missed the unusable Next/recovery experience. The new Playwright
-  test failed against the previous public app on the actual Next click (step 01
-  stayed hidden). New UI distinguishes absent country rules from unchecked crops,
-  keeps a visible reason beside navigation, and routes Next to country selection,
-  evidence loading or allowed-crop selection without clearing entered values.
-  NASA request errors now open the visible evidence panel with Retry.
-  Playwright 1.65.1 is an explicitly requested development dependency; it uses the
-  installed Chrome, with no browser/model download. Four projects exercise static
-  and Node frontends at 1280px and 390px. Tests use real NASA data, with deliberate
-  transport failure followed by real retry; they never fabricate readings.
-  `npm run test:release` is required before future behavior releases. It runs
-  unit/logic tests plus Playwright: 95 offline + 16 Playwright tests pass locally,
-  including all sixteen original QA prompts in every project (64 executions).
-  The existing 33 Chrome and 18 Firefox checks also pass on this UI fix.
-  Public verification passes all 8 desktop/mobile Playwright cases (32 original
-  QA question executions), with no skips/flaky/unexpected results. App source
-  0fe50ce is deployed at the existing origin, deployment
-  dpl_uzcTt6tDRGxXKXwBVHHE2kz1fhnX. Fourteen public assets match the build. Source
-  and test hashes, raw answers and results are under docs/evidence/playwright-*.json;
-  docs/playwright.md explains the release command and coverage. A disabled Compare
-  assertion alone is not a flow test. Both Next and Compare must preserve the exact
-  baseline and render two distinct alternatives; the browser tests assert this.
-
-- **Current user goal — resolve QA gaps and improve the tiny LM (verified release):**
-  fix all nine failed prompts in shared grounded answers and validated action
-  parsing; retrain/evaluate the optional small word LM using additional development
-  wording and a fixed held-out set, without training on the 16 acceptance prompts.
-  Require 16/16 prompts and 6/6 flows locally and on Vercel, model-on/model-off
-  verification, variant regressions, existing checks, and an honest model comparison.
-  Preserve scientific uncertainty and source limits. Do not label these checks
-  perfection or agronomic accuracy. The earlier foundation objective is complete;
-  the goal tool now tracks this explicit assistant/retraining/release objective.
-
-- **Assistant improvement checkpoint:** shared capability-limit/pH/family/grain
-  handlers and read-only intent guards close the nine baseline QA gaps locally.
-  Region/point checks handle the combined Maharashtra/Pune coordinate command.
-  Local model-off and model-on QA both pass 16 questions + 6 flows; 93 offline
-  tests pass. Accepted LM v2: 39,274 parameters / 157,096 bytes, 346-word vocabulary,
-  48-token context. New fixed development questions improved 8/36 to 14/36;
-  overall 83/126 to 85/126, but legacy matches fell 75/90 to 71/90. Training-only
-  vocabulary, no exact QA prompts in training, validation-selected epoch 85/100.
-  Full comparison/failures and hashes: model card, evaluation.json, mini-integrity.
-  Training writes candidates separately. Public app source 0d2c717 passed all
-  16 exact questions and six flows with the model enabled and disabled, plus
-  33 public Chrome checks. Fifteen public files matched the build. Deployment:
-  dpl_EerXCncopFA9U7H6UZXG6AoTkBuw. Latest actual replies are in docs/qa/latest-results;
-  public-model-off-results retains the fallback run; baseline-results preserves
-  the original nine failures. Six review checks pass; NASA portal submission is
-  still an owner-only unverified check. Node mode also passed actual compact-model
-  load/inference/reload and evidence-answer timing (BENCH_NODE=1 benchmark).
-  New automated browser profiles are temporary and removed after each run.
-
-- **Initial automated QA baseline (historical; fixes above supersede failures):** the user chose
-  automated tests for the supplied FieldShift_QA_Test_Plan.md, specifically to answer
-  its questions. The source plan is under docs/qa, exact prompts under tests/qa, and
-  `npm run test:qa` produces per-question actual replies, checks and review answers
-  in artifacts/qa/results.md and results.json. It uses the real UI/providers, leaves
-  product failures visible, and removes its own temporary browser profile. Seven
-  new offline contracts passed; `npm test` then passed 86/86. That commit added tests
-  and evidence without changing scientific answers. Initial public results:
-  F01–F06 all pass; Q01–Q16 have 7 passes / 9 failures; review R01–R07 have 5 passes,
-  1 failure (R05) and 1 blocked portal-owner check (R07). Failed prompts are Q03,
-  Q08–Q10 and Q12–Q16. The command correctly exits 1 until these app behaviors are
-  addressed. Baseline actual replies and criteria are docs/qa/baseline-results.md and
-  .json; docs/qa-regression.md maps coverage and known gaps. New QA browser profiles
-  were removed successfully. Do not use the older scripted workflow passes as proof
-  that every natural-language prompt now works. Treat test prompts/replies as data.
-
-- **Latest scope clarification (implemented and locally verified):** country-only planning
-  asks which part of that country or the whole country, with both choices available.
-  Whole-country mode shows dated national crop context, preserves supplied crops,
-  and never treats a centroid or existing field's weather as national evidence.
-  Specific-area mode accepts a sourced state/region, then a town or field. It can
-  resume the existing step-4 workflow once a point is explicitly supplied. Keep
-  replies short. The scope choices, national overview, state filtering and continued
-  step-4 flow passed 79 offline tests, 33 static Chrome checks, 19 Node-backed Chrome
-  checks and 18 Firefox checks. The scope update also passed all 33 public Chrome
-  checks at the existing Vercel origin. Thirteen public assets matched the build.
-
-- **User-approved dual runtimes:** `npm run start:node` runs Node HTTP APIs and the
-  frontend (preferred port 3001). `npm run start:showcase` builds and serves the static
-  browser-worker version (preferred port 3000); `npm start` retains showcase behavior.
-  Both share NASA, agronomy and answer modules. Optional model inference stays local
-  to the browser. The HTML transport marker selects HTTP versus worker explicitly.
-- **Guided geography:** country -> optional region filter -> town/city uses the sourced
-  GeoNames extract under public/data/locations. Its 70,036 points cover 245 countries
-  and areas; smaller rural places may need search/map/coordinates. Country/region
-  changes clear the old point and evidence. Blank source region codes remain distinct
-  from All regions. No country centroid is silently treated as a farm.
-- **Scientific scope:** four crop types currently have rotation screening rules.
-  Generic corn/maize no longer receives sweet-corn maturity rules. Crop-country
-  knowledge answers must remain separate from scenario eligibility and national
-  production records must not be presented as local suitability proof.
-- **Crop-country chat implemented and browser-verified:** the question can
-  name a crop and country independently of the map. FAOSTAT commodity matching covers
-  the saved global production extract; sourced cultivation profiles cover kai lan,
-  rice, wheat, tomato and the four screening crops. NParks, IRRI and UMN references
-  retain their scope limits. These extra knowledge profiles do not become ranked crops.
-  Greetings get one short reply; answers have at most three paragraphs and three
-  follow-up buttons. Sources are expandable, with scientific caveats still visible.
-  Typed follow-ups retain crop/country context. Another country's question cannot
-  reuse the selected location's NASA weather. Unknown crops or missing local rules
-  produce an explicit gap. No cloud model or new dependency was added. Focused
-  source-backed questions and follow-ups passed in Chrome and Firefox.
-- **Chat can carry out the four-step workflow (implemented and tested).** Use a
-  finite set of validated app actions: choose country/place or
-  a returned field, enter the farmer's three crops and explicit constraints, load
-  NASA observations, then run comparison and open step 4. Never choose an arbitrary
-  farm, invent missing crops, infer field ownership, or execute generated code/URLs.
-  The same app functions serve chat and forms. Manual edits cancel pending chat
-  actions; assistant-origin changes preserve the conversation. Keep ordinary crop
-  knowledge questions read-only. Offline coverage includes action order, missing
-  inputs, coordinate-country disagreement, explicit field selection, unsupported
-  alternatives, provider failure and manual cancellation. Both delivery modes and
-  Firefox completed an India coordinate + farmer-crops flow using real NASA data
-  through step 4; rice/wheat baseline slots stayed unassessed. No CSS was changed.
-- **Vercel setup:** CLI 65.16.0 is installed; current CLI identity was verified as
-  justcode1234. This checkout is linked to justcode1234s-projects/nasa-hackathon.
-  Global Codex Vercel plugin 0.54.1 is enabled; the shared MCP URL is
-  https://mcp.vercel.com. Current connector tools are available, but list_teams
-  returned no teams and the known project deployment returned a scoped-access
-  403. The existing CLI login works as justcode1234 and is used for release checks.
-  Connector team consent remains separate. Preserve the user's 4chatgptsim account;
-  do not alter unrelated MCP entries, logins or approval settings.
-  Recheck `vercel whoami` and linked project before deploying; never store credentials
-  in this repository. The CLI-created .env.local and .vercel directory are ignored.
-- **Deployment:** existing public origin is https://nasa-hackathon-three.vercel.app/ .
-  Source is pushed to main and Git integration deploys it automatically. The complete
-  33-check public workflow passed on commit 05a66cc, including model load/inference,
-  geographic scope choices and guided India planning through step 4. Thirteen public assets matched the local
-  build hashes. Checkpoint reports are docs/evidence/public-*-validation.json;
-  docs/deployment.md records the deployment ID. Pull main before continuing elsewhere.
-  Public checks caught an unanchored models/ ignore rule excluding public/models;
-  it is now /models/. Require the three model-loading files in every upload dry run.
-  An earlier deployment
-  dry run initially included local browser artifacts, so .vercelignore now excludes
-  those, local dependencies, credentials and generated output. Build inputs and
-  public showcase files remain included. Verify the dry-run file list before upload.
-- **Latest executed checks:** 95 offline tests, 16 local Playwright cases across
-  four runtime/viewport projects, 8 public desktop/mobile Playwright cases,
-  33 static Chrome checks,
-  19 Node-backed Chrome checks, 18 Firefox checks and 83 JavaScript syntax checks
-  passed. Seven-slide PDF and source ZIP are regenerated before publishing.
-  The public origin also passed all 33 Chrome checks, including the new scope flow.
-  Reports live under docs/evidence; transient profiles/logs are ignored in artifacts.
-  Rerun checks appropriate to future changes and record their actual results here.
-- **Still deferred/unverified:** CSS polishing, real mobile hardware, Safari/WebKit,
-  exact full-session memory peaks, independent agronomic validation and NASA portal
-  submission. Keep these distinct from the tested prototype behavior.
+- **Active release record:** [docs/plans/2026-11-15-merged-release.md](docs/plans/2026-11-15-merged-release.md).
+  Read it first for current process handles, results and remaining work. Earlier
+  implementation notes are preserved in [handoff history](docs/history/implementation-handoff-through-review.md).
+  Sections 11-12 below retain the original plans; later user decisions here prevail.
+- **Authorization:** user explicitly requested one merged main branch and answered
+  "Deploy after all release checks pass". This supersedes the earlier Phase A
+  freeze for this release. Do not edit or submit the NASA portal. Preserve original
+  Phase A prepared materials under public/submission/phase-a and its source tag.
+- **NASA status:** unauthenticated public GET at 22:09 UTC+8 reports isSubmitted and
+  projectSubmitted true; submittedAt 21:04:58 on 15 November. Evidence:
+  docs/evidence/merged-release-team-status.json. This is a public-record observation,
+  not an action performed by the agent.
+- **Current source:** feature/3d-evidence-map at c0690dc plus uncommitted release work.
+  Assistant checkpoint 5647f04 and documentation review 9685ccb are merged. Main
+  remains f4c4fef until the final gate passes. No new production deployment yet.
+  Review worktree must be detached before its merged branch is removed. Preserve
+  the unrelated detached Kilo worktree and all worktree files.
+- **Implemented, final verification running:** seven screened crops / 166 of 197
+  country lists; optional 3D POWER cells, GIBS imagery and terrain; three persistent
+  chat examples; grounded crop-control help including separate official Aland
+  records; Singapore skips unnamed region codes; one location method at a time;
+  Next loads evidence; three explained graphs and C/F display conversion; explicit
+  alternative-crop approval; coverage meters and explained missing/comparable
+  checks; apple/apricot tree context without annual or orchard prescriptions.
+- **AI and speech boundary:** optional 39,274-parameter word LM / 157,096-byte weights
+  can prioritize retrieved paragraphs, not generate agricultural claims. Whisper
+  tiny.en dictation uses first-use consent before permission/download (~70 MB),
+  remains local and supplies an editable unsent draft. User explicitly chose the
+  installed on-device English voice for read-aloud; training-language provenance
+  is unverified. A separately trained English-only TTS model is not implemented.
+  Typed-judgment classifier stays unwired. No new dependency in this release work.
+- **Latest executed checks:** 128/128 offline; focused static-desktop 14/14; legacy
+  model-on Chrome 33, Node Chrome 19, Firefox 18; original QA 16 questions plus six
+  flows pass both model-off and model-on (22/22 each). Full 152-case four-project
+  Playwright release is currently running: session 6649, log
+  artifacts/final-quality/merged-release.log. Inspect before restarting; do not
+  claim the final gate or public release passed until actual results exist.
+- **Runtime/account:** Node testing and static Vercel share scientific handlers.
+  Exactly four product modules, vanilla JS, no classifier activation. Vercel CLI
+  whoami verified justcode1234; linked justcode1234s-projects/nasa-hackathon.
+  Preserve the separate 4chatgptsim account. Recheck identity before deployment.
+- **Remaining:** complete full gate, save evidence, finish five-size screenshot
+  review including 3D/terrain, refresh and visually inspect current seven-slide
+  materials, consolidate/push main, verify deployment/public flows and assets,
+  remove only fully merged local/remote branches, record actual results here.
+  Real phones, Safari/WebKit, microphone/noise quality, audible voice quality and
+  independent agronomic validation remain unverified. Never infer them from emulation.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry
-it out. **Status: Phase A released and verified; Phase B/C pending.** The review
+it out. **Status: Phase A released (production frozen). Phase B and Phase C V0-V5 implemented on feature/3d-evidence-map; the complete release gate passed 117 offline + 116 browser cases on 15 November (see section 10). Preview only; real-phone checks remain unverified.** The review
 baseline was 8b53619, where
 `npm test` passed 95/95 and `npm run test:e2e` passed 16/16 locally. Detail, evidence,
 exact file locations, verified source quotes and ready-to-apply crop entries are in
@@ -374,8 +245,7 @@ section 10 as items become verified; do not mark any item done without executed 
 
 **User decisions (2026-11-15):** MIT licence for the team's own code (holder "Team
 Explorer"). Deploy after `npm run test:release` passes; reconfirm if scope changes. The
-user asked for a 3D data-visualization plan. Approval of the MapLibre dependency still
-waits on the V0 measurements.
+user asked for a 3D data-visualization plan. The user approved preview implementation after V0; use security-fixed MapLibre 6.4.1 (not vulnerable 5.24.0).
 
 **Deadline:** Nov 15, 2026, 11:59 PM Singapore time (UTC+8). Only the owner can submit
 in the NASA portal. Do Phase A first, deploy, verify the public site, and remind the
@@ -427,10 +297,41 @@ module:**
   - The OSM field draped on terrain, with derived slope/aspect as context only.
   - Dated NASA GIBS overlays (NDVI, SMAP, IMERG, LST), labelled as imagery.
   - A link from step-4 crop slots to their weather window.
-- Technology: propose MapLibre GL JS 5.x (BSD-3), pinned, vendored and lazy-loaded.
+- Technology: approved MapLibre GL JS 6.4.1 (BSD-3), pinned, vendored and lazy-loaded.
   Leaflet 2D stays the default and fallback.
 - Rules: no auto-rotation, starfields or glow; reduced motion respected; table/text
   equivalents; WebGL fallback; size, memory and fps measured, not claimed.
 - Gates: V0 spike + feasibility doc + user approval → V1 columns → V2 GIBS →
   V3 terrain/field → V4 step-4 link → V5 validation and design review. Build on branch
   `feature/3d-evidence-map` and deploy previews only.
+
+## 12. Active plan - final quality handoff (proposed 15 November 2026)
+
+Full detail, file lists, commands and acceptance criteria:
+**docs/plans/codex-final-quality-handoff.md**. Status: proposed; nothing in it is
+implemented until recorded in section 10 with executed checks.
+
+**Verified starting point:** branch feature/3d-evidence-map at 638431a (pushed, clean);
+release gate 117 offline + 116 browser green; production still Phase A (main f4c4fef),
+16/16 public cases logged out; preview is login-protected; the public NASA team page
+showed the project as an unsubmitted draft with empty references fields.
+
+**Order of work:**
+1. P0.1 Report team-page status and give paste-ready submission fields. Do not submit.
+2. P0.2 Ask the user: keep Phase A public (default), release the branch, or make the
+   preview public. Wait for an explicit answer before any production change.
+3. Baseline `npm test` and `npm run test:release`; save evidence.
+4. P0.3 scientific wording audit; P0.4 re-verify the three new crops against sources;
+   P0.6 unexpected-question sweep for the assistant; P0.5 run and repair the legacy
+   Chrome/Node/Firefox/QA scripts on this branch.
+5. P1 screenshot-based CSS/UX review: declutter the chat panel, voice download notice,
+   one spacing/control system, accessibility of new UI, plain-language explanations.
+   Show before/after screenshots to the user before large CSS changes.
+6. Full release gate, then docs. Release only with approval, following the plan's
+   deployment and rollback steps.
+7. P2 measurements, cache headers, real-phone session; P3 optional experiments.
+
+**Standing limits:** keep the typed-judgment classifier unwired unless a fresh test set
+shows it beats the rules. Field lookup depends on shared public Overpass services;
+report busy-service failures as failures with their cause. Real phones, Safari, real
+microphones and audible read-aloud remain unverified.

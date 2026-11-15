@@ -67,7 +67,7 @@ async function waitFor(expression, timeout = 35_000) {
   }
   throw new Error(`Timed out: ${expression}\n${await evaluate('document.body.innerText')}`);
 }
-const fill = async (selector, value) => evaluate(`(() => { const node = document.querySelector(${JSON.stringify(selector)}); node.value = ${JSON.stringify(value)}; node.dispatchEvent(new Event('input', {bubbles:true})); })()`);
+const fill = async (selector, value) => evaluate(`(() => { if(["#latitude","#longitude"].includes(${JSON.stringify(selector)})){const mode=document.querySelector("#location-method");mode.value="coordinates";mode.dispatchEvent(new Event("change",{bubbles:true}));} const node = document.querySelector(${JSON.stringify(selector)}); node.value = ${JSON.stringify(value)}; node.dispatchEvent(new Event('input', {bubbles:true})); })()`);
 async function screenshot(filename) {
   const shot = await call('Page.captureScreenshot', { format: 'png' });
   await writeFile(`artifacts/${filename}.png`, Buffer.from(shot.data, 'base64'));
@@ -181,8 +181,8 @@ try {
   await screenshot('desktop-location-picker');
   assert.ok(await evaluate('[...document.querySelector("#baseline-1").options].some(o=>o.value==="unassessed:fao-27")'));
   await fill('#baseline-1', 'sweet-corn');
-  await evaluate('document.querySelector("#pest-country").value="SG";document.querySelector("#pest-country").dispatchEvent(new Event("change",{bubbles:true}));');
-  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Singapore:") && document.querySelector("#place-town").options.length > 1');
+  await evaluate('document.querySelector("#pest-country").value="KH";document.querySelector("#pest-country").dispatchEvent(new Event("change",{bubbles:true}));');
+  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Cambodia:") && document.querySelector("#place-town").options.length > 1');
   assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
   assert.equal(await evaluate('document.querySelector("#place-town").value'), '');
   assert.equal(await evaluate('document.querySelectorAll("[name=allowedCrops]").length'), 0);
@@ -201,18 +201,18 @@ try {
   check('place-name search returns real Nominatim place choices');
   await evaluate('(() => { const s=document.querySelector("#example-location"); s.value="52.19,0.09"; s.dispatchEvent(new Event("change", {bubbles:true})); })()');
   await waitFor('document.querySelector("#farm-results").options.length > 1');
-  await waitFor('document.querySelectorAll("[name=allowedCrops]").length === 2');
+  await waitFor('document.querySelectorAll("[name=allowedCrops]").length === 5');
   assert.ok(await evaluate('![...document.querySelector("#baseline-1").options].some(o=>o.value==="unassessed:fao-27")'));
   await evaluate('(() => { const s=document.querySelector("#farm-results"); s.selectedIndex=1; s.dispatchEvent(new Event("change", {bubbles:true})); })()');
   assert.match(await evaluate('document.querySelector("#farm-details").textContent'), /OSM last edited/);
   check('real OSM field polygons and dropdown select a field with dated metadata and unknown crop labels');
   await evaluate('document.querySelector("#flow-next").click()');
   await waitFor('document.querySelector("#evidence-status").textContent.startsWith("Historical evidence loaded")');
-  assert.equal(await evaluate('document.querySelectorAll("#evidence-output svg").length'), 2);
+  assert.equal(await evaluate('document.querySelectorAll("#evidence-output svg").length'), 3);
   assert.match(await evaluate('document.querySelector("#evidence-output").textContent'), /MJ\/m\^2\/day/);
   check('real NASA year loads with units, source timestamps, daily metadata, monthly charts and tables');
   await evaluate('document.querySelector("#tab-si").click()');
-  await waitFor('document.querySelectorAll("[name=allowedCrops]").length === 2');
+  await waitFor('document.querySelectorAll("[name=allowedCrops]").length === 5');
   await fill('#baseline-1', 'bush-bean'); await fill('#baseline-2', 'pea'); await fill('#baseline-3', 'bush-bean');
   await evaluate('document.querySelector("#load-pests").click()');
   await waitFor('document.querySelector("#pest-status").textContent.startsWith("Country context loaded")');
@@ -266,7 +266,7 @@ try {
   await fill('#latitude', '44.98'); await fill('#longitude', '-93.27');
   assert.equal(await evaluate('document.querySelector("#evidence-output").children.length'), 0);
   assert.equal(await evaluate('document.querySelector("#compare").disabled'), true);
-  await evaluate('document.querySelector("#load-evidence").click()');
+  await evaluate('document.querySelector("#tab-location").click();document.querySelector("#flow-next").click()');
   await waitFor('document.querySelector("#evidence-status").textContent.startsWith("Historical evidence loaded")');
   assert.match(await evaluate('document.querySelector("#evidence-output").textContent'), /44\.98°, -93\.27°/);
   check('different coordinates clear prior evidence and load a different real NASA location');
@@ -276,7 +276,7 @@ try {
   await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Choose a country")');
   assert.match(await evaluate('document.querySelector("#map-status").textContent'), /Map library unavailable/);
   await fill('#latitude', '-1.29'); await fill('#longitude', '36.82');
-  await evaluate('document.querySelector("#load-evidence").click()');
+  await evaluate('document.querySelector("#tab-location").click();document.querySelector("#flow-next").click()');
   await waitFor('document.querySelector("#evidence-status").textContent.startsWith("Historical evidence loaded")');
   check('coordinates and NASA evidence work with map library and tiles unavailable');
   if (process.env.TEST_MODEL === '1') {
@@ -305,7 +305,7 @@ try {
   assert.ok(coreSession, `Browser data worker is present: ${JSON.stringify([...workerSessions.values()])}`);
   await call('Network.setBlockedURLs', { urls: ['*power.larc.nasa.gov*'] }, coreSession);
   await fill('#latitude', '0');
-  await evaluate('document.querySelector("#load-evidence").click()');
+  await evaluate('document.querySelector("#tab-location").click();document.querySelector("#flow-next").click()');
   await waitFor('document.querySelector("#evidence-status").classList.contains("error")');
   assert.equal(await evaluate('document.querySelector("#compare").disabled'), true);
   check('network failure produces visible error and prevents stale-evidence comparisons');

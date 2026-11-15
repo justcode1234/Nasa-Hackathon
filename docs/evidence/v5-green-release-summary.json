@@ -1,0 +1,158 @@
+{
+ "command": "npm run test:release",
+ "commitBase": "a85acbb plus working tree (speech, judgment experiment, live-field retry helper)",
+ "stats": {
+  "startTime": "2026-11-15T09:12:20.487Z",
+  "duration": 1050849.827,
+  "expected": 116,
+  "skipped": 0,
+  "unexpected": 0,
+  "flaky": 0
+ },
+ "offlineTests": {
+  "passed": 117,
+  "failed": 0
+ },
+ "projects": {
+  "static-desktop": {
+   "passed": 29,
+   "failed": 0
+  },
+  "static-mobile": {
+   "passed": 29,
+   "failed": 0
+  },
+  "node-desktop": {
+   "passed": 29,
+   "failed": 0
+  },
+  "node-mobile": {
+   "passed": 29,
+   "failed": 0
+  }
+ },
+ "casesPerSpecFile": {
+  "assistant.spec.js": 4,
+  "field-terrain.spec.js": 4,
+  "gibs.spec.js": 12,
+  "map3d-review.spec.js": 4,
+  "map3d.spec.js": 16,
+  "review-phase-a.spec.js": 16,
+  "review-phase-b.spec.js": 16,
+  "speech-microphone.spec.js": 12,
+  "speech.spec.js": 8,
+  "terrain.spec.js": 8,
+  "weather-window.spec.js": 4,
+  "workflow.spec.js": 12
+ },
+ "liveFieldUserRetriesNeeded": 0,
+ "speechAndReadAloud": [
+  {
+   "project": "static-desktop",
+   "name": "Speech-to-text measurement",
+   "data": {
+    "transcript": "Tell me about tomatoes in Kenya.",
+    "model": "onnx-community/whisper-tiny.en@794207f (q8)",
+    "loadMs": 3142.2000000029802,
+    "downloadBytes": 43536374,
+    "inferenceMs": 1579,
+    "audioSeconds": 4.08
+   }
+  },
+  {
+   "project": "static-mobile",
+   "name": "Speech-to-text measurement",
+   "data": {
+    "transcript": "Tell me about tomatoes in Kenya.",
+    "model": "onnx-community/whisper-tiny.en@794207f (q8)",
+    "loadMs": 3255,
+    "downloadBytes": 43536374,
+    "inferenceMs": 1670.699999999255,
+    "audioSeconds": 4.02
+   }
+  },
+  {
+   "project": "node-desktop",
+   "name": "Speech-to-text measurement",
+   "data": {
+    "transcript": "Tell me about tomatoes in Kenya.",
+    "model": "onnx-community/whisper-tiny.en@794207f (q8)",
+    "loadMs": 3314.199999999255,
+    "downloadBytes": 43536374,
+    "inferenceMs": 1672.300000000745,
+    "audioSeconds": 4.02
+   }
+  },
+  {
+   "project": "node-mobile",
+   "name": "Speech-to-text measurement",
+   "data": {
+    "transcript": "Tell me about tomatoes in Kenya.",
+    "model": "onnx-community/whisper-tiny.en@794207f (q8)",
+    "loadMs": 3302.400000002235,
+    "downloadBytes": 43536374,
+    "inferenceMs": 1650.6000000014901,
+    "audioSeconds": 4.02
+   }
+  },
+  {
+   "project": "static-desktop",
+   "name": "Read-aloud voice and text",
+   "data": {
+    "voice": {
+     "name": "Microsoft David - English (United States)",
+     "lang": "en-US",
+     "localService": true
+    },
+    "spoken": "I cannot guarantee that a crop will be safe or succeed next year. Historical weather is not a forecast, and this prototype has no validated safety or future-yield model. Local cultivar, soil, water, pest history and management still need assessment. Source limits remain in effect even when a question asks me to ignore them.",
+    "started": 0
+   }
+  },
+  {
+   "project": "static-mobile",
+   "name": "Read-aloud voice and text",
+   "data": {
+    "voice": {
+     "name": "Microsoft David - English (United States)",
+     "lang": "en-US",
+     "localService": true
+    },
+    "spoken": "I cannot guarantee that a crop will be safe or succeed next year. Historical weather is not a forecast, and this prototype has no validated safety or future-yield model. Local cultivar, soil, water, pest history and management still need assessment. Source limits remain in effect even when a question asks me to ignore them.",
+    "started": 0
+   }
+  },
+  {
+   "project": "node-desktop",
+   "name": "Read-aloud voice and text",
+   "data": {
+    "voice": {
+     "name": "Microsoft David - English (United States)",
+     "lang": "en-US",
+     "localService": true
+    },
+    "spoken": "I cannot guarantee that a crop will be safe or succeed next year. Historical weather is not a forecast, and this prototype has no validated safety or future-yield model. Local cultivar, soil, water, pest history and management still need assessment. Source limits remain in effect even when a question asks me to ignore them.",
+    "started": 0
+   }
+  },
+  {
+   "project": "node-mobile",
+   "name": "Read-aloud voice and text",
+   "data": {
+    "voice": {
+     "name": "Microsoft David - English (United States)",
+     "lang": "en-US",
+     "localService": true
+    },
+    "spoken": "I cannot guarantee that a crop will be safe or succeed next year. Historical weather is not a forecast, and this prototype has no validated safety or future-yield model. Local cultivar, soil, water, pest history and management still need assessment. Source limits remain in effect even when a question asks me to ignore them.",
+    "started": 0
+   }
+  }
+ ],
+ "rawSha256": "4dc1abe36a4049879a3c6ea1feb5bbd87b61f5c4c4f68a9e4dd33bcfdf57a8e7",
+ "notes": [
+  "Field lookups hit shared public Overpass services; a pass reflects their availability during this run, not a guarantee.",
+  "Dictation fixture is synthetic English speech from a Windows voice; no real accents, noise or phone microphones were tested.",
+  "Read-aloud audio output itself cannot be captured by the tests; text, voice and Stop are verified.",
+  "Speech memory and real-phone performance are unmeasured."
+ ]
+}

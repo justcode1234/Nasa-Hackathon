@@ -1,0 +1,28 @@
+[
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 1000
+    },
+    "images": {
+      "rain": "v5-review-1280-rain.png",
+      "terrain": "v5-review-1280-terrain.png"
+    },
+    "legend": "June 2025 · rain sum of available days (mm). Colour: pale blue 0 to dark blue 161.68 mm, fixed across this year. Height: 1 mm = 123.7 display metres; columns are not water depth. Hatched cells have no available rain values; partial totals are labelled in the table.",
+    "terrain": "Nearest DEM pixel at the selected point: 178.0 m. Sampling spacing approximately 32.4 m/pixel. This is modelled terrain, not a survey. Field slope and aspect require a boundary.\n\nTerrain Tiles Terrarium DEM mosaic · estimated context. Observation/acquisition date: unknown or varies by source. DEM tile zoom 12.\n\nHistorical DEM mosaic including SRTM and other providers, not a surveyed farm height or current observation.\nTile sampling spacing is not source accuracy. Elevation datum, source resolution and age can vary.\nSlope uses central differences of unexaggerated elevation and neighbouring pixels; aspect is downhill, clockwise from north.\nOnly DEM pixel centres inside the supplied polygon, excluding holes, are summarised. Boundaries are approximate.\nTransparent and lowest encoded elevation pixels remain missing. Fewer than nine valid interior gradients leave slope/aspect unassessed.\nTerrain is context only: no erosion prediction, crop suitability, ownership or access is established.\nsrtm/S32E116.tif · retrieved 2026-11-15T08:13:17.919Z · tile-file modification Mon, 20 Nov 2017 04:14:12 GMT (not observation date)\nFull terrain-provider attribution",
+    "checkedAt": "2026-11-15T08:13:18.506Z"
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "images": {
+      "rain": "v5-review-390-rain.png",
+      "terrain": "v5-review-390-terrain.png"
+    },
+    "legend": "June 2025 · rain sum of available days (mm). Colour: pale blue 0 to dark blue 161.68 mm, fixed across this year. Height: 1 mm = 123.7 display metres; columns are not water depth. Hatched cells have no available rain values; partial totals are labelled in the table.",
+    "terrain": "Nearest DEM pixel at the selected point: 178.0 m. Sampling spacing approximately 32.4 m/pixel. This is modelled terrain, not a survey. Field slope and aspect require a boundary.\n\nTerrain Tiles Terrarium DEM mosaic · estimated context. Observation/acquisition date: unknown or varies by source. DEM tile zoom 12.\n\nHistorical DEM mosaic including SRTM and other providers, not a surveyed farm height or current observation.\nTile sampling spacing is not source accuracy. Elevation datum, source resolution and age can vary.\nSlope uses central differences of unexaggerated elevation and neighbouring pixels; aspect is downhill, clockwise from north.\nOnly DEM pixel centres inside the supplied polygon, excluding holes, are summarised. Boundaries are approximate.\nTransparent and lowest encoded elevation pixels remain missing. Fewer than nine valid interior gradients leave slope/aspect unassessed.\nTerrain is context only: no erosion prediction, crop suitability, ownership or access is established.\nsrtm/S32E116.tif · retrieved 2026-11-15T08:13:22.303Z · tile-file modification Mon, 20 Nov 2017 04:14:12 GMT (not observation date)\nFull terrain-provider attribution",
+    "checkedAt": "2026-11-15T08:13:22.569Z"
+  }
+]

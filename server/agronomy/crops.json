@@ -1,5 +1,5 @@
 {
-  "scope": "Four starter vegetable types with Minnesota extension evidence. Local varieties, planting calendars and commercial-scale suitability are not globally validated.",
+  "scope": "Seven starter vegetable types with regional US extension evidence. Local varieties, planting calendars and commercial-scale suitability are not globally validated.",
   "sources": [
     {
       "id": "nasa-power",
@@ -40,6 +40,36 @@
       "id": "cornell-rotation",
       "title": "Cornell Extension: rotating vegetables by family",
       "url": "https://allegany.cce.cornell.edu/gardening/food-gardening/vegetable-garden/rotating-vegetables-by-family"
+    },
+    {
+      "id": "clemson-tomato",
+      "title": "Clemson HGIC 1323: Tomato",
+      "url": "https://hgic.clemson.edu/factsheet/tomato/"
+    },
+    {
+      "id": "clemson-cabbage",
+      "title": "Clemson HGIC 1303: Cabbage and Chinese Cabbage (head-cabbage rules only)",
+      "url": "https://hgic.clemson.edu/factsheet/cabbage-chinese-cabbage/"
+    },
+    {
+      "id": "clemson-onion",
+      "title": "Clemson HGIC 1314: Onion, Leek, Shallot and Garlic (onion section)",
+      "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/"
+    },
+    {
+      "id": "usu-onion",
+      "title": "Utah State Extension: Onions in the Garden",
+      "url": "https://extension.usu.edu/yardandgarden/research/onions-in-the-garden"
+    },
+    {
+      "id": "ncsu-seasons",
+      "title": "NC State Extension: Vegetable Gardening seasonal groups",
+      "url": "https://content.ces.ncsu.edu/home-vegetable-gardening-a-quick-reference-guide"
+    },
+    {
+      "id": "ncsu-onion",
+      "title": "NC State Plant Toolbox: Allium cepa family and growing conditions",
+      "url": "https://plants.ces.ncsu.edu/plants/allium-cepa/"
     }
   ],
   "crops": [
@@ -160,6 +190,102 @@
       ],
       "soilPhRange": null,
       "requiresWellDrainedSoil": false
+    },
+    {
+      "id": "tomato",
+      "name": "Tomato",
+      "aliases": [
+        "tomatoes"
+      ],
+      "family": "Solanaceae",
+      "maturityDays": [
+        52,
+        90
+      ],
+      "frostTender": true,
+      "idealAirC": null,
+      "legume": false,
+      "soilPhRange": [
+        6,
+        6.5
+      ],
+      "requiresWellDrainedSoil": true,
+      "sourceIds": [
+        "clemson-tomato",
+        "ncsu-seasons",
+        "cornell-rotation"
+      ],
+      "notes": [
+        "Clemson gives 52-90 days to first harvest depending on cultivar, without stating seed or transplant timing; seedling time before transplanting is outside this screening slot.",
+        "Warm-season and frost-sensitive (NC State). Clemson describes best growth at 70-80 F days and 60-70 F nights; no daily-mean heat rule is inferred."
+      ]
+    },
+    {
+      "id": "cabbage",
+      "name": "Cabbage",
+      "aliases": [
+        "cabbages",
+        "head cabbage"
+      ],
+      "family": "Brassicaceae",
+      "maturityDays": [
+        60,
+        80
+      ],
+      "frostTender": false,
+      "idealAirC": [
+        15.555555555555555,
+        18.333333333333332
+      ],
+      "legume": false,
+      "soilPhRange": [
+        5.8,
+        6.5
+      ],
+      "requiresWellDrainedSoil": true,
+      "sourceIds": [
+        "clemson-cabbage",
+        "ncsu-seasons",
+        "cornell-rotation"
+      ],
+      "notes": [
+        "Clemson gives 60-80 days after planting head-cabbage transplants; seedling time before transplanting is outside this slot. Direct-seeded timing is not stated.",
+        "Cool-season and cold-hardy (NC State). Days above the cited 60-65 F best-growth range indicate exposure, not predicted damage. Cold-induced bolting is not modelled. Chinese/Napa cabbage and bok choy are not covered by these rules."
+      ]
+    },
+    {
+      "id": "onion",
+      "name": "Bulb onion",
+      "aliases": [
+        "onions",
+        "bulb onions",
+        "dry onion",
+        "dry onions"
+      ],
+      "family": "Amaryllidaceae",
+      "maturityDays": [
+        100,
+        120
+      ],
+      "frostTender": false,
+      "idealAirC": null,
+      "legume": false,
+      "soilPhRange": [
+        6.2,
+        6.5
+      ],
+      "requiresWellDrainedSoil": true,
+      "sourceIds": [
+        "usu-onion",
+        "clemson-onion",
+        "ncsu-seasons",
+        "ncsu-onion",
+        "cornell-rotation"
+      ],
+      "notes": [
+        "Utah State gives 100-120 days for bulb onions without stating seed, set or transplant timing; local cultivar day-length needs are not modelled.",
+        "Cool-season and cold-hardy (NC State). Clemson notes late onion-set plantings are more susceptible to cold/freeze injury; winter survival remains unassessed. Green/bunching onions are not assigned bulb maturity."
+      ]
     }
   ]
 }

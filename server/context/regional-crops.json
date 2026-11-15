@@ -1,0 +1,26 @@
+{
+  "AX": {
+    "countryName": "Åland Islands",
+    "kind": "published territory-level production/sales statistics",
+    "year": 2024,
+    "spatialScope": "Åland Islands aggregate; not a town or selected field",
+    "source": {
+      "id": "asub-aland-2024",
+      "title": "Statistics Åland: Åland in Figures 2025, agricultural production 2024, page 11",
+      "url": "https://www.asub.ax/sites/default/files/media/document/ALSIFF25ENG.pdf#page=13",
+      "publishedYear": 2025,
+      "retrievedAt": "2026-11-15T10:13:21.954Z",
+      "sha256": "3034a1e9ce5b136b41da258a2e3f9a4aefcb40b2de482b586f51a0bf160b6cc9",
+      "attribution": "Source: ÅSUB (Statistics and Research Åland). Selected factual table entries transcribed with attribution; no broader publication licence is asserted."
+    },
+    "records": [
+      {"id":"wheat","name":"Wheat","group":"cereals","tonnes":3100},
+      {"id":"barley-oats","name":"Barley and oats (combined category)","group":"cereals","tonnes":810},
+      {"id":"rye","name":"Rye","group":"cereals","tonnes":660},
+      {"id":"table-potatoes","name":"Table potatoes","group":"vegetables","tonnes":170},
+      {"id":"onions","name":"Onions","group":"vegetables","tonnes":7100}
+    ],
+    "limitation": "These are crop types documented locally, not a planting prescription or proof of suitability for the selected field. Cultivar, planting season, soil, drainage and water still need local review. No rotation rules or alternative eligibility are added from production records.",
+    "missingness": "Five selected annual-crop categories, not a complete crop inventory. Quantities are rounded territory aggregates; barley/oats is one combined category and must not be split. This is separate from the FAOSTAT extract."
+  }
+}

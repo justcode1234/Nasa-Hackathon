@@ -7,7 +7,7 @@ function setup(t) {
   const nodes = new Map();
   const node = () => ({
     value: '', textContent: '', children: [], disabled: false,
-    classList: { toggle() {} }, setAttribute() {}, addEventListener() {},
+    classList: { toggle() {} }, setAttribute() {}, addEventListener() {}, closest() { return this; },
     append(...children) { this.children.push(...children); },
     replaceChildren(...children) { this.children = children; this.textContent = ''; }
   });

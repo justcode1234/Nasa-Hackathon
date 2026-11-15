@@ -1,7 +1,9 @@
+import { historicalWindow, rainIndicators } from '../../public/js/lib/weather-window.js';
 import { AppError } from '../errors.js';
 import { validateLocation } from '../nasa/power.js';
 import { catalog, findCrop, mentionedCrops, ambiguousCornQuestion, cornScopeNotice } from './catalog.js';
 import { countryCropName, getCountryCrops } from '../context/crops.js';
+import knowledge from './knowledge.json' with {type:'json'};
 
 const DAY = 86_400_000;
 const iso = timestamp => new Date(timestamp).toISOString().slice(0, 10);
@@ -41,30 +43,15 @@ export function validateInputs(body) {
   };
 }
 
-function historicalWindow(observations, start, length) {
-  const referenceYear = Number(observations.period.start.slice(0, 4));
-  const indexes = new Map(observations.dates.map((date, i) => [date.slice(5), i]));
-  const days = [];
-  let leapDaySubstitutions = 0;
-  for (let i = 0; i < length; i++) {
-    let monthDay = iso(start + i * DAY).slice(5);
-    if (monthDay === '02-29' && !indexes.has(monthDay)) { monthDay = '02-28'; leapDaySubstitutions++; }
-    const index = indexes.get(monthDay);
-    const day = { referenceDate: `${referenceYear}-${monthDay}` };
-    for (const id of ['T2M', 'T2M_MIN', 'T2M_MAX', 'PRECTOTCORR']) day[id] = observations.parameters[id]?.values[index] ?? null;
-    days.push(day);
-  }
-  return { days, leapDaySubstitutions };
-}
 
 function evaluate(ids, inputs, observations, label, baseline = false) {
   const seen = new Set();
   const previous = findCrop(inputs.previousCrop);
   if (previous) seen.add(previous.family);
   const criteria = { unsupportedCrops: 0, calendarOverruns: 0, missingEvidenceDays: 0, frostRiskDays: 0,
-    peaDaysAboveIdeal: 0, repeatedFamilies: 0, maturityUpperDays: 0,
+    daysAboveIdealAir: 0, repeatedFamilies: 0, maturityUpperDays: 0,
     soilConcerns: 0, soilPhAssessedSlots: 0, longestZeroRainRunDays: 0 };
-  const sourceIds = new Set(['nasa-power', 'power-resolution', 'umn-duration', 'umn-families', 'cornell-rotation']);
+  const sourceIds = new Set(['nasa-power', 'power-resolution', 'cornell-rotation']);
   const risks = [];
   const reasons = [];
   const timeline = ids.map((value, i) => {
@@ -78,7 +65,15 @@ function evaluate(ids, inputs, observations, label, baseline = false) {
     if (!crop) {
       criteria.unsupportedCrops++;
       risks.push(`Slot ${i + 1}: “${value}” is outside the sourced catalog; maturity, family and environmental fit are unassessed.`);
-      return { ...slot, maturityDays: null, indicators: null, notes: ['Unsupported crop — baseline preserved without inferred crop facts.'] };
+      const itemCode=/^unassessed:fao-(\d+)$/.exec(value)?.[1];
+      const record=inputs.country&&itemCode?getCountryCrops({country:inputs.country}).records.find(record=>String(record.itemCode)===itemCode):null;
+      const profile=knowledge.profiles.find(profile=>profile.perennial&&(profile.itemIds.includes(itemCode)||profile.aliases.includes(slot.cropName.toLowerCase())));
+      profile?.sourceIds.forEach(id=>sourceIds.add(id));
+      if(record)sourceIds.add('faostat-qcl');
+      return { ...slot, maturityDays: null, indicators: null,referenceFamily:profile?.family??null,perennial:profile?.perennial??false,
+        recordedContext:record?{year:record.year,tonnes:record.tonnes,units:record.units,kind:'national production record; not field suitability',sourceId:'faostat-qcl'}:null,
+        notes: [profile?`${slot.cropName} is a perennial fruit tree in ${profile.family}. This prototype uses annual crop slots, so its four-month calendar cannot assess an established orchard or justify replacing trees with annual crops. A local orchard-specific plan is needed.`:`We kept ${slot.cropName} as you entered it, but this prototype has no sourced rotation-screening entry for it. Crop family, maturity and environmental fit are unassessed here; that does not mean the crop cannot grow.`,
+          'Next step: keep this baseline to inspect the evidence gap, or choose crops with screening rules for an annual comparison. Obtain a local crop-specific calendar and requirements before using these results for that crop. No other crop is silently substituted.'] };
     }
     crop.sourceIds.forEach(id => sourceIds.add(id));
     const soilChecks = [];
@@ -109,31 +104,26 @@ function evaluate(ids, inputs, observations, label, baseline = false) {
     const heat = crop.idealAirC ? days.filter(d => d.T2M !== null && d.T2M > crop.idealAirC[1]).length : null;
     criteria.missingEvidenceDays += missing;
     criteria.frostRiskDays += frost;
-    criteria.peaDaysAboveIdeal += heat ?? 0;
-    const rain = days.map(d => d.PRECTOTCORR).filter(v => v !== null);
-    let run = 0, longestZeroRainRunDays = 0;
-    for (const day of days) {
-      run = day.PRECTOTCORR === 0 ? run + 1 : 0;
-      longestZeroRainRunDays = Math.max(longestZeroRainRunDays, run);
-    }
-    criteria.longestZeroRainRunDays = Math.max(criteria.longestZeroRainRunDays, longestZeroRainRunDays);
+    criteria.daysAboveIdealAir += heat ?? 0;
+    const rain = rainIndicators(days);
+    criteria.longestZeroRainRunDays = Math.max(criteria.longestZeroRainRunDays, rain.longestZeroRainRunDays);
     const minimums = days.map(d => d.T2M_MIN).filter(v => v !== null);
     const maximums = days.map(d => d.T2M_MAX).filter(v => v !== null);
     if (frost) risks.push(`Slot ${i + 1}: ${frost} historical analogue days had regional minimum air temperature ≤0°C for frost-tender ${crop.name}.`);
-    if (heat) risks.push(`Slot ${i + 1}: ${heat} historical analogue days exceeded the pea ideal mean-air range upper bound (18.3°C). This does not predict damage.`);
+    if (heat) risks.push(`Slot ${i + 1}: ${heat} historical analogue days exceeded the cited ideal-air upper bound for ${crop.name} (${crop.idealAirC[1].toFixed(1)}°C). This does not predict damage.`);
     if (missing) risks.push(`Slot ${i + 1}: ${missing} historical analogue days lack one or more required weather values; absence is not evidence of low risk.`);
     return { ...slot, maturityDays: crop.maturityDays, harvestTurnaroundAssumptionDays: 14,
       maturityEndExclusive: iso(start + duration * DAY), unallocatedDays: Math.max(0, slotDays - duration - 14),
       indicators: { kind: 'derived from historical analogue, not a forecast', sourceId: 'nasa-power',
         referenceYear: inputs.referenceYear, assessedDays: duration, missingEvidenceDays: missing,
-        frostRiskDays: crop.frostTender ? frost : null, peaDaysAboveIdeal: heat,
-        precipitationMm: rain.length ? rain.reduce((a, b) => a + b, 0) : null,
-        precipitationValidDays: rain.length, precipitationPartial: rain.length !== duration,
-        longestZeroRainRunDays, minAirC: minimums.length ? Math.min(...minimums) : null,
+        validMeanTemperatureDays:days.filter(day=>day.T2M!==null).length,validMinTemperatureDays:days.filter(day=>day.T2M_MIN!==null).length,
+        frostRiskDays: crop.frostTender ? frost : null, daysAboveIdealAir: heat,
+        ...rain, minAirC: minimums.length ? Math.min(...minimums) : null,
         maxAirC: maximums.length ? Math.max(...maximums) : null, leapDaySubstitutions },
       soilChecks, notes: crop.notes };
   });
-  if (!criteria.repeatedFamilies) reasons.push('No known family repeats in the supplied previous crop and three slots. This is a short screening horizon, not a validated disease-break interval.');
+  if (!criteria.repeatedFamilies&&!criteria.unsupportedCrops) reasons.push('No known family repeats in the supplied previous crop and three slots. This is a short screening horizon, not a validated disease-break interval.');
+  if(criteria.unsupportedCrops)risks.push(`Family repetition and calendar fit cannot be fully compared: ${criteria.unsupportedCrops} baseline crop(s) lack screening rules. Missing evidence is not a favourable result.`);
   if (!criteria.calendarOverruns && !criteria.unsupportedCrops) reasons.push('Sourced maturity upper bounds plus the assumed 14-day turnaround fit each four-month slot.');
   if (baseline && ids.some(id => { const c = findCrop(id); return c && !inputs.allowedCrops.includes(c.id); })) {
     risks.push('The existing baseline contains a crop excluded from alternatives; it has been preserved for comparison.');
@@ -142,15 +132,20 @@ function evaluate(ids, inputs, observations, label, baseline = false) {
   const concerning = criteria.unsupportedCrops || criteria.calendarOverruns || criteria.missingEvidenceDays || criteria.frostRiskDays || criteria.soilConcerns;
   return { id: baseline ? 'baseline' : ids.join('--'), label, baseline,
     status: concerning ? 'Screening concerns — local review required' : 'Limited screening only — local review required',
-    criteria, timeline, reasons, risks, sourceIds: [...sourceIds].sort() };
+    criteria, timeline, reasons, risks,
+    assessment:{totalSlots:timeline.length,cropRules:timeline.filter(slot=>slot.cropId).length,weather:timeline.filter(slot=>slot.indicators).length,
+      frost:timeline.filter(slot=>slot.indicators?.frostRiskDays!=null&&slot.indicators.validMinTemperatureDays>0).length,heat:timeline.filter(slot=>slot.indicators?.daysAboveIdealAir!=null&&slot.indicators.validMeanTemperatureDays>0).length,
+      rain:timeline.filter(slot=>slot.indicators?.precipitationValidDays>0).length,
+      ph:criteria.soilPhAssessedSlots,drainage:inputs.drainage==='unknown'?0:timeline.filter(slot=>findCrop(slot.cropId)?.requiresWellDrainedSoil).length},
+    sourceIds: [...sourceIds].sort() };
 }
 
 export function rankingVector(scenario, priority) {
   const c = scenario.criteria;
   const safety = [c.unsupportedCrops, c.calendarOverruns, c.missingEvidenceDays, c.frostRiskDays, c.soilConcerns ?? 0];
-  const tieBreaks = priority === 'water' ? [c.longestZeroRainRunDays, c.repeatedFamilies, c.peaDaysAboveIdeal, c.maturityUpperDays] : priority === 'family' ? [c.repeatedFamilies, c.peaDaysAboveIdeal, c.maturityUpperDays] :
-    priority === 'short-season' ? [c.maturityUpperDays, c.repeatedFamilies, c.peaDaysAboveIdeal] :
-      [c.peaDaysAboveIdeal, c.repeatedFamilies, c.maturityUpperDays];
+  const tieBreaks = priority === 'water' ? [c.longestZeroRainRunDays, c.repeatedFamilies, c.daysAboveIdealAir, c.maturityUpperDays] : priority === 'family' ? [c.repeatedFamilies, c.daysAboveIdealAir, c.maturityUpperDays] :
+    priority === 'short-season' ? [c.maturityUpperDays, c.repeatedFamilies, c.daysAboveIdealAir] :
+      [c.daysAboveIdealAir, c.repeatedFamilies, c.maturityUpperDays];
   return [...safety, ...tieBreaks];
 }
 
@@ -173,11 +168,11 @@ export function compareRotations(inputs, observations) {
     catalog.scope,
     'One historical year is not a forecast, climate normal, validated planting window or estimate of extreme-event likelihood.',
     'No location is agronomically validated by this prototype, including the source region. Land use, altitude effects, cultivar, soil pH, salinity and economics need local verification.',
-    'Heat screening is sourced only for peas; no quantitative heat threshold is available for the other crops. Frost tolerance of peas and radishes is not quantified; winter survival is unassessed.',
+    `Ideal-air exposure references exist for ${catalog.crops.filter(c=>c.idealAirC).map(c=>c.name).join(', ')}. Heat exposure is unassessed for ${catalog.crops.filter(c=>!c.idealAirC).map(c=>c.name).join(', ')}. Quantitative cold-survival rules are not modelled for ${catalog.crops.filter(c=>!c.frostTender).map(c=>c.name).join(', ')}; winter survival remains unassessed.`,
     'Nitrogen fixation and soil effects depend on rhizobia, residues and management. No soil improvement, fertilizer credit or pest prevention is predicted.',
     'Maturity plus 14-day turnaround is a planning assumption; growing-degree days, harvest duration and photoperiod are unmodelled. Unallocated slot time needs a locally chosen cover/management plan.',
     'Rain-free exposure is the longest sequence of exact zero PRECTOTCORR days within a crop window; missing rain breaks a run and is counted separately. It is a historical exposure indicator, not crop water demand, effective rain or savings.',
-    inputs.soilPh === null ? 'No soil-test pH supplied. Crop pH checks cannot run.' : 'Soil pH is farmer-supplied, not a NASA measurement. Sourced pH ranges exist for beans, peas and sweet corn only; radish remains unassessed.',
+    inputs.soilPh === null ? 'No soil-test pH supplied. Crop pH checks cannot run.' : `Soil pH is farmer-supplied, not a NASA measurement. Reference ranges exist for ${catalog.crops.filter(c=>c.soilPhRange).map(c=>c.name).join(', ')}; pH is unassessed for ${catalog.crops.filter(c=>!c.soilPhRange).map(c=>c.name).join(', ')}.`,
     inputs.irrigation === 'available' ? 'Irrigation is reported available, but volume, quality and reliability are unknown; adequacy cannot be assessed.' :
       inputs.irrigation === 'rainfed' ? 'Rainfed: historical precipitation is context only. The app cannot confirm enough crop water or recommend planting without a local water balance.' : 'Irrigation is unknown; crop water sufficiency cannot be assessed.',
     inputs.soil === 'unknown' ? 'Soil type and soil tests are missing; nutrient and drainage suitability cannot be established.' : `Farmer-reported ${inputs.soil} soil is not a soil test; drainage, pH, salinity and nutrients remain unassessed.`,
@@ -188,17 +183,17 @@ export function compareRotations(inputs, observations) {
     schemaVersion: 1, kind: 'deterministic rule-based comparison', inputs,
     horizon: { start: baseline.timeline[0].start, endExclusive: baseline.timeline[2].endExclusive, months: 12 },
     scenarios: [baseline, ...alternatives], consideredCandidates: candidates.length,
-    ranking: { priority: inputs.priority, method: 'Lexicographic counts, lowest first; fixed crop-ID tie-break. Only alternatives are ranked; the baseline is always retained.',
+    ranking: { priority: inputs.priority, method: 'Every possible sequence of the allowed crops was checked. Fewer is better on the first criterion; ties go to the next. Exact ties use a stable order. Only alternatives are ordered; your baseline is retained.',
       orderedCriteria: ['Unsupported crops', 'Calendar overruns', 'Missing evidence days', 'Historical frost-tender exposure days', 'Known soil pH / drainage concerns',
-        ...(inputs.priority === 'water' ? ['Longest zero-rain run in a crop window', 'Family repeats', 'Pea days above ideal', 'Summed maturity upper bounds'] : inputs.priority === 'family' ? ['Family repeats', 'Pea days above ideal', 'Summed maturity upper bounds'] :
-          inputs.priority === 'short-season' ? ['Summed maturity upper bounds', 'Family repeats', 'Pea days above ideal'] :
-            ['Pea days above ideal', 'Family repeats', 'Summed maturity upper bounds'])],
+        ...(inputs.priority === 'water' ? ['Longest zero-rain run in a crop window', 'Family repeats', 'Days above cited ideal air range', 'Summed maturity upper bounds'] : inputs.priority === 'family' ? ['Family repeats', 'Days above cited ideal air range', 'Summed maturity upper bounds'] :
+          inputs.priority === 'short-season' ? ['Summed maturity upper bounds', 'Family repeats', 'Days above cited ideal air range'] :
+            ['Days above cited ideal air range', 'Family repeats', 'Summed maturity upper bounds'])],
       limitation: 'Counts are screening rules, not suitability probabilities. Unequal thermal evidence between crops limits the ordering; unknown heat risk is not zero risk. Shorter maturity does not imply lower water demand.' },
     uncertainty: 'Uncertainty: high — local agronomic validation and future weather are unavailable', gaps,
     assumptions: ['One field; one crop starts each four-month slot; 12-month horizon.',
       'Maturity upper bound plus 14 days for harvest and turnaround; remaining days are unallocated.',
       `Every crop day uses the same month/day in ${inputs.referenceYear}; windows wrap across the reference year. February 29 uses February 28 if absent.`],
-    sources: inputs.country ? [...catalog.sources, getCountryCrops({country: inputs.country}).source] : catalog.sources
+    sources: [...catalog.sources,...knowledge.sources,...(inputs.country?[getCountryCrops({country:inputs.country}).source]:[])]
   };
 }
 
@@ -217,7 +212,7 @@ export function answerQuestion(question, result, observations) {
   } else if (!matches.length && !ambiguousCorn) {
     const first = result.scenarios[1];
     blocks.push({ kind: 'rule output', text: `Among ${result.consideredCandidates} allowed candidate sequences, the first by your ${result.inputs.priority} priority is ${first.timeline.map(s => s.cropName).join(' → ')}. Its status is “${first.status}”. This is a limited comparison, not a planting recommendation.`, sourceIds: first.sourceIds });
-    blocks.push({ kind: 'limitation', text: 'Crop-specific retrieval recognises only bush snap bean, garden pea, sweet corn and radish. Other crops and questions outside this evidence cannot be assessed.', sourceIds: [] });
+    blocks.push({ kind: 'limitation', text: `Crop-specific retrieval covers ${catalog.crops.map(crop=>crop.name).join(', ')}. Other crops and questions outside this evidence cannot be assessed.`, sourceIds: [] });
   }
   blocks.push({ kind: 'limitation', text: `${result.uncertainty}. NASA weather records do not validate a crop for this farm. Review the scenario risks and gaps before seeking local advice.`, sourceIds: ['nasa-power'] });
   const ids = new Set(blocks.flatMap(block => block.sourceIds));

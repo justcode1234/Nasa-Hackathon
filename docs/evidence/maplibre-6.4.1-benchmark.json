@@ -1,0 +1,764 @@
+{
+  "checkedAt": "2026-11-15T05:02:18.781Z",
+  "viewport": {
+    "width": 1280,
+    "height": 1000
+  },
+  "noRendererRequestsBeforeOptIn": true,
+  "metrics": {
+    "errors": [],
+    "requestsBeforeOpen": [
+      "http://127.0.0.1:50189/app.css",
+      "http://127.0.0.1:50189/spike.js"
+    ],
+    "interactiveMs": 1678.5,
+    "renderer": "WebKit WebGL"
+  },
+  "terrainElevation": 177.50637390330763,
+  "frameRate": {
+    "durationMs": 2014.300000000745,
+    "frames": 121,
+    "fps": 59.98711020772397,
+    "p95FrameMs": 17
+  },
+  "browserProcessMemory": {
+    "supported": true,
+    "method": "Windows .NET process counters for the isolated browser and descendants; snapshots at workflow phases.",
+    "maxSampledWorkingSetBytes": 672292864,
+    "maxSampledPrivateBytes": 555282432,
+    "sumObservedProcessPeakWorkingSetsBytes": 689451008,
+    "observedProcessCount": 8,
+    "snapshots": [
+      {
+        "phase": "2D experiment shell before renderer load",
+        "startedAt": "2026-11-15T05:02:11.1730894Z",
+        "finishedAt": "2026-11-15T05:02:11.4624880Z",
+        "processCount": 8,
+        "workingSetBytes": 434077696,
+        "privateBytes": 226648064
+      },
+      {
+        "phase": "globe loaded",
+        "startedAt": "2026-11-15T05:02:13.4281005Z",
+        "finishedAt": "2026-11-15T05:02:13.6405124Z",
+        "processCount": 8,
+        "workingSetBytes": 538648576,
+        "privateBytes": 337674240
+      },
+      {
+        "phase": "terrain and basemap loaded",
+        "startedAt": "2026-11-15T05:02:15.9909369Z",
+        "finishedAt": "2026-11-15T05:02:16.2064671Z",
+        "processCount": 8,
+        "workingSetBytes": 651173888,
+        "privateBytes": 555282432
+      },
+      {
+        "phase": "after scripted pan benchmark",
+        "startedAt": "2026-11-15T05:02:18.5257451Z",
+        "finishedAt": "2026-11-15T05:02:18.7398035Z",
+        "processCount": 8,
+        "workingSetBytes": 672292864,
+        "privateBytes": 516202496
+      }
+    ],
+    "limitations": [
+      "Working-set sums can count shared physical pages more than once.",
+      "Summed per-process lifetime peaks are not a simultaneous browser peak.",
+      "Subprocesses that start and exit entirely between snapshots can be missed; this is not an exact full-session peak.",
+      "These are desktop headless measurements, not real mobile hardware or a memory guarantee."
+    ]
+  },
+  "browserProcessMemorySamples": [
+    {
+      "startedAt": "2026-11-15T05:02:11.1730894Z",
+      "finishedAt": "2026-11-15T05:02:11.4624880Z",
+      "rootProcessId": 25124,
+      "processes": [
+        {
+          "id": 25124,
+          "parentId": 2420,
+          "startedAt": "2026-11-15T05:02:10.1851641Z",
+          "workingSetBytes": 118026240,
+          "privateBytes": 35614720,
+          "peakWorkingSetBytes": 118026240
+        },
+        {
+          "id": 22004,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.1966470Z",
+          "workingSetBytes": 10366976,
+          "privateBytes": 2711552,
+          "peakWorkingSetBytes": 10366976
+        },
+        {
+          "id": 8624,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.2788762Z",
+          "workingSetBytes": 85696512,
+          "privateBytes": 96342016,
+          "peakWorkingSetBytes": 87875584
+        },
+        {
+          "id": 21772,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.2844672Z",
+          "workingSetBytes": 35336192,
+          "privateBytes": 12283904,
+          "peakWorkingSetBytes": 35340288
+        },
+        {
+          "id": 3332,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.3012279Z",
+          "workingSetBytes": 19296256,
+          "privateBytes": 8249344,
+          "peakWorkingSetBytes": 19296256
+        },
+        {
+          "id": 22260,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.3826508Z",
+          "workingSetBytes": 69095424,
+          "privateBytes": 31858688,
+          "peakWorkingSetBytes": 69095424
+        },
+        {
+          "id": 24872,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.4043858Z",
+          "workingSetBytes": 34746368,
+          "privateBytes": 18206720,
+          "peakWorkingSetBytes": 34746368
+        },
+        {
+          "id": 2776,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.4091918Z",
+          "workingSetBytes": 61513728,
+          "privateBytes": 21381120,
+          "peakWorkingSetBytes": 61513728
+        }
+      ],
+      "phase": "2D experiment shell before renderer load",
+      "supported": true
+    },
+    {
+      "startedAt": "2026-11-15T05:02:13.4281005Z",
+      "finishedAt": "2026-11-15T05:02:13.6405124Z",
+      "rootProcessId": 25124,
+      "processes": [
+        {
+          "id": 25124,
+          "parentId": 2420,
+          "startedAt": "2026-11-15T05:02:10.1851641Z",
+          "workingSetBytes": 131112960,
+          "privateBytes": 43474944,
+          "peakWorkingSetBytes": 132202496
+        },
+        {
+          "id": 22004,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.1966470Z",
+          "workingSetBytes": 10395648,
+          "privateBytes": 2756608,
+          "peakWorkingSetBytes": 10395648
+        },
+        {
+          "id": 8624,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.2788762Z",
+          "workingSetBytes": 102744064,
+          "privateBytes": 141246464,
+          "peakWorkingSetBytes": 102744064
+        },
+        {
+          "id": 21772,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.2844672Z",
+          "workingSetBytes": 38789120,
+          "privateBytes": 15417344,
+          "peakWorkingSetBytes": 38797312
+        },
+        {
+          "id": 3332,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.3012279Z",
+          "workingSetBytes": 19357696,
+          "privateBytes": 8257536,
+          "peakWorkingSetBytes": 19357696
+        },
+        {
+          "id": 22260,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.3826508Z",
+          "workingSetBytes": 69165056,
+          "privateBytes": 31858688,
+          "peakWorkingSetBytes": 69165056
+        },
+        {
+          "id": 24872,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.4043858Z",
+          "workingSetBytes": 34836480,
+          "privateBytes": 18206720,
+          "peakWorkingSetBytes": 34836480
+        },
+        {
+          "id": 2776,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.4091918Z",
+          "workingSetBytes": 132247552,
+          "privateBytes": 76455936,
+          "peakWorkingSetBytes": 132247552
+        }
+      ],
+      "phase": "globe loaded",
+      "supported": true
+    },
+    {
+      "startedAt": "2026-11-15T05:02:15.9909369Z",
+      "finishedAt": "2026-11-15T05:02:16.2064671Z",
+      "rootProcessId": 25124,
+      "processes": [
+        {
+          "id": 25124,
+          "parentId": 2420,
+          "startedAt": "2026-11-15T05:02:10.1851641Z",
+          "workingSetBytes": 133308416,
+          "privateBytes": 44642304,
+          "peakWorkingSetBytes": 139296768
+        },
+        {
+          "id": 22004,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.1966470Z",
+          "workingSetBytes": 10395648,
+          "privateBytes": 2756608,
+          "peakWorkingSetBytes": 10395648
+        },
+        {
+          "id": 8624,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.2788762Z",
+          "workingSetBytes": 168464384,
+          "privateBytes": 314277888,
+          "peakWorkingSetBytes": 171323392
+        },
+        {
+          "id": 21772,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.2844672Z",
+          "workingSetBytes": 42024960,
+          "privateBytes": 17629184,
+          "peakWorkingSetBytes": 42065920
+        },
+        {
+          "id": 3332,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.3012279Z",
+          "workingSetBytes": 19357696,
+          "privateBytes": 8257536,
+          "peakWorkingSetBytes": 19357696
+        },
+        {
+          "id": 22260,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.3826508Z",
+          "workingSetBytes": 69165056,
+          "privateBytes": 31858688,
+          "peakWorkingSetBytes": 69165056
+        },
+        {
+          "id": 24872,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.4043858Z",
+          "workingSetBytes": 34836480,
+          "privateBytes": 18206720,
+          "peakWorkingSetBytes": 34836480
+        },
+        {
+          "id": 2776,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.4091918Z",
+          "workingSetBytes": 173621248,
+          "privateBytes": 117653504,
+          "peakWorkingSetBytes": 173875200
+        }
+      ],
+      "phase": "terrain and basemap loaded",
+      "supported": true
+    },
+    {
+      "startedAt": "2026-11-15T05:02:18.5257451Z",
+      "finishedAt": "2026-11-15T05:02:18.7398035Z",
+      "rootProcessId": 25124,
+      "processes": [
+        {
+          "id": 25124,
+          "parentId": 2420,
+          "startedAt": "2026-11-15T05:02:10.1851641Z",
+          "workingSetBytes": 133980160,
+          "privateBytes": 45613056,
+          "peakWorkingSetBytes": 140414976
+        },
+        {
+          "id": 22004,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.1966470Z",
+          "workingSetBytes": 10395648,
+          "privateBytes": 2756608,
+          "peakWorkingSetBytes": 10395648
+        },
+        {
+          "id": 8624,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.2788762Z",
+          "workingSetBytes": 173912064,
+          "privateBytes": 260698112,
+          "peakWorkingSetBytes": 183934976
+        },
+        {
+          "id": 21772,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.2844672Z",
+          "workingSetBytes": 41824256,
+          "privateBytes": 17117184,
+          "peakWorkingSetBytes": 42524672
+        },
+        {
+          "id": 3332,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.3012279Z",
+          "workingSetBytes": 19357696,
+          "privateBytes": 8257536,
+          "peakWorkingSetBytes": 19357696
+        },
+        {
+          "id": 22260,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.3826508Z",
+          "workingSetBytes": 69165056,
+          "privateBytes": 31858688,
+          "peakWorkingSetBytes": 69165056
+        },
+        {
+          "id": 24872,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.4043858Z",
+          "workingSetBytes": 34836480,
+          "privateBytes": 18206720,
+          "peakWorkingSetBytes": 34836480
+        },
+        {
+          "id": 2776,
+          "parentId": 25124,
+          "startedAt": "2026-11-15T05:02:10.4091918Z",
+          "workingSetBytes": 188821504,
+          "privateBytes": 131694592,
+          "peakWorkingSetBytes": 188821504
+        }
+      ],
+      "phase": "after scripted pan benchmark",
+      "supported": true
+    }
+  ],
+  "gpu": {
+    "devices": [
+      {
+        "vendorId": 4318,
+        "deviceId": 11524,
+        "subSysId": 393353690,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce RTX 5060 Ti",
+        "driverVendor": "NVIDIA",
+        "driverVersion": "32.0.16.2124"
+      },
+      {
+        "vendorId": 4318,
+        "deviceId": 11524,
+        "subSysId": 393353690,
+        "revision": 161,
+        "vendorString": "",
+        "deviceString": "NVIDIA GeForce RTX 5060 Ti",
+        "driverVendor": "",
+        "driverVersion": "32.0.16.2124"
+      },
+      {
+        "vendorId": 5140,
+        "deviceId": 140,
+        "subSysId": 0,
+        "revision": 0,
+        "vendorString": "",
+        "deviceString": "Microsoft Basic Render Driver",
+        "driverVendor": "",
+        "driverVersion": "10.0.26100.9818"
+      }
+    ],
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5060 Ti (0x00002D04) Direct3D11 vs_5_0 ps_5_0, D3D11-32.0.16.2124)"
+  },
+  "responses": [
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/6/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/6/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/2/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/6/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/2/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/4.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/4.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/2/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/4.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/6/4.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/4.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/6/3.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/3.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/2.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/6/1.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/1.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/1.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/0.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/0.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/0.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/6/0.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/0.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/4.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/4/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/4.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/0.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/0.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/1.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/7/2.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/5/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/7.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/3/5.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/3/6/6.jpeg",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/12/3374/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/14/13504/9726.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/12/3377/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/11/1688/1214.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/13/6753/4862.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/11/1687/1214.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/12/3378/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/12/3376/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/13/6751/4863.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/11/1689/1214.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/13/6750/4862.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/13/6751/4862.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/12/3375/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/13/6755/4862.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/13/6752/4862.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/13/6754/4862.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/14/13509/9726.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/14/13505/9726.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/14/13507/9726.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/14/13508/9726.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/14/13506/9726.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3376/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3376/2431.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3377/2431.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3377/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3375/2431.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3375/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/11/1689/1215.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/11/1689/1214.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3374/2430.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/11/1688/1214.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/11/1687/1214.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/11/1688/1215.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/5/26/18.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/10/844/607.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/11/1687/1215.png",
+      "status": 200
+    },
+    {
+      "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/10/843/607.png",
+      "status": 200
+    },
+    {
+      "url": "https://tile.openstreetmap.org/13/6755/4863.png",
+      "status": 200
+    }
+  ],
+  "errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "limitations": [
+    "Headless desktop Chrome; not real mobile hardware.",
+    "Memory is sampled process-tree working set, not exact simultaneous peak.",
+    "preserveDrawingBuffer is enabled for screenshot evidence; production can avoid that cost.",
+    "This V0 experiment has no POWER columns, GIBS science-overlay controls, field polygon or slope estimates."
+  ]
+}

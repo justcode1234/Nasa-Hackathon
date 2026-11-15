@@ -1,0 +1,576 @@
+{
+ "kind": "HELD-OUT hand-written wording with authored labels (AI-assisted, not independently reviewed). Never used for training, early stopping, calibration or thresholds.",
+ "note": "Same author as the development templates, so this is not an independent study. The 16 acceptance prompts are excluded.",
+ "rows": [
+  {
+   "text": "yo",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting"
+  },
+  {
+   "text": "morning!",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting"
+  },
+  {
+   "text": "hiya, anyone there?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting"
+  },
+  {
+   "text": "ok thanks, bye",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting"
+  },
+  {
+   "text": "much appreciated",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting"
+  },
+  {
+   "text": "howdy",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "greeting"
+  },
+  {
+   "text": "could you give me a quick rundown on groundnuts in Senegal?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "are lentils and chickpeas in the same plant family?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "roughly how many weeks before cabbage is ready?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "I'm curious whether Peru records any quinoa production",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "what's a sensible crop to put after tomatoes?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "is sweet corn the same thing as maize for your rules?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "do onions count as a cool season crop",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "sorghum in Ethiopia, what have you got?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "which of my crops fixes nitrogen",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "tell me something about okra",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "was last July unusually wet at this spot?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "did temperatures drop below freezing at all in the reference year",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "what's the sunniest part of the year according to your data",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "how big an area does one NASA rainfall number actually cover",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "any long dry stretch during the pea window?",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "what were the hottest days like here",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "is the weather you show live or old",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "monthly rain totals for Nakuru please, what do they look like",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "my soil test came back at 5.4, is that bad for cabbage",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil"
+  },
+  {
+   "text": "is the ground here mostly clay or sand",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil"
+  },
+  {
+   "text": "water sits on my field after storms, does that matter for onions",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil"
+  },
+  {
+   "text": "can I trust the mapped pH for my own plot",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil"
+  },
+  {
+   "text": "which of these crops tolerates alkaline ground",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil"
+  },
+  {
+   "text": "what's meant by well-drained",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "soil"
+  },
+  {
+   "text": "we only rely on rain, how is that handled",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water"
+  },
+  {
+   "text": "are tomatoes thirsty plants",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water"
+  },
+  {
+   "text": "what do your irrigation figures for Australia represent",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water"
+  },
+  {
+   "text": "does a 13 day rain-free run mean my crop would have died",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water"
+  },
+  {
+   "text": "how do you account for having a borehole",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "water"
+  },
+  {
+   "text": "has armyworm been seen in Zambia",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests"
+  },
+  {
+   "text": "would swapping cabbage for radish break a pest cycle",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests"
+  },
+  {
+   "text": "what bugs go for brassicas",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests"
+  },
+  {
+   "text": "do your pest numbers mean my farm is infested",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests"
+  },
+  {
+   "text": "I had moth damage last year, is that used anywhere",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "pests"
+  },
+  {
+   "text": "what makes option two worse than option one",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "why didn't you just pick the best rotation for me",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "talk me through the table on the last step",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "which of the three has the fewest warnings",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "what assumptions sit behind these timelines",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "is the ranking based on yield",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "can you set me up somewhere in Tanzania",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location"
+  },
+  {
+   "text": "let's work on my plot outside Chiang Mai",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location"
+  },
+  {
+   "text": "switch the place to Morocco",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location"
+  },
+  {
+   "text": "drop the pin at -1.29, 36.82",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location"
+  },
+  {
+   "text": "grab the nearest mapped field for me",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location"
+  },
+  {
+   "text": "I'd like to start with a farm in northern France, sort that out",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location"
+  },
+  {
+   "text": "zoom in on Kumasi and look for fields",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location"
+  },
+  {
+   "text": "make it the entire country rather than one farm",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "location"
+  },
+  {
+   "text": "put down maize, beans and cabbage as what I grow now",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "swap my third crop for onions",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "mark the farm as rain fed only",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "only let the alternatives use tomato and peas",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "record my pH as 6.8",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "start the plan in September instead",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "crops"
+  },
+  {
+   "text": "pull in the NASA numbers for this field",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "grab 2022 weather for the spot I chose",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "try the evidence download again",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "bring up the climate record for my pin",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "weather"
+  },
+  {
+   "text": "okay do the comparison",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "run it again but favour shorter seasons",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "move on and show me the three rotations",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "finish the steps and compare for me",
+   "action": 1,
+   "unsupported": 0,
+   "topic": "comparison"
+  },
+  {
+   "text": "so what tonnage per hectare am I looking at for tomatoes",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops"
+  },
+  {
+   "text": "just give me a number: odds my cabbage makes it",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops"
+  },
+  {
+   "text": "can you swear the onions won't fail",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops"
+  },
+  {
+   "text": "how many dollars will the bean crop bring in",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops"
+  },
+  {
+   "text": "be honest, are you 90 percent sure about peas",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops"
+  },
+  {
+   "text": "what's the precise harvest weight I should expect from sweet corn",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "crops"
+  },
+  {
+   "text": "work out the cubic metres of water I'd save",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water"
+  },
+  {
+   "text": "tell me precisely how long to run the sprinklers every morning",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water"
+  },
+  {
+   "text": "assure me the wells won't run dry",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "water"
+  },
+  {
+   "text": "what are the odds of a locust swarm this year",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests"
+  },
+  {
+   "text": "can you certify the rotation wipes out nematodes",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "pests"
+  },
+  {
+   "text": "will it rain on the 14th of next March",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather"
+  },
+  {
+   "text": "give me next season's temperatures",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather"
+  },
+  {
+   "text": "promise there won't be a heatwave",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "weather"
+  },
+  {
+   "text": "how much will my soil organic matter rise with alternative 2, in percent",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison"
+  },
+  {
+   "text": "rank them by guaranteed profit",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison"
+  },
+  {
+   "text": "what's your accuracy score for this recommendation",
+   "action": 0,
+   "unsupported": 1,
+   "topic": "comparison"
+  },
+  {
+   "text": "what's the tallest mountain in Africa",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "can you draft an email to my bank",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "sing happy birthday",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "which phone should I buy",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "are you a real person",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "what does this app do",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "how do I change a tyre",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "convert 5 miles to kilometres",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "asdf qwer zxcv",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  },
+  {
+   "text": "???",
+   "action": 0,
+   "unsupported": 0,
+   "topic": "other"
+  }
+ ]
+}

@@ -1,0 +1,614 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "gibs"
+    ],
+    "configFile": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\playwright.config.js",
+    "rootDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "static-desktop",
+        "name": "static-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "static-mobile",
+        "name": "static-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "node-desktop",
+        "name": "node-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "node-mobile",
+        "name": "node-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "static-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "static-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "static-mobile",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "static-mobile"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "node-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "node-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "node-mobile",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "node-mobile"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        {
+          "printSteps": true
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts/playwright/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "artifacts/playwright/report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "gibs.spec.js",
+      "file": "gibs.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "four imagery products use NASA dates, legends and native resolution without changing POWER values",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-desktop",
+              "projectName": "static-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7292,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:07:16.673Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Actual NASA imagery selections",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJpZCI6ICJNT0RJU19UZXJyYV9ORFZJXzhEYXkiLAogICAgImRhdGUiOiAiMjAyNi0xMS0xNCIsCiAgICAidW5pdHMiOiAidW5pdGxlc3MgTkRWSSIsCiAgICAicmVzb2x1dGlvbiI6ICIyNTAgbSIsCiAgICAic291cmNlIjogewogICAgICAidHlwZSI6ICJyYXN0ZXIiLAogICAgICAidGlsZXMiOiBbCiAgICAgICAgImh0dHBzOi8vZ2licy5lYXJ0aGRhdGEubmFzYS5nb3Yvd210cy9lcHNnMzg1Ny9iZXN0L01PRElTX1RlcnJhX05EVklfOERheS9kZWZhdWx0LzIwMjYtMTEtMTQvR29vZ2xlTWFwc0NvbXBhdGlibGVfTGV2ZWw5L3t6fS97eX0ve3h9LnBuZyIKICAgICAgXSwKICAgICAgInRpbGVTaXplIjogMjU2LAogICAgICAibWF4em9vbSI6IDksCiAgICAgICJhdHRyaWJ1dGlvbiI6ICJOQVNBIEdJQlMgaW1hZ2VyeSAodmFsdWVzIG5vdCBleHRyYWN0ZWQpIgogICAgfQogIH0sCiAgewogICAgImlkIjogIlNNQVBfTDRfQW5hbHl6ZWRfU3VyZmFjZV9Tb2lsX01vaXN0dXJlIiwKICAgICJkYXRlIjogIjIwMjYtMTEtMTAiLAogICAgInVuaXRzIjogIm3Csy9twrMiLAogICAgInJlc29sdXRpb24iOiAiOSBrbSIsCiAgICAic291cmNlIjogewogICAgICAidHlwZSI6ICJyYXN0ZXIiLAogICAgICAidGlsZXMiOiBbCiAgICAgICAgImh0dHBzOi8vZ2licy5lYXJ0aGRhdGEubmFzYS5nb3Yvd210cy9lcHNnMzg1Ny9iZXN0L1NNQVBfTDRfQW5hbHl6ZWRfU3VyZmFjZV9Tb2lsX01vaXN0dXJlL2RlZmF1bHQvMjAyNi0xMS0xMC9Hb29nbGVNYXBzQ29tcGF0aWJsZV9MZXZlbDYve3p9L3t5fS97eH0ucG5nIgogICAgICBdLAogICAgICAidGlsZVNpemUiOiAyNTYsCiAgICAgICJtYXh6b29tIjogNiwKICAgICAgImF0dHJpYnV0aW9uIjogIk5BU0EgR0lCUyBpbWFnZXJ5ICh2YWx1ZXMgbm90IGV4dHJhY3RlZCkiCiAgICB9CiAgfSwKICB7CiAgICAiaWQiOiAiSU1FUkdfUHJlY2lwaXRhdGlvbl9SYXRlIiwKICAgICJkYXRlIjogIjIwMjYtMTEtMTMiLAogICAgInVuaXRzIjogIm1tL2hvdXIiLAogICAgInJlc29sdXRpb24iOiAiMC4xwrAiLAogICAgInNvdXJjZSI6IHsKICAgICAgInR5cGUiOiAicmFzdGVyIiwKICAgICAgInRpbGVzIjogWwogICAgICAgICJodHRwczovL2dpYnMuZWFydGhkYXRhLm5hc2EuZ292L3dtdHMvZXBzZzM4NTcvYmVzdC9JTUVSR19QcmVjaXBpdGF0aW9uX1JhdGUvZGVmYXVsdC8yMDI2LTExLTEzL0dvb2dsZU1hcHNDb21wYXRpYmxlX0xldmVsNi97en0ve3l9L3t4fS5wbmciCiAgICAgIF0sCiAgICAgICJ0aWxlU2l6ZSI6IDI1NiwKICAgICAgIm1heHpvb20iOiA2LAogICAgICAiYXR0cmlidXRpb24iOiAiTkFTQSBHSUJTIGltYWdlcnkgKHZhbHVlcyBub3QgZXh0cmFjdGVkKSIKICAgIH0KICB9LAogIHsKICAgICJpZCI6ICJNT0RJU19UZXJyYV9MYW5kX1N1cmZhY2VfVGVtcF9EYXkiLAogICAgImRhdGUiOiAiMjAyNi0xMS0xNSIsCiAgICAidW5pdHMiOiAiSyIsCiAgICAicmVzb2x1dGlvbiI6ICIxIGttIiwKICAgICJzb3VyY2UiOiB7CiAgICAgICJ0eXBlIjogInJhc3RlciIsCiAgICAgICJ0aWxlcyI6IFsKICAgICAgICAiaHR0cHM6Ly9naWJzLmVhcnRoZGF0YS5uYXNhLmdvdi93bXRzL2Vwc2czODU3L2Jlc3QvTU9ESVNfVGVycmFfTGFuZF9TdXJmYWNlX1RlbXBfRGF5L2RlZmF1bHQvMjAyNi0xMS0xNS9Hb29nbGVNYXBzQ29tcGF0aWJsZV9MZXZlbDcve3p9L3t5fS97eH0ucG5nIgogICAgICBdLAogICAgICAidGlsZVNpemUiOiAyNTYsCiAgICAgICJtYXh6b29tIjogNywKICAgICAgImF0dHJpYnV0aW9uIjogIk5BU0EgR0lCUyBpbWFnZXJ5ICh2YWx1ZXMgbm90IGV4dHJhY3RlZCkiCiAgICB9CiAgfQpd"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-mobile",
+              "projectName": "static-mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 15233,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:07:34.340Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Actual NASA imagery selections",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJpZCI6ICJNT0RJU19UZXJyYV9ORFZJXzhEYXkiLAogICAgImRhdGUiOiAiMjAyNi0xMS0xNCIsCiAgICAidW5pdHMiOiAidW5pdGxlc3MgTkRWSSIsCiAgICAicmVzb2x1dGlvbiI6ICIyNTAgbSIsCiAgICAic291cmNlIjogewogICAgICAidHlwZSI6ICJyYXN0ZXIiLAogICAgICAidGlsZXMiOiBbCiAgICAgICAgImh0dHBzOi8vZ2licy5lYXJ0aGRhdGEubmFzYS5nb3Yvd210cy9lcHNnMzg1Ny9iZXN0L01PRElTX1RlcnJhX05EVklfOERheS9kZWZhdWx0LzIwMjYtMTEtMTQvR29vZ2xlTWFwc0NvbXBhdGlibGVfTGV2ZWw5L3t6fS97eX0ve3h9LnBuZyIKICAgICAgXSwKICAgICAgInRpbGVTaXplIjogMjU2LAogICAgICAibWF4em9vbSI6IDksCiAgICAgICJhdHRyaWJ1dGlvbiI6ICJOQVNBIEdJQlMgaW1hZ2VyeSAodmFsdWVzIG5vdCBleHRyYWN0ZWQpIgogICAgfQogIH0sCiAgewogICAgImlkIjogIlNNQVBfTDRfQW5hbHl6ZWRfU3VyZmFjZV9Tb2lsX01vaXN0dXJlIiwKICAgICJkYXRlIjogIjIwMjYtMTEtMTAiLAogICAgInVuaXRzIjogIm3Csy9twrMiLAogICAgInJlc29sdXRpb24iOiAiOSBrbSIsCiAgICAic291cmNlIjogewogICAgICAidHlwZSI6ICJyYXN0ZXIiLAogICAgICAidGlsZXMiOiBbCiAgICAgICAgImh0dHBzOi8vZ2licy5lYXJ0aGRhdGEubmFzYS5nb3Yvd210cy9lcHNnMzg1Ny9iZXN0L1NNQVBfTDRfQW5hbHl6ZWRfU3VyZmFjZV9Tb2lsX01vaXN0dXJlL2RlZmF1bHQvMjAyNi0xMS0xMC9Hb29nbGVNYXBzQ29tcGF0aWJsZV9MZXZlbDYve3p9L3t5fS97eH0ucG5nIgogICAgICBdLAogICAgICAidGlsZVNpemUiOiAyNTYsCiAgICAgICJtYXh6b29tIjogNiwKICAgICAgImF0dHJpYnV0aW9uIjogIk5BU0EgR0lCUyBpbWFnZXJ5ICh2YWx1ZXMgbm90IGV4dHJhY3RlZCkiCiAgICB9CiAgfSwKICB7CiAgICAiaWQiOiAiSU1FUkdfUHJlY2lwaXRhdGlvbl9SYXRlIiwKICAgICJkYXRlIjogIjIwMjYtMTEtMTMiLAogICAgInVuaXRzIjogIm1tL2hvdXIiLAogICAgInJlc29sdXRpb24iOiAiMC4xwrAiLAogICAgInNvdXJjZSI6IHsKICAgICAgInR5cGUiOiAicmFzdGVyIiwKICAgICAgInRpbGVzIjogWwogICAgICAgICJodHRwczovL2dpYnMuZWFydGhkYXRhLm5hc2EuZ292L3dtdHMvZXBzZzM4NTcvYmVzdC9JTUVSR19QcmVjaXBpdGF0aW9uX1JhdGUvZGVmYXVsdC8yMDI2LTExLTEzL0dvb2dsZU1hcHNDb21wYXRpYmxlX0xldmVsNi97en0ve3l9L3t4fS5wbmciCiAgICAgIF0sCiAgICAgICJ0aWxlU2l6ZSI6IDI1NiwKICAgICAgIm1heHpvb20iOiA2LAogICAgICAiYXR0cmlidXRpb24iOiAiTkFTQSBHSUJTIGltYWdlcnkgKHZhbHVlcyBub3QgZXh0cmFjdGVkKSIKICAgIH0KICB9LAogIHsKICAgICJpZCI6ICJNT0RJU19UZXJyYV9MYW5kX1N1cmZhY2VfVGVtcF9EYXkiLAogICAgImRhdGUiOiAiMjAyNi0xMS0xNSIsCiAgICAidW5pdHMiOiAiSyIsCiAgICAicmVzb2x1dGlvbiI6ICIxIGttIiwKICAgICJzb3VyY2UiOiB7CiAgICAgICJ0eXBlIjogInJhc3RlciIsCiAgICAgICJ0aWxlcyI6IFsKICAgICAgICAiaHR0cHM6Ly9naWJzLmVhcnRoZGF0YS5uYXNhLmdvdi93bXRzL2Vwc2czODU3L2Jlc3QvTU9ESVNfVGVycmFfTGFuZF9TdXJmYWNlX1RlbXBfRGF5L2RlZmF1bHQvMjAyNi0xMS0xNS9Hb29nbGVNYXBzQ29tcGF0aWJsZV9MZXZlbDcve3p9L3t5fS97eH0ucG5nIgogICAgICBdLAogICAgICAidGlsZVNpemUiOiAyNTYsCiAgICAgICJtYXh6b29tIjogNywKICAgICAgImF0dHJpYnV0aW9uIjogIk5BU0EgR0lCUyBpbWFnZXJ5ICh2YWx1ZXMgbm90IGV4dHJhY3RlZCkiCiAgICB9CiAgfQpd"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-desktop",
+              "projectName": "node-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8060,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:07:58.260Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Actual NASA imagery selections",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJpZCI6ICJNT0RJU19UZXJyYV9ORFZJXzhEYXkiLAogICAgImRhdGUiOiAiMjAyNi0xMS0xNCIsCiAgICAidW5pdHMiOiAidW5pdGxlc3MgTkRWSSIsCiAgICAicmVzb2x1dGlvbiI6ICIyNTAgbSIsCiAgICAic291cmNlIjogewogICAgICAidHlwZSI6ICJyYXN0ZXIiLAogICAgICAidGlsZXMiOiBbCiAgICAgICAgImh0dHBzOi8vZ2licy5lYXJ0aGRhdGEubmFzYS5nb3Yvd210cy9lcHNnMzg1Ny9iZXN0L01PRElTX1RlcnJhX05EVklfOERheS9kZWZhdWx0LzIwMjYtMTEtMTQvR29vZ2xlTWFwc0NvbXBhdGlibGVfTGV2ZWw5L3t6fS97eX0ve3h9LnBuZyIKICAgICAgXSwKICAgICAgInRpbGVTaXplIjogMjU2LAogICAgICAibWF4em9vbSI6IDksCiAgICAgICJhdHRyaWJ1dGlvbiI6ICJOQVNBIEdJQlMgaW1hZ2VyeSAodmFsdWVzIG5vdCBleHRyYWN0ZWQpIgogICAgfQogIH0sCiAgewogICAgImlkIjogIlNNQVBfTDRfQW5hbHl6ZWRfU3VyZmFjZV9Tb2lsX01vaXN0dXJlIiwKICAgICJkYXRlIjogIjIwMjYtMTEtMTAiLAogICAgInVuaXRzIjogIm3Csy9twrMiLAogICAgInJlc29sdXRpb24iOiAiOSBrbSIsCiAgICAic291cmNlIjogewogICAgICAidHlwZSI6ICJyYXN0ZXIiLAogICAgICAidGlsZXMiOiBbCiAgICAgICAgImh0dHBzOi8vZ2licy5lYXJ0aGRhdGEubmFzYS5nb3Yvd210cy9lcHNnMzg1Ny9iZXN0L1NNQVBfTDRfQW5hbHl6ZWRfU3VyZmFjZV9Tb2lsX01vaXN0dXJlL2RlZmF1bHQvMjAyNi0xMS0xMC9Hb29nbGVNYXBzQ29tcGF0aWJsZV9MZXZlbDYve3p9L3t5fS97eH0ucG5nIgogICAgICBdLAogICAgICAidGlsZVNpemUiOiAyNTYsCiAgICAgICJtYXh6b29tIjogNiwKICAgICAgImF0dHJpYnV0aW9uIjogIk5BU0EgR0lCUyBpbWFnZXJ5ICh2YWx1ZXMgbm90IGV4dHJhY3RlZCkiCiAgICB9CiAgfSwKICB7CiAgICAiaWQiOiAiSU1FUkdfUHJlY2lwaXRhdGlvbl9SYXRlIiwKICAgICJkYXRlIjogIjIwMjYtMTEtMTMiLAogICAgInVuaXRzIjogIm1tL2hvdXIiLAogICAgInJlc29sdXRpb24iOiAiMC4xwrAiLAogICAgInNvdXJjZSI6IHsKICAgICAgInR5cGUiOiAicmFzdGVyIiwKICAgICAgInRpbGVzIjogWwogICAgICAgICJodHRwczovL2dpYnMuZWFydGhkYXRhLm5hc2EuZ292L3dtdHMvZXBzZzM4NTcvYmVzdC9JTUVSR19QcmVjaXBpdGF0aW9uX1JhdGUvZGVmYXVsdC8yMDI2LTExLTEzL0dvb2dsZU1hcHNDb21wYXRpYmxlX0xldmVsNi97en0ve3l9L3t4fS5wbmciCiAgICAgIF0sCiAgICAgICJ0aWxlU2l6ZSI6IDI1NiwKICAgICAgIm1heHpvb20iOiA2LAogICAgICAiYXR0cmlidXRpb24iOiAiTkFTQSBHSUJTIGltYWdlcnkgKHZhbHVlcyBub3QgZXh0cmFjdGVkKSIKICAgIH0KICB9LAogIHsKICAgICJpZCI6ICJNT0RJU19UZXJyYV9MYW5kX1N1cmZhY2VfVGVtcF9EYXkiLAogICAgImRhdGUiOiAiMjAyNi0xMS0xNSIsCiAgICAidW5pdHMiOiAiSyIsCiAgICAicmVzb2x1dGlvbiI6ICIxIGttIiwKICAgICJzb3VyY2UiOiB7CiAgICAgICJ0eXBlIjogInJhc3RlciIsCiAgICAgICJ0aWxlcyI6IFsKICAgICAgICAiaHR0cHM6Ly9naWJzLmVhcnRoZGF0YS5uYXNhLmdvdi93bXRzL2Vwc2czODU3L2Jlc3QvTU9ESVNfVGVycmFfTGFuZF9TdXJmYWNlX1RlbXBfRGF5L2RlZmF1bHQvMjAyNi0xMS0xNS9Hb29nbGVNYXBzQ29tcGF0aWJsZV9MZXZlbDcve3p9L3t5fS97eH0ucG5nIgogICAgICBdLAogICAgICAidGlsZVNpemUiOiAyNTYsCiAgICAgICJtYXh6b29tIjogNywKICAgICAgImF0dHJpYnV0aW9uIjogIk5BU0EgR0lCUyBpbWFnZXJ5ICh2YWx1ZXMgbm90IGV4dHJhY3RlZCkiCiAgICB9CiAgfQpd"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-mobile",
+              "projectName": "node-mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5607,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:08:11.973Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Actual NASA imagery selections",
+                      "contentType": "application/json",
+                      "body": "WwogIHsKICAgICJpZCI6ICJNT0RJU19UZXJyYV9ORFZJXzhEYXkiLAogICAgImRhdGUiOiAiMjAyNi0xMS0xNCIsCiAgICAidW5pdHMiOiAidW5pdGxlc3MgTkRWSSIsCiAgICAicmVzb2x1dGlvbiI6ICIyNTAgbSIsCiAgICAic291cmNlIjogewogICAgICAidHlwZSI6ICJyYXN0ZXIiLAogICAgICAidGlsZXMiOiBbCiAgICAgICAgImh0dHBzOi8vZ2licy5lYXJ0aGRhdGEubmFzYS5nb3Yvd210cy9lcHNnMzg1Ny9iZXN0L01PRElTX1RlcnJhX05EVklfOERheS9kZWZhdWx0LzIwMjYtMTEtMTQvR29vZ2xlTWFwc0NvbXBhdGlibGVfTGV2ZWw5L3t6fS97eX0ve3h9LnBuZyIKICAgICAgXSwKICAgICAgInRpbGVTaXplIjogMjU2LAogICAgICAibWF4em9vbSI6IDksCiAgICAgICJhdHRyaWJ1dGlvbiI6ICJOQVNBIEdJQlMgaW1hZ2VyeSAodmFsdWVzIG5vdCBleHRyYWN0ZWQpIgogICAgfQogIH0sCiAgewogICAgImlkIjogIlNNQVBfTDRfQW5hbHl6ZWRfU3VyZmFjZV9Tb2lsX01vaXN0dXJlIiwKICAgICJkYXRlIjogIjIwMjYtMTEtMTAiLAogICAgInVuaXRzIjogIm3Csy9twrMiLAogICAgInJlc29sdXRpb24iOiAiOSBrbSIsCiAgICAic291cmNlIjogewogICAgICAidHlwZSI6ICJyYXN0ZXIiLAogICAgICAidGlsZXMiOiBbCiAgICAgICAgImh0dHBzOi8vZ2licy5lYXJ0aGRhdGEubmFzYS5nb3Yvd210cy9lcHNnMzg1Ny9iZXN0L1NNQVBfTDRfQW5hbHl6ZWRfU3VyZmFjZV9Tb2lsX01vaXN0dXJlL2RlZmF1bHQvMjAyNi0xMS0xMC9Hb29nbGVNYXBzQ29tcGF0aWJsZV9MZXZlbDYve3p9L3t5fS97eH0ucG5nIgogICAgICBdLAogICAgICAidGlsZVNpemUiOiAyNTYsCiAgICAgICJtYXh6b29tIjogNiwKICAgICAgImF0dHJpYnV0aW9uIjogIk5BU0EgR0lCUyBpbWFnZXJ5ICh2YWx1ZXMgbm90IGV4dHJhY3RlZCkiCiAgICB9CiAgfSwKICB7CiAgICAiaWQiOiAiSU1FUkdfUHJlY2lwaXRhdGlvbl9SYXRlIiwKICAgICJkYXRlIjogIjIwMjYtMTEtMTMiLAogICAgInVuaXRzIjogIm1tL2hvdXIiLAogICAgInJlc29sdXRpb24iOiAiMC4xwrAiLAogICAgInNvdXJjZSI6IHsKICAgICAgInR5cGUiOiAicmFzdGVyIiwKICAgICAgInRpbGVzIjogWwogICAgICAgICJodHRwczovL2dpYnMuZWFydGhkYXRhLm5hc2EuZ292L3dtdHMvZXBzZzM4NTcvYmVzdC9JTUVSR19QcmVjaXBpdGF0aW9uX1JhdGUvZGVmYXVsdC8yMDI2LTExLTEzL0dvb2dsZU1hcHNDb21wYXRpYmxlX0xldmVsNi97en0ve3l9L3t4fS5wbmciCiAgICAgIF0sCiAgICAgICJ0aWxlU2l6ZSI6IDI1NiwKICAgICAgIm1heHpvb20iOiA2LAogICAgICAiYXR0cmlidXRpb24iOiAiTkFTQSBHSUJTIGltYWdlcnkgKHZhbHVlcyBub3QgZXh0cmFjdGVkKSIKICAgIH0KICB9LAogIHsKICAgICJpZCI6ICJNT0RJU19UZXJyYV9MYW5kX1N1cmZhY2VfVGVtcF9EYXkiLAogICAgImRhdGUiOiAiMjAyNi0xMS0xNSIsCiAgICAidW5pdHMiOiAiSyIsCiAgICAicmVzb2x1dGlvbiI6ICIxIGttIiwKICAgICJzb3VyY2UiOiB7CiAgICAgICJ0eXBlIjogInJhc3RlciIsCiAgICAgICJ0aWxlcyI6IFsKICAgICAgICAiaHR0cHM6Ly9naWJzLmVhcnRoZGF0YS5uYXNhLmdvdi93bXRzL2Vwc2czODU3L2Jlc3QvTU9ESVNfVGVycmFfTGFuZF9TdXJmYWNlX1RlbXBfRGF5L2RlZmF1bHQvMjAyNi0xMS0xNS9Hb29nbGVNYXBzQ29tcGF0aWJsZV9MZXZlbDcve3p9L3t5fS97eH0ucG5nIgogICAgICBdLAogICAgICAidGlsZVNpemUiOiAyNTYsCiAgICAgICJtYXh6b29tIjogNywKICAgICAgImF0dHJpYnV0aW9uIjogIk5BU0EgR0lCUyBpbWFnZXJ5ICh2YWx1ZXMgbm90IGV4dHJhY3RlZCkiCiAgICB9CiAgfQpd"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dcdeb310657d239c6587-00abec0d31eb3911c090",
+          "file": "gibs.spec.js",
+          "line": 10,
+          "column": 1
+        },
+        {
+          "title": "imagery metadata transport failure retries the real capabilities",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-desktop",
+              "projectName": "static-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4764,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:07:24.135Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-mobile",
+              "projectName": "static-mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3923,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:07:49.741Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-desktop",
+              "projectName": "node-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2113,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:08:06.494Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-mobile",
+              "projectName": "node-mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2066,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:08:17.749Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dcdeb310657d239c6587-de91483f1669d9b74ed5",
+          "file": "gibs.spec.js",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "missing imagery tiles produce a visible notice and preserve the rain table",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-desktop",
+              "projectName": "static-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4725,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:07:28.907Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-mobile",
+              "projectName": "static-mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3891,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:07:53.673Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-desktop",
+              "projectName": "node-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2668,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:08:08.617Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-mobile",
+              "projectName": "node-mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2219,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:08:19.824Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dcdeb310657d239c6587-27154f01abcbc9d3d9ba",
+          "file": "gibs.spec.js",
+          "line": 37,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T07:07:15.158Z",
+    "duration": 67254.151,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

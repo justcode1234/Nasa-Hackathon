@@ -1,0 +1,26 @@
+{
+  "version": "5.24.0",
+  "integrity": "sha512-ALyFxgtd5R+65UqZ/++lOqwWcC0SNho9c27fYSyLmG7AfnAul2o46F05aDJGPbFU57wos9dgcIySHs0Xe6ia3A==",
+  "integrityVerified": true,
+  "tarballBytes": 8810495,
+  "files": [
+    {
+      "name": "package/dist/maplibre-gl.css",
+      "bytes": 70024,
+      "gzipBytes": 10092,
+      "sha256": "ab1e70d59ec40465bae7e7030da2f3ccf28133fd502e62bd598eefbadfd7a732"
+    },
+    {
+      "name": "package/dist/maplibre-gl.js",
+      "bytes": 1056837,
+      "gzipBytes": 276839,
+      "sha256": "45a9b07a9189ce56054c620a947ccf41e291e58c95e9b61533b740aaa65ee5cb"
+    },
+    {
+      "name": "package/LICENSE.txt",
+      "bytes": 5984,
+      "gzipBytes": 1539,
+      "sha256": "ee5fc05a0677eaf69601d2c7db0d9ecd6cc27c3abc1d0733bc9ed34707cf8ef2"
+    }
+  ]
+}

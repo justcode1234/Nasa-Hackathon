@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-11-15T13:47:48.711Z",
+  "browser": {
+    "acceptInsecureCerts": false,
+    "browserName": "firefox",
+    "browserVersion": "160.0",
+    "platformName": "windows",
+    "setWindowRect": true,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:160.0) Gecko/20100101 Firefox/160.0",
+    "moz:buildID": "20261104181552",
+    "moz:headless": true,
+    "moz:platformVersion": "10.0",
+    "moz:processID": 11096,
+    "moz:profile": "C:\\Users\\~\\AppData\\Local\\Temp\\fieldshift-firefox-gc9mTP",
+    "moz:shutdownTimeout": 73000
+  },
+  "checks": [
+    "Firefox loads the four modules and data worker with an empty initial location",
+    "country crop choices load from recorded categories without a generic fallback",
+    "real historical NASA evidence renders with charts, units and retrieval metadata",
+    "baseline and two alternatives render equal dated timelines, risks and sources",
+    "blocked model runtime shows an unavailable state while sourced evidence chat still answers",
+    "a greeting receives one brief friendly reply without scientific data or sources",
+    "kai lan in Singapore has traceable facts and a working focused growing-conditions follow-up",
+    "a crop-country question and country-evidence follow-up work independently of the current map selection",
+    "asking about another country never appends the selected map location’s weather",
+    "Firefox WASM model loads, infers and unloads after the failed-load fallback",
+    "edited constraints invalidate results and unsupported wheat stays unassessed",
+    "390px Firefox layout fits the viewport and real arrow-key tab navigation works",
+    "blocking the actual worker NASA request shows an error and prevents stale comparison",
+    "a country-only planning request asks which part or the whole country with both scope choices",
+    "Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison",
+    "choosing a specific area accepts a sourced Indian state and filters the town dropdown",
+    "chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4",
+    "no backend /api requests or uncaught JavaScript exceptions occurred in Firefox"
+  ],
+  "errors": [],
+  "blockedRequests": [
+    "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js",
+    "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@4.22.0/dist/tf-backend-wasm.min.js",
+    "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MAX%2CT2M_MIN%2CPRECTOTCORR%2CALLSKY_SFC_SW_DWN&community=AG&latitude=52.19&longitude=0.09&start=20240101&end=20241231&format=JSON&time-standard=LST"
+  ],
+  "modelMetrics": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 39274,
+    "weightBytes": 157096,
+    "loadMs": 174,
+    "backend": "wasm",
+    "tensorBytes": 157096,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null,
+    "inferenceMs": 19,
+    "topic": "soil",
+    "accepted": true
+  },
+  "limitations": [
+    "Desktop Firefox and a narrow viewport, not real mobile hardware or Safari.",
+    "Provider requests use live public services; country/crop suitability remains unvalidated."
+  ]
+}

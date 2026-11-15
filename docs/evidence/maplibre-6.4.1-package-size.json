@@ -1,0 +1,38 @@
+{
+  "version": "6.4.1",
+  "integrity": "sha512-KzxQKtfBu/pSz1C+yW1hNS9eyj2h2lC7ufdAi6/SEt177n3oAfDfmUmslRfJdXY7ReAFBcnvwsqmiyoDhtA9GQ==",
+  "integrityVerified": true,
+  "tarballBytes": 3962099,
+  "files": [
+    {
+      "name": "package/dist/maplibre-gl.css",
+      "bytes": 83195,
+      "gzipBytes": 10548,
+      "sha256": "8e2dbbab312dc57656fbb76e9fa5308c75c9d7c7ba5808a7d55bcdb64cc813fa"
+    },
+    {
+      "name": "package/dist/maplibre-gl-shared.mjs",
+      "bytes": 482036,
+      "gzipBytes": 134408,
+      "sha256": "fcf4d81450df235da0aea74897cc23926774b5228d38ae1de6a7d701c5905785"
+    },
+    {
+      "name": "package/dist/maplibre-gl-worker.mjs",
+      "bytes": 18592,
+      "gzipBytes": 5861,
+      "sha256": "ce4957017fe705ac2f9ebef206cca966d08d8621756c39326a78cf09757e7d75"
+    },
+    {
+      "name": "package/dist/maplibre-gl.mjs",
+      "bytes": 567005,
+      "gzipBytes": 142502,
+      "sha256": "97e8b9a39ab8b823d6a0caf9c312237262bc9138a6162d9e29606f5f8d24127d"
+    },
+    {
+      "name": "package/LICENSE.txt",
+      "bytes": 5984,
+      "gzipBytes": 1539,
+      "sha256": "ee5fc05a0677eaf69601d2c7db0d9ecd6cc27c3abc1d0733bc9ed34707cf8ef2"
+    }
+  ]
+}

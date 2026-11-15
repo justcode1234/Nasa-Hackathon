@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23173d2c'/%3E%3Ctext x='7' y='25' font-size='26' font-family='sans-serif' fill='%23fffdf5'%3EF%3C/text%3E%3C/svg%3E">
   <meta name="description" content="Compare crop rotations using historical NASA POWER evidence and transparent screening rules.">
   <meta name="fieldshift-transport" content="worker">
   <title>FieldShift — crop rotation evidence</title>
@@ -26,6 +27,8 @@
   <main id="main">
     <section id="location" role="tabpanel" aria-labelledby="tab-location">
       <h2 id="location-heading">01 · Find a place and explore mapped fields</h2>
+      <label class="country-picker">How would you like to choose a location?<select id="location-method"><option value="places">Choose from places or the map</option><option value="coordinates">Enter coordinates</option></select></label>
+      <div id="place-inputs">
       <label class="country-picker">Country<select id="pest-country"><option value="">Choose a country</option></select></label>
       <div class="fields">
         <label>Region (optional filter)<select id="place-region" disabled><option value="">Choose a country first</option></select></label>
@@ -40,16 +43,20 @@
         <label>Search results<select id="place-results" disabled><option value="">Search for a place first</option></select></label>
       </form>
       <p id="place-status" role="status">Search by name, use an example region, or pick a point on the map.</p>
+      </div>
       <div class="map-workspace">
       <div class="map-column">
         <div id="map" role="region" aria-label="Location and mapped farmland. Fields can also be chosen using the dropdown."></div>
+        <button id="open-map3d" type="button" aria-controls="map3d-panel" aria-expanded="false">Open 3D evidence map</button>
+        <p id="map3d-notice" role="status">Optional 3D downloads only when opened. The 2D map remains the default.</p>
+        <div id="map3d-panel" hidden></div>
         <p id="map-status" role="status">Loading the map. Coordinates work independently of map tiles.</p>
       </div>
       <div class="location-controls">
       <form id="location-form">
         <div class="fields">
-          <label>Latitude (−90 to 90°)<input id="latitude" name="latitude" type="number" min="-90" max="90" step="any" required></label>
-          <label>Longitude (−180 to 180°)<input id="longitude" name="longitude" type="number" min="-180" max="180" step="any" required></label>
+          <div id="coordinate-inputs" class="fields" hidden><label>Latitude (−90 to 90°)<input id="latitude" name="latitude" type="number" min="-90" max="90" step="any"></label>
+          <label>Longitude (−180 to 180°)<input id="longitude" name="longitude" type="number" min="-180" max="180" step="any"></label></div>
           <label>Historical reference year<input id="reference-year" name="referenceYear" type="number" min="2001" required></label>
           <label>Explore an example farming region
             <select id="example-location">
@@ -61,7 +68,8 @@
             </select>
           </label>
         </div>
-        <button id="load-evidence" type="submit">Load historical NASA evidence</button>
+        <button id="load-evidence" type="submit" hidden>Load historical NASA evidence</button>
+        <p>When your location and reference year are ready, use <strong>Next: NASA evidence</strong> below.</p>
       </form>
       <button type="button" id="find-farms">Find mapped fields around selection</button>
       <label>Mapped field<select id="farm-results" disabled><option value="">Load nearby fields first</option></select></label>
@@ -74,6 +82,8 @@
       <h2 id="evidence-heading">02 · Inspect the evidence</h2>
       <p id="evidence-status" role="status">Choose a location and load a historical year.</p>
       <button id="retry-evidence" type="button" hidden>Retry NASA evidence</button>
+      <label class="country-picker">Temperature unit<select id="temperature-unit"><option value="C">Celsius (°C)</option><option value="F">Fahrenheit (°F)</option></select></label>
+      <p>Read the temperature line and rainfall bars together. They describe the selected historical year, not a forecast or a farm water requirement.</p>
       <div id="evidence-output"></div>
     </section>
     <section id="si" role="tabpanel" aria-labelledby="tab-si" hidden>
@@ -85,15 +95,18 @@
         <fieldset>
           <legend>Existing rotation (baseline)</legend>
           <div class="fields">
-            <label>First crop<select name="baseline-1" id="baseline-1" required></select></label>
-            <label>Second crop<select name="baseline-2" id="baseline-2" required></select></label>
-            <label>Third crop<select name="baseline-3" id="baseline-3" required></select></label>
+            <label>First crop<select name="baseline-1" id="baseline-1" aria-describedby="crop-selection-status" required></select></label>
+            <label>Second crop<select name="baseline-2" id="baseline-2" aria-describedby="crop-selection-status" required></select></label>
+            <label>Third crop<select name="baseline-3" id="baseline-3" aria-describedby="crop-selection-status" required></select></label>
             <label>Crop before this plan (optional)<select name="previousCrop" id="previous-crop"></select></label>
           </div>
+          <p id="crop-selection-status" hidden></p>
           <p id="recorded-crops">Choose crops yourself; a map tag does not provide a three-crop rotation history.</p>
         </fieldset>
         <fieldset>
           <legend>Allowed crops for alternatives (choose at least two)</legend>
+          <label>Which crops may alternatives use?<select id="alternative-scope"><option value="baseline">Only my baseline crops with screening rules</option><option value="custom">Let me choose different crops below</option></select></label>
+          <p id="alternative-selection-note">No extra crop is added automatically. Choose different crops only if you want them considered.</p>
           <div id="allowed-crops" class="choices"></div>
           <p id="allowed-crop-status" role="status"></p>
         </fieldset>
@@ -144,10 +157,24 @@
   <button id="chat-toggle" class="chat-launcher" type="button" aria-controls="chat-panel" aria-expanded="false" aria-label="Open FieldShift assistant">Chat</button>
   <aside id="chat-panel" class="chat-panel" aria-labelledby="chat-heading" hidden>
     <div class="chat-header"><h2 id="chat-heading">FieldShift assistant</h2><button id="chat-close" type="button" aria-label="Close assistant">Close</button></div>
-    <p id="model-status" role="status">Evidence is available immediately. The compact model loads when chat opens.</p>
-    <details><summary>Compact local language-model experiment</summary><p>FieldShift Mini is a custom next-word language-model experiment, plus a small TensorFlow.js runtime. Its measured weight size appears after loading. It is not a general-purpose LLM. Development tests showed limited free-form understanding, so a relevance guard and sourced fallback are always used. Raw generated scientific claims are never displayed.</p><button id="load-model" type="button">Enable compact local model</button><button id="unload-model" type="button" disabled>Unload model</button></details>
+    <div id="chat-examples" role="group" aria-label="Try an example">
+      <p>Try a question or guided plan:</p>
+      <button type="button" data-prompt="Tell me about kai lan in Singapore">Crop facts: kai lan in Singapore</button>
+      <button type="button" data-prompt="Help me plan a rotation in India. Crops: tomato, cabbage, bulb onion. Rainfed.">Plan tomatoes, cabbage and onions in India</button>
+      <button type="button" data-prompt="Why can't I choose my first crop?">Why can't I choose a crop?</button>
+    </div>
+    <details id="assistant-settings"><summary>Assistant settings</summary>
+      <p id="model-status">Evidence is available immediately. The compact model loads when chat opens.</p>
+      <h3>Compact local language-model experiment</h3><p>FieldShift Mini is an experimental next-word model. A relevance guard may prioritize retrieved paragraphs; generated agricultural claims are hidden. Sourced answers and planning work without it.</p><button id="load-model" type="button">Enable compact local model</button><button id="unload-model" type="button" disabled>Unload model</button>
+      <p>English dictation: Whisper tiny.en runs on this device. The first use downloads about 70 MB of model and runtime. Audio is not uploaded. Check the draft before sending.</p>
+      <p>Read aloud uses an installed on-device English voice. Its training-language provenance is unverified; it is not a separately trained FieldShift TTS model.</p>
+      <button id="unload-speech" type="button" disabled>Unload speech model</button>
+    </details>
     <div id="chat-history" role="log" aria-label="Conversation" aria-live="polite"><p>Ask about a crop and country, such as “rice in India”. Or ask “help me plan a rotation in India” to select a field, enter your three crops, load NASA evidence and compare in step 4.</p></div>
-    <form id="question-form"><label>Message<input id="question" name="question" type="text" maxlength="500" required placeholder="Tell me about a crop in a country"></label><button id="ask" type="submit">Send</button></form>
+    <form id="question-form"><label>Message<input id="question" name="question" type="text" maxlength="500" required placeholder="Tell me about a crop in a country"></label><button id="mic" class="mic" type="button" aria-pressed="false" aria-label="Dictate a message in English"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 0 0-7 0v6A3.5 3.5 0 0 0 12 15Zm6-3.5a1 1 0 1 0-2 0 4 4 0 0 1-8 0 1 1 0 1 0-2 0 6 6 0 0 0 5 5.9V20H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.6a6 6 0 0 0 5-5.9Z"/></svg></button><button id="ask" type="submit">Send</button></form>
+    <p id="speech-status" role="status" hidden>Optional: press the microphone to dictate in English. Speech is transcribed on this device.</p>
+    <div id="speech-consent" class="notice" hidden><p>English dictation needs about 70 MB for its first download (43.5 MB model + 26.9 MB runtime). Audio stays on this device. Allow the download and microphone request?</p><button id="start-dictation" type="button">Continue with English dictation</button><button id="cancel-dictation" type="button">Cancel dictation</button></div>
+    <button id="stop-speaking" type="button" hidden>Stop speaking</button>
     <p id="answer-status" role="status">Answers include sources and limitations.</p>
     <div id="answer-output" hidden></div>
   </aside>

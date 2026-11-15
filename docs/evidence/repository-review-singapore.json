@@ -1,0 +1,92 @@
+{
+  "checkedAt": "2026-11-15T12:06:23.318Z",
+  "target": "public Phase A; fresh unauthenticated browser contexts",
+  "runs": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 1000
+      },
+      "initial": {
+        "paragraphs": [
+          "Which part of Singapore should we focus on, or would you like an overview of the whole country?"
+        ],
+        "buttons": [
+          "Whole Singapore",
+          "A specific area"
+        ],
+        "country": "SG",
+        "latitude": "",
+        "longitude": ""
+      },
+      "whole": {
+        "paragraphs": [
+          "Whole-country overview for Singapore. Your supplied crops are retained: rice → wheat → beans.",
+          "FAOSTAT national production records: rice: no matching production category; wheat: no matching production category; beans: no matching production category. Snapshot retrieved 2026-11-14; these are country records, not local suitability evidence.",
+          "There is no single country-wide planting calendar or field weather reading here. Choose a region when you want to compare rotations for a particular farm."
+        ],
+        "buttons": [
+          "Choose a region"
+        ],
+        "country": "SG",
+        "latitude": "",
+        "longitude": ""
+      },
+      "specific": {
+        "paragraphs": [
+          "Which state, region or town in Singapore? You can name it here or use the location dropdowns."
+        ],
+        "buttons": [
+          "Whole Singapore"
+        ],
+        "country": "SG",
+        "latitude": "",
+        "longitude": ""
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "initial": {
+        "paragraphs": [
+          "Which part of Singapore should we focus on, or would you like an overview of the whole country?"
+        ],
+        "buttons": [
+          "Whole Singapore",
+          "A specific area"
+        ],
+        "country": "SG",
+        "latitude": "",
+        "longitude": ""
+      },
+      "whole": {
+        "paragraphs": [
+          "Whole-country overview for Singapore. Your supplied crops are retained: rice → wheat → beans.",
+          "FAOSTAT national production records: rice: no matching production category; wheat: no matching production category; beans: no matching production category. Snapshot retrieved 2026-11-14; these are country records, not local suitability evidence.",
+          "There is no single country-wide planting calendar or field weather reading here. Choose a region when you want to compare rotations for a particular farm."
+        ],
+        "buttons": [
+          "Choose a region"
+        ],
+        "country": "SG",
+        "latitude": "",
+        "longitude": ""
+      },
+      "specific": {
+        "paragraphs": [
+          "Which state, region or town in Singapore? You can name it here or use the location dropdowns."
+        ],
+        "buttons": [
+          "Whole Singapore"
+        ],
+        "country": "SG",
+        "latitude": "",
+        "longitude": ""
+      },
+      "errors": []
+    }
+  ]
+}
