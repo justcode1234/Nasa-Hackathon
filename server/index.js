@@ -9,7 +9,7 @@ import { createLocationClient } from './context/locations.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const previewId = createHash('sha256').update(path.resolve(root)).digest('hex').slice(0, 16);
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.bin': 'application/octet-stream', '.pdf': 'application/pdf', '.zip': 'application/zip', '.txt': 'text/plain; charset=utf-8' };
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.bin': 'application/octet-stream', '.pdf': 'application/pdf', '.zip': 'application/zip', '.txt': 'text/plain; charset=utf-8' };
 
 async function readJson(request) {
   if (!request.headers['content-type']?.startsWith('application/json')) throw new AppError('Send application/json.', 415);
@@ -44,10 +44,12 @@ export function createApp(dependencies = {}) {
       if (!['GET', 'HEAD'].includes(request.method)) throw new AppError('Method not allowed.', 405);
       let base = path.join(root, 'public');
       let relative = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname).replace(/^\/+/, '');
-      const leafletLicense = relative === 'vendor/leaflet/LICENSE.txt';
+      const leafletLicense = ['vendor/leaflet/LICENSE.txt','vendor/maplibre/LICENSE.txt'].includes(relative);
       if (leafletLicense) {
-        base = path.join(root, 'node_modules/leaflet');
-        relative = 'LICENSE';
+        base = path.join(root, relative.includes('/maplibre/')?'node_modules/maplibre-gl':'node_modules/leaflet');
+        relative = relative.includes('/maplibre/')?'LICENSE.txt':'LICENSE';
+      } else if(relative.startsWith('vendor/maplibre/')) {
+        base=path.join(root,'node_modules/maplibre-gl/dist');relative=relative.slice('vendor/maplibre/'.length);
       } else if (relative.startsWith('vendor/leaflet/')) {
         base = path.join(root, 'node_modules/leaflet/dist');
         relative = relative.slice('vendor/leaflet/'.length);

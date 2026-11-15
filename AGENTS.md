@@ -189,7 +189,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 ## 10. Current implementation and cross-device handoff - 2026-11-15
 
 - **Phase B implemented but release blocked on feature/review-phase-b:** seven sourced crops cover 166/197 countries; 99 offline tests pass. Results/evidence wording, archived workers, tighter CSP, arrow semantics, axe licence and pixel-identical CSS cleanup are implemented. Full release: 36/44 Playwright cases pass, with all 8 failures at live Overpass field lookup; zero skips/flaky results. All 20 axe state scans and 12 model-on QA executions pass. Four enhanced transport-failure cases also pass: Retry preserves coordinates, and real NASA evidence still leads to step 4 using the explicit point (phase-b-playwright-field-degradation.json). Fresh browser probes show both Overpass deadlines expiring with no CSP errors; status endpoints also time out from this device. Production core hashes still match Phase A (phase-a-freeze-recheck.json). Production stays at f4c4fef; no Phase B deployment. Raw results: docs/evidence/phase-b-playwright-local.json and phase-b-playwright-retry.json.
-- **Phase C V0 measured, approval pending (feature/3d-evidence-map, based on Phase B 42e9bc2):** isolated MapLibre 5.24.0 experiment (not an app dependency) is under experiments/3d-v0; run node scripts/3d-v0-spike.js. JS+CSS are 1.13 MB raw / 287 KB gzip; desktop cold interactive 1.73 s, pan 60 fps, max sampled browser working set 620.5 MB on RTX 5060 Ti. Real phone and combined model memory remain unmeasured. Native POWER regional centres and the fixture SRTM tile were verified; a WebGL-disabled phone-size fallback passed. docs/3d-feasibility.md links screenshots, raw results and remaining gates. The local V0 preview is http://127.0.0.1:4175 while its helper runs. A reduced-motion phone-size render passes axe and CSP after an attribution-link fix. An explicit dependency question is pending; do not begin V1 before the answer. Neither new local branch has been pushed because Git integration would deploy despite the red release gate.
+- **Phase C preview approved; V1 locally verified on feature/3d-evidence-map:** the user approved preview implementation on 15 November. MapLibre 5.24.0 proved vulnerable to CVE-2026-85061 during installation; patched 6.4.1 is now pinned (zero npm audit findings), with repeated desktop measurements 1.68 s / 60 fps / 672.3 MB max sampled working set; 293 KB gzip modules+CSS. Real-phone and combined-model memory remain unverified. Native rain cells, month control/table equality, missingness, WebGL fallback, provider retry and stale-load cleanup pass 16/16 V1 Playwright cases across four projects; npm test passes 104/104. Metadata and all raw reports are in docs/evidence/v1-* and maplibre-6.4.1-*.json. Node and worker share /api/power-grid. V2-V5 remain. Production stays frozen; live Overpass success cases still block deployment.
 
 Update this section and docs/decisions.md / docs/validation.md after each substantive
 implementation change. Record what changed, actual checks, remaining work and deployment
@@ -377,8 +377,7 @@ section 10 as items become verified; do not mark any item done without executed 
 
 **User decisions (2026-11-15):** MIT licence for the team's own code (holder "Team
 Explorer"). Deploy after `npm run test:release` passes; reconfirm if scope changes. The
-user asked for a 3D data-visualization plan. Approval of the MapLibre dependency still
-waits on the V0 measurements.
+user asked for a 3D data-visualization plan. The user approved preview implementation after V0; use security-fixed MapLibre 6.4.1 (not vulnerable 5.24.0).
 
 **Deadline:** Nov 15, 2026, 11:59 PM Singapore time (UTC+8). Only the owner can submit
 in the NASA portal. Do Phase A first, deploy, verify the public site, and remind the
@@ -430,7 +429,7 @@ module:**
   - The OSM field draped on terrain, with derived slope/aspect as context only.
   - Dated NASA GIBS overlays (NDVI, SMAP, IMERG, LST), labelled as imagery.
   - A link from step-4 crop slots to their weather window.
-- Technology: propose MapLibre GL JS 5.x (BSD-3), pinned, vendored and lazy-loaded.
+- Technology: approved MapLibre GL JS 6.4.1 (BSD-3), pinned, vendored and lazy-loaded.
   Leaflet 2D stays the default and fallback.
 - Rules: no auto-rotation, starfields or glow; reduced motion respected; table/text
   equivalents; WebGL fallback; size, memory and fps measured, not claimed.

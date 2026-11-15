@@ -304,3 +304,52 @@ and exits nonzero if fewer than three fields return). The original browser probe
 was executed; the reusable wrapper has syntax validation. The V0 benchmark's
 Playwright timeout argument was corrected to the options position; the previously
 measured fast rendering result is unchanged. MapLibre approval remains pending.
+
+## Preview approval and security fix - 15 November 2026
+
+The user approved preview implementation, keeping Leaflet default. Installing the
+approved 5.24.0 package revealed CVE-2026-85061 (GHSA-jrc7-96c5-q579), a critical
+attribution sanitizer bypass affecting versions through 6.4.0. The upstream fix
+starts at 6.4.1: https://github.com/advisories/GHSA-jrc7-96c5-q579 . We switched to
+exact 6.4.1 to fix the approved dependency, rather than shipping the vulnerable
+version. This is the same optional MapLibre renderer, with no new service/account.
+`npm audit` reports zero vulnerabilities. The release predates the two-week gate.
+
+Repeated isolated desktop measurements: 1.68 seconds interactive, 60 fps, 672.3 MB
+maximum sampled process working set. JS/CSS/modules total 1,150,828 bytes raw and
+293,319 bytes gzip. Version 6 uses three ES modules and a same-origin module worker;
+the initial terrain benchmark exposed a missing self permission in the experiment
+worker CSP. Fixing that permission and setting projection before terrain restored
+actual terrain rendering. A console favicon 404 in that run was fixed afterward.
+Raw results: docs/evidence/maplibre-6.4.1-benchmark.json and package-size.json.
+These replace the 5.24 measurements for the approved preview; real-phone and
+combined-model memory remain unmeasured. Production remains frozen.
+
+## V1 native rainfall columns - verified locally, 15 November
+
+The approved optional map is now inside the existing geospatial step, with Leaflet
+2D default. MapLibre 6.4.1 (security-fixed) and its three ES modules/CSS/licence
+are vendored and lazy-loaded. Both Node and worker use the new bounded
+/api/power-grid adapter. Native MERRA-2 centres use the documented origin and
+spacing; midpoint bounds wrap the date line and clip at poles. Date-line requests
+show one actual native-centre point response rather than invented neighbours.
+
+Monthly rain columns have a zero baseline and an explicitly labelled display scale.
+Null and true zero differ; missing months hatch, partial sums keep valid-day counts.
+The month control synchronises exact selected-cell values and the existing evidence
+table highlight. The API retains units, dates, source, native spacing, retrieval
+time and missingness. No crop recommendation or imagery-derived value was added.
+Changing point/year closes stale 3D state. Rapid close/reopen cleanup is isolated
+per renderer instance so an old load cannot remove a newer map.
+
+Executed: npm test 104/104; full V1 Playwright 16/16 across static/Node and
+desktop/mobile, with no skips/flaky results. This includes real NASA values,
+nonblank screenshot pixels, slider/table equality, blocked WebGL fallback, provider
+failure/real retry, and delayed-module location-change races. npm audit: zero
+vulnerabilities. Reports: v1-playwright-complete.json, v1-native-rain-fixture.json
+and maplibre-6.4.1-audit.json under docs/evidence. The first pixel test read a
+renderer framebuffer before paint; it now checks actual screenshot pixels.
+
+No deployment: Phase B's actual field-success gate still fails. A fresh 06:47 UTC
+status probe still timed out at both Overpass hosts from this device. V2 imagery,
+V3 terrain/field context, V4 strategy linkage and V5 complete validation remain.

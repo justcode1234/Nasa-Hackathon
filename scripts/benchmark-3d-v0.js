@@ -1,7 +1,7 @@
 import {chromium} from '@playwright/test';import {writeFile} from 'node:fs/promises';import {createSpikeServer,prepareSpike} from './3d-v0-spike.js';import {sampleBrowserMemory,summarizeMemory} from './browser-memory.js';
 await prepareSpike();const app=createSpikeServer();await new Promise(r=>app.listen(0,'127.0.0.1',r));const service=await chromium.launchServer({channel:'chrome',headless:true});const browser=await chromium.connect(service.wsEndpoint()),samples=[],rows=[],errors=[];
 try{
- const page=await browser.newPage({viewport:{width:1280,height:1000}});page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(!r.url().startsWith('http://127.0.0.1'))rows.push({url:r.url(),status:r.status()});});
+ const page=await browser.newPage({viewport:{width:1280,height:1000}});page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});page.on('response',r=>{if(!r.url().startsWith('http://127.0.0.1'))rows.push({url:r.url(),status:r.status()});});
  await page.goto(`http://127.0.0.1:${app.address().port}`,{waitUntil:'networkidle'});
  const before=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>/maplibre/.test(r.name)).length);samples.push(await sampleBrowserMemory(service.process().pid,'2D experiment shell before renderer load'));
  await page.getByRole('button',{name:'Open 3D experiment',exact:true}).click();await page.waitForFunction(()=>window.spikeMetrics.interactiveMs,null,{timeout:60000});

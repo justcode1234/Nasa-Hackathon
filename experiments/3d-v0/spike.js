@@ -3,8 +3,8 @@ window.spikeMetrics={errors:[],requestsBeforeOpen:performance.getEntriesByType('
 let map,terrain=false;
 function jump(field){
   terrain=field;
-  map.setTerrain(field?{source:'terrain',exaggeration:Number($('exaggeration').value)}:null);
   map.setProjection({type:field?'mercator':'globe'});
+  map.setTerrain(field?{source:'terrain',exaggeration:Number($('exaggeration').value)}:null);
   map.jumpTo(field?{center:[116.77,-31.89],zoom:12,pitch:55,bearing:0}:{center:[116.77,-25],zoom:1.5,pitch:0,bearing:0});
   $('terrain-status').textContent=field?`Terrain exaggeration ×${$('exaggeration').value}. Pixel spacing near this point at zoom 12 is approximately 32.45 m; this is tile sampling, not a claim of field measurement accuracy.`:'Terrain off in globe view.';
 }
@@ -12,7 +12,7 @@ $('open').addEventListener('click',async()=>{
   $('open').disabled=true;const start=performance.now();$('status').textContent='Loading the optional renderer…';
   try{
     const link=document.createElement('link');link.rel='stylesheet';link.href='/vendor/maplibre-gl.css';document.head.append(link);
-    await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='/vendor/maplibre-gl.js';s.onload=resolve;s.onerror=()=>reject(Error('Renderer download failed'));document.head.append(s);});
+    const maplibregl=await import('/vendor/maplibre-gl.mjs');
     map=new maplibregl.Map({container:'map3d',center:[116.77,-25],zoom:1.5,preserveDrawingBuffer:true,style:{version:8,projection:{type:'globe'},sources:{
       globe:{type:'raster',tiles:['https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg'],tileSize:256,maxzoom:8,attribution:'<a href="https://www.earthdata.nasa.gov/engage/open-data-services-and-software/earthdata-developer-portal/gibs">NASA GIBS Blue Marble</a> (static composite)'},
       osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,minzoom:9,maxzoom:19,attribution:'© OpenStreetMap contributors'},

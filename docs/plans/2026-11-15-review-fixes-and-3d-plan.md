@@ -6,7 +6,7 @@ verification). **Phase A is now implemented and verified** (app source 70eafb1):
 95 offline tests, 32 local Playwright cases and 16 public cases passed. The review
 baseline was 8b53619 with 95/95 tests. B4 licence/credit delivery was pulled forward
 to give A6 a working link. Phase B is implemented but its live field tests fail (36/44 browser cases pass);
-V0 is measured and awaits dependency approval. V1-V5 remain proposed. See
+Preview implementation was approved after V0; V1 passes 104 offline and 16 browser tests. V2-V5 remain. MapLibre 6.4.1 replaces vulnerable 5.24.0 (see security findings). See
 docs/3d-feasibility.md and the phase-b reports; see section 10 of AGENTS.md and the phase-a reports in docs/evidence.
 
 ## 0. Deadline and order of work

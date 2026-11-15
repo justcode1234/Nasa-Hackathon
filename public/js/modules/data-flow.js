@@ -63,10 +63,12 @@ export function renderEvidence(data) {
   root.append(list(data.notices));
   root.append(el('p', 'Brown marks partial data; missing months remain blank. Table cells show value [valid/requested days]. Monthly air extremes are regional daily extremes. Solar is a monthly average of daily energy, not a monthly total.'));
   const cell = (p, key) => `${number(p[key])} [${p.validDays}/${p.expectedDays}]${p.partial ? ' partial' : ''}`;
-  root.append(table(['Month', 'Mean air (°C)', 'Lowest air (°C)', 'Highest air (°C)', 'Rain sum (mm)', 'Mean daily solar (MJ/m²/day)'],
+  const monthlyTable=table(['Month', 'Mean air (°C)', 'Lowest air (°C)', 'Highest air (°C)', 'Rain sum (mm)', 'Mean daily solar (MJ/m²/day)'],
     data.monthly.map(m => [monthLabel(m.period,true), cell(m.parameters.T2M, 'mean'), cell(m.parameters.T2M_MIN, 'min'),
       cell(m.parameters.T2M_MAX, 'max'), cell(m.parameters.PRECTOTCORR, 'sum'), cell(m.parameters.ALLSKY_SFC_SW_DWN, 'mean')]),
-    'Monthly derived indicators — NASA POWER, with missingness'));
+    'Monthly derived indicators — NASA POWER, with missingness');
+  monthlyTable.querySelectorAll('tbody tr').forEach((row,i)=>{row.dataset.evidenceMonth=data.monthly[i].period;row.dataset.rainSum=JSON.stringify(data.monthly[i].parameters.PRECTOTCORR.sum);});
+  root.append(monthlyTable);
   const download = el('button', 'Download normalized evidence (JSON)', { type: 'button' });
   download.addEventListener('click', () => {
     const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
@@ -76,3 +78,10 @@ export function renderEvidence(data) {
   });
   root.append(download);
 }
+globalThis.window?.addEventListener('fieldshift:monthchange',event=>{
+  document.querySelectorAll('[data-evidence-month]').forEach(row=>{
+    const selected=row.dataset.evidenceMonth===event.detail.period;
+    row.classList.toggle('selected-evidence-month',selected);
+    if(selected)row.setAttribute('aria-current','true');else row.removeAttribute('aria-current');
+  });
+});

@@ -27,7 +27,8 @@
     "test:release": "npm test && npm run test:e2e"
   },
   "dependencies": {
-    "leaflet": "1.9.4"
+    "leaflet": "1.9.4",
+    "maplibre-gl": "6.4.1"
   },
   "devDependencies": {
     "@playwright/test": "1.65.1",

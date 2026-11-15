@@ -1,15 +1,17 @@
 # 3D evidence map: V0 measurements, 15 November 2026
 
-V0 is an isolated experiment, **not an application dependency or released feature**.
-The submitted app remains Leaflet 2D. V1–V5 require the plan's dependency approval;
-no crop columns, science-overlay controls, field slope or strategy links are built.
+The user approved preview implementation on 15 November. V1 is now implemented
+and locally verified (104 offline +16 browser tests); MapLibre 6.4.1 is the pinned
+security-fixed dependency. The original 5.24.0 V0 measurements below are historical
+and superseded by the security/measurement section at the end. Production remains
+frozen, Leaflet stays default, and V2-V5 are still pending.
 
 Reproduce locally: `node scripts/3d-v0-spike.js`, then open
 http://127.0.0.1:4175. It downloads the exact pinned npm package into ignored
 `artifacts/3d-v0/vendor`, checks its SHA-512 integrity, and serves only an explicit
 file allowlist. Run `node scripts/benchmark-3d-v0.js` for the desktop load/pan/process-memory
-measurement. Nothing is copied into `public` or the application build. No account,
-key, model download or package.json runtime dependency is involved.
+measurement. Nothing is copied into `public` or the application build. No account, key or model download is involved; the approved renderer is now also
+a pinned application dependency.
 
 ## Renderer decision
 
@@ -112,7 +114,7 @@ extracted**. No science overlay values are read from map colours.
 
 ## Remaining gates
 
-Approval is required before adding MapLibre to the app and proceeding to V1. Keep
+Preview approval has been received and V1 is locally verified. Keep
 Leaflet default, mobile opt-in, WebGL fallback and preview-only delivery. V1 adds
 honest POWER cells/slider/table equality; V2 dated imagery; V3 field terrain context;
 V4 identical strategy weather windows; V5 complete release, accessibility, hardware
@@ -120,3 +122,23 @@ and visual review. Production stays frozen at f4c4fef until a separate decision.
 
 Phase B's live Overpass field flow is currently failing and independently blocks a
 behavior release. This experiment does not bypass that release gate.
+
+## Preview approval and security fix - 15 November 2026
+
+The user approved preview implementation, keeping Leaflet default. Installing the
+approved 5.24.0 package revealed CVE-2026-85061 (GHSA-jrc7-96c5-q579), a critical
+attribution sanitizer bypass affecting versions through 6.4.0. The upstream fix
+starts at 6.4.1: https://github.com/advisories/GHSA-jrc7-96c5-q579 . We switched to
+exact 6.4.1 to fix the approved dependency, rather than shipping the vulnerable
+version. This is the same optional MapLibre renderer, with no new service/account.
+`npm audit` reports zero vulnerabilities. The release predates the two-week gate.
+
+Repeated isolated desktop measurements: 1.68 seconds interactive, 60 fps, 672.3 MB
+maximum sampled process working set. JS/CSS/modules total 1,150,828 bytes raw and
+293,319 bytes gzip. Version 6 uses three ES modules and a same-origin module worker;
+the initial terrain benchmark exposed a missing self permission in the experiment
+worker CSP. Fixing that permission and setting projection before terrain restored
+actual terrain rendering. A console favicon 404 in that run was fixed afterward.
+Raw results: docs/evidence/maplibre-6.4.1-benchmark.json and package-size.json.
+These replace the 5.24 measurements for the approved preview; real-phone and
+combined-model memory remain unmeasured. Production remains frozen.

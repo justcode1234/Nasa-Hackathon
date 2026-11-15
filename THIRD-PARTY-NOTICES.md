@@ -7,6 +7,8 @@ licences, source attribution and the exact runtime package versions.
 
 - Leaflet 1.9.4: BSD-2-Clause, Volodymyr Agafonkin, CloudMade and contributors. Its complete
   installed-package licence ships at public/vendor/leaflet/LICENSE.txt.
+- MapLibre GL JS 6.4.1: BSD-3-Clause and bundled notices. Full package licence
+  ships beside lazy-loaded ES modules at public/vendor/maplibre/LICENSE.txt.
 - TensorFlow.js and WASM backend 4.22.0: Apache-2.0, TensorFlow/Google contributors.
   Loaded on demand from pinned jsDelivr URLs. Full licence is shipped under
   public/licenses/tensorflow-apache-2.0.txt, copied from the matching source tag.

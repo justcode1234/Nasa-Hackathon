@@ -7,6 +7,9 @@ export async function buildBrowser() {
   await mkdir('public/vendor/leaflet', { recursive: true });
   for (const file of ['leaflet.js', 'leaflet.css', 'images']) await cp(`node_modules/leaflet/dist/${file}`, `public/vendor/leaflet/${file}`, { recursive: true });
   await cp('node_modules/leaflet/LICENSE','public/vendor/leaflet/LICENSE.txt');
+  await mkdir('public/vendor/maplibre',{recursive:true});
+  for(const file of ['maplibre-gl.mjs','maplibre-gl-shared.mjs','maplibre-gl-worker.mjs','maplibre-gl.css'])await cp(`node_modules/maplibre-gl/dist/${file}`,`public/vendor/maplibre/${file}`);
+  await cp('node_modules/maplibre-gl/LICENSE.txt','public/vendor/maplibre/LICENSE.txt');
   await mkdir('public/licenses',{recursive:true});
   await cp('LICENSE','public/licenses/fieldshift-mit.txt');
   await cp('node_modules/esbuild/LICENSE.md','public/licenses/esbuild-mit.txt');

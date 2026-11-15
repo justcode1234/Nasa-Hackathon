@@ -59,6 +59,10 @@ summary { cursor: pointer; padding-block: .5rem; font-weight: 600; }
 .search-row button { margin-top: 0; white-space: nowrap; }
 .map-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1rem; }
 .map-column { min-width: 0; }
+#map3d-canvas { height: max(320px, calc(100dvh - 330px)); background: #e8edde; }
+.map3d-controls { display: flex; flex-wrap: wrap; gap: .5rem; }
+.maplibregl-ctrl-attrib .maplibregl-ctrl-attrib-inner a { text-decoration: underline; color: #185537; }
+.selected-evidence-month > * { outline: 2px solid #426748; outline-offset: -2px; }
 #map-status, #farms-status, #place-status { font-size: .9rem; margin-block: .5rem; }
 .location-controls { background: var(--panel); padding: .9rem; border: 1px solid #ccd2c2; max-height: calc(100dvh - 280px); overflow-y: auto; }
 .location-controls .fields { gap: .5rem; grid-template-columns: 1fr 1fr; }

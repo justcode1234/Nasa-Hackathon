@@ -12,6 +12,29 @@ import { comparisonReadiness } from './lib/comparison-readiness.js';
 const $ = selector => document.querySelector(selector);
 $('#runtime-status').textContent = getTransport() === 'http' ? 'Node.js testing mode' : 'Runs in your browser · no account needed';
 let observations = null;
+let evidenceMap3D=null,map3DVersion=0;
+function closeMap3D(){
+  const wasOpen=!$('#map3d-panel').hidden||$('#open-map3d').disabled;
+  map3DVersion++;evidenceMap3D?.close();evidenceMap3D=null;
+  $('#map3d-panel').hidden=true;$('#map').hidden=false;$('#open-map3d').disabled=false;
+  $('#open-map3d').setAttribute('aria-expanded','false');
+  if(wasOpen)$('#map3d-notice').textContent='3D closed. The 2D map is available.';
+  window.dispatchEvent(new Event('fieldshift:tabchange'));
+}
+$('#open-map3d').addEventListener('click',async()=>{
+  if($('#latitude').value===''||$('#longitude').value===''||!$('#location-form').checkValidity()){
+    $('#map3d-notice').textContent='Select a town, map point or valid coordinates first.';$('#latitude').focus();return;
+  }
+  const version=++map3DVersion;$('#open-map3d').disabled=true;$('#map3d-notice').textContent='Opening the optional 3D view…';
+  try{
+    const module=await import('./modules/map3d.js');if(version!==map3DVersion)return;
+    $('#map3d-panel').hidden=false;$('#map').hidden=true;$('#open-map3d').setAttribute('aria-expanded','true');
+    const instance=await module.createEvidenceMap({getState:()=>({location:$('#latitude').value===''||$('#longitude').value===''?null:{latitude:Number($('#latitude').value),longitude:Number($('#longitude').value)},year:Number($('#reference-year').value),observations,farm:selectedFarm}),onClose:()=>{closeMap3D();$('#open-map3d').focus();}});
+    if(version!==map3DVersion){instance.close();await instance.ready.catch(()=>{});return;}evidenceMap3D=instance;
+    await instance.ready;
+    if(version===map3DVersion)$('#map3d-notice').textContent='3D evidence view open. Use Return to 2D at any time.';
+  }catch(error){if(version===map3DVersion){closeMap3D();$('#map3d-notice').textContent=error.message;}}
+});
 let comparedInputs = null;
 let catalogReady = false;
 let catalogFailed = false;
@@ -61,6 +84,7 @@ function invalidate(clearEvidence, options = {}) {
   $('#strategy-output').textContent = 'Inputs changed. Compare again to see results for the current inputs.';
   status('#comparison-status', clearEvidence ? 'Load evidence for the selected coordinates and year.' : 'Constraints changed. Compare again.');
   if (clearEvidence) {
+    closeMap3D();
     observations = null;
     $('#retry-evidence').hidden = true;
     $('#evidence-output').replaceChildren();
