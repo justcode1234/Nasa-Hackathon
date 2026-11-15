@@ -33,7 +33,7 @@ The Vercel showcase architecture is static HTML/CSS/JavaScript with Leaflet and 
 
 ## What was actually validated
 
-- 93 automated unit, adapter, conversation/action, country-filter, static-build, model-artifact, location-race and startup checks passed. All 16 supplied QA questions and six flows pass locally with model enabled and disabled; real providers are used.
+- 95 offline unit/logic checks and 16 Playwright cases pass across Node/static transports and desktop/mobile layouts, including 64 executions of the original QA questions. Navigation blockers, successful Next/Compare, invalidation and real-data retry are exercised. The earlier model release also passed the supplied 16-question/six-flow suite with the model enabled and disabled.
 - 33 browser checks passed in Chrome against the static build, including named crop-country questions, focused follow-ups, guided execution through step 4, pending-location edits, Next/Back navigation, country-dependent choices, real field selection, NASA evidence, timelines, invalidation, model load/unload, failures and seven-page PDF output.
 - 19 Node-backed browser checks passed with direct browser NASA access and the data worker blocked, including chat-driven country/location/crop selection, real backend retrieval, comparison and failure/retry.
 - 18 separate Firefox 160 workflow checks passed using native BiDi, including crop-country chat, guided execution through step 4, blocked model/NASA requests, model recovery and narrow-viewport keyboard navigation.

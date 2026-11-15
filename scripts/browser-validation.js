@@ -153,7 +153,9 @@ try {
   await evaluate('document.querySelector("#flow-next").click()');
   assert.equal(await evaluate('document.querySelector("#si").hidden'), false);
   await evaluate('document.querySelector("#flow-next").click()');
-  assert.equal(await evaluate('document.querySelector("#si").hidden'), false);
+  assert.equal(await evaluate('document.querySelector("#location").hidden'), false);
+  assert.equal(await evaluate('document.activeElement.id'), 'pest-country');
+  await evaluate('document.querySelector("#tab-si").click()');
   await evaluate('document.querySelector("#flow-back").click()');
   assert.equal(await evaluate('document.querySelector("#evidence").hidden'), false);
   await evaluate('document.querySelector("#flow-back").click()');

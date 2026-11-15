@@ -73,6 +73,7 @@
     <section id="evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
       <h2 id="evidence-heading">02 · Inspect the evidence</h2>
       <p id="evidence-status" role="status">Choose a location and load a historical year.</p>
+      <button id="retry-evidence" type="button" hidden>Retry NASA evidence</button>
       <div id="evidence-output"></div>
     </section>
     <section id="si" role="tabpanel" aria-labelledby="tab-si" hidden>
@@ -94,6 +95,7 @@
         <fieldset>
           <legend>Allowed crops for alternatives (choose at least two)</legend>
           <div id="allowed-crops" class="choices"></div>
+          <p id="allowed-crop-status" role="status"></p>
         </fieldset>
         <fieldset>
           <legend>Calendar and farm constraints</legend>
@@ -110,6 +112,7 @@
           <p>Optional pH and drainage are checked against sourced crop requirements where available. Rain-free exposure counts zero-rain days, not crop demand or water savings. Nutrient sufficiency and pest diagnosis remain unassessed.</p>
         </fieldset>
         <button id="compare" type="submit" disabled>Compare baseline and two alternatives</button>
+        <p id="comparison-readiness" role="status"></p>
         <p id="comparison-status" role="status">Load evidence first.</p>
       </form>
       <details id="published-context" open><summary>Published soil and irrigation context</summary><p id="soil-context-status" role="status">Regional soil estimates load after NASA evidence. They are not farm measurements.</p><button id="load-soil-context" type="button">Load regional soil estimates</button><div id="soil-context-output"></div><div id="water-context-output"></div></details>
@@ -130,6 +133,7 @@
   <div class="workflow-navigation" role="navigation" aria-label="Workflow steps">
     <button id="flow-back" type="button" disabled>Back</button>
     <p id="flow-progress" role="status">Step 1 of 4 · Find farmland</p>
+    <p id="flow-blocker" role="status" hidden></p>
     <button id="flow-next" type="button">Next: NASA evidence →</button>
   </div>
   <footer>

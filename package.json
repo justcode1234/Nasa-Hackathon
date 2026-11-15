@@ -21,12 +21,15 @@
     "test:browser": "node scripts/browser-validation.js",
     "test:node-browser": "node scripts/node-browser-validation.js",
     "test:firefox": "node scripts/firefox-validation.js",
-    "test:qa": "node scripts/qa-validation.js"
+    "test:qa": "node scripts/qa-validation.js",
+    "test:e2e": "npm run build && playwright test",
+    "test:release": "npm test && npm run test:e2e"
   },
   "dependencies": {
     "leaflet": "1.9.4"
   },
   "devDependencies": {
+    "@playwright/test": "1.65.1",
     "esbuild": "0.28.2"
   }
 }

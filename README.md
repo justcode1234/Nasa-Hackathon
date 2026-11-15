@@ -4,6 +4,10 @@ Crop-rotation decision support for NASA Space Apps 2026, with a **Node.js testin
 
 ## Run
 
+Before publishing behavior changes, run `npm run test:release` (offline logic tests
+and Playwright flows for both runtimes at desktop/mobile widths). See the
+[Playwright checks](docs/playwright.md) for coverage, reports and public verification.
+
 Requires Node.js 22+. Both modes use the same NASA adapters, sourced catalog and deterministic rotation engine.
 
 ```sh

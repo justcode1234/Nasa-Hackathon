@@ -2,6 +2,34 @@
 
 Date: 2026-11-15 (local). This section supersedes the earlier planning assumptions; the user selected a Node.js backend for local testing alongside a browser-only static Vercel showcase. Previously recorded styling is preserved; no CSS polishing was added.
 
+## Next/Compare regression and Playwright release gate
+
+The reported step-3 block was real: the previous tests checked disabled Compare,
+but did not assert an actionable Next recovery or a visible explanation. A new
+Playwright test failed against public release 28572af after the actual Next click:
+the expected location panel stayed hidden. No missing crop rule was invented to
+make comparison available. New readiness guidance explains country coverage gaps,
+unchecked alternatives or missing NASA evidence; Next routes to the relevant
+control without clearing farmer entries. NASA failures now open the evidence tab
+and expose Retry. Navigation and Compare are disabled during an active comparison.
+
+The local release check passed **95 offline tests and 16 Playwright tests**, with
+zero skipped, flaky or unexpected results in its JSON report. Four projects cover
+the Node/static transports at desktop and phone widths. Each project executes
+three UI flows plus all sixteen original QA questions (64 question executions).
+The first QA test-port attempt tried clicking Unload inside collapsed settings;
+Playwright correctly rejected that hidden control. The test now opens the settings
+as a user would. This was a test-helper failure, preserved separately from the
+reproduced public Next defect. Default action timeouts bound future stalls.
+
+The existing 33 Chrome checks (including the optional model) and 18 Firefox checks
+also passed after this UI change. The mobile coverage screenshot was inspected:
+the complete reason and recovery control remain visible while the form scrolls.
+
+`npm run test:release` is required before future behavior releases. Details and
+failure artifacts: [Playwright checks](playwright.md). Public fix verification is
+still pending; older public reports below describe earlier releases.
+
 ## Assistant improvements — verified local and public release
 
 The nine QA failures have targeted shared answer/parser fixes. The local showcase

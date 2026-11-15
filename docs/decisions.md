@@ -2,6 +2,17 @@
 
 ## Current accepted user decisions — supersede the earlier G0 plan
 
+- **Playwright release checks and actionable blocked navigation (2026-11-15).**
+  The user reported Next/Compare stalling with no supported alternatives and
+  explicitly required Playwright flow/logic coverage. Use the installed browser,
+  real production data paths and development-only @playwright/test. Every behavior
+  release must pass `npm run test:release`, including both runtimes, desktop/mobile,
+  failed prerequisites, recovery and the sixteen existing QA questions. A disabled
+  button alone is insufficient acceptance. Distinguish unavailable source coverage
+  from missing selections, retain farmer inputs during navigation, keep blockers
+  visible beside Next and show source failures with a working retry. Do not invent
+  unsupported crop rules to make the form proceed. docs/playwright.md records the
+  current matrix and reproduction commands.
 - **Improve the assistant and retrain, rather than stop at QA (2026-11-15).**
   The user expanded the earlier tests-only task to fixing the nine exposed gaps
   and improving the optional tiny language model. Scientific capability limits

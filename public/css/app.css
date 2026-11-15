@@ -117,7 +117,10 @@ footer { padding-block: .4rem; border: 0; color: #5a6c55; font-size: .8rem; }
 .workflow-navigation { display: flex; align-items: center; gap: 1rem; padding: .5rem 6rem .5rem 1rem; background: #fffdf5; border-top: 1px solid #c4cdbb; flex: none; }
 .workflow-navigation button { margin: 0; }
 .workflow-navigation p { flex: 1; text-align: center; margin: 0; font-size: .9rem; }
+.workflow-navigation:has(#flow-blocker:not([hidden])) { flex-wrap: wrap; }
+.workflow-navigation #flow-blocker { flex: 1 1 100%; order: -1; text-align: left; color: #793c0f; }
 @media (max-width: 700px) { .workflow-navigation { gap: .4rem; padding: .4rem 5rem .4rem .8rem; } .workflow-navigation p { display: none; } .workflow-navigation button { flex: 1; font-size: .8rem; padding: .4rem; } }
+@media (max-width: 700px) { .workflow-navigation #flow-blocker:not([hidden]) { display: block; font-size: .8rem; } }
 #si p { margin-block: .6rem; }
 @media (max-width: 900px) { .map-workspace { grid-template-columns: minmax(0, 1fr) 290px; } #si { grid-template-columns: 1fr; } #si > *, #published-context { grid-column: 1; grid-row: auto; } }
 @media (max-width: 700px) { header { padding: .5rem .8rem; } main { padding-inline: .8rem; } .map-workspace { grid-template-columns: 1fr; } .location-controls { max-height: none; } #map { height: 300px; } nav button { padding: .35rem .4rem; } }

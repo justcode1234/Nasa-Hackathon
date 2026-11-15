@@ -7,12 +7,15 @@ import { initTabs } from './lib/tabs.js';
 import { initContext } from './modules/context.js';
 import { initChat } from './modules/chat.js';
 import { resolveCropInput } from './modules/workflow-assistant.js';
+import { comparisonReadiness } from './lib/comparison-readiness.js';
 
 const $ = selector => document.querySelector(selector);
 $('#runtime-status').textContent = getTransport() === 'http' ? 'Node.js testing mode' : 'Browser showcase mode';
 let observations = null;
 let comparedInputs = null;
 let catalogReady = false;
+let catalogFailed = false;
+let comparing = false;
 let revision = 0;
 let controller;
 let catalogData, countryCrops = null, selectedFarm = null, pestContext = null, soilContext = null, waterContext = null, context, chat;
@@ -33,17 +36,33 @@ function status(selector, message, error = false) {
   node.classList.toggle('error', error);
 }
 function syncControls() {
-  $('#compare').disabled = !observations || !catalogReady || document.querySelectorAll('[name="allowedCrops"]:checked').length < 2;
+  const gate = getComparisonReadiness();
+  $('#compare').disabled = !gate.ready || comparing;
+  $('#compare').setAttribute('aria-describedby', 'comparison-readiness');
+  $('#comparison-readiness').textContent = gate.message;
+  const planning = !$('#si').hidden;
+  $('#flow-blocker').hidden = !planning || gate.ready;
+  $('#flow-blocker').textContent = gate.ready ? '' : gate.message;
+  $('#flow-next').disabled = planning && (gate.code === 'catalog' || comparing);
+  if (planning) $('#flow-next').textContent = comparing ? 'Comparing…' : gate.label;
+  $('#flow-next').setAttribute('aria-describedby', planning && !gate.ready ? 'flow-blocker' : 'flow-progress');
 }
+function getComparisonReadiness() {
+  return comparisonReadiness({catalogReady,catalogFailed,country:countryCrops,observations,
+    allowedCount:document.querySelectorAll('[name="allowedCrops"]:checked').length});
+}
+window.addEventListener('fieldshift:tabchange', syncControls);
 function invalidate(clearEvidence, options = {}) {
   revision++;
   controller?.abort();
+  comparing = false;
   comparedInputs = null;
   chat?.invalidate(options);
   $('#strategy-output').textContent = 'Inputs changed. Compare again to see results for the current inputs.';
   status('#comparison-status', clearEvidence ? 'Load evidence for the selected coordinates and year.' : 'Constraints changed. Compare again.');
   if (clearEvidence) {
     observations = null;
+    $('#retry-evidence').hidden = true;
     $('#evidence-output').replaceChildren();
     status('#evidence-status', 'Location or reference year changed. Load historical NASA evidence.');
   }
@@ -140,6 +159,7 @@ async function loadEvidence(options = {}) {
   controller = new AbortController();
   $('#load-evidence').disabled = true;
   status('#evidence-status', 'Retrieving historical NASA POWER data… This may take up to 25 seconds.');
+  activateTab('evidence');
   const params = new URLSearchParams({ latitude: $('#latitude').value, longitude: $('#longitude').value, year: $('#reference-year').value });
   try {
     const data = await api(`/api/observations?${params}`, { signal: controller.signal });
@@ -152,13 +172,14 @@ async function loadEvidence(options = {}) {
     context.loadSoil();
     return true;
   } catch (error) {
-    if (error.name !== 'AbortError' && revision === version) status('#evidence-status', error.message, true);
+    if (error.name !== 'AbortError' && revision === version) { status('#evidence-status', error.message, true); $('#retry-evidence').hidden = false; }
     return false;
   } finally {
     if (revision === version) { $('#load-evidence').disabled = false; syncControls(); }
   }
 }
 $('#location-form').addEventListener('submit', event => { event.preventDefault(); loadEvidence(); });
+$('#retry-evidence').addEventListener('click', () => loadEvidence());
 function readInputs() {
   return { latitude: Number($('#latitude').value), longitude: Number($('#longitude').value), referenceYear: Number($('#reference-year').value), country: countryCrops?.country ?? '',
     planningYear: Number($('#planning-year').value), startMonth: Number($('#start-month').value),
@@ -174,19 +195,32 @@ activateTab.beforeNext = from => {
     return false;
   }
   if (from === 'si') {
-    if (!observations) { status('#comparison-status', 'Load NASA evidence in step 02 before comparing.', true); return false; }
-    if (document.querySelectorAll('[name="allowedCrops"]:checked').length < 2) { status('#comparison-status', 'At least two country crops with screening rules are required. See country coverage above.', true); return false; }
+    const gate = getComparisonReadiness();
+    if (!gate.ready) {
+      status('#comparison-status', gate.message, true);
+      if (gate.code === 'country' || gate.code === 'coverage' || gate.code === 'evidence') {
+        activateTab('location');
+        $(gate.code === 'evidence' ? '#load-evidence' : '#pest-country').focus();
+      } else if (gate.code === 'allowed') {
+        $('#allowed-crops').closest('fieldset').scrollIntoView({block:'center'});
+        document.querySelector('[name="allowedCrops"]')?.focus();
+      }
+      return false;
+    }
     if ($('#planning-form').reportValidity()) $('#planning-form').requestSubmit();
     return false;
   }
 };
 async function runComparison(options = {}) {
-  if (!observations || !catalogReady || !$('#planning-form').checkValidity()) return false;
+  const gate = getComparisonReadiness();
+  if (!gate.ready) { status('#comparison-status', gate.message, true); syncControls(); return false; }
+  if (!$('#planning-form').checkValidity()) return false;
   invalidate(false, options);
   const version = revision;
   const inputs = readInputs();
   controller = new AbortController();
-  $('#compare').disabled = true;
+  comparing = true;
+  syncControls();
   status('#comparison-status', 'Comparing sourced crop rules and historical evidence…');
   try {
     const result = await api('/api/compare', { method: 'POST', body: inputs, signal: controller.signal });
@@ -200,7 +234,7 @@ async function runComparison(options = {}) {
   } catch (error) {
     if (error.name !== 'AbortError' && version === revision) status('#comparison-status', error.message, true);
     return false;
-  } finally { if (version === revision) syncControls(); }
+  } finally { if (version === revision) { comparing = false; syncControls(); } }
 }
 $('#planning-form').addEventListener('submit', event => { event.preventDefault(); runComparison(); });
 try {
@@ -209,4 +243,4 @@ try {
   renderCatalog(catalog, countryCrops, selectedFarm?.crops ?? []);
   catalogReady = true;
   syncControls();
-} catch (error) { status('#catalog-status', `Crop catalog unavailable: ${error.message} Reload this page to retry.`, true); }
+} catch (error) { catalogFailed = true; syncControls(); status('#catalog-status', `Crop catalog unavailable: ${error.message} Reload this page to retry.`, true); }

@@ -186,6 +186,25 @@ Update this section and docs/decisions.md / docs/validation.md after each substa
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
 
+- **Active goal: fix Next/Compare and require Playwright flow tests.** The user
+  reproduced a blocked step-3 screen. Earlier coverage tests checked that Compare
+  was disabled but missed the unusable Next/recovery experience. The new Playwright
+  test failed against the previous public app on the actual Next click (step 01
+  stayed hidden). New UI distinguishes absent country rules from unchecked crops,
+  keeps a visible reason beside navigation, and routes Next to country selection,
+  evidence loading or allowed-crop selection without clearing entered values.
+  NASA request errors now open the visible evidence panel with Retry.
+  Playwright 1.65.1 is an explicitly requested development dependency; it uses the
+  installed Chrome, with no browser/model download. Four projects exercise static
+  and Node frontends at 1280px and 390px. Tests use real NASA data, with deliberate
+  transport failure followed by real retry; they never fabricate readings.
+  `npm run test:release` is required before future behavior releases. It runs
+  unit/logic tests plus Playwright: 95 offline + 16 Playwright tests pass locally,
+  including all sixteen original QA prompts in every project (64 executions).
+  The existing 33 Chrome and 18 Firefox checks also pass on this UI fix.
+  Publishing/public Playwright checks are in progress; do not yet claim the public
+  fix is deployed. A disabled Compare assertion alone is not a flow test.
+
 - **Current user goal — resolve QA gaps and improve the tiny LM (verified release):**
   fix all nine failed prompts in shared grounded answers and validated action
   parsing; retrain/evaluate the optional small word LM using additional development

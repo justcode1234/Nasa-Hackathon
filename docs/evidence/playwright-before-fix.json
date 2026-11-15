@@ -1,0 +1,218 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--project=public-desktop",
+      "--grep",
+      "zero coverage"
+    ],
+    "configFile": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\playwright.config.js",
+    "rootDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "public-desktop",
+        "name": "public-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "public-mobile",
+        "name": "public-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "public-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "https://nasa-hackathon-three.vercel.app",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "public-desktop"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts/playwright/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "artifacts/playwright/report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "workflow.spec.js",
+      "file": "workflow.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "zero coverage explains the block beside Next and recovers without erasing farmer inputs",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "public-desktop",
+              "projectName": "public-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 17666,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#location')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('#location') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('#location')\u001b[22m\n\u001b[2m    33 × locator resolved to <section hidden=\"\" id=\"location\" role=\"tabpanel\" aria-labelledby=\"tab-location\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#location')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('#location') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('#location')\u001b[22m\n\u001b[2m    33 × locator resolved to <section hidden=\"\" id=\"location\" role=\"tabpanel\" aria-labelledby=\"tab-location\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\workflow.spec.js:34:43",
+                    "location": {
+                      "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\workflow.spec.js",
+                      "column": 43,
+                      "line": 34
+                    },
+                    "snippet": " \u001b[90m 32 |\u001b[39m   \u001b[90m// Exercise the user's actual failing click before checking any new helper UI.\u001b[39m\n \u001b[90m 33 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'#flow-next'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 34 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#location'\u001b[39m))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#pest-country'\u001b[39m))\u001b[33m.\u001b[39mtoBeFocused()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 35 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#pest-country'\u001b[39m))\u001b[33m.\u001b[39mtoHaveValue(\u001b[32m'SG'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 36 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'#tab-si'\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 37 |\u001b[39m   \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m'#allowed-crop-status'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(\u001b[32m'No alternatives are available'\u001b[39m)\u001b[33m;\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\workflow.spec.js",
+                        "column": 43,
+                        "line": 34
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('#location')\nExpected: visible\nReceived: hidden\nTimeout:  15000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('#location') with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('#location')\u001b[22m\n\u001b[2m    33 × locator resolved to <section hidden=\"\" id=\"location\" role=\"tabpanel\" aria-labelledby=\"tab-location\">…</section>\u001b[22m\n\u001b[2m       - unexpected value \"hidden\"\u001b[22m\n\n\n  32 |   // Exercise the user's actual failing click before checking any new helper UI.\n  33 |   await page.locator('#flow-next').click();\n> 34 |   await expect(page.locator('#location')).toBeVisible();await expect(page.locator('#pest-country')).toBeFocused();\n     |                                           ^\n  35 |   await expect(page.locator('#pest-country')).toHaveValue('SG');\n  36 |   await page.locator('#tab-si').click();\n  37 |   await expect(page.locator('#allowed-crop-status')).toContainText('No alternatives are available');\n    at C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\workflow.spec.js:34:43"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-14T19:39:05.891Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\workflow-zero-coverage-exp-49be5-thout-erasing-farmer-inputs-public-desktop\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\workflow-zero-coverage-exp-49be5-thout-erasing-farmer-inputs-public-desktop\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results\\workflow-zero-coverage-exp-49be5-thout-erasing-farmer-inputs-public-desktop\\trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e\\workflow.spec.js",
+                    "column": 43,
+                    "line": 34
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "93da89c2ff21c8134e9c-ec7942da81c1356f3b05",
+          "file": "workflow.spec.js",
+          "line": 23,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-14T19:39:05.147Z",
+    "duration": 18806.992,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
