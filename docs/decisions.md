@@ -541,3 +541,53 @@ so do not pretend that advertised install works. No new speech dependency has ye
 been installed. Current registry Transformers.js is 4.3.2; evaluate/pin only after
 review and browser feasibility. The previous HF workers remain archived; any new
 speech-only runtime needs an explicit narrow CSP and licence update.
+
+
+## Field lookup, voice and typed-judgment decisions - 15 November 2026 (Claude Code session)
+
+**Field lookup.** Diagnosis: overpass-api.de was returning correct fields in about
+26-27 s while the client abandoned each service after 25 s, in sequence; its status
+endpoint also returned "at capacity ... retry using exponential backoff". The lookup
+now overlaps three public Overpass services (overpass-api.de, overpass.private.coffee,
+maps.mail.ru/osm/tools/overpass), gives each up to three attempts with exponential
+backoff, and shares one 75 s deadline. The first complete real response wins. Nothing
+is substituted when every service fails; the app shows Retry. maps.mail.ru is a
+long-standing public Overpass instance listed by the OSM community; it was added to
+both CSPs. These are shared volunteer services, so availability is still not
+guaranteed. Browser tests press the app's Retry button like a user (at most twice),
+record the number of retries, and still require real fields.
+
+**Voice input (speech to text).** Whisper tiny.en, ONNX export
+onnx-community/whisper-tiny.en pinned at revision 794207f, q8 files (43.5 MB measured
+download). OpenAI's model card states the .en checkpoints are English-only. Runtime:
+Transformers.js 4.3.2 with ONNX Runtime Web, shipped from this origin under
+public/vendor/transformers (587 KB script, 53 KB loader, 26.9 MB WASM) and fetched
+only after the mic is pressed. 3.8.1 was rejected because npm audit flags its sharp
+dependency (high severity); 4.3.2 audits clean. A cross-origin import inside the
+module worker was blocked by the CSP, which is why the runtime is vendored. CSP adds
+only https://huggingface.co and https://us.aws.cdn.hf.co (the observed redirect host)
+to connect-src. No telemetry is configured. The microphone is requested only after
+an explicit click; audio is decoded and transcribed on the device; the transcript is
+appended to the editable message box and never sent or executed automatically.
+
+**Read aloud (text to speech).** KittenTTS was evaluated and not adopted: its model
+card states no training data or English-only training, the advertised @kittentts/web
+package still returns 404 (only an unofficial port exists), and its documented
+pipeline depends on the GPL-licensed espeak phonemizer. Read aloud therefore uses
+the browser's built-in speech engine, restricted to English voices with
+`localService === true`, so text is not sent to a remote voice service and nothing is
+downloaded. If no on-device English voice exists the app says so. It speaks the
+visible answer paragraphs, including limits. There is no TTS model to unload; the
+Unload button applies to the speech-to-text model. Limitation: the produced audio
+cannot be captured in automated tests; tests verify the exact text, the chosen
+on-device English voice and Stop. If a downloadable English-only TTS with verified
+provenance and a permissive phonemizer is found later, it can replace this.
+
+**Typed-judgment experiment (Jev-inspired, not Jev).** See models/judgment/README.md.
+A 33,229-parameter TensorFlow.js Layers classifier answers three fixed questions
+(app action, unsupported claim, topic) with calibrated probabilities and abstention.
+On 95 held-out messages it scored 77/80/43 against 75/81/50 for the existing rules,
+so it is not wired into the app. The held-out set was evaluated twice; this is
+recorded. @tensorflow/tfjs 4.22.0 was added as a development-only dependency for
+training in Node. Python TensorFlow is not installed on this machine, so the
+notebook-based Keras route in section 5 was not used for this experiment.

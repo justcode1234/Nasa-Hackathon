@@ -123,3 +123,17 @@ summary { cursor: pointer; padding-block: .5rem; font-weight: 600; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }
 
 #gibs-legend img { max-width: 100%; height: auto; background: white; }
+
+/* Voice input: icon button beside the message box; state shown by colour and label, no animation. */
+#question-form { display: flex; align-items: end; gap: .5rem; }
+#question-form label { flex: 1; min-width: 0; }
+#question-form button { margin-top: 0; flex: none; }
+.mic { display: inline-flex; align-items: center; justify-content: center; width: 44px; padding: 0; background: var(--panel); color: var(--control); border: 1px solid var(--control); }
+.mic:hover:enabled { background: #e8edde; }
+.mic.recording { background: #8a2a1c; border-color: #8a2a1c; color: #fff; }
+.mic.recording:hover:enabled { background: #6f1f14; }
+#speech-status { font-size: .9rem; margin-block: .4rem; }
+.speech-controls { display: flex; flex-wrap: wrap; gap: .5rem; }
+.speech-controls button, .read-aloud { margin-top: 0; min-height: 36px; padding: .25rem .7rem; font-size: .9rem; background: var(--panel); color: var(--control); border: 1px solid var(--control); }
+.speech-controls button:hover:enabled, .read-aloud:hover:enabled { background: #e8edde; }
+.read-aloud { margin-top: .4rem; }

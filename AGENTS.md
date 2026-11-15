@@ -188,7 +188,40 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 
 ## 10. Current implementation and cross-device handoff - 2026-11-15
 
-- **New user scope:** implement small English-only STT/TTS with a mic option in chat and investigate/train a local typed classifier inspired by TypeSafe AI Jev. User corrected JEPA/LeJEPA: do not build JEPA. Research/requirements and actual dependency findings are at the end of docs/decisions.md. No speech dependency/model is installed yet. The 3D visuals are approved for preview, but full release still fails: 114 offline pass, 84/92 browser pass; standalone Ames field-terrain additionally fails all four projects at discovery. Current release suite has 96 browser cases. Keep the original field requirements and production freeze.
+- **Release gate GREEN; voice input and typed-judgment experiment added (Claude Code session, 15 Nov):**
+  `npm run test:release` passed 117/117 offline and 116/116 browser cases (29 per project,
+  zero skips/flaky, no field retries needed). Evidence: docs/evidence/v5-green-release-summary.json
+  (+ raw .json.gz and log). Changes since ef11d3a:
+  - **Field lookup fixed.** The client gave up after 25 s per service while overpass-api.de
+    answered in 26-27 s. Lookup now overlaps three public Overpass services with exponential
+    backoff (three attempts each) under one 75 s deadline; nothing is substituted on failure.
+    Live field -> terrain drape -> slope passes in all four projects. An intermediate full run
+    was 95/96 (one real all-services-busy window, v5-field-fix-release.json); tests now press
+    the app's Retry like a user (max twice) via tests/e2e/live-fields.js and still require real
+    fields. These are shared volunteer services: a later run can still fail if all are down.
+  - **Voice input implemented.** Mic button in chat -> explicit permission -> Whisper tiny.en
+    (onnx-community export, revision 794207f, q8; 43.5 MB measured) transcribed on the device
+    with vendored Transformers.js 4.3.2 + ONNX Runtime Web (public/vendor/transformers, built
+    from node_modules; 26.9 MB WASM). Transcript goes to the editable message box; never
+    auto-sent. Unload button, 20 s cap, permission-denied, download-failure and cancel paths
+    are tested. Measured on the development desktop: about 3.4 s load, 1.7 s for a 4 s clip.
+    The test clip is synthetic Windows-voice English (tests/fixtures/TEST-...wav).
+  - **Read aloud implemented with the built-in on-device English voice** (speechSynthesis,
+    localService only). KittenTTS was NOT adopted: no stated training data/English-only
+    provenance, no official web package, GPL espeak dependency. Details in docs/decisions.md.
+  - **Typed-judgment experiment (Jev-inspired, not Jev) trained, NOT wired into the app.**
+    33,229 parameters; held-out 95 messages: action 77, unsupported 80, topic 43 vs rules
+    75/81/50. See models/judgment/README.md and evaluation.json. Do not present its
+    probabilities as agronomic confidence.
+  - New dependencies: @huggingface/transformers 4.3.2 (runtime, vendored; 3.8.1 rejected for
+    a flagged sharp dependency), @tensorflow/tfjs 4.22.0 (dev only). npm audit: 0 findings.
+    CSP connect-src adds huggingface.co, us.aws.cdn.hf.co and maps.mail.ru only.
+  - **Unverified:** real phones, real accents/noise, speech memory use, Safari/Firefox voice
+    behaviour, audible TTS output, independent label review for the classifier.
+  - Branch push and Vercel PREVIEW status are recorded in docs/deployment.md. Production
+    stays frozen at Phase A (main f4c4fef).
+
+- **(Superseded by the entry above) New user scope:** implement small English-only STT/TTS with a mic option in chat and investigate/train a local typed classifier inspired by TypeSafe AI Jev. User corrected JEPA/LeJEPA: do not build JEPA. Research/requirements and actual dependency findings are at the end of docs/decisions.md. No speech dependency/model is installed yet. The 3D visuals are approved for preview, but full release still fails: 114 offline pass, 84/92 browser pass; standalone Ames field-terrain additionally fails all four projects at discovery. Current release suite has 96 browser cases. Keep the original field requirements and production freeze.
 
 - **V5 visual approval received; full release still fails at fields:** user approved the current visuals for preview. Full release: 114 offline pass; 84/92 browser pass, eight real-field failures, no skips/flaky cases; 44 axe scans pass. All 3D point/data/window/retry cases pass. Node Cambridge returned fields, then York failed: availability is partial. Ames field drape is now a standalone real-discovery test (all four fail at discovery), not gated behind unrelated example failures. Exact branch-only Git deployment suppression permits cross-device sync without creating a release; push verification is pending. Reports: docs/evidence/v5-release*. Production core hashes and remote main still match Phase A.
 
@@ -379,7 +412,7 @@ state. Do not leave another device relying on an earlier planning assumption.
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry
-it out. **Status: Phase A released; Phase B implemented but live field verification fails; V0 approved, V1/V2/V4 locally verified, V3 field flow and V5 release gate incomplete.** The review
+it out. **Status: Phase A released (production frozen). Phase B and Phase C V0-V5 implemented on feature/3d-evidence-map; the complete release gate passed 117 offline + 116 browser cases on 15 November (see section 10). Preview only; real-phone checks remain unverified.** The review
 baseline was 8b53619, where
 `npm test` passed 95/95 and `npm run test:e2e` passed 16/16 locally. Detail, evidence,
 exact file locations, verified source quotes and ready-to-apply crop entries are in

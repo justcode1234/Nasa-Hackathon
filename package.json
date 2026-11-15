@@ -27,11 +27,13 @@
     "test:release": "npm test && npm run test:e2e"
   },
   "dependencies": {
+    "@huggingface/transformers": "4.3.2",
     "leaflet": "1.9.4",
     "maplibre-gl": "6.4.1"
   },
   "devDependencies": {
     "@playwright/test": "1.65.1",
+    "@tensorflow/tfjs": "4.22.0",
     "axe-core": "4.10.2",
     "esbuild": "0.28.2"
   }

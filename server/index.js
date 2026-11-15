@@ -9,7 +9,7 @@ import { createLocationClient } from './context/locations.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const previewId = createHash('sha256').update(path.resolve(root)).digest('hex').slice(0, 16);
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.bin': 'application/octet-stream', '.pdf': 'application/pdf', '.zip': 'application/zip', '.txt': 'text/plain; charset=utf-8' };
+const types = { '.wasm': 'application/wasm', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.bin': 'application/octet-stream', '.pdf': 'application/pdf', '.zip': 'application/zip', '.txt': 'text/plain; charset=utf-8' };
 
 async function readJson(request,limit=16_384) {
   if (!request.headers['content-type']?.startsWith('application/json')) throw new AppError('Send application/json.', 415);

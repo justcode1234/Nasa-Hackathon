@@ -1,6 +1,7 @@
 import { api } from '../lib/api.js';
 import { el, sourceLinks } from '../lib/dom.js';
 import { createWorkflowAssistant } from './workflow-assistant.js';
+import { initSpeech } from './speech.js';
 
 export function initChat(getState, actions) {
   const $ = id => document.getElementById(id);
@@ -10,10 +11,12 @@ export function initChat(getState, actions) {
   const setStatus = message => { $('model-status').textContent = message; };
   const workflow = createWorkflowAssistant({ getState, actions, progress: message => { $('answer-status').textContent = message; } });
   let pendingChoice = null, messageSerial = 0;
+  // Optional voice input/read-aloud. Dictation only fills the editable message box.
+  const speech = initSpeech({ input: $('question'), status: $('speech-status'), micButton: $('mic'), unloadButton: $('unload-speech'), stopButton: $('stop-speaking') });
   function open(value) {
     $('chat-panel').hidden = !value;
     $('chat-toggle').setAttribute('aria-expanded', String(value));
-    if (value) $('question').focus(); else $('chat-toggle').focus();
+    if (value) $('question').focus(); else { speech.cancel(); $('chat-toggle').focus(); }
     if(value&&!worker&&!disabled)loadModel();
   }
   $('chat-toggle').addEventListener('click', () => open($('chat-panel').hidden));
@@ -139,6 +142,7 @@ export function initChat(getState, actions) {
         });
         response.append(choices);
       }
+      speech.attachReadAloud(response);
       log.append(response);
       // The evidence answer is visible before optional neural inference finishes.
       const renderedAt=performance.now();
@@ -160,7 +164,7 @@ export function initChat(getState, actions) {
   return { invalidate({ fromAssistant = false } = {}) {
     chatContext = null;
     if (fromAssistant) return;
-    workflow.invalidate(); pendingChoice = null;
+    workflow.invalidate(); pendingChoice = null; speech.stopSpeaking();
     revision++; request?.abort(); $('ask').disabled = false; chatContext = null;
     log.replaceChildren(el('p', 'Location or planning context changed. New messages use the current selection.'));
     $('answer-status').textContent = 'Answers include sources and limitations.';

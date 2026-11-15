@@ -31,3 +31,14 @@ All memory figures are sampled isolated process-tree working sets and can
 double-count shared pages. They are not exact simultaneous session peaks or
 guarantees. The mini-LM actually ran; its proposed topic was rejected by the answer
 guard in this measurement. No crop accuracy claim follows from these benchmarks.
+
+
+## Update - 15 November 2026 (release gate passed)
+
+The live field-selection -> terrain drape -> derived slope/aspect path now passes in
+both runtimes and both viewport sizes (field-terrain.spec.js, 4/4), and the complete
+release suite passed 117 offline + 116 browser cases. The earlier failures were a
+client deadline shorter than the real service response time, fixed by overlapping
+services with backoff under a 75 s deadline. Evidence:
+docs/evidence/v5-green-release-summary.json. Real-phone performance and memory remain
+unverified. Preview/push status: docs/deployment.md.

@@ -10,6 +10,11 @@ export async function buildBrowser() {
   await mkdir('public/vendor/maplibre',{recursive:true});
   for(const file of ['maplibre-gl.mjs','maplibre-gl-shared.mjs','maplibre-gl-worker.mjs','maplibre-gl.css'])await cp(`node_modules/maplibre-gl/dist/${file}`,`public/vendor/maplibre/${file}`);
   await cp('node_modules/maplibre-gl/LICENSE.txt','public/vendor/maplibre/LICENSE.txt');
+  // Speech-to-text runtime: served from this origin, fetched only after the mic is pressed.
+  await mkdir('public/vendor/transformers',{recursive:true});
+  await cp('node_modules/@huggingface/transformers/dist/transformers.min.js','public/vendor/transformers/transformers.min.js');
+  await cp('node_modules/@huggingface/transformers/LICENSE','public/vendor/transformers/LICENSE.txt');
+  for(const file of ['ort-wasm-simd-threaded.asyncify.mjs','ort-wasm-simd-threaded.asyncify.wasm'])await cp(`node_modules/onnxruntime-web/dist/${file}`,`public/vendor/transformers/${file}`);
   await mkdir('public/licenses',{recursive:true});
   await cp('LICENSE','public/licenses/fieldshift-mit.txt');
   await cp('node_modules/esbuild/LICENSE.md','public/licenses/esbuild-mit.txt');

@@ -526,3 +526,35 @@ so do not pretend that advertised install works. No new speech dependency has ye
 been installed. Current registry Transformers.js is 4.3.2; evaluate/pin only after
 review and browser feasibility. The previous HF workers remain archived; any new
 speech-only runtime needs an explicit narrow CSP and licence update.
+
+
+## Green release gate, field fix, voice and judgment checks - 15 November 2026
+
+Executed in this session (development desktop, installed Chrome via Playwright):
+
+| Check | Result |
+| --- | --- |
+| Live Ames field -> terrain drape -> slope, four projects (after lookup fix) | 4/4 passed (was 0/4) |
+| Full release after lookup fix | 114/114 offline; 95/96 browser. One example-regions case failed when all three Overpass services stayed busy for 75 s (7 attempts) |
+| Speech specs, four projects | 20/20 passed |
+| **Final `npm run test:release`** | **117/117 offline; 116/116 browser; 0 skipped; 0 flaky; 0 user retries needed** |
+| npm audit | 0 vulnerabilities |
+
+Evidence: docs/evidence/v5-field-fix-release.json, v5-field-terrain-after-fix.raw.json,
+v5-green-release-summary.json (+ .raw.json.gz, .log.gz), speech-playwright.raw.json.gz.
+
+Voice input measurements (same machine, each project): transcript exactly "Tell me
+about tomatoes in Kenya."; model download 43,536,374 bytes; load 3.3-3.5 s; inference
+1.67-1.74 s for about 4 s of audio. The runtime WASM (26.9 MB) is additional. Tests
+assert that no non-GET request leaves the machine during dictation, that no chat
+message is sent, that no country is selected, and that a refused microphone triggers
+no model download.
+
+Typed-judgment experiment, 95 held-out messages (second evaluation; see
+models/judgment/README.md): action 77 (rules 75, majority 73), unsupported 80 (81, 78),
+topic 43 (50, 22). Not wired into the app.
+
+Not verified: real phones or tablets, real microphones, accents and noise, memory
+use of the speech model, Safari/Firefox voice input, audible read-aloud output (only
+text, voice choice and Stop are checked), availability of the public field services
+at any other time, and independent review of classifier labels.

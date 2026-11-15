@@ -12,6 +12,16 @@ licences, source attribution and the exact runtime package versions.
 - TensorFlow.js and WASM backend 4.22.0: Apache-2.0, TensorFlow/Google contributors.
   Loaded on demand from pinned jsDelivr URLs. Full licence is shipped under
   public/licenses/tensorflow-apache-2.0.txt, copied from the matching source tag.
+- Transformers.js 4.3.2: Apache-2.0, Hugging Face. ONNX Runtime Web (bundled runtime and
+  WASM): MIT, Microsoft Corporation. Both ship under public/vendor/transformers and are
+  fetched only after the microphone is pressed. Licences: that folder's LICENSE.txt and
+  public/licenses/onnxruntime-mit.txt (the npm package omits a licence file, so the
+  standard MIT text with the upstream copyright line is reproduced).
+- Whisper tiny.en (OpenAI), ONNX export onnx-community/whisper-tiny.en pinned at revision
+  794207fec2761281fe63a23a94b7e9f53a4efbc1: Apache-2.0 as declared on the model
+  repository. Downloaded from huggingface.co at run time, never redistributed here.
+- @tensorflow/tfjs 4.22.0 (npm): Apache-2.0; development-only, used to train and
+  evaluate the typed-judgment experiment in Node.
 - esbuild 0.28.2: MIT; build tooling. Installed-package licence is included under
   public/licenses/esbuild-mit.txt.
 - Playwright, Playwright Core and @playwright/test 1.65.1: Apache-2.0, Microsoft
