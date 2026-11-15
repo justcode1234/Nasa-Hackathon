@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-11-15T12:08:34.262Z",
+  "reviewSourceBase": "4f9b8b3",
+  "branch": "review/submission-accuracy",
+  "main": "f4c4fef9202d133a4f412973a8a8653fd3d21965",
+  "publicCoverage": {
+    "crops": [
+      "Bush snap bean",
+      "Garden pea",
+      "Sweet corn",
+      "Radish"
+    ],
+    "countries": 197,
+    "records": 9238,
+    "comparable": 89
+  },
+  "gazetteer": {
+    "countryAreas": 245,
+    "points": 70036
+  },
+  "protectedFiles": [
+    {
+      "file": "docs/submission.md",
+      "sha256": "89f78635fcf1fe43edc5c45a89cbbad306c0feba8c92bcd48192d620f7d09d64",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "public/submission/index.html",
+      "sha256": "f6a033e365c2a95460359591b4f5546def25152c695776a824978ad1bed22ab8",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "public/submission/fieldshift-deck.pdf",
+      "sha256": "73579d653ba288dc4ff2c1d3b3dd854a31819108569db39806496a7ceafe608c",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "public/submission/fieldshift-source.zip",
+      "sha256": "b3afc9310855fc727414b183b84267b2331add730597904fd07d9b564cf0a9ee",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "public/submission/submission-text.txt",
+      "sha256": "89f78635fcf1fe43edc5c45a89cbbad306c0feba8c92bcd48192d620f7d09d64",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "public/submission/source-manifest.json",
+      "sha256": "a87327b0bebf17ecbdba5e0ca3bb33366eee3e01dbd8e55b221c96bb96fbb94b",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "THIRD-PARTY-NOTICES.md",
+      "sha256": "27b11bffcdf33bbdb8fd01325a01909898a6aed1976b3428d1e9852884baf644",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "LICENSE",
+      "sha256": "30b8017aaecb6af49b7cf88726a689e2d3220f33a1dbb59e8a666bafa670fd2d",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "package.json",
+      "sha256": "3c009f39c43dfa9dd6989b2c80219530ff3abadbba68706cbd44cd1b8deb9eea",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "1feaaad240f9abaaefce6605a84e61f6f878efe7c18fed65bf1ad443d052b998",
+      "unchangedFromReviewBase": true
+    },
+    {
+      "file": "playwright.config.js",
+      "sha256": "09a72b95846e13feee7963e915f8af3da2ad072e17d77dc5fbd1423770a4b7f8",
+      "unchangedFromReviewBase": true
+    }
+  ]
+}

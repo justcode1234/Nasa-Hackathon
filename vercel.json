@@ -4,7 +4,8 @@
   "outputDirectory": "dist/client",
   "git": {
     "deploymentEnabled": {
-      "feature/3d-evidence-map": false
+      "feature/3d-evidence-map": false,
+      "review/submission-accuracy": false
     }
   },
   "headers": [

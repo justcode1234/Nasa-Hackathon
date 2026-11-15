@@ -1,0 +1,223 @@
+{
+  "checkedAt": "2026-11-15T11:51:14.081Z",
+  "authentication": "none; ordinary fetch without credentials",
+  "results": [
+    {
+      "requested": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/",
+      "checkedAt": "2026-11-15T11:51:07.292Z",
+      "status": 200,
+      "url": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/",
+      "type": "text/html",
+      "bytes": 36966,
+      "sha256": "d624945397c5fa517d5d8d63c3c802550869271d545c93f31c0e7e419cf4a9f6"
+    },
+    {
+      "requested": "https://power.larc.nasa.gov/",
+      "checkedAt": "2026-11-15T11:51:07.232Z",
+      "status": 200,
+      "url": "https://power.larc.nasa.gov/",
+      "type": "text/html",
+      "bytes": 35593,
+      "sha256": "0c2f2af2440b4e9dda000c921f3be02dd1d71294a1e57640ef6a4e3270fb98b1"
+    },
+    {
+      "requested": "https://www.fao.org/faostat/en/#data/QCL",
+      "checkedAt": "2026-11-15T11:51:07.293Z",
+      "status": 200,
+      "url": "https://www.fao.org/faostat/en/",
+      "type": "text/html",
+      "bytes": 3752,
+      "sha256": "e7d6c678671ba94e79217f3ed76de34cf93d3414d9677cedecb66c84089846af"
+    },
+    {
+      "requested": "https://isric.org/explore/soilgrids/",
+      "checkedAt": "2026-11-15T11:51:07.294Z",
+      "status": 200,
+      "url": "https://isric.org/explore/soilgrids/",
+      "type": "text/html;charset=utf-8",
+      "bytes": 279976,
+      "sha256": "3c80eb0fb30d0032f1110eb45209aedf1ca332b0acddfa19817de31560bd2dc0"
+    },
+    {
+      "requested": "https://www.gbif.org/",
+      "checkedAt": "2026-11-15T11:51:09.027Z",
+      "status": 403,
+      "url": "https://www.gbif.org/",
+      "type": "text/html; charset=UTF-8",
+      "bytes": 5954,
+      "sha256": "54fe0f0ef88765312b14cb59030980cc0a9e9dbf0a74c86aeedeef05260979bf"
+    },
+    {
+      "requested": "https://github.com/justcode1234/Nasa-Hackathon",
+      "checkedAt": "2026-11-15T11:51:09.028Z",
+      "status": 200,
+      "url": "https://github.com/justcode1234/Nasa-Hackathon",
+      "type": "text/html; charset=utf-8",
+      "bytes": 277935,
+      "sha256": "74b11f05ec516f17adf34150768ae61aebbaa0ff9b9de69857c5ed21e703be7f"
+    },
+    {
+      "requested": "https://www.openstreetmap.org/copyright",
+      "checkedAt": "2026-11-15T11:51:09.025Z",
+      "status": 200,
+      "url": "https://www.openstreetmap.org/copyright",
+      "type": "text/html; charset=utf-8",
+      "bytes": 21314,
+      "sha256": "3fd0797bcfb56e2a2c56b9497dc4af093d7a4d33e5e6789e961cbe94eb8ad475"
+    },
+    {
+      "requested": "https://www.geonames.org/export/",
+      "checkedAt": "2026-11-15T11:51:09.027Z",
+      "status": 200,
+      "url": "https://www.geonames.org/export/",
+      "type": "text/html; charset=utf-8",
+      "bytes": 30795,
+      "sha256": "30c44785d834cdf9a8c034181e61516d2c89492efb8876478daf4bd5f2cf8158"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/credits.html",
+      "checkedAt": "2026-11-15T11:51:13.204Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/credits.html",
+      "type": "text/html; charset=utf-8",
+      "bytes": 4079,
+      "sha256": "41741437906f25c77bfacef14eb628085f273096ae00cb3f7db5ef7192ab8ee5"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/",
+      "checkedAt": "2026-11-15T11:51:13.203Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/",
+      "type": "text/html; charset=utf-8",
+      "bytes": 13517,
+      "sha256": "b3b025a5e44cf671eddd86c285d904500325b37146eed0c403cd468f8c4db1fe",
+      "features": {
+        "has3d": false,
+        "hasMic": false,
+        "hasCountry": true,
+        "hasCredits": true
+      }
+    },
+    {
+      "requested": "https://api.github.com/repos/justcode1234/Nasa-Hackathon",
+      "checkedAt": "2026-11-15T11:51:13.200Z",
+      "status": 200,
+      "url": "https://api.github.com/repos/justcode1234/Nasa-Hackathon",
+      "type": "application/json; charset=utf-8",
+      "bytes": 5613,
+      "sha256": "c8145f6edc2cbb7f457b6b00a7e638dc24394919a540e89c05875095c6ce9566",
+      "repository": "justcode1234/Nasa-Hackathon",
+      "private": false,
+      "defaultBranch": "main"
+    },
+    {
+      "requested": "https://api.github.com/repos/justcode1234/Nasa-Hackathon/commits/main",
+      "checkedAt": "2026-11-15T11:51:13.202Z",
+      "status": 200,
+      "url": "https://api.github.com/repos/justcode1234/Nasa-Hackathon/commits/main",
+      "type": "application/json; charset=utf-8",
+      "bytes": 112534,
+      "sha256": "36ae2ed7d4192bc99be5c4d1ac18c7c7783b048b8870c87d81bebd3819b12c56",
+      "commit": "f4c4fef9202d133a4f412973a8a8653fd3d21965"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/submission/submission-text.txt",
+      "checkedAt": "2026-11-15T11:51:13.674Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/submission/submission-text.txt",
+      "type": "text/plain; charset=utf-8",
+      "bytes": 15273,
+      "sha256": "89f78635fcf1fe43edc5c45a89cbbad306c0feba8c92bcd48192d620f7d09d64"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/submission/source-manifest.json",
+      "checkedAt": "2026-11-15T11:51:13.672Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/submission/source-manifest.json",
+      "type": "application/json; charset=utf-8",
+      "bytes": 69421,
+      "sha256": "a87327b0bebf17ecbdba5e0ca3bb33366eee3e01dbd8e55b221c96bb96fbb94b"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/submission/fieldshift-deck.pdf",
+      "checkedAt": "2026-11-15T11:51:13.672Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/submission/fieldshift-deck.pdf",
+      "type": "application/pdf",
+      "bytes": 86877,
+      "sha256": "73579d653ba288dc4ff2c1d3b3dd854a31819108569db39806496a7ceafe608c"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/submission/",
+      "checkedAt": "2026-11-15T11:51:13.671Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/submission/",
+      "type": "text/html; charset=utf-8",
+      "bytes": 10817,
+      "sha256": "f6a033e365c2a95460359591b4f5546def25152c695776a824978ad1bed22ab8"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/js/modules/si.js",
+      "checkedAt": "2026-11-15T11:51:14.014Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/js/modules/si.js",
+      "type": "application/javascript; charset=utf-8",
+      "bytes": 4806,
+      "sha256": "fac834508dba734e17407a722a192dd8df567dc62bfce643288e93a00839f1d8"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/js/modules/data-flow.js",
+      "checkedAt": "2026-11-15T11:51:14.014Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/js/modules/data-flow.js",
+      "type": "application/javascript; charset=utf-8",
+      "bytes": 4999,
+      "sha256": "c86d6a22ecb7a64c98c850b55ba55f985f5d0237fc35641f73b1fb6da136d542"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/js/modules/strategy.js",
+      "checkedAt": "2026-11-15T11:51:14.014Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/js/modules/strategy.js",
+      "type": "application/javascript; charset=utf-8",
+      "bytes": 4130,
+      "sha256": "c45cfb95585ae0e33d8a95d4c855ebf1373b77f0119a7bcdf68511ef64ceca00"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/js/modules/map.js",
+      "checkedAt": "2026-11-15T11:51:14.014Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/js/modules/map.js",
+      "type": "application/javascript; charset=utf-8",
+      "bytes": 3486,
+      "sha256": "1087c73746a6ea83f71e9dd121f102313dc7c8520f1f8e54041bac7aeaf461cb"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/api/health",
+      "checkedAt": "2026-11-15T11:51:14.066Z",
+      "status": 404,
+      "url": "https://nasa-hackathon-three.vercel.app/api/health",
+      "type": "text/plain; charset=utf-8",
+      "bytes": 79,
+      "sha256": "3940d486e32fc0c8837c50fafc18cd20854047bdbd250b2b83547056de8ce14d"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/js/lib/core-worker.bundle.js",
+      "checkedAt": "2026-11-15T11:51:14.066Z",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/js/lib/core-worker.bundle.js",
+      "type": "application/javascript; charset=utf-8",
+      "bytes": 339546,
+      "sha256": "6851ac6c5f5981fe5d82805fda45a18db79fcebd54b13248a7539e06b5666745"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/js/modules/mini-lm.js",
+      "checkedAt": "2026-11-15T11:51:14.065Z",
+      "status": 404,
+      "url": "https://nasa-hackathon-three.vercel.app/js/modules/mini-lm.js",
+      "type": "text/plain; charset=utf-8",
+      "bytes": 79,
+      "sha256": "bcea9babd2965a682eea13c95d1f2265270f584277e0f2583695ce5ea3d4dfd1"
+    }
+  ]
+}

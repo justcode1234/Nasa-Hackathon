@@ -12,6 +12,11 @@
 > Never merge or deploy to production, or touch the NASA submission, without the
 > user's explicit approval.
 
+> **Repository review:** `review/submission-accuracy` in the sibling
+> worktree `Nasa-Hackathon-repository-review`, based on `4f9b8b3`. Read
+> `docs/submission-accuracy-review.md` for findings and verification status.
+> Preserve unfinished assistant changes in the original feature worktree.
+
 ## 1. Mission and product rules
 
 Build **FieldShift**, a **global, location-adaptive crop-rotation decision-support web app** for the 2026 NASA Space Apps Challenge: **“Field Shift: Adapting Farms with NASA Data.”**
@@ -188,6 +193,41 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 **Priority when there is a conflict:** scientific honesty and working functionality > benchmarked, optional browser AI > CSS polish and extra features. User-approved requirements override speculative implementation ideas in this document.
 
 ## 10. Current implementation and cross-device handoff - 2026-11-15
+
+- **Repository/submission review (verified, 15 November):** the user requested a
+  visitor README, verified references, conservative organization and an accuracy
+  report, on a separate branch with no merge/deploy. Created
+  `review/submission-accuracy` at `4f9b8b3` in the sibling
+  `C:\Users\~\Documents\Life\Coding\github\Nasa-Hackathon-repository-review`.
+  The original feature worktree's incomplete assistant/regional-crop changes remain
+  untouched and are not included. Root runtime/configuration paths and third-party
+  notices stay in place; developer instructions move from README into
+  docs/development.md, with docs/README.md as the index. NASA submission copy and
+  public submission artifacts are unchanged; proposals go in separate review files.
+  Public source checks match main `f4c4fef`; live GitHub and public site return 200
+  without authentication. Supplied provider pages return 200 except GBIF homepage
+  (403 here; API documentation reachable). ISRIC announces a REST pause. Pinned
+  dependencies installed with npm ci --ignore-scripts: 0 audit vulnerabilities.
+  `npm.cmd run test:release` completed exit 0: 119/119 offline + 116/116 browser,
+  zero skips/flaky/unexpected, 19.8-minute browser phase. All four runtime/viewport
+  projects and mandatory real-field checks passed. Separate unauthenticated public
+  run: 16/16 cases at 1280/390 px, 32 original QA question executions, zero skips/
+  flaky/unexpected. Durable summary, complete compressed report, logs, hashes and
+  public results are docs/evidence/repository-review-*. Both test processes ended;
+  do not restart them based on the superseded in-progress note. Eleven protected
+  submission/package/licence/config files are byte-identical to review base; 14
+  public assets match main. Public NASA record at 20:05 UTC+8 has populated reference
+  fields but isSubmitted/projectSubmitted false. Source checks: 35/45 direct GETs
+  reachable, eight 403 restrictions and two connection/redirect failures; official
+  UF/IFAS PDF and UMN maturity table separately retrieved. This review branch's
+  automatic Git deployment is disabled; it may be pushed for review. No merge,
+  deployment or portal edit is authorized/performed. It inherits feature code:
+  do not merge it into main merely to adopt docs. Outstanding user reports (AX empty crop/chat explanation,
+  Singapore country/region flow, navigation/chat overlap, three chat examples)
+  remain product work; do not claim them fixed by documentation changes. Singapore
+  region wording reproduced publicly on both widths, with replies/screenshots saved.
+  Continue original P0.6 assistant regressions/repairs, then P0.5 legacy suites and
+  P1 functional chat/navigation/voice UX, respecting the existing quality handoff.
 
 - **P0.4 source check complete:** live primary-source ranges match tomato/cabbage/onion; new duration-basis and unassessed-variant comparison checks pass. npm test: 119/119. User retained all three field services and requested sourced area crop suggestions, non-overlapping aligned navigation, and three clickable chat starters. These remain part of P0.6/P1. Phase A stays public; classifier unwired.
 

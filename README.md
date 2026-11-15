@@ -1,148 +1,41 @@
-﻿# FieldShift
+# Field Shift
 
-Crop-rotation decision support for NASA Space Apps 2026, with a **Node.js testing mode** and a **browser-only Vercel showcase**. Team **Explorer**, Singapore. Read [AGENTS.md](AGENTS.md) and the current user decisions in [docs/decisions.md](docs/decisions.md).
+Field Shift helps farmers explore historical NASA weather evidence and compare crop rotations. Built by Team Explorer for NASA Space Apps 2026, it explains the reasons, trade-offs and missing information behind each comparison.
 
-## Run
+**[Try Field Shift →](https://nasa-hackathon-three.vercel.app/)**
 
-Before publishing behavior changes, run `npm run test:release` (offline logic tests
-and Playwright flows for both runtimes at desktop/mobile widths). See the
-[Playwright checks](docs/playwright.md) for coverage, reports and public verification.
+No installation or account is required.
 
-Requires Node.js 22+. Both modes use the same NASA adapters, sourced catalog and deterministic rotation engine.
+## How to use
 
-```sh
-npm ci
-npm run start:node          # Node backend + frontend, default http://localhost:3001
-npm run start:showcase      # static browser-only showcase, default http://localhost:3000
-```
+Select a location → Explore NASA data → Enter your crops → Compare rotations → Ask the assistant.
 
-Run either command in its own terminal to use both at once. Node mode serves source files and real `/api` endpoints; the frontend sends validated planning inputs to the Node backend. Showcase mode builds static files and performs retrieval/calculations in a browser worker. The footer identifies the active mode. Re-running a command reuses only the matching project's runtime; unrelated applications and the other mode keep their ports. `PORT` overrides the preferred port; `NO_OPEN=1` disables automatic browser opening. In PowerShell with npm.ps1 blocked, use `npm.cmd`. `npm start` retains the showcase workflow. `npm run dev:node` watches the Node testing server.
+Choose a country and a town, search the map, or enter coordinates. Load a historical year, enter your existing three-crop sequence and constraints, then compare it with two alternatives where crop coverage permits. Start with an example farming region if you want to explore the workflow.
 
-## Vercel
+## Four connected features
 
-```sh
-npm run build
-```
+- **SI Model — farming assistant:** short, sourced crop answers and guided planning. An optional, small experimental language model helps order retrieved information; documented rules produce the comparisons.
+- **Geospatial Map:** location selection and community-mapped farmland, where records are available. A map outline does not establish ownership or current crops.
+- **Data Flow:** historical NASA POWER temperature, rainfall and solar radiation, with charts, dates, sources and missing-data notices.
+- **Strategy Logic:** your baseline and two alternatives over the same 12 months, showing crop-family repetition, calendar fit, environmental exposure and evidence gaps.
 
-The existing showcase origin is [nasa-hackathon-three.vercel.app](https://nasa-hackathon-three.vercel.app/). See the [deployment record](docs/deployment.md) for release verification. Vercel settings are framework **Other**, build **npm run build**, output **dist/client**; the checked-in `vercel.json` includes security headers. No API keys, environment variables, serverless functions or database are needed. Local testing uses the separate Node command above.
+[View the seven-slide demonstration](https://nasa-hackathon-three.vercel.app/submission/) · [Download the slides as a PDF](https://nasa-hackathon-three.vercel.app/submission/fieldshift-deck.pdf)
 
-## Workflow
+## Data Sources & References
 
-1. Choose a country, optionally filter by region, then choose a town/city without typing a place name. The sourced GeoNames extract includes 70,036 places across 245 countries/areas; it does not include every rural settlement. Search, example regions, map selection and coordinates remain available. Find nearby OpenStreetMap farmland and choose a mapped field from the outline or dropdown.
-2. Load a historical NASA POWER year. Inspect real daily source metadata, monthly charts, missing days and downloadable observations. Regional soil estimates load independently.
-3. Choose baseline crops from the selected country's recorded production list, restrict alternatives and set priorities. FAOSTAT supplies 9,238 crop records across 197 countries/areas, using latest positive production records in 2020–2024. Missing coverage stays empty. Only country categories with starter rules can form alternatives; fewer than two disables comparison. Optional measured soil pH/drainage can be supplied; mapped regional estimates never masquerade as a farm soil test. Published Australian irrigation history supplies context where relevant.
-4. Compare the existing rotation with two alternatives over the same 12 months. Read individual criteria, risks, sources and gaps. Country pest records provide inspection leads.
+[NASA POWER](https://power.larc.nasa.gov/) and its [Daily API](https://power.larc.nasa.gov/docs/services/api/temporal/daily/) supply regional, satellite- and model-derived environmental estimates. Additional context comes from [FAOSTAT](https://www.fao.org/faostat/en/#data/QCL), [ISRIC SoilGrids](https://isric.org/explore/soilgrids/), [OpenStreetMap](https://www.openstreetmap.org/copyright), [GeoNames](https://www.geonames.org/export/), [GBIF](https://www.gbif.org/), Australian irrigation statistics and cited agricultural publications.
 
-Exactly four tabbed modules: **SI Model**, **Geospatial Map**, **Data Flow**, **Strategy Logic**. The approved interface is map-first, dark green and cream, with a compact sidebar and an accessible bottom-right assistant. Long evidence scrolls inside its tab; switching modules never requires scrolling down the page.
+Historical weather is not a forecast or a farm measurement. National production records do not prove local suitability; regional soil estimates do not replace a soil test. External services can be unavailable: ISRIC currently reports a pause of its SoilGrids REST service, and field lookups depend on shared mapping services.
 
-Visible workflow numbering follows the user's path: **01 Find farmland → 02 NASA evidence → 03 Plan crops → 04 Compare**. Persistent Next/Back buttons and keyboard-accessible tabs provide navigation.
+The public prototype has screening rules for **four crop types**; **89 of 197** country/area lists contain enough screened categories for alternatives. Unsupported crops remain unassessed. Comparisons assume three four-month slots and do not predict yields, profitability, water savings, pest prevention or soil improvement. Local agricultural review is needed.
 
-## Fast local assistant
+## References and technical information
 
-Ask about a crop and country directly: “rice in India”, “wheat in Australia” or
-“kai lan in Singapore”. Answers stay short, with separate growing/harvest/country
-evidence follow-ups and expandable sources. A country named in chat does not change
-the map or borrow weather from another country. Cultivation coverage is limited;
-missing crop-country rules remain explicit.
+- [Detailed references, licences and scientific scope](docs/references.md)
+- [Submission accuracy review and proposed corrections](docs/submission-accuracy-review.md)
+- [Development, testing and unreleased work](docs/development.md) · [Documentation index](docs/README.md)
+- [Licences and credits](https://nasa-hackathon-three.vercel.app/credits.html) · [Third-party notices](THIRD-PARTY-NOTICES.md)
 
-To have chat carry out the workflow, ask “Help me plan a rotation in India. Crops:
-rice, wheat, beans.” It asks which part of India or the whole country, with both
-choices available. Whole-country mode shows national crop context without inventing
-a country-wide weather reading or planting calendar. Specific-area mode accepts a
-state/region, then a town, mapped field or explicit coordinates. It retains the
-supplied three-crop sequence across these choices, loads historical
-NASA evidence, runs the same comparison engine and opens step 4. You can select a
-returned field by button, field number or its current OSM way ID. Missing crops are
-never filled automatically. Unsupported crops remain unassessed; alternatives use
-the allowed screened crops. Manual form edits cancel pending actions; say “continue”
-to use the current form. “Cancel” ends guided planning. Actions are fixed app code,
-independent of model generation, and use no arbitrary URLs or generated code.
+ChatGPT, Claude and OpenAI Codex assisted with development, research, tests and documentation. The optional browser model is experimental; sourced answers and deterministic comparisons remain available without it. See the [AI disclosure](docs/references.md#ai-assistance).
 
-Chat renders sourced evidence immediately. A custom **39,274-parameter autoregressive word language model** loads in a worker when chat opens. Its trained weights are **157.1 KB**. It is experimental, not a general-purpose LLM or agronomic authority. A relevance guard can prioritize existing retrieved evidence; raw generated scientific statements are never displayed. Model-disabled chat uses the same source facts and validated actions.
-
-The retrained model matched **14/36 new free-form development questions**, versus **8/36** before; overall **85/126**, versus **83/126**. Legacy matches decreased from 75/90 to 71/90, so the improvement is modest. One Chrome/WASM run measured **3.26 s cold load**, **0.16 s warm load**, **20 ms inference**, and **4 ms first evidence response**. These are development measurements, not crop-recommendation accuracy or device guarantees. See the [model card](models/README.md), [training notebook](notebooks/llm_training.ipynb) and [validation record](docs/validation.md).
-
-The earlier 184 MB SmolLM2 experiment and a 12.5 MB TinyStories candidate were benchmarked. They are not the default assistant: the latter failed both evidence-following checks. No cloud model inference occurs.
-
-## Optional 3D evidence preview
-
-On `feature/3d-evidence-map`, choose a point and open **3D evidence map** in step 1.
-It lazy-loads MapLibre; Leaflet remains the default and WebGL fallback. Native POWER
-rain cells and exact tables follow the month control. Dated GIBS layers are visual
-context only. Terrain has a visible exaggeration factor and explicit DEM sampling
-and missingness. A supported step-4 crop-slot button opens the exact historical
-rain window used in its strategy result, rather than its entire four-month slot.
-
-**Status (15 November 2026).** On this feature branch the complete release gate
-passed: `npm run test:release` ran 117 offline and 116 browser cases with no skips or
-flaky results, including live field discovery, field-on-terrain and derived slope in
-both runtimes and viewport sizes. The earlier field failures came from a client
-deadline shorter than the real service response; lookups now overlap three public
-Overpass services with backoff. Those are shared volunteer services, so a later run
-can still fail when all are busy. See [verification status](docs/3d-validation.md),
-[validation record](docs/validation.md), [visual review](docs/3d-visual-review.md) and
-[measured feasibility](docs/3d-feasibility.md).
-
-**What is public.** The public submission site is still Phase A (`main` at f4c4fef):
-four screening crops, 89/197 comparable-country coverage, no 3D view and no voice
-input. This branch has seven screening crops and 166/197 coverage. It is deployed only
-as a login-protected Vercel preview, which is not a public demo link; see
-[deployment notes](docs/deployment.md). Automatic Git deployment stays disabled for
-this branch. Real-phone performance and memory are unverified.
-
-## Optional voice input and read-aloud (feature branch)
-
-The chat has a microphone button. Pressing it asks for microphone permission, then
-transcribes English speech on the device with Whisper tiny.en (about 43.5 MB model
-plus a 26.9 MB runtime, fetched only after the first press). The transcript is placed
-in the message box to check and edit; nothing is sent until Send is pressed. **Read
-aloud** speaks the written answer, including its limits, with an English voice already
-installed on the device. Typed chat never depends on either. Tested with a synthetic
-English clip on desktop Chrome only; real microphones, accents, noise, phones and
-other browsers are unverified.
-
-## Typed-judgment experiment (not used by the app)
-
-[models/judgment](models/judgment/README.md) holds a small classifier experiment
-inspired by TypeSafe AI's public description of Jev. It is not Jev. On 95 held-out
-messages it does not beat the existing rules (77/80/43 against 75/81/50), so the
-validated rules remain in charge and the classifier is not wired in.
-
-## Sources and limits
-
-- **NASA POWER**: actual T2M, T2M_MAX, T2M_MIN, PRECTOTCORR and ALLSKY_SFC_SW_DWN. Temperature/rain support is nominally 0.5° × 0.625°; solar 1° × 1°. A historical year is not a forecast or climate normal. Values retain units, period, retrieval time, source URL and missingness.
-- **ISRIC SoilGrids**: modelled pH, sand/clay and prediction intervals at 250 m, 0–5 cm depth. ISRIC advises against farm-level use; these are regional background, never automatically filled as measured farm inputs. There is no single observation year.
-- **ABS**: Australian 2020–21 national irrigated-area and water-applied totals. ML/ha ratios are documented annual aggregates, not field irrigation schedules or water requirements. They are not applied to other countries.
-- **OpenStreetMap/Nominatim**: community-mapped field outlines, optional crop/produce tags and place names. Missing tags stay unknown. Mapping does not prove ownership, access, available land or current crops. Grain maize is not assigned sweet-corn rules.
-- **GeoNames**: dated, country-sized town lists and administrative-region names, with source hashes and CC BY 4.0 attribution. Country selection clears the old point; town selection sets a gazetteer coordinate, not a farm boundary. Smaller places may need search or map selection. The largest current country file is about 454 KB and loads only when that country is chosen.
-- **GBIF + IPPC/UF IFAS**: a small sourced host watchlist and historical country occurrences for fall armyworm/diamondback moth. Country presence is not farm presence, outbreak status or pest probability.
-- **FAOSTAT QCL + UN M49**: dated national primary-crop production records drive country lists, not trade/imports or generic climate guesses. Commodity categories are broader than cultivars; green beans/peas/corn provide explicitly qualified starter-rule mappings. Absence is unknown, not proof a crop cannot grow. Full source flags, years, units, source hash, licence and reproducible extraction are included.
-- **UMN/Cornell/Clemson/Utah State/NC State Extension**: this branch has screening rules for bush snap bean, garden pea, sweet corn, radish, tomato, cabbage and bulb onion. Commodity/cultivar and timing limitations remain explicit. Source-region evidence is not worldwide validation.
-
-Comparisons assume one field, three four-month slots, maturity upper bounds plus a disclosed 14-day harvest/turnaround allowance. They screen family repeats, calendar fit, missing evidence, frost exposure, limited heat/pH/drainage rules and rain-free exposure. They do not calculate crop water demand, fertilizer credit, pest prevention, yield gains, soil improvement, profitability or savings. Unsupported crops remain visible and unassessed.
-
-In showcase mode scientific logic runs in a browser worker, and device-local IndexedDB caches retain original retrieval times. In Node testing mode the same logic runs on the local server with its in-memory caches. Optional model inference stays browser-local in both. Failure never creates substitute readings. External-source availability and fair-use limits apply to both; browser CORS requirements also apply to the showcase. [Sources](docs/data-sources.md), [challenge fit](docs/challenge-alignment.md), [decisions](docs/decisions.md).
-
-## Validation and development
-
-```sh
-npm test                    # offline unit / HTTP-harness / static-build / startup checks
-npm run test:live            # real NASA retrieval at three contrasting coordinates
-npm run test:browser         # installed Chrome/Chromium/Edge, live sources and UI
-npm run test:node-browser    # Node-backed UI, real NASA and injected upstream failure
-npm run test:firefox         # installed Firefox, separate engine, real data and failure paths
-npm run test:qa              # exact QA-plan prompts, real UI/providers, answer-by-answer report
-node scripts/check-sourced-context.js
-node scripts/benchmark-mini-lm.js
-```
-
-Browser checks use isolated profiles and built-in Chrome debugging; no browser is downloaded. `CHROME_PATH` can override discovery. Ignored `artifacts/` contains raw reports, screenshots and profiles. Static showcase tests verify no `/api` network requests; Node browser tests verify real `/api` calls and no browser-side NASA retrieval or data-worker load.
-
-The supplied [QA plan and automated answers](docs/qa-regression.md) have a separate
-acceptance runner that records every actual reply and condition. Its original nine
-unmet chatbot expectations are fixed; all sixteen prompts also run inside
-`npm run test:release` in every project. Saved reports: [latest](docs/qa/latest-results.md)
-and the [original baseline](docs/qa/baseline-results.md).
-
-`npm run test:release` (offline tests, build, then Playwright in installed Chrome) is
-the required gate before any behaviour release. See [docs/playwright.md](docs/playwright.md).
+This README describes the public Phase A application. The 3D map, expanded crop catalogue and voice controls on development branches are unreleased. Field Shift is not affiliated with or endorsed by NASA.

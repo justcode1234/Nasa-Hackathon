@@ -1,0 +1,1808 @@
+{
+  "checkedAt": "2026-11-15T12:15:26.742Z",
+  "command": "npm.cmd run test:release",
+  "exitCode": 0,
+  "applicationSource": "4f9b8b3; review only changes docs, a read-only link checker and branch auto-deployment exclusion",
+  "offline": {
+    "tests": 119,
+    "passed": 119,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "startTime": "2026-11-15T11:54:30.819Z",
+    "duration": 1190654.528,
+    "expected": 116,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "projects": [
+    {
+      "name": "static-desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 1000
+      },
+      "channel": "chrome"
+    },
+    {
+      "name": "static-mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "channel": "chrome"
+    },
+    {
+      "name": "node-desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 1000
+      },
+      "channel": "chrome"
+    },
+    {
+      "name": "node-mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "channel": "chrome"
+    }
+  ],
+  "rawReport": {
+    "file": "repository-review-release.raw.json.gz",
+    "sha256": "0ddee5be50dc1aa39fe63d11ff2aa3e8362ad7762888b590683a5746afa0d60b",
+    "uncompressedSha256": "e3b238662b5543344c06e83b4627d8d39940ae82c81642c02dca3b24c5d3e38c",
+    "uncompressedBytes": 13831963,
+    "compressedBytes": 770062
+  },
+  "cases": [
+    {
+      "title": "assistant.spec.js / all sixteen original QA questions retain their grounded answers and workflow logic",
+      "file": "assistant.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 11608,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "assistant.spec.js / all sixteen original QA questions retain their grounded answers and workflow logic",
+      "file": "assistant.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 10222,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "assistant.spec.js / all sixteen original QA questions retain their grounded answers and workflow logic",
+      "file": "assistant.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 11763,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "assistant.spec.js / all sixteen original QA questions retain their grounded answers and workflow logic",
+      "file": "assistant.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 9775,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "field-terrain.spec.js / a live-discovered Ames field renders on terrain with derived slope context",
+      "file": "field-terrain.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 41227,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "field-terrain.spec.js / a live-discovered Ames field renders on terrain with derived slope context",
+      "file": "field-terrain.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 50815,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "field-terrain.spec.js / a live-discovered Ames field renders on terrain with derived slope context",
+      "file": "field-terrain.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 38054,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "field-terrain.spec.js / a live-discovered Ames field renders on terrain with derived slope context",
+      "file": "field-terrain.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3467,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / four imagery products use NASA dates, legends and native resolution without changing POWER values",
+      "file": "gibs.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6513,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / four imagery products use NASA dates, legends and native resolution without changing POWER values",
+      "file": "gibs.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 12411,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / four imagery products use NASA dates, legends and native resolution without changing POWER values",
+      "file": "gibs.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 7045,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / four imagery products use NASA dates, legends and native resolution without changing POWER values",
+      "file": "gibs.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5077,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / imagery metadata transport failure retries the real capabilities",
+      "file": "gibs.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 10663,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / imagery metadata transport failure retries the real capabilities",
+      "file": "gibs.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 9506,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / imagery metadata transport failure retries the real capabilities",
+      "file": "gibs.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2575,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / imagery metadata transport failure retries the real capabilities",
+      "file": "gibs.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2054,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / missing imagery tiles produce a visible notice and preserve the rain table",
+      "file": "gibs.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 10666,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / missing imagery tiles produce a visible notice and preserve the rain table",
+      "file": "gibs.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6976,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / missing imagery tiles produce a visible notice and preserve the rain table",
+      "file": "gibs.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2591,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "gibs.spec.js / missing imagery tiles produce a visible notice and preserve the rain table",
+      "file": "gibs.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2089,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d-review.spec.js / 3D controls retain accessible equivalents, reduced motion and usable short-screen layout",
+      "file": "map3d-review.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 28152,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d-review.spec.js / 3D controls retain accessible equivalents, reduced motion and usable short-screen layout",
+      "file": "map3d-review.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 16553,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d-review.spec.js / 3D controls retain accessible equivalents, reduced motion and usable short-screen layout",
+      "file": "map3d-review.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 17353,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d-review.spec.js / 3D controls retain accessible equivalents, reduced motion and usable short-screen layout",
+      "file": "map3d-review.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 14571,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / lazy native rain cells match point evidence, slider and monthly table",
+      "file": "map3d.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 11446,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / lazy native rain cells match point evidence, slider and monthly table",
+      "file": "map3d.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4945,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / lazy native rain cells match point evidence, slider and monthly table",
+      "file": "map3d.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4764,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / lazy native rain cells match point evidence, slider and monthly table",
+      "file": "map3d.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2678,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / WebGL failure preserves the usable 2D map and coordinate flow",
+      "file": "map3d.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1947,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / WebGL failure preserves the usable 2D map and coordinate flow",
+      "file": "map3d.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1894,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / WebGL failure preserves the usable 2D map and coordinate flow",
+      "file": "map3d.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 655,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / WebGL failure preserves the usable 2D map and coordinate flow",
+      "file": "map3d.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 589,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / 3D NASA failures keep missing data explicit and retry the real request",
+      "file": "map3d.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3027,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / 3D NASA failures keep missing data explicit and retry the real request",
+      "file": "map3d.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3506,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / 3D NASA failures keep missing data explicit and retry the real request",
+      "file": "map3d.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2308,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / 3D NASA failures keep missing data explicit and retry the real request",
+      "file": "map3d.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2223,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / changing location during lazy loading cannot clear a newer map",
+      "file": "map3d.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3189,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / changing location during lazy loading cannot clear a newer map",
+      "file": "map3d.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3109,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / changing location during lazy loading cannot clear a newer map",
+      "file": "map3d.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5798,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "map3d.spec.js / changing location during lazy loading cannot clear a newer map",
+      "file": "map3d.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2089,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / mouse Send preserves chat input focus and Escape returns to the launcher",
+      "file": "review-phase-a.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 500,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / mouse Send preserves chat input focus and Escape returns to the launcher",
+      "file": "review-phase-a.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 395,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / mouse Send preserves chat input focus and Escape returns to the launcher",
+      "file": "review-phase-a.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 441,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / mouse Send preserves chat input focus and Escape returns to the launcher",
+      "file": "review-phase-a.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 428,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / short zoom and landscape viewports retain sixty percent usable height",
+      "file": "review-phase-a.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1098,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / short zoom and landscape viewports retain sixty percent usable height",
+      "file": "review-phase-a.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1006,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / short zoom and landscape viewports retain sixty percent usable height",
+      "file": "review-phase-a.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1092,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / short zoom and landscape viewports retain sixty percent usable height",
+      "file": "review-phase-a.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1072,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / every example region returns at least three complete mapped fields",
+      "file": "review-phase-a.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 195752,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / every example region returns at least three complete mapped fields",
+      "file": "review-phase-a.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 131329,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / every example region returns at least three complete mapped fields",
+      "file": "review-phase-a.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 96883,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / every example region returns at least three complete mapped fields",
+      "file": "review-phase-a.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1056,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / the submission fixture is enterable and reproduces the three live-engine scenarios",
+      "file": "review-phase-a.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2390,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / the submission fixture is enterable and reproduces the three live-engine scenarios",
+      "file": "review-phase-a.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2706,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / the submission fixture is enterable and reproduces the three live-engine scenarios",
+      "file": "review-phase-a.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1145,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-a.spec.js / the submission fixture is enterable and reproduces the three live-engine scenarios",
+      "file": "review-phase-a.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1058,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / a failed field request has a reachable retry and still permits a point-based comparison",
+      "file": "review-phase-b.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 20059,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / a failed field request has a reachable retry and still permits a point-based comparison",
+      "file": "review-phase-b.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 21263,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / a failed field request has a reachable retry and still permits a point-based comparison",
+      "file": "review-phase-b.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1271,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / a failed field request has a reachable retry and still permits a point-based comparison",
+      "file": "review-phase-b.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1140,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / human dropdowns, map click, fields and a new-crop comparison form a working path",
+      "file": "review-phase-b.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 113257,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / human dropdowns, map click, fields and a new-crop comparison form a working path",
+      "file": "review-phase-b.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 34274,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / human dropdowns, map click, fields and a new-crop comparison form a working path",
+      "file": "review-phase-b.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2797,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / human dropdowns, map click, fields and a new-crop comparison form a working path",
+      "file": "review-phase-b.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1362,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / WCAG AA and best-practice checks pass in initial, evidence, plan, compare and chat states",
+      "file": "review-phase-b.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3860,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / WCAG AA and best-practice checks pass in initial, evidence, plan, compare and chat states",
+      "file": "review-phase-b.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4965,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / WCAG AA and best-practice checks pass in initial, evidence, plan, compare and chat states",
+      "file": "review-phase-b.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3273,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / WCAG AA and best-practice checks pass in initial, evidence, plan, compare and chat states",
+      "file": "review-phase-b.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3056,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / the optional model loads and Q01, Q03 and Q16 retain grounded answers",
+      "file": "review-phase-b.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1035,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / the optional model loads and Q01, Q03 and Q16 retain grounded answers",
+      "file": "review-phase-b.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1379,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / the optional model loads and Q01, Q03 and Q16 retain grounded answers",
+      "file": "review-phase-b.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4143,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "review-phase-b.spec.js / the optional model loads and Q01, Q03 and Q16 retain grounded answers",
+      "file": "review-phase-b.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1040,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / dictation transcribes real audio on the device into an editable draft and never sends it",
+      "file": "speech-microphone.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6742,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / dictation transcribes real audio on the device into an editable draft and never sends it",
+      "file": "speech-microphone.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6876,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / dictation transcribes real audio on the device into an editable draft and never sends it",
+      "file": "speech-microphone.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6731,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / dictation transcribes real audio on the device into an editable draft and never sends it",
+      "file": "speech-microphone.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6911,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / unloading during recording cancels it, releases the microphone and leaves the draft untouched",
+      "file": "speech-microphone.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2022,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / unloading during recording cancels it, releases the microphone and leaves the draft untouched",
+      "file": "speech-microphone.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2000,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / unloading during recording cancels it, releases the microphone and leaves the draft untouched",
+      "file": "speech-microphone.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2049,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / unloading during recording cancels it, releases the microphone and leaves the draft untouched",
+      "file": "speech-microphone.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2337,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / a failed speech-model download is reported and typed chat still works",
+      "file": "speech-microphone.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 591,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / a failed speech-model download is reported and typed chat still works",
+      "file": "speech-microphone.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 573,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / a failed speech-model download is reported and typed chat still works",
+      "file": "speech-microphone.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 605,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech-microphone.spec.js / a failed speech-model download is reported and typed chat still works",
+      "file": "speech-microphone.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 888,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech.spec.js / a refused microphone records nothing, explains itself and leaves typed chat working",
+      "file": "speech.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 510,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech.spec.js / a refused microphone records nothing, explains itself and leaves typed chat working",
+      "file": "speech.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 849,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech.spec.js / a refused microphone records nothing, explains itself and leaves typed chat working",
+      "file": "speech.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 495,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech.spec.js / a refused microphone records nothing, explains itself and leaves typed chat working",
+      "file": "speech.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 492,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech.spec.js / read aloud speaks the actual grounded answer, with its limits, using an on-device English voice",
+      "file": "speech.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 586,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech.spec.js / read aloud speaks the actual grounded answer, with its limits, using an on-device English voice",
+      "file": "speech.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 917,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech.spec.js / read aloud speaks the actual grounded answer, with its limits, using an on-device English voice",
+      "file": "speech.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 573,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "speech.spec.js / read aloud speaks the actual grounded answer, with its limits, using an on-device English voice",
+      "file": "speech.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 540,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "terrain.spec.js / real terrain keeps actual scale and leaves field slope unknown without a boundary",
+      "file": "terrain.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4683,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "terrain.spec.js / real terrain keeps actual scale and leaves field slope unknown without a boundary",
+      "file": "terrain.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5478,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "terrain.spec.js / real terrain keeps actual scale and leaves field slope unknown without a boundary",
+      "file": "terrain.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6081,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "terrain.spec.js / real terrain keeps actual scale and leaves field slope unknown without a boundary",
+      "file": "terrain.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5477,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "terrain.spec.js / failed terrain remains unknown and an explicit retry restores real pixels",
+      "file": "terrain.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5009,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "terrain.spec.js / failed terrain remains unknown and an explicit retry restores real pixels",
+      "file": "terrain.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4431,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "terrain.spec.js / failed terrain remains unknown and an explicit retry restores real pixels",
+      "file": "terrain.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5297,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "terrain.spec.js / failed terrain remains unknown and an explicit retry restores real pixels",
+      "file": "terrain.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5278,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "weather-window.spec.js / a crop slot opens its exact strategy rain window and input edits clear that window",
+      "file": "weather-window.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 6667,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "weather-window.spec.js / a crop slot opens its exact strategy rain window and input edits clear that window",
+      "file": "weather-window.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 7665,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "weather-window.spec.js / a crop slot opens its exact strategy rain window and input edits clear that window",
+      "file": "weather-window.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 5097,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "weather-window.spec.js / a crop slot opens its exact strategy rain window and input edits clear that window",
+      "file": "weather-window.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 8663,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / zero coverage explains the block beside Next and recovers without erasing farmer inputs",
+      "file": "workflow.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 694,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / zero coverage explains the block beside Next and recovers without erasing farmer inputs",
+      "file": "workflow.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1024,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / zero coverage explains the block beside Next and recovers without erasing farmer inputs",
+      "file": "workflow.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 711,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / zero coverage explains the block beside Next and recovers without erasing farmer inputs",
+      "file": "workflow.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1056,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / Next and Compare both complete a real baseline comparison and invalidate stale results",
+      "file": "workflow.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3612,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / Next and Compare both complete a real baseline comparison and invalidate stale results",
+      "file": "workflow.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 4439,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / Next and Compare both complete a real baseline comparison and invalidate stale results",
+      "file": "workflow.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3292,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / Next and Compare both complete a real baseline comparison and invalidate stale results",
+      "file": "workflow.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3214,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / missing coordinates and a failed data request have visible validation and working retry",
+      "file": "workflow.spec.js",
+      "project": "static-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1652,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / missing coordinates and a failed data request have visible validation and working retry",
+      "file": "workflow.spec.js",
+      "project": "static-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 2507,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / missing coordinates and a failed data request have visible validation and working retry",
+      "file": "workflow.spec.js",
+      "project": "node-desktop",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 823,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "title": "workflow.spec.js / missing coordinates and a failed data request have visible validation and working retry",
+      "file": "workflow.spec.js",
+      "project": "node-mobile",
+      "status": "expected",
+      "expectedStatus": "passed",
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1151,
+          "retry": 0,
+          "errors": []
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Installed desktop Chrome with desktop/mobile viewports, not physical phones or Safari.",
+    "Live providers were exercised; successful retrieval in this run does not guarantee later uptime.",
+    "Synthetic unit fixtures and labelled speech audio remain test fixtures; no NASA observations were fabricated."
+  ]
+}

@@ -1,0 +1,29 @@
+
+Running 16 tests using 1 worker
+
+(node:11908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [public-desktop] › tests\e2e\assistant.spec.js:6:1 › all sixteen original QA questions retain their grounded answers and workflow logic (12.4s)
+  ok  2 [public-desktop] › tests\e2e\review-phase-a.spec.js:6:1 › mouse Send preserves chat input focus and Escape returns to the launcher (539ms)
+  ok  3 [public-desktop] › tests\e2e\review-phase-a.spec.js:16:1 › short zoom and landscape viewports retain sixty percent usable height (1.3s)
+  ok  4 [public-desktop] › tests\e2e\review-phase-a.spec.js:34:1 › every example region returns at least three complete mapped fields (7.0s)
+  ok  5 [public-desktop] › tests\e2e\review-phase-a.spec.js:43:1 › the submission fixture is enterable and reproduces the three live-engine scenarios (2.4s)
+  ok  6 [public-desktop] › tests\e2e\workflow.spec.js:26:1 › zero coverage explains the block beside Next and recovers without erasing farmer inputs (1.2s)
+  ok  7 [public-desktop] › tests\e2e\workflow.spec.js:52:1 › Next and Compare both complete a real baseline comparison and invalidate stale results (7.7s)
+  ok  8 [public-desktop] › tests\e2e\workflow.spec.js:80:1 › missing coordinates and a failed data request have visible validation and working retry (12.3s)
+(node:26208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26208) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [public-mobile] › tests\e2e\assistant.spec.js:6:1 › all sixteen original QA questions retain their grounded answers and workflow logic (11.7s)
+  ok 10 [public-mobile] › tests\e2e\review-phase-a.spec.js:6:1 › mouse Send preserves chat input focus and Escape returns to the launcher (829ms)
+  ok 11 [public-mobile] › tests\e2e\review-phase-a.spec.js:16:1 › short zoom and landscape viewports retain sixty percent usable height (2.7s)
+  ok 12 [public-mobile] › tests\e2e\review-phase-a.spec.js:34:1 › every example region returns at least three complete mapped fields (6.1s)
+  ok 13 [public-mobile] › tests\e2e\review-phase-a.spec.js:43:1 › the submission fixture is enterable and reproduces the three live-engine scenarios (2.6s)
+  ok 14 [public-mobile] › tests\e2e\workflow.spec.js:26:1 › zero coverage explains the block beside Next and recovers without erasing farmer inputs (1.2s)
+  ok 15 [public-mobile] › tests\e2e\workflow.spec.js:52:1 › Next and Compare both complete a real baseline comparison and invalidate stale results (3.8s)
+  ok 16 [public-mobile] › tests\e2e\workflow.spec.js:80:1 › missing coordinates and a failed data request have visible validation and working retry (2.5s)
+
+  16 passed (1.3m)
