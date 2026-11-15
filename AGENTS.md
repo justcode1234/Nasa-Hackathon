@@ -219,7 +219,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 - **RELEASED (15 Nov ~22:55 UTC+8):** user approved; main pushed to ef0e80e (merge b094f40);
   production deployment dpl_DVZLzVaybdoLsXuQf57xfVynaeq8 serves the merged release; logged-out
   public Playwright 76/76 passed; assets match. Rollback target and steps: docs/deployment.md.
-- **Post-release fix (whole-country chat flow, rice rotation answer):** see the latest entry in
+- **Post-release fix (whole-country chat flow, rice rotation answer) — LIVE since ~23:50, dpl_9aQGEBmw31Z7uv83MDgSm2rGSCDz, public 12/12:** see the latest entry in
   docs/validation.md. Committed on main after its own full release gate; pushing it to
   production needs the user's approval. Branch cleanup (one branch only, as the user asked in
   the Codex session) is pending the same approval: detach the review worktree first, keep the

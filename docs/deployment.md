@@ -190,3 +190,16 @@ were read or stored. The push and post-push deployment check are pending here.
   all return 200 without login.
 - **Rollback target:** previous production deployment nasa-hackathon-e5zj96p3p (Phase A,
   f4c4fef). `vercel rollback` to it, then `git revert -m 1 b094f40` on main.
+
+## Whole-country chat fix in production - 15 November 2026 (about 23:50 UTC+8)
+
+- User approved ("push now"). main pushed ef0e80e → bb152ac. Production deployment
+  dpl_9aQGEBmw31Z7uv83MDgSm2rGSCDz (nasa-hackathon-al0l421ql), Ready in about 21 s.
+- Live files contain the fix (workflow-assistant.js, context.js checked).
+- Logged-out public Playwright from bb152ac: whole-country-flow, assistant (16 original QA
+  prompts) and workflow specs, **12/12 passed** on public-desktop and public-mobile.
+- The full local gate for this commit was 129/129 offline and 156/158 browser; the two
+  failures were live field lookups while all three public Overpass services were down
+  (see docs/validation.md). Re-run those cases when the services recover.
+- Rollback: previous production deployment nasa-hackathon-3hwgknx0t (merged release,
+  ef0e80e); earlier Phase A deployment nasa-hackathon-e5zj96p3p.
