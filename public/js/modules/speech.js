@@ -26,9 +26,10 @@ export async function toMono16k(blob) {
   } finally { await context.close(); }
 }
 
-export function initSpeech({ input, status, micButton, unloadButton, stopButton }) {
+export function initSpeech({ input, status, micButton, unloadButton, stopButton, consent, startButton, cancelButton }) {
   let worker = null, ready = false, recorder = null, stream = null, chunks = [], timer = null, sequence = 0, pending = null, cancelled = false;
-  const say = message => { status.textContent = message; };
+  let accepted=false,permissionRequest=0;
+  const say = message => { status.textContent = message;status.hidden=false;const answer=document.getElementById('answer-status');if(answer)answer.hidden=true; };
   const supported = Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder && window.Worker);
   if (!supported) { micButton.disabled = true; say('Voice input is not supported in this browser. Typing works as usual.'); }
   const setRecording = on => {
@@ -43,6 +44,7 @@ export function initSpeech({ input, status, micButton, unloadButton, stopButton 
   }
   function unload(message = 'Speech model unloaded. Typing works as usual.') {
     cancelled = true;
+    permissionRequest++;if(consent)consent.hidden=true;
     if (recorder?.state === 'recording') recorder.stop();
     release();
     worker?.terminate(); worker = null; ready = false; pending = null;
@@ -74,11 +76,15 @@ export function initSpeech({ input, status, micButton, unloadButton, stopButton 
   }
   async function start() {
     cancelled = false;
+    const version=++permissionRequest;micButton.disabled=true;
     try {
       // Permission is requested only here, after an explicit click on the mic button.
-      stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } });
+      const granted = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } });
+      if(cancelled||version!==permissionRequest){granted.getTracks().forEach(track=>track.stop());return;}
+      stream=granted;
     } catch (error) {
       release();
+      micButton.disabled=!supported;
       return say(error.name === 'NotAllowedError' || error.name === 'SecurityError' ? 'Microphone permission was not granted. Nothing was recorded. Typing works as usual.' :
         error.name === 'NotFoundError' ? 'No microphone was found. Typing works as usual.' : `The microphone could not start (${error.name}). Typing works as usual.`);
     }
@@ -100,11 +106,17 @@ export function initSpeech({ input, status, micButton, unloadButton, stopButton 
       } catch (error) { micButton.disabled = false; say('That recording could not be decoded. Try again or type your message.'); }
     };
     recorder.start();
+    micButton.disabled=false;
     setRecording(true);
     say(`Listening… speak in English, then press the mic again to stop (${MAX_SECONDS} seconds maximum).`);
     timer = setTimeout(() => { if (recorder?.state === 'recording') recorder.stop(); }, MAX_SECONDS * 1000);
   }
-  micButton.addEventListener('click', () => { if (recorder?.state === 'recording') recorder.stop(); else if (!recorder) start(); });
+  micButton.addEventListener('click', () => { if (recorder?.state === 'recording') recorder.stop(); else if (!recorder) {
+    if(!accepted&&consent){consent.hidden=false;say('English dictation needs about 70 MB on first use. Continue or cancel before any microphone request or download.');startButton.focus();}
+    else start();
+  } });
+  startButton?.addEventListener('click',()=>{accepted=true;consent.hidden=true;start();});
+  cancelButton?.addEventListener('click',()=>{cancelled=true;permissionRequest++;consent.hidden=true;micButton.disabled=!supported;say('Dictation cancelled. No microphone request or model download was started.');micButton.focus();});
   unloadButton.addEventListener('click', () => unload());
 
   // Read aloud.
@@ -129,12 +141,14 @@ export function initSpeech({ input, status, micButton, unloadButton, stopButton 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.voice = voice; utterance.lang = voice.lang; utterance.rate = 1;
       utterance.onstart = () => { window.fieldshiftSpeechStarted = (window.fieldshiftSpeechStarted ?? 0) + 1; };
-      utterance.onend = utterance.onerror = () => { if (speakingButton === button) resetSpeak(); };
+      utterance.onend = () => { if (speakingButton === button){resetSpeak();say('Read-aloud finished. The written answer and its sources remain available.');} };
+      utterance.onerror = () => { if (speakingButton === button){resetSpeak();say('Read-aloud stopped or could not finish. The written answer is available.');} };
       speakingButton = button; button.textContent = 'Stop reading'; button.setAttribute('aria-pressed', 'true'); stopButton.hidden = false;
       window.fieldshiftSpokenText = text; window.fieldshiftSpokenVoice = { name: voice.name, lang: voice.lang, localService: voice.localService };
+      say('Reading the written answer aloud, including its limits. Use Stop speaking to stop.');
       synth.speak(utterance);
     });
     article.append(button);
   }
-  return { attachReadAloud, stopSpeaking, unload, cancel() { cancelled = true; if (recorder?.state === 'recording') recorder.stop(); release(); stopSpeaking(); } };
+  return { attachReadAloud, stopSpeaking, unload, cancel() { cancelled = true;permissionRequest++;if(consent)consent.hidden=true; if (recorder?.state === 'recording') recorder.stop(); release();micButton.disabled=!supported; stopSpeaking(); } };
 }

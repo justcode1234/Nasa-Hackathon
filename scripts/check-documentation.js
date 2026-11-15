@@ -5,7 +5,8 @@ import path from 'node:path';
 
 const files = ['README.md', 'docs/README.md', 'docs/development.md',
   'docs/references.md', 'docs/submission-accuracy-review.md',
-  'docs/submission-review-proposed.md'];
+  'docs/submission-review-proposed.md', 'docs/submission.md',
+  'docs/merged-release-review.md', 'docs/plans/2026-11-15-merged-release.md'];
 const local = [], external = new Set();
 for (const file of files) {
   const text = await readFile(file, 'utf8');

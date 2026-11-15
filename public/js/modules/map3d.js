@@ -25,6 +25,7 @@ export async function createEvidenceMap({getState,onClose}){
   const windowSummary=el('p','',{id:'map3d-window',tabindex:'-1',hidden:''}),monthly=el('button','Return to monthly view',{type:'button',hidden:''});
   const tileNotice=el('p','',{class:'notice',role:'status',hidden:''});
   root.append(controls,status,tileNotice,canvas,windowSummary,monthly,label,legend,metadata,values);
+  root.append(el('p','A native cell is one original NASA grid area. Zooming in enlarges it on the screen but does not add finer weather measurements. Missing cells remain missing.'));
   let map,data,terrain,windowState=null,features=[],month=1,revision=0,closed=false;
   try{
     const initial=getState().location;if(!initial)throw new Error('The selected location changed. Open 3D for the new point.');

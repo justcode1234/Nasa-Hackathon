@@ -3,23 +3,19 @@
 Visitor introduction: [README](../README.md). Start development by reading
 [AGENTS.md](../AGENTS.md), especially section 10, and the [decisions](decisions.md).
 
-## Public release and review branch
+## Approved merged release
 
-The public application is **Phase A**, with `main` at `f4c4fef`: four screening crop
-types, 89/197 country/area lists with at least two screened categories, no 3D view or
-voice controls. These are coverage counts, not validated agronomic recommendations.
+The user subsequently approved consolidating all branch histories into `main` and
+deploying after the full release gate passes. The current source has seven screening
+crop types and 166/197 country/area lists with at least two screened categories,
+optional 3D/GIBS/terrain, three chat starters and English speech controls. These
+are coverage counts, not validated agronomic recommendations. The typed-judgment
+classifier remains an experiment and is **not used by the application**.
 
-`review/submission-accuracy` starts from `feature/3d-evidence-map` at `4f9b8b3`.
-That feature source has seven screening crop types and 166/197 comparable lists,
-preview-only 3D/GIBS/terrain and English voice controls. The typed-judgment
-classifier is an experiment and is **not used by the application**. Keep these
-features out of descriptions of the current public release.
-
-This review uses a separate Git worktree. Incomplete assistant changes in the
-original worktree are preserved and excluded from this review. No merge or
-deployment is authorized by the review request. The review branch may be pushed
-for inspection after checks; automatic Git deployment is
-disabled for both the feature branch and this review branch in `vercel.json`.
+See the [current release record](plans/2026-11-15-merged-release.md) for actual
+commit, deployment and test status. The earlier Phase A release at `f4c4fef` is
+preserved as a dated [submission snapshot](../public/submission/phase-a/). A
+repository deployment does not edit or submit the NASA portal.
 
 ## Run locally
 
@@ -97,12 +93,11 @@ CSP and attribution files. The [deployment history](deployment.md) includes acco
 release and rollback details; verify `justcode1234` before any authorized deployment
 and preserve the separate `4chatgptsim` account.
 
-Submission copy and frozen public artifacts are not regenerated during this
-documentation review. Proposed wording lives in a separate review file. Changing
-the source ZIP, PDF or portal copy requires a deliberate submission/release decision.
-This branch inherits the feature branch's unreleased application code. Do not merge
-it into Phase A merely to adopt documentation; review the documentation commit
-separately if the owner later wants a documentation-only update on main.
+The approved release refreshes the current seven-slide deck, source ZIP and
+description to match the tested application. Original Phase A materials stay
+separately dated. The accuracy review and its proposed wording describe the earlier
+review baseline; neither records a NASA portal edit. Further merges and deployments
+still require authorization appropriate to their scope.
 
 ## Repository layout
 

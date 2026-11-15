@@ -221,3 +221,32 @@ test('crop resolution preserves unknown varieties and existing FAO selections', 
   assert.equal(resolveCropInput('grain maize', catalog, country).id, 'unassessed:grain maize');
   assert.equal(resolveCropInput('moonfruit', catalog, country).id, 'unassessed:moonfruit');
 });
+
+test('an explicit alternative list is separate from baseline and a mixed unsupported list needs correction',async()=>{
+  const parsed=parseWorkflowMessage('Allowed crops: bush snap bean, garden pea',true);assert.equal(parsed.baseline,undefined);assert.deepEqual(parsed.allowed,['bush snap bean','garden pea']);
+  const {assistant,calls}=setup();await assistant.respond('Use the selected point');calls.length=0;
+  const rejected=await assistant.respond('Crops: beans, peas, beans. Alternatives: beans, peas, rice');assert.match(rejected.blocks[0].text,/rice.*not silently discard/s);assert.ok(!calls.includes('NASA')&&!calls.includes('compare'));
+  assert.match((await assistant.respond('Allowed crops: beans, peas')).blocks[0].text,/Step 4 is ready/);
+});
+
+test('unmatched text in national scope does not execute a workflow action',async()=>{
+  const {assistant,calls}=setup({point:false});await assistant.respond('Help me plan in India');await assistant.respond('Whole India');calls.length=0;
+  assert.equal(await assistant.respond('blorple flarn'),null);assert.deepEqual(calls,[]);
+});
+
+
+test('nonsense and full-width read-only questions cannot advance a pending point workflow', async()=>{
+  const {assistant,calls}=setup();
+  await assistant.respond('Help me plan a rotation using the selected point');calls.length=0;
+  assert.equal(await assistant.respond('blorple flarn'),null);assert.deepEqual(calls,[]);
+  assert.equal(parseWorkflowMessage(String.fromCharCode(0xff1f,0xff1f,0xff1f),true),null);
+});
+
+test('Singapore with unnamed region codes goes directly to places and never needs a region',async()=>{
+  const {assistant,calls,state}=setup({country:'SG',point:false,locations:{regions:[{id:'01',name:null}],places:[{id:'town',name:'Singapore',regionCode:'01',latitude:1.29,longitude:103.85}]}});
+  await assistant.respond('Help me plan a rotation in Singapore. Crops: tomato, cabbage, onion');
+  const overview=await assistant.respond('Whole Singapore');
+  assert.equal(overview.followUps[0].label,'Choose a town or field');
+  const area=await assistant.respond('A specific area');assert.match(area.blocks[0].text,/No named regions.*choose a town|No named regions.*Choose a town/s);
+  assert.ok(!calls.includes('region')&&!calls.includes('NASA'));assert.equal(state.location,null);
+});

@@ -1,0 +1,58 @@
+{
+  "reviewedAt": "2026-11-15T14:19:43.184811+00:00",
+  "scope": "Five viewport sizes, four steps, chat, optional 3D and terrain. Actual POWER evidence, deliberate field transport failure for layout only. Original screenshots remain in ignored artifacts; selected captures and contact sheets retained here.",
+  "files": [
+    {
+      "file": "docs/evidence/merged-release-visuals/before-1280-compare.png",
+      "sha256": "77a44d65d07ec8207fd0e7ac478f46625f34b9431465ffa85357b4dab81e3599"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/before-1280-evidence.png",
+      "sha256": "5db345404ff4855bf27fcb47c81a783acbe42e7c4c60978bde7d78d242c7bb53"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/before-390-chat.png",
+      "sha256": "fb6466667e1b16f9fc2cc07403fb6f5d3f6316ea60e91d29b37edeaf2ee6f7ff"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/before-844-location.png",
+      "sha256": "f26fb94c80c42f6bbab0a48f0ee4402e393e24ce1c3ec526b03e16760a450bbd"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-1280-compare.png",
+      "sha256": "787d7b3b19b4bb2f92d7cff22657550912986ab70b670ac42d9b65ba1ec31237"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-1280-evidence.png",
+      "sha256": "c83888f1b627c3035db8bedae0300df57d1b87a4a6b41431b0b161bdb567a2e2"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-390-chat.png",
+      "sha256": "680828f990d9b5247df9835e755bdb0b963d7adaee837ad0964073f1c2f71bae"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-844-location.png",
+      "sha256": "b553b2e74b7d67235fea9ed8ed17a9db7d8faf33ff231bae5c0d240de600d045"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-contact-1280.png",
+      "sha256": "6ad85e562f271323e5dd2d96640bb77893a175f8a9dcf8917b6a8d22fc52f56c"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-contact-1366.png",
+      "sha256": "568ac7a87e373371367ba1aa677efd0d493ae3d3b7f27136bd8bb42035b44881"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-contact-390.png",
+      "sha256": "2059f52965edd4784e479fe3f8848e8ce15070714a44ed926a4f5ba4339fcee7"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-contact-683.png",
+      "sha256": "321888520613d9bc0181af6d66550236c1fc3858af268329bf570e0fb078d1cd"
+    },
+    {
+      "file": "docs/evidence/merged-release-visuals/after-contact-844.png",
+      "sha256": "4b9a53731a449a89268937e8408654a5ab33d051c968c4fccec8678750f99e6b"
+    }
+  ]
+}

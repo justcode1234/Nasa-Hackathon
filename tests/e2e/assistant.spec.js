@@ -20,12 +20,14 @@ test('all sixteen original QA questions retain their grounded answers and workfl
     for(const item of plan.cases)await test.step(item.id+': '+item.prompt,async()=>{
       await page.goto('/',{waitUntil:'domcontentloaded'});await expect(page.locator('#catalog-status')).toContainText('Choose a country');
       await page.locator('#chat-toggle').click();
-      await page.getByText('Compact local language-model experiment',{exact:true}).click();
+      await page.locator('#assistant-settings>summary').click();
       await page.locator('#unload-model').click();
       if(item.id==='Q05')await ask(plan.cases.find(row=>row.id==='Q04').prompt);
       if(['Q08','Q09'].includes(item.id))await ask(plan.cases.find(row=>row.id==='Q07').prompt);
+      if(item.id==='Q09')await ask('Allowed crops: bush snap bean, garden pea');
       const actual=await ask(item.prompt);
       if(item.id==='Q07'){
+        await ask('Allowed crops: bush snap bean, garden pea');
         await ask('at 18.5204, 73.8567');
         actual.followUp={retainedBaseline:JSON.stringify(await page.locator('[id^=baseline-]').evaluateAll(nodes=>nodes.map(n=>n.value)))===JSON.stringify(['unassessed:fao-27','unassessed:fao-15','bush-bean']),
           irrigation:await page.locator('#irrigation').inputValue(),unsupportedBaseline:/Rice.*unknown.*Wheat.*unknown/s.test(await page.locator('.scenario').first().textContent())};

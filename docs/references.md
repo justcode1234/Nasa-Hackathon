@@ -1,5 +1,13 @@
 # Data sources and references
 
+**Merged release update:** the user approved consolidating to main and deploying
+after checks. Seven screening crops / 166 of 197 national lists, 3D imagery/terrain
+and voice are included in the current release candidate. The Phase A public hashes
+below describe the earlier review baseline, not the new release. Original Phase A
+materials are retained under public/submission/phase-a. The NASA portal is unchanged.
+Read-aloud keeps the installed English system voice by explicit user decision;
+English-only training provenance for that voice remains unverified.
+
 Reviewed **15 November 2026 (UTC+8)** against the public Phase A release (`main`
 `f4c4fef`) and review source `4f9b8b3`. Provider descriptions are separate from what
 Field Shift actually uses. [HTTP evidence](evidence/repository-review-public-links.json)
@@ -9,7 +17,7 @@ identify the public implementation inspected.
 
 ## What is integrated
 
-| Source | Public Phase A use | Limits |
+| Source | Current release integration | Limits |
 | --- | --- | --- |
 | NASA POWER Daily | Retrieved temperature, precipitation and solar radiation; monthly summaries and crop-window exposure indicators | Regional estimated observations, not field sensors or a forecast |
 | FAOSTAT QCL | Bundled dated national production extract populating country crop lists | Production categories do not prove cultivar, availability or local suitability |
@@ -20,9 +28,9 @@ identify the public implementation inspected.
 | Australian Bureau of Statistics | Bundled Australian 2020–21 irrigation totals and annual ratios | National categories, not field water requirements; not applied to other countries |
 | Agricultural publications | Factual crop profiles, family, maturity, selected pH/drainage/temperature screening rules | Source-region evidence, not worldwide agronomic validation |
 
-**Preview only:** NASA GIBS imagery (MODIS NDVI/LST, SMAP and IMERG), POWER regional
-grid columns, and mixed-source Terrain Tiles including SRTM. These are present in
-this branch's 3D map, **not the public Phase A application**. GIBS colours do not feed
+**Optional 3D map:** NASA GIBS imagery (MODIS NDVI/LST, SMAP and IMERG), POWER regional
+grid columns, and mixed-source Terrain Tiles including SRTM are included in the
+approved merged release. The preserved Phase A snapshot predates them. GIBS colours do not feed
 crop ranking; imagery values are not extracted. No standalone SMAP, GPM or MODIS
 numerical crop-model integration is claimed.
 
@@ -80,10 +88,21 @@ the UN Statistics Division's [M49/ISO table](https://unstats.un.org/unsd/methodo
 Production records are evidence of reported national production, not proof that
 an individual farm can grow a crop. Commodity-to-screening mappings are disclosed
 proxies. Absence means missing extract coverage, not that nothing grows there.
-Public Phase A has four screening crop types and 89/197 lists with two or more
-screened categories; this branch has seven and 166/197. Radish has no mapped FAOSTAT
+The earlier Phase A release had four screening crop types and 89/197 lists with two or more
+screened categories; this release has seven and 166/197. Radish has no mapped FAOSTAT
 category, so it is not offered by country lists. Never describe these counts as
 validated countries or recommendation accuracy.
+
+**Separate Åland records:** Statistics and Research Åland (ÅSUB), *Åland in Figures
+2025*, agricultural production 2024, printed page 11 / PDF page 13.
+[Official publication](https://www.asub.ax/sites/default/files/media/document/ALSIFF25ENG.pdf#page=13).
+Five attributed factual categories are transcribed in
+[regional-crops.json](../server/context/regional-crops.json): wheat, combined
+barley/oats, rye, table potatoes and onions. These are territory aggregates, not
+FAOSTAT entries, field suitability assessments or additional screening rules.
+The combined barley/oats category is not split. The publication retains its
+copyright; no broader reuse licence is asserted. Retrieval date, SHA-256 and
+missingness are retained with the extract.
 
 ## ISRIC SoilGrids
 
@@ -113,8 +132,8 @@ Display contributor attribution and licence links. Read the
 [tile policy](https://operations.osmfoundation.org/policies/tiles/) and
 [Nominatim policy](https://operations.osmfoundation.org/policies/nominatim/).
 
-Public Phase A retrieves bounded field geometry through the OSM map API. This
-branch uses three fixed public Overpass services: `overpass-api.de`,
+The earlier Phase A release retrieved bounded field geometry through the OSM map API. The
+current adapter uses three fixed public Overpass services: `overpass-api.de`,
 `overpass.private.coffee`, `maps.mail.ru`, with staggered requests, bounded retries
 and a shared deadline. The user elected to retain all three. These are transport
 services for OSM data, not independent crop authorities. Place searches use
@@ -192,6 +211,7 @@ references are not worldwide farm prescriptions.
 | Preview head cabbage 60–80 days after transplants, pH 5.8–6.5, best growth 60–65°F | [Clemson HGIC cabbage](https://hgic.clemson.edu/factsheet/cabbage-chinese-cabbage/) | No inheritance by Chinese/Napa cabbage or bok choy |
 | Preview bulb onion 100–120 days, pH 6.2–6.5 and family | [Utah State onions](https://extension.usu.edu/yardandgarden/research/onions-in-the-garden), [Clemson alliums](https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/), [NC State Allium cepa](https://plants.ces.ncsu.edu/plants/allium-cepa/) | Day length and starting method unmodelled; green/spring onions excluded |
 | Preview warm/cool seasonal groups | [NC State vegetable gardening](https://content.ces.ncsu.edu/home-vegetable-gardening-a-quick-reference-guide) | Qualitative grouping does not validate winter survival |
+| Apple/apricot are deciduous Rosaceae fruit trees | [NC State apple](https://plants.ces.ncsu.edu/plants/malus-domestica/), [NC State apricot](https://plants.ces.ncsu.edu/plants/prunus-armeniaca/) | Factual context only; no annual rotation, local orchard calendar or yield rule added |
 
 The [crop registry](../server/agronomy/crops.json) and
 [knowledge registry](../server/agronomy/knowledge.json) retain source IDs.
@@ -212,16 +232,16 @@ check, duration bases and unsupported-variant comparisons.
   irrigation availability, reported soil, optional soil-test pH/drainage and pest history.
   These are not NASA observations; no field measurements are inferred from a map.
 
-## Preview imagery and terrain attribution
+## Optional imagery and terrain attribution
 
 [NASA GIBS](https://nasa-gibs.github.io/gibs-api-docs/) supplies dated, advertised
 WMTS imagery through a fixed product allowlist in [gibs.js](../server/context/gibs.js).
-The preview displays MODIS NDVI (250 m), MODIS daytime LST (1 km), SMAP L4
+The 3D map displays MODIS NDVI (250 m), MODIS daytime LST (1 km), SMAP L4
 model-derived top-5-cm moisture (9 km), and IMERG precipitation rate (0.1° source
 grid). Units, dates, legends and missing coverage are labelled; tile zoom is not
-native resolution. These layers are not present in Phase A and never drive screening.
+native resolution. These layers were absent from Phase A and never drive screening.
 
-[Terrain Tiles](https://registry.opendata.aws/terrain-tiles/) supply the preview's
+[Terrain Tiles](https://registry.opendata.aws/terrain-tiles/) supply the map's
 Terrarium DEM mosaic. Credits include USGS SRTM, NED/3DEP, GMTED, Geoscience Australia
 and others; the mosaic is not uniformly NASA. Full attribution:
 [terrain-attribution.txt](../public/licenses/terrain-attribution.txt).
@@ -232,10 +252,11 @@ they are not surveyed farm measurements or erosion/yield estimates.
 
 Original Team Explorer code: [MIT](../LICENSE). Preserve
 [THIRD-PARTY-NOTICES.md](../THIRD-PARTY-NOTICES.md), [shipped licences](../public/licenses/)
-and [credits](../public/credits.html). Leaflet is BSD-2-Clause; preview MapLibre is
+and [credits](../public/credits.html). Leaflet is BSD-2-Clause; MapLibre is
 BSD-3-Clause; TensorFlow.js and Transformers.js are Apache-2.0; ONNX Runtime is MIT.
 Pinned versions and test/build dependency notices are in the lockfile and notices.
-No new dependency or experimental model is activated by this documentation review.
+The merged release adds no dependency beyond those already pinned and approved;
+the typed-judgment classifier remains unwired.
 
 ## AI assistance
 

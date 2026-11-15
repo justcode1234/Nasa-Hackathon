@@ -10,7 +10,9 @@ No installation or account is required.
 
 Select a location → Explore NASA data → Enter your crops → Compare rotations → Ask the assistant.
 
-Choose a country and a town, search the map, or enter coordinates. Load a historical year, enter your existing three-crop sequence and constraints, then compare it with two alternatives where crop coverage permits. Start with an example farming region if you want to explore the workflow.
+Choose **places/map** or **coordinates**, then use **Next** to load a historical year. View the explained temperature, rainfall and solar graphs; switch temperature between °C and °F. Enter your existing three-crop sequence and constraints, then compare it with two alternatives where crop coverage permits. Alternatives use your screened baseline crops unless you explicitly choose other crops.
+
+Open **Chat** for three clickable examples. English microphone dictation runs on the device after a first-use download notice (about 70 MB); review the draft before Send. **Read aloud** uses an installed on-device English voice. Its training-language provenance is unverified; no separately trained Field Shift TTS model is claimed.
 
 ## Four connected features
 
@@ -27,7 +29,7 @@ Choose a country and a town, search the map, or enter coordinates. Load a histor
 
 Historical weather is not a forecast or a farm measurement. National production records do not prove local suitability; regional soil estimates do not replace a soil test. External services can be unavailable: ISRIC currently reports a pause of its SoilGrids REST service, and field lookups depend on shared mapping services.
 
-The public prototype has screening rules for **four crop types**; **89 of 197** country/area lists contain enough screened categories for alternatives. Unsupported crops remain unassessed. Comparisons assume three four-month slots and do not predict yields, profitability, water savings, pest prevention or soil improvement. Local agricultural review is needed.
+The prototype has screening rules for **seven crop types**; **166 of 197** country/area lists contain enough screened categories for alternatives. Missing rules are explained, not treated as good results. Apples and apricots have factual tree-crop context, but an annual-slot planner cannot assess an established orchard. Comparisons assume three four-month slots and do not predict yields, profitability, water savings, pest prevention or soil improvement. Local agricultural review is needed.
 
 ## References and technical information
 
@@ -38,4 +40,4 @@ The public prototype has screening rules for **four crop types**; **89 of 197** 
 
 ChatGPT, Claude and OpenAI Codex assisted with development, research, tests and documentation. The optional browser model is experimental; sourced answers and deterministic comparisons remain available without it. See the [AI disclosure](docs/references.md#ai-assistance).
 
-This README describes the public Phase A application. The 3D map, expanded crop catalogue and voice controls on development branches are unreleased. Field Shift is not affiliated with or endorsed by NASA.
+The optional 3D map shows regional POWER cells, dated GIBS imagery and terrain context; those map colours do not drive crop ranking. The [prepared Phase A submission snapshot](https://nasa-hackathon-three.vercel.app/submission/phase-a/) remains separate from the current release. Real-phone performance, Safari and independent agronomic validation remain unverified. Field Shift is not affiliated with or endorsed by NASA.

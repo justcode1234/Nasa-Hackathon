@@ -1,0 +1,38 @@
+{
+  "sourceCommit": "f4c4fef9202d133a4f412973a8a8653fd3d21965",
+  "tag": "phase-a-submission-2026-11-15",
+  "files": [
+    {
+      "file": "fieldshift-deck.pdf",
+      "matchesPhaseA": true,
+      "sha256": "73579d653ba288dc4ff2c1d3b3dd854a31819108569db39806496a7ceafe608c",
+      "bytes": 86877
+    },
+    {
+      "file": "fieldshift-source.zip",
+      "matchesPhaseA": true,
+      "sha256": "b3afc9310855fc727414b183b84267b2331add730597904fd07d9b564cf0a9ee",
+      "bytes": 2452507
+    },
+    {
+      "file": "source-manifest.json",
+      "matchesPhaseA": true,
+      "sha256": "a87327b0bebf17ecbdba5e0ca3bb33366eee3e01dbd8e55b221c96bb96fbb94b",
+      "bytes": 69421
+    },
+    {
+      "file": "submission-text.txt",
+      "matchesPhaseA": true,
+      "sha256": "89f78635fcf1fe43edc5c45a89cbbad306c0feba8c92bcd48192d620f7d09d64",
+      "bytes": 15273
+    },
+    {
+      "file": "validation.txt",
+      "matchesPhaseA": true,
+      "sha256": "dbcf5cb3a3a01fc778ffb29776c4b16e6bd262ad503d97a1bf4466f2ee0ada1c",
+      "bytes": 15890
+    }
+  ],
+  "originalHtmlMatches": true,
+  "note": "Original prepared materials; not a NASA submission receipt. Landing wrapper describes the snapshot and links to current app."
+}

@@ -1,0 +1,445 @@
+PASS: four numbered steps, empty initial location, no generic crop list or automatic NASA/model download
+PASS: editing coordinates while country identification is pending cancels the earlier evidence submission
+PASS: persistent Next/Back controls follow workflow order and validate missing inputs
+PASS: tabs switch modules without page scrolling; inactive panels are hidden
+PASS: country, region and town dropdowns select a real sourced point without typing a place name
+PASS: country selection updates real crop lists, clears foreign selections and blocks insufficient screening coverage
+PASS: actual map click selects a coordinate and updates the coordinate form
+PASS: place-name search returns real Nominatim place choices
+PASS: real OSM field polygons and dropdown select a field with dated metadata and unknown crop labels
+PASS: real NASA year loads with units, source timestamps, daily metadata, monthly charts and tables
+PASS: country pest query displays sourced hosts and GBIF historical occurrence context
+PASS: baseline + two distinct alternatives render nine dated crop slots with risks and evidence
+PASS: a greeting receives one brief friendly reply without scientific data or sources
+PASS: kai lan in Singapore has traceable facts and a working focused growing-conditions follow-up
+PASS: a crop-country question and country-evidence follow-up work independently of the current map selection
+PASS: asking about another country never appends the selected map location’s weather
+PASS: assistant fallback answers crop question with source links and no model
+PASS: constraint edits immediately clear outdated comparison and answer
+PASS: unsupported baseline crop stays visible without invented family or weather fit
+PASS: 390px mobile layout has no page-wide horizontal overflow
+PASS: arrow-key navigation selects and focuses the next tab
+PASS: different coordinates clear prior evidence and load a different real NASA location
+PASS: coordinates and NASA evidence work with map library and tiles unavailable
+PASS: custom compact browser language model loads and selects evidence with recorded metrics
+PASS: model unload returns to working evidence mode
+PASS: network failure produces visible error and prevents stale-evidence comparisons
+PASS: all data and comparison calls stay in the browser; no server /api request occurred
+PASS: a country-only planning request asks which part or the whole country with both scope choices
+PASS: Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison
+PASS: choosing a specific area accepts a sourced Indian state and filters the town dropdown
+PASS: chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4
+PASS: seven-slide deck has no clipped content and exports exactly seven PDF pages
+PASS: no uncaught JavaScript exceptions or CSP violations
+
+Compact model benchmark:
+{
+  "checkedAt": "2026-11-14T19:13:13.500Z",
+  "firstEvidenceAnswerMs": 3.800000011920929,
+  "coldLoad": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 39274,
+    "weightBytes": 157096,
+    "loadMs": 3256.300000011921,
+    "backend": "wasm",
+    "tensorBytes": 157096,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null
+  },
+  "warmLoad": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 39274,
+    "weightBytes": 157096,
+    "loadMs": 155.30000001192093,
+    "backend": "wasm",
+    "tensorBytes": 157096,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null
+  },
+  "inference": {
+    "model": "FieldShift Mini word LM (experimental)",
+    "parameters": 39274,
+    "weightBytes": 157096,
+    "loadMs": 3256.300000011921,
+    "backend": "wasm",
+    "tensorBytes": 157096,
+    "wasmHeapCapacityBytes": 16777216,
+    "peakTotalBrowserMemoryBytes": null,
+    "inferenceMs": 19.799999982118607,
+    "topic": "soil",
+    "accepted": true
+  },
+  "rawGenerationForEvaluationOnly": "regional soil estimates are not farm measurements . a local soil test",
+  "browserProcessMemory": {
+    "supported": true,
+    "method": "Windows .NET process counters for the isolated browser and descendants; snapshots at workflow phases.",
+    "maxSampledWorkingSetBytes": 754790400,
+    "maxSampledPrivateBytes": 356552704,
+    "sumObservedProcessPeakWorkingSetsBytes": 808001536,
+    "observedProcessCount": 14,
+    "snapshots": [
+      {
+        "phase": "before model load",
+        "startedAt": "2026-11-14T19:13:07.9757007Z",
+        "finishedAt": "2026-11-14T19:13:08.3976810Z",
+        "processCount": 11,
+        "workingSetBytes": 563605504,
+        "privateBytes": 232562688
+      },
+      {
+        "phase": "after model load and inference",
+        "startedAt": "2026-11-14T19:13:12.2517834Z",
+        "finishedAt": "2026-11-14T19:13:12.4823077Z",
+        "processCount": 13,
+        "workingSetBytes": 740929536,
+        "privateBytes": 341622784
+      },
+      {
+        "phase": "after developer generation and app model reload",
+        "startedAt": "2026-11-14T19:13:13.2324272Z",
+        "finishedAt": "2026-11-14T19:13:13.4587615Z",
+        "processCount": 13,
+        "workingSetBytes": 754790400,
+        "privateBytes": 356552704
+      }
+    ],
+    "limitations": [
+      "Working-set sums can count shared physical pages more than once.",
+      "Summed per-process lifetime peaks are not a simultaneous browser peak.",
+      "Subprocesses that start and exit entirely between snapshots can be missed; this is not an exact full-session peak.",
+      "These are desktop headless measurements, not real mobile hardware or a memory guarantee."
+    ]
+  },
+  "browserProcessMemorySamples": [
+    {
+      "startedAt": "2026-11-14T19:13:07.9757007Z",
+      "finishedAt": "2026-11-14T19:13:08.3976810Z",
+      "rootProcessId": 15472,
+      "processes": [
+        {
+          "id": 15472,
+          "parentId": 22828,
+          "startedAt": "2026-11-14T19:13:07.1887185Z",
+          "workingSetBytes": 136171520,
+          "privateBytes": 40988672,
+          "peakWorkingSetBytes": 136171520
+        },
+        {
+          "id": 25972,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.1994330Z",
+          "workingSetBytes": 10461184,
+          "privateBytes": 2760704,
+          "peakWorkingSetBytes": 10461184
+        },
+        {
+          "id": 21408,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2801737Z",
+          "workingSetBytes": 40947712,
+          "privateBytes": 15142912,
+          "peakWorkingSetBytes": 40947712
+        },
+        {
+          "id": 23192,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2850345Z",
+          "workingSetBytes": 40443904,
+          "privateBytes": 14397440,
+          "peakWorkingSetBytes": 40734720
+        },
+        {
+          "id": 17860,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2999664Z",
+          "workingSetBytes": 17838080,
+          "privateBytes": 7987200,
+          "peakWorkingSetBytes": 17838080
+        },
+        {
+          "id": 27140,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3431780Z",
+          "workingSetBytes": 65757184,
+          "privateBytes": 29220864,
+          "peakWorkingSetBytes": 65757184
+        },
+        {
+          "id": 24496,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3680711Z",
+          "workingSetBytes": 31158272,
+          "privateBytes": 15020032,
+          "peakWorkingSetBytes": 31158272
+        },
+        {
+          "id": 27564,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3685001Z",
+          "workingSetBytes": 93896704,
+          "privateBytes": 41484288,
+          "peakWorkingSetBytes": 93896704
+        },
+        {
+          "id": 37416,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4570795Z",
+          "workingSetBytes": 42582016,
+          "privateBytes": 22695936,
+          "peakWorkingSetBytes": 42582016
+        },
+        {
+          "id": 38468,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4804634Z",
+          "workingSetBytes": 39534592,
+          "privateBytes": 19615744,
+          "peakWorkingSetBytes": 39534592
+        },
+        {
+          "id": 18504,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.5015371Z",
+          "workingSetBytes": 44814336,
+          "privateBytes": 23248896,
+          "peakWorkingSetBytes": 44814336
+        }
+      ],
+      "phase": "before model load",
+      "supported": true
+    },
+    {
+      "startedAt": "2026-11-14T19:13:12.2517834Z",
+      "finishedAt": "2026-11-14T19:13:12.4823077Z",
+      "rootProcessId": 15472,
+      "processes": [
+        {
+          "id": 15472,
+          "parentId": 22828,
+          "startedAt": "2026-11-14T19:13:07.1887185Z",
+          "workingSetBytes": 158920704,
+          "privateBytes": 53673984,
+          "peakWorkingSetBytes": 160727040
+        },
+        {
+          "id": 25972,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.1994330Z",
+          "workingSetBytes": 10477568,
+          "privateBytes": 2777088,
+          "peakWorkingSetBytes": 10477568
+        },
+        {
+          "id": 21408,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2801737Z",
+          "workingSetBytes": 45379584,
+          "privateBytes": 15618048,
+          "peakWorkingSetBytes": 45379584
+        },
+        {
+          "id": 23192,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2850345Z",
+          "workingSetBytes": 41639936,
+          "privateBytes": 14839808,
+          "peakWorkingSetBytes": 45047808
+        },
+        {
+          "id": 17860,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2999664Z",
+          "workingSetBytes": 18042880,
+          "privateBytes": 8040448,
+          "peakWorkingSetBytes": 18042880
+        },
+        {
+          "id": 27140,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3431780Z",
+          "workingSetBytes": 66101248,
+          "privateBytes": 29265920,
+          "peakWorkingSetBytes": 66101248
+        },
+        {
+          "id": 27564,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3685001Z",
+          "workingSetBytes": 142921728,
+          "privateBytes": 92024832,
+          "peakWorkingSetBytes": 142921728
+        },
+        {
+          "id": 37416,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4570795Z",
+          "workingSetBytes": 42934272,
+          "privateBytes": 22753280,
+          "peakWorkingSetBytes": 42934272
+        },
+        {
+          "id": 38468,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4804634Z",
+          "workingSetBytes": 39936000,
+          "privateBytes": 19689472,
+          "peakWorkingSetBytes": 39936000
+        },
+        {
+          "id": 18504,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.5015371Z",
+          "workingSetBytes": 45158400,
+          "privateBytes": 23306240,
+          "peakWorkingSetBytes": 45158400
+        },
+        {
+          "id": 34352,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.8566380Z",
+          "workingSetBytes": 52740096,
+          "privateBytes": 22679552,
+          "peakWorkingSetBytes": 52740096
+        },
+        {
+          "id": 13072,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.9528328Z",
+          "workingSetBytes": 31383552,
+          "privateBytes": 15056896,
+          "peakWorkingSetBytes": 31383552
+        },
+        {
+          "id": 13216,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.9904038Z",
+          "workingSetBytes": 45293568,
+          "privateBytes": 21897216,
+          "peakWorkingSetBytes": 45895680
+        }
+      ],
+      "phase": "after model load and inference",
+      "supported": true
+    },
+    {
+      "startedAt": "2026-11-14T19:13:13.2324272Z",
+      "finishedAt": "2026-11-14T19:13:13.4587615Z",
+      "rootProcessId": 15472,
+      "processes": [
+        {
+          "id": 15472,
+          "parentId": 22828,
+          "startedAt": "2026-11-14T19:13:07.1887185Z",
+          "workingSetBytes": 157970432,
+          "privateBytes": 53768192,
+          "peakWorkingSetBytes": 160727040
+        },
+        {
+          "id": 25972,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.1994330Z",
+          "workingSetBytes": 10477568,
+          "privateBytes": 2777088,
+          "peakWorkingSetBytes": 10477568
+        },
+        {
+          "id": 21408,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2801737Z",
+          "workingSetBytes": 45379584,
+          "privateBytes": 15618048,
+          "peakWorkingSetBytes": 45379584
+        },
+        {
+          "id": 23192,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2850345Z",
+          "workingSetBytes": 41689088,
+          "privateBytes": 14893056,
+          "peakWorkingSetBytes": 45047808
+        },
+        {
+          "id": 17860,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.2999664Z",
+          "workingSetBytes": 18042880,
+          "privateBytes": 8040448,
+          "peakWorkingSetBytes": 18042880
+        },
+        {
+          "id": 27140,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3431780Z",
+          "workingSetBytes": 66101248,
+          "privateBytes": 29265920,
+          "peakWorkingSetBytes": 66101248
+        },
+        {
+          "id": 27564,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.3685001Z",
+          "workingSetBytes": 157683712,
+          "privateBytes": 106807296,
+          "peakWorkingSetBytes": 173019136
+        },
+        {
+          "id": 37416,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4570795Z",
+          "workingSetBytes": 42934272,
+          "privateBytes": 22753280,
+          "peakWorkingSetBytes": 42934272
+        },
+        {
+          "id": 38468,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.4804634Z",
+          "workingSetBytes": 39936000,
+          "privateBytes": 19689472,
+          "peakWorkingSetBytes": 39936000
+        },
+        {
+          "id": 18504,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:07.5015371Z",
+          "workingSetBytes": 45158400,
+          "privateBytes": 23306240,
+          "peakWorkingSetBytes": 45158400
+        },
+        {
+          "id": 34352,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.8566380Z",
+          "workingSetBytes": 52740096,
+          "privateBytes": 22679552,
+          "peakWorkingSetBytes": 52740096
+        },
+        {
+          "id": 13072,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.9528328Z",
+          "workingSetBytes": 31383552,
+          "privateBytes": 15056896,
+          "peakWorkingSetBytes": 31383552
+        },
+        {
+          "id": 13216,
+          "parentId": 15472,
+          "startedAt": "2026-11-14T19:13:09.9904038Z",
+          "workingSetBytes": 45293568,
+          "privateBytes": 21897216,
+          "peakWorkingSetBytes": 45895680
+        }
+      ],
+      "phase": "after developer generation and app model reload",
+      "supported": true
+    }
+  ],
+  "limitations": [
+    "Development question wording is synthetic and not agronomist-reviewed.",
+    "Raw generated words never reach scientific UI output.",
+    "WASM heap capacity and tensor bytes are not total browser peak memory."
+  ]
+}
+
+No live Vercel deployment or NASA submission is claimed without verified account actions.

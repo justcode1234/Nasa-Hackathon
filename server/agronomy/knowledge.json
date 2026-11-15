@@ -37,6 +37,20 @@
       "reviewedYear": 2024,
       "checkedDate": "2026-11-15",
       "region": "Minnesota gardening reference; not global farm validation"
+    },
+    {
+      "id": "ncsu-apple",
+      "title": "NC State Plant Toolbox: Apple tree identity and cultivation context",
+      "url": "https://plants.ces.ncsu.edu/plants/malus-domestica/",
+      "checkedDate": "2026-11-15",
+      "region": "Botanical identity and regional cultivation reference, not a local orchard prescription"
+    },
+    {
+      "id": "ncsu-apricot",
+      "title": "NC State Plant Toolbox: Apricot tree identity and cultivation context",
+      "url": "https://plants.ces.ncsu.edu/plants/prunus-armeniaca/",
+      "checkedDate": "2026-11-15",
+      "region": "Botanical identity and regional cultivation reference, not a local orchard prescription"
     }
   ],
   "profiles": [
@@ -137,6 +151,50 @@
           "clemson-tomato"
         ]
       }
+    },
+    {
+      "id": "apple",
+      "name": "Apple",
+      "aliases": [
+        "apple",
+        "apples"
+      ],
+      "itemIds": [
+        "515"
+      ],
+      "sourceIds": [
+        "ncsu-apple"
+      ],
+      "family": "Rosaceae",
+      "perennial": true,
+      "referenceScope": "NC State describes a deciduous fruit tree; this does not validate the prototype annual rotation calendar.",
+      "overview": "Apple is a deciduous fruit tree in Rosaceae. An established orchard is not a sequence of annual crops to replace every four months.",
+      "conditions": "Cultivar, local chilling and flowering conditions, soil and orchard management need local review. The national production record does not establish suitability for this field.",
+      "water": "This app has no orchard water-balance model or field irrigation requirement for apple.",
+      "harvest": "No locally validated orchard harvest calendar or establishment-to-bearing model is available here. The three four-month annual slots must not be treated as an orchard prescription.",
+      "screeningEligible": false
+    },
+    {
+      "id": "apricot",
+      "name": "Apricot",
+      "aliases": [
+        "apricot",
+        "apricots"
+      ],
+      "itemIds": [
+        "526"
+      ],
+      "sourceIds": [
+        "ncsu-apricot"
+      ],
+      "family": "Rosaceae",
+      "perennial": true,
+      "referenceScope": "NC State describes a deciduous fruit tree; this does not validate the prototype annual rotation calendar.",
+      "overview": "Apricot is a deciduous fruit tree in Rosaceae. An established orchard is not a sequence of annual crops to replace every four months.",
+      "conditions": "Cultivar, local chilling and flowering conditions, soil and orchard management need local review. The national production record does not establish suitability for this field.",
+      "water": "This app has no orchard water-balance model or field irrigation requirement for apricot.",
+      "harvest": "No locally validated orchard harvest calendar or establishment-to-bearing model is available here. The three four-month annual slots must not be treated as an orchard prescription.",
+      "screeningEligible": false
     }
   ]
 }

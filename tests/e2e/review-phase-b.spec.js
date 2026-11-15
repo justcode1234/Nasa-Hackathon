@@ -32,10 +32,10 @@ test('a failed field request has a reachable retry and still permits a point-bas
   await expect(page.getByRole('combobox',{name:'Mapped field',exact:true})).toBeDisabled();
   await expect(page.locator('.scenario')).toHaveCount(0);
   await expect(page.locator('#farms-status')).toContainText('continue with the selected map point or coordinates');
-  const latitude=await page.getByRole('spinbutton',{name:/Latitude/}).inputValue();
+  const latitude=await page.locator('#latitude').inputValue();
   await page.getByRole('button',{name:'Retry mapped field search',exact:true}).click();
   await expect(page.getByRole('button',{name:'Retry mapped field search',exact:true})).toBeEnabled();
-  await expect(page.getByRole('spinbutton',{name:/Latitude/})).toHaveValue(latitude);
+  await expect(page.locator('#latitude')).toHaveValue(latitude);
   // Field outlines are optional. Retain the explicit point and use real NASA data.
   await evidence(page);await compare(page);
   await expect(page.locator('#farm-results')).toBeDisabled();
@@ -50,10 +50,10 @@ test('human dropdowns, map click, fields and a new-crop comparison form a workin
   const towns=page.getByRole('combobox',{name:'Town / city',exact:true});
   await expect(towns.locator('option').filter({hasText:/^Perth ·/})).toHaveCount(1);
   const perth=await towns.locator('option').filter({hasText:/^Perth ·/}).getAttribute('value');await towns.selectOption(perth);
-  await expect(page.getByRole('spinbutton',{name:/Latitude/})).not.toHaveValue('');
-  const before=await page.getByRole('spinbutton',{name:/Longitude/}).inputValue();
+  await expect(page.locator('#latitude')).not.toHaveValue('');
+  const before=await page.locator('#longitude').inputValue();
   await page.getByRole('region',{name:/Location and mapped farmland/}).click({position:{x:80,y:100}});
-  await expect(page.getByRole('spinbutton',{name:/Longitude/})).not.toHaveValue(before);
+  await expect(page.locator('#longitude')).not.toHaveValue(before);
   // One explicit search per complete run; never type-triggered autocomplete.
   if(info.project.name===info.config.projects[0].name){
     await page.getByRole('textbox',{name:'Town, region or country',exact:true}).fill('Cambridge, United Kingdom');
@@ -103,7 +103,7 @@ test('the optional model loads and Q01, Q03 and Q16 retain grounded answers',asy
     await page.getByRole('textbox',{name:'Message',exact:true}).fill(question);await page.getByRole('button',{name:'Send',exact:true}).click();
     await expect(page.locator('#answer-status')).toContainText('Answer ready',{timeout:60_000});
     const last=page.locator('#chat-history article').last();
-    const actual={paragraphs:await last.locator(':scope > p').allTextContents(),links:await last.locator('a').evaluateAll(nodes=>nodes.map(n=>({title:n.textContent,url:n.href}))),buttons:await last.locator('button').allTextContents(),state:{country:await page.getByRole('combobox',{name:'Country',exact:true}).inputValue(),latitude:await page.getByRole('spinbutton',{name:/Latitude/}).inputValue(),longitude:await page.getByRole('spinbutton',{name:/Longitude/}).inputValue(),scenarios:await page.locator('.scenario').count(),evidenceElements:await page.locator('#evidence-output > *').count()}};
+    const actual={paragraphs:await last.locator(':scope > p').allTextContents(),links:await last.locator('a').evaluateAll(nodes=>nodes.map(n=>({title:n.textContent,url:n.href}))),buttons:await last.locator('button').allTextContents(),state:{country:await page.locator('#pest-country').inputValue(),latitude:await page.locator('#latitude').inputValue(),longitude:await page.locator('#longitude').inputValue(),scenarios:await page.locator('.scenario').count(),evidenceElements:await page.locator('#evidence-output > *').count()}};
     const checks=gradePrompt(id,actual);captured.push({id,question,actual,checks});expect(checks.filter(c=>!c.passed),JSON.stringify(actual)).toEqual([]);
   }
   expect(await page.evaluate(()=>window.fieldshiftModelSelections??0),'Actual worker inference completed').toBeGreaterThan(0);

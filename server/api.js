@@ -52,7 +52,7 @@ export function createApiHandler({ getObservations = createPowerClient(), getPow
         const conversation = answerConversation(body.question, { country: body.country ?? body.selectedCountry, context: body.chatContext });
         if (conversation) return conversation;
       }
-      if (url.pathname === '/api/ask' && !body.baseline) return { ...answerCatalogQuestion(body.question), topic: questionTopic(body.question) };
+      if (url.pathname === '/api/ask' && (!body.baseline || (questionTopic(body.question)==='overview'&&!/\b(?:compare|comparison|baseline)\b/i.test(body.question)))) return { ...answerCatalogQuestion(body.question), topic: questionTopic(body.question) };
       const inputs = validateInputs(body);
       const observations = await getObservations({ latitude: inputs.latitude, longitude: inputs.longitude, year: inputs.referenceYear });
       const result = compareRotations(inputs, observations);

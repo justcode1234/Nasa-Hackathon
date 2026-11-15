@@ -3,6 +3,7 @@ import { AppError } from '../errors.js';
 import { validateLocation } from '../nasa/power.js';
 import { catalog, findCrop, mentionedCrops, ambiguousCornQuestion, cornScopeNotice } from './catalog.js';
 import { countryCropName, getCountryCrops } from '../context/crops.js';
+import knowledge from './knowledge.json' with {type:'json'};
 
 const DAY = 86_400_000;
 const iso = timestamp => new Date(timestamp).toISOString().slice(0, 10);
@@ -64,7 +65,15 @@ function evaluate(ids, inputs, observations, label, baseline = false) {
     if (!crop) {
       criteria.unsupportedCrops++;
       risks.push(`Slot ${i + 1}: “${value}” is outside the sourced catalog; maturity, family and environmental fit are unassessed.`);
-      return { ...slot, maturityDays: null, indicators: null, notes: ['Unsupported crop — baseline preserved without inferred crop facts.'] };
+      const itemCode=/^unassessed:fao-(\d+)$/.exec(value)?.[1];
+      const record=inputs.country&&itemCode?getCountryCrops({country:inputs.country}).records.find(record=>String(record.itemCode)===itemCode):null;
+      const profile=knowledge.profiles.find(profile=>profile.perennial&&(profile.itemIds.includes(itemCode)||profile.aliases.includes(slot.cropName.toLowerCase())));
+      profile?.sourceIds.forEach(id=>sourceIds.add(id));
+      if(record)sourceIds.add('faostat-qcl');
+      return { ...slot, maturityDays: null, indicators: null,referenceFamily:profile?.family??null,perennial:profile?.perennial??false,
+        recordedContext:record?{year:record.year,tonnes:record.tonnes,units:record.units,kind:'national production record; not field suitability',sourceId:'faostat-qcl'}:null,
+        notes: [profile?`${slot.cropName} is a perennial fruit tree in ${profile.family}. This prototype uses annual crop slots, so its four-month calendar cannot assess an established orchard or justify replacing trees with annual crops. A local orchard-specific plan is needed.`:`We kept ${slot.cropName} as you entered it, but this prototype has no sourced rotation-screening entry for it. Crop family, maturity and environmental fit are unassessed here; that does not mean the crop cannot grow.`,
+          'Next step: keep this baseline to inspect the evidence gap, or choose crops with screening rules for an annual comparison. Obtain a local crop-specific calendar and requirements before using these results for that crop. No other crop is silently substituted.'] };
     }
     crop.sourceIds.forEach(id => sourceIds.add(id));
     const soilChecks = [];
@@ -107,12 +116,14 @@ function evaluate(ids, inputs, observations, label, baseline = false) {
       maturityEndExclusive: iso(start + duration * DAY), unallocatedDays: Math.max(0, slotDays - duration - 14),
       indicators: { kind: 'derived from historical analogue, not a forecast', sourceId: 'nasa-power',
         referenceYear: inputs.referenceYear, assessedDays: duration, missingEvidenceDays: missing,
+        validMeanTemperatureDays:days.filter(day=>day.T2M!==null).length,validMinTemperatureDays:days.filter(day=>day.T2M_MIN!==null).length,
         frostRiskDays: crop.frostTender ? frost : null, daysAboveIdealAir: heat,
         ...rain, minAirC: minimums.length ? Math.min(...minimums) : null,
         maxAirC: maximums.length ? Math.max(...maximums) : null, leapDaySubstitutions },
       soilChecks, notes: crop.notes };
   });
-  if (!criteria.repeatedFamilies) reasons.push('No known family repeats in the supplied previous crop and three slots. This is a short screening horizon, not a validated disease-break interval.');
+  if (!criteria.repeatedFamilies&&!criteria.unsupportedCrops) reasons.push('No known family repeats in the supplied previous crop and three slots. This is a short screening horizon, not a validated disease-break interval.');
+  if(criteria.unsupportedCrops)risks.push(`Family repetition and calendar fit cannot be fully compared: ${criteria.unsupportedCrops} baseline crop(s) lack screening rules. Missing evidence is not a favourable result.`);
   if (!criteria.calendarOverruns && !criteria.unsupportedCrops) reasons.push('Sourced maturity upper bounds plus the assumed 14-day turnaround fit each four-month slot.');
   if (baseline && ids.some(id => { const c = findCrop(id); return c && !inputs.allowedCrops.includes(c.id); })) {
     risks.push('The existing baseline contains a crop excluded from alternatives; it has been preserved for comparison.');
@@ -121,7 +132,12 @@ function evaluate(ids, inputs, observations, label, baseline = false) {
   const concerning = criteria.unsupportedCrops || criteria.calendarOverruns || criteria.missingEvidenceDays || criteria.frostRiskDays || criteria.soilConcerns;
   return { id: baseline ? 'baseline' : ids.join('--'), label, baseline,
     status: concerning ? 'Screening concerns — local review required' : 'Limited screening only — local review required',
-    criteria, timeline, reasons, risks, sourceIds: [...sourceIds].sort() };
+    criteria, timeline, reasons, risks,
+    assessment:{totalSlots:timeline.length,cropRules:timeline.filter(slot=>slot.cropId).length,weather:timeline.filter(slot=>slot.indicators).length,
+      frost:timeline.filter(slot=>slot.indicators?.frostRiskDays!=null&&slot.indicators.validMinTemperatureDays>0).length,heat:timeline.filter(slot=>slot.indicators?.daysAboveIdealAir!=null&&slot.indicators.validMeanTemperatureDays>0).length,
+      rain:timeline.filter(slot=>slot.indicators?.precipitationValidDays>0).length,
+      ph:criteria.soilPhAssessedSlots,drainage:inputs.drainage==='unknown'?0:timeline.filter(slot=>findCrop(slot.cropId)?.requiresWellDrainedSoil).length},
+    sourceIds: [...sourceIds].sort() };
 }
 
 export function rankingVector(scenario, priority) {
@@ -177,7 +193,7 @@ export function compareRotations(inputs, observations) {
     assumptions: ['One field; one crop starts each four-month slot; 12-month horizon.',
       'Maturity upper bound plus 14 days for harvest and turnaround; remaining days are unallocated.',
       `Every crop day uses the same month/day in ${inputs.referenceYear}; windows wrap across the reference year. February 29 uses February 28 if absent.`],
-    sources: inputs.country ? [...catalog.sources, getCountryCrops({country: inputs.country}).source] : catalog.sources
+    sources: [...catalog.sources,...knowledge.sources,...(inputs.country?[getCountryCrops({country:inputs.country}).source]:[])]
   };
 }
 

@@ -16,7 +16,7 @@ const check = text => { checks.push(text); console.log(`PASS: ${text}`); };
 try {
   browser = await openFirefox();
   const { call, context, evaluate, waitFor } = browser;
-  const fill = async (selector, value) => evaluate(`(() => { const node=document.querySelector(${JSON.stringify(selector)});node.value=${JSON.stringify(value)};node.dispatchEvent(new Event('input',{bubbles:true})); })()`);
+  const fill = async (selector, value) => evaluate(`(() => { if(["#latitude","#longitude"].includes(${JSON.stringify(selector)})){const mode=document.querySelector("#location-method");mode.value="coordinates";mode.dispatchEvent(new Event("change",{bubbles:true}));} const node=document.querySelector(${JSON.stringify(selector)});node.value=${JSON.stringify(value)};node.dispatchEvent(new Event('input',{bubbles:true})); })()`);
   // Interception is global to this isolated browser, including provider calls from workers.
   const block = async hostname => call('network.addIntercept', { phases: ['beforeRequestSent'],
     urlPatterns: [{ type: 'pattern', protocol: 'https', hostname }] });
@@ -43,12 +43,12 @@ try {
 
     await evaluate('document.querySelector("#example-location").value="52.19,0.09";document.querySelector("#example-location").dispatchEvent(new Event("change",{bubbles:true}));');
     await waitFor('document.querySelector("#catalog-status").textContent.startsWith("United Kingdom")');
-    assert.equal(await evaluate('document.querySelectorAll("[name=allowedCrops]").length'), 2);
+    assert.equal(await evaluate('document.querySelectorAll("[name=allowedCrops]").length'), 5);
     check('country crop choices load from recorded categories without a generic fallback');
 
     await evaluate('document.querySelector("#flow-next").click()');
     await waitFor('document.querySelector("#evidence-status").textContent.startsWith("Historical evidence loaded")');
-    assert.equal(await evaluate('document.querySelectorAll("#evidence-output svg").length'), 2);
+    assert.equal(await evaluate('document.querySelectorAll("#evidence-output svg").length'), 3);
     assert.match(await evaluate('document.querySelector("#evidence-output").textContent'), /NASA.*retrieved/is);
     check('real historical NASA evidence renders with charts, units and retrieval metadata');
 
@@ -99,7 +99,7 @@ try {
 
     const nasaBlock = await block('power.larc.nasa.gov');
     await fill('#reference-year', 2024);
-    await evaluate('document.querySelector("#tab-location").click();document.querySelector("#load-evidence").click()');
+    await evaluate('document.querySelector("#tab-location").click();document.querySelector("#flow-next").click()');
     await waitFor('document.querySelector("#evidence-status").classList.contains("error")');
     assert.ok(blockedRequests.some(url => url.includes('power.larc.nasa.gov')));
     assert.equal(await evaluate('document.querySelector("#compare").disabled'), true);

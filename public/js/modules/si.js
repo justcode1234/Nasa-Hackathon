@@ -12,16 +12,17 @@ export function renderCatalog(catalog, country = null, taggedCrops = []) {
   document.querySelector('#allowed-crop-status').textContent = !country?.country ? 'Choose a country in step 01 to see available alternatives.' : ids.size === 0 ?
     `No alternatives are available for ${country.countryName}: none of its recorded crop categories currently have screening rules in this prototype. Filling more farm details will not enable comparison. You can still inspect NASA evidence, or choose another location.` : ids.size === 1 ?
     `Only one crop has screening rules for ${country.countryName}; comparison needs at least two. This is a coverage gap, not a missing selection.` :
-    'Select at least two of these sourced screening crops. Unsupported baseline crops remain unassessed.';
+    'Alternatives use only the screened baseline crops you chose, unless you explicitly choose different crops below. At least two are needed; missing crop rules are explained in the results.';
   updateCropChoices(catalog, taggedCrops, country);
-  const baselineStatus=document.querySelector('#baseline-crop-status');
+  const baselineStatus=document.querySelector('#crop-selection-status');
+  delete baselineStatus.dataset.selectionWarning;
   baselineStatus.textContent=country?.regionalContext?`Official ÅSUB ${country.regionalContext.year} records document cereals and vegetables here. You can select these regional records for your baseline; their rotation fit remains unassessed. No alternative screening rules have been added.`:
     country?.country&&!country.choices.length&&!taggedCrops.length?`The selected area is ${country.countryName}; its crop records are missing from this dataset. NASA evidence is still available. Soil estimates do not populate the crop list.`:'';
   baselineStatus.hidden=!baselineStatus.textContent;
   catalog.crops.filter(crop => ids.has(crop.id)).forEach(crop => {
     const label = el('label');
     const input = el('input', null, { type: 'checkbox', name: 'allowedCrops', value: crop.id });
-    input.checked = true;
+    input.checked = false;
     label.append(input, crop.name);
     choices.append(label);
     const article = el('article');

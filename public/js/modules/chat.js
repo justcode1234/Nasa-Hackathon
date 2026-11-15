@@ -12,11 +12,23 @@ export function initChat(getState, actions) {
   const workflow = createWorkflowAssistant({ getState, actions, progress: message => { $('answer-status').textContent = message; } });
   let pendingChoice = null, messageSerial = 0;
   // Optional voice input/read-aloud. Dictation only fills the editable message box.
-  const speech = initSpeech({ input: $('question'), status: $('speech-status'), micButton: $('mic'), unloadButton: $('unload-speech'), stopButton: $('stop-speaking') });
+  const speech = initSpeech({ input: $('question'), status: $('speech-status'), micButton: $('mic'), unloadButton: $('unload-speech'), stopButton: $('stop-speaking'), consent: $('speech-consent'), startButton: $('start-dictation'), cancelButton: $('cancel-dictation') });
+  const starters=[...$('chat-examples').querySelectorAll('button')];
+  starters.forEach(button=>button.addEventListener('click',()=>{if($('ask').disabled)return;pendingChoice=null;$('question').value=button.dataset.prompt;$('question-form').requestSubmit();}));
+  function positionChat(){
+    const main=document.querySelector('main');document.documentElement.style.setProperty('--main-scrollbar',`${main.offsetWidth-main.clientWidth}px`);
+    const bar=document.querySelector('.workflow-navigation').getBoundingClientRect();
+    const clearance=bar.top<innerHeight&&bar.bottom>0?innerHeight-Math.max(0,bar.top)+8:88;
+    $('chat-panel').style.setProperty('--chat-bottom',`${clearance}px`);
+    // Keep the closed launcher clear of sticky navigation on short screens too.
+    $('chat-toggle').style.bottom=`${bar.top<innerHeight-16&&bar.bottom>innerHeight-80?clearance:16}px`;
+  }
+  const observer=new ResizeObserver(positionChat);observer.observe(document.querySelector('.workflow-navigation'));observer.observe(document.querySelector('footer'));observer.observe(document.querySelector('main'));
+  window.addEventListener('resize',positionChat);window.addEventListener('scroll',positionChat,{passive:true});
   function open(value) {
     $('chat-panel').hidden = !value;
     $('chat-toggle').setAttribute('aria-expanded', String(value));
-    if (value) $('question').focus(); else { speech.cancel(); $('chat-toggle').focus(); }
+    if (value) { positionChat(); $('question').focus(); } else { speech.cancel(); $('chat-toggle').focus(); }
     if(value&&!worker&&!disabled)loadModel();
   }
   $('chat-toggle').addEventListener('click', () => open($('chat-panel').hidden));
@@ -105,9 +117,11 @@ export function initChat(getState, actions) {
     const startedAt=performance.now();
     const version = revision, question = $('question').value.trim(), serial = ++messageSerial;
     if (!question) return;
+    speech.cancel();$('speech-status').hidden=true;$('answer-status').hidden=false;
     request?.abort(); request = new AbortController();
     $('question').focus();
     $('ask').disabled = true; $('answer-status').textContent = 'Retrieving source facts…';
+    starters.forEach(button=>button.disabled=true);
     const user = el('article', null, { class: 'chat-message' });
     user.append(el('h3', 'You'), el('p', question)); log.append(user);
     $('question').value = '';
@@ -159,13 +173,14 @@ export function initChat(getState, actions) {
       log.scrollTop = log.scrollHeight;
       $('answer-status').textContent = 'Answer ready. Sources and limits are included.';
     } catch (error) { if (error.name !== 'AbortError' && version === revision && serial === messageSerial) $('answer-status').textContent = error.message; }
-    finally { if (version === revision && serial === messageSerial) $('ask').disabled = false; }
+    finally { if (version === revision && serial === messageSerial) { $('ask').disabled = false;starters.forEach(button=>button.disabled=false); } }
   });
   return { invalidate({ fromAssistant = false } = {}) {
     chatContext = null;
     if (fromAssistant) return;
     workflow.invalidate(); pendingChoice = null; speech.stopSpeaking();
     revision++; request?.abort(); $('ask').disabled = false; chatContext = null;
+    starters.forEach(button=>button.disabled=false);
     log.replaceChildren(el('p', 'Location or planning context changed. New messages use the current selection.'));
     $('answer-status').textContent = 'Answers include sources and limitations.';
   } };

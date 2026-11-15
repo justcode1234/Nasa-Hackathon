@@ -1,0 +1,23 @@
+
+> fieldshift@0.1.0 test:node-browser
+> node scripts/node-browser-validation.js
+
+PASS: Node entry explicitly selects HTTP transport and displays its testing mode
+PASS: Node serves the sourced country town dropdown and choosing Cambridge sets the location
+PASS: Node fetches real NASA observations while browser NASA access and the data worker are blocked
+PASS: Node comparison returns the baseline and two alternatives through the shared engine
+PASS: sourced assistant answers arrive from Node with the optional browser model unloaded
+PASS: a greeting receives one brief friendly reply without scientific data or sources
+PASS: kai lan in Singapore has traceable facts and a working focused growing-conditions follow-up
+PASS: a crop-country question and country-evidence follow-up work independently of the current map selection
+PASS: asking about another country never appends the selected map location’s weather
+PASS: unsupported grain maize questions do not inherit sweet-corn maturity facts
+PASS: constraint edits invalidate Node results and unsupported baseline crops remain unassessed
+PASS: Node runtime label and comparison fit a 390px viewport
+PASS: Node upstream failure reaches the UI as an error and prevents stale-evidence comparison
+PASS: retrying after the Node upstream failure retrieves real evidence successfully
+PASS: a country-only planning request asks which part or the whole country with both scope choices
+PASS: Whole India shows dated national crop context without inventing country-wide NASA readings or a field comparison
+PASS: choosing a specific area accepts a sourced Indian state and filters the town dropdown
+PASS: chat verifies explicit coordinates, enters supplied crops, retrieves real NASA data and executes comparison through step 4
+PASS: all data calls use the Node API with no browser NASA request, data-worker load or uncaught exception

@@ -12,6 +12,15 @@ import { comparisonReadiness } from './lib/comparison-readiness.js';
 const $ = selector => document.querySelector(selector);
 $('#runtime-status').textContent = getTransport() === 'http' ? 'Node.js testing mode' : 'Runs in your browser · no account needed';
 let observations = null;
+$('#temperature-unit').addEventListener('change',()=>{if(observations)renderEvidence(observations);});
+function setLocationMethod(value){$('#location-method').value=value;$('#place-inputs').hidden=value==='coordinates';$('#coordinate-inputs').hidden=value!=='coordinates';$('#example-location').closest('label').hidden=value==='coordinates';}
+$('#location-method').addEventListener('change',()=>setLocationMethod($('#location-method').value));
+function validLocation(report=false){
+  const valid=$('#latitude').value!==''&&$('#longitude').value!==''&&$('#latitude').checkValidity()&&$('#longitude').checkValidity();
+  if(!valid&&report){status('#place-status','Choose a town or map point, or switch to Enter coordinates and provide a valid latitude/longitude.',true);
+    if($('#location-method').value==='coordinates')$('#latitude').focus();else if(!$('#pest-country').value)$('#pest-country').focus();else $('#place-town').focus();}
+  return valid;
+}
 let evidenceMap3D=null,map3DVersion=0;
 function closeMap3D(){
   const wasOpen=!$('#map3d-panel').hidden||$('#open-map3d').disabled;
@@ -70,6 +79,7 @@ function status(selector, message, error = false) {
   node.classList.toggle('error', error);
 }
 function syncControls() {
+  syncAllowedCrops();
   const gate = getComparisonReadiness();
   $('#compare').disabled = !gate.ready || comparing;
   $('#compare').setAttribute('aria-describedby', 'comparison-readiness');
@@ -80,6 +90,15 @@ function syncControls() {
   $('#flow-next').disabled = planning && (gate.code === 'catalog' || comparing);
   if (planning) setNavigationLabel($('#flow-next'),comparing ? 'Comparing…' : gate.label);
   $('#flow-next').setAttribute('aria-describedby', planning && !gate.ready ? 'flow-blocker' : 'flow-progress');
+}
+function syncAllowedCrops(){
+  const selected=[1,2,3].map(i=>$(`#baseline-${i}`).value);
+  const missing=selected.filter(value=>value&&!catalogData?.crops.some(crop=>crop.id===value));
+  const note=$('#crop-selection-status');
+  if(missing.length){note.dataset.selectionWarning='true';note.hidden=false;note.textContent=`${missing.length} of your selected baseline crops lack annual screening rules. They will stay visible with an explanation of the missing evidence. This planner does not model orchard replacement or invent crop requirements. You must explicitly choose any additional crops for alternatives.`;}
+  else if(note.dataset.selectionWarning){delete note.dataset.selectionWarning;note.textContent=countryCrops?.regionalContext?'Official regional crop records are available as unassessed baseline choices; no alternative screening rules have been added.':'';note.hidden=!note.textContent;}
+  if($('#alternative-scope').value!=='baseline')return;
+  document.querySelectorAll('[name=allowedCrops]').forEach(input=>input.checked=selected.includes(input.value));
 }
 function getComparisonReadiness() {
   return comparisonReadiness({catalogReady,catalogFailed,country:countryCrops,observations,
@@ -141,7 +160,7 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
   regionCode: $('#place-region').value === '__all__' ? null : $('#place-region').value || null }), {
   chooseCountry: code => context.chooseCountry(code, { fromAssistant: true }),
   chooseRegion: code => context.chooseRegion(code, { fromAssistant: true }),
-  chooseLocation: (point, countryCode) => selectLocation(point.latitude, point.longitude, { pan: true, countryCode, fromAssistant: true }),
+  chooseLocation: (point, countryCode) => {if(!point.id)setLocationMethod('coordinates');return selectLocation(point.latitude, point.longitude, { pan: true, countryCode, fromAssistant: true });},
   chooseFarm: id => context.selectFarm(id, { fromAssistant: true }),
   loadFarms: () => context.loadFarms(),
   showStep: activateTab, loadEvidence: () => loadEvidence({ fromAssistant: true }),
@@ -158,6 +177,7 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
       planningYear: '#planning-year', startMonth: '#start-month', referenceYear: '#reference-year' };
     for (const [key, value] of Object.entries(constraints ?? {})) if (controls[key]) $(controls[key]).value = value;
     if (allowed) {
+      $('#alternative-scope').value='custom';
       const ids = allowed.map(name => resolveCropInput(name, catalogData, countryCrops).id);
       document.querySelectorAll('[name=allowedCrops]').forEach(input => { input.checked = ids.includes(input.value); });
     }
@@ -184,9 +204,9 @@ $('#example-location').addEventListener('change', () => {
   context.locationChanged({ countryCode });
   context.loadFarms();
 });
-$('#planning-form').addEventListener('input', () => invalidate(false));
+$('#planning-form').addEventListener('input', event => {if(event.target.name==='allowedCrops')$('#alternative-scope').value='custom';invalidate(false);});
 async function loadEvidence(options = {}) {
-  if (!$('#location-form').checkValidity()) return false;
+  if (!validLocation(true)||!$('#location-form').reportValidity()) return false;
   const selectionVersion = revision;
   await context.ensureCountry(options);
   if (selectionVersion !== revision) return;
@@ -227,7 +247,7 @@ function readInputs() {
 }
 activateTab.beforeNext = from => {
   if (from === 'location' && !observations) {
-    if ($('#location-form').reportValidity()) $('#location-form').requestSubmit();
+    if (validLocation(true)&&$('#location-form').reportValidity()) $('#location-form').requestSubmit();
     return false;
   }
   if (from === 'si') {
@@ -236,7 +256,7 @@ activateTab.beforeNext = from => {
       status('#comparison-status', gate.message, true);
       if (gate.code === 'country' || gate.code === 'coverage' || gate.code === 'evidence') {
         activateTab('location');
-        $(gate.code === 'evidence' ? '#load-evidence' : '#pest-country').focus();
+        if(gate.code==='evidence')$('#flow-next').focus();else {setLocationMethod('places');$('#pest-country').focus();}
       } else if (gate.code === 'allowed') {
         $('#allowed-crops').closest('fieldset').scrollIntoView({block:'center'});
         document.querySelector('[name="allowedCrops"]')?.focus();

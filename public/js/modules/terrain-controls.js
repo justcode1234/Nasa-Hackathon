@@ -11,6 +11,7 @@ export function terrainControls({map,getState,isClosed,setRainVisible}){
   const state=getState(),farm=state.farm,position=state.location;let active=false,revision=0;
   field.disabled=!farm?.geometry;
   root.append(summary,point,field,exaggerationLabel,status,el('p',farm?`${farm.name} · ${farm.id}. Community-mapped outline; ownership, access and current crops are unverified.`:'No field boundary selected. Field slope and aspect remain unassessed; selecting a point does not supply a farm boundary.'),output);
+  root.append(el('p','Hillshade uses light and shadow to show terrain shape. Exaggeration stretches heights for display: ×2 looks twice as tall but does not change the elevation or slope calculations.'));
   if(position){
     map.addSource('terrain-location',{type:'geojson',data:{type:'Feature',geometry:{type:'Point',coordinates:[position.longitude,position.latitude]},properties:{}}});
     map.addLayer({id:'terrain-location',type:'circle',source:'terrain-location',paint:{'circle-radius':5,'circle-color':'#173d2c','circle-stroke-color':'#fffdf5','circle-stroke-width':2}});

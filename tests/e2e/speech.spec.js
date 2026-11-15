@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {scanAccessibility} from './axe-helper.js';
 
 const fields=/overpass-api\.de|overpass\.private\.coffee|maps\.mail\.ru|\/api\/farms\?/;
 const open=async page=>{
@@ -12,6 +13,7 @@ test('a refused microphone records nothing, explains itself and leaves typed cha
   await open(page);
   await page.evaluate(()=>{navigator.mediaDevices.getUserMedia=()=>Promise.reject(new DOMException('Permission denied','NotAllowedError'));});
   await mic(page).click();
+  if(await page.locator("#speech-consent").isVisible())await page.locator("#start-dictation").click();
   await expect(page.locator('#speech-status')).toContainText('Microphone permission was not granted. Nothing was recorded');
   await expect(mic(page)).toHaveAttribute('aria-pressed','false');
   expect(await page.evaluate(()=>performance.getEntriesByType('resource').filter(e=>/huggingface|hf\.co|transformers/.test(e.name)).length),'no model download without a microphone').toBe(0);
@@ -35,6 +37,7 @@ test('read aloud speaks the actual grounded answer, with its limits, using an on
     expect(await page.evaluate(()=>window.fieldshiftSpokenText)).toBe(visible);
     const voice=await page.evaluate(()=>window.fieldshiftSpokenVoice);expect(voice.localService).toBe(true);expect(voice.lang).toMatch(/^en/i);
     await expect(page.getByRole('button',{name:'Stop speaking',exact:true})).toBeVisible();
+    await scanAccessibility(page,info,'read-aloud active');
     await page.getByRole('button',{name:'Stop speaking',exact:true}).click();
     await expect(answer.getByRole('button',{name:'Read aloud',exact:true})).toHaveAttribute('aria-pressed','false');
     expect(await page.evaluate(()=>speechSynthesis.speaking)).toBe(false);

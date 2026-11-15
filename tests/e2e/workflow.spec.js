@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 const pageErrors=new WeakMap();
 
 async function country(page, code) {
+  await page.locator('#location-method').selectOption('places');
   await page.locator('#pest-country').selectOption(code);
   await expect(page.locator('#country-status')).toContainText('crop production categories');
   await expect(page.locator('#place-region')).toBeEnabled();
@@ -9,6 +10,7 @@ async function country(page, code) {
 }
 async function selectPoint(page) {
   await country(page,'AU');
+  await page.locator('#location-method').selectOption('coordinates');
   await page.locator('#latitude').fill('-31.89');await page.locator('#longitude').fill('116.77');
 }
 async function evidenceReady(page) {
@@ -52,7 +54,7 @@ test('zero coverage explains the block beside Next and recovers without erasing 
 test('Next and Compare both complete a real baseline comparison and invalidate stale results',async({page})=>{
   await selectPoint(page);await page.locator('#tab-si').click();
   await expect(page.locator('#flow-next')).toHaveText('Load NASA evidence →');
-  await page.locator('#flow-next').click();await expect(page.locator('#load-evidence')).toBeFocused();
+  await page.locator('#flow-next').click();await expect(page.locator('#flow-next')).toBeFocused();
   await page.locator('#flow-next').click();await evidenceReady(page);
   await page.locator('#flow-next').click();await expect(page.locator('#si')).toBeVisible();
   for(const [i,value] of ['sweet-corn','pea','bush-bean'].entries())await page.locator('#baseline-'+(i+1)).selectOption(value);
@@ -78,6 +80,7 @@ test('Next and Compare both complete a real baseline comparison and invalidate s
 });
 
 test('missing coordinates and a failed data request have visible validation and working retry',async({page,context})=>{
+  await page.locator('#location-method').selectOption('coordinates');
   await page.locator('#flow-next').click();await expect(page.locator('#latitude')).toBeFocused();
   await expect(page.locator('#location')).toBeVisible();await selectPoint(page);
   const pattern=/power\.larc\.nasa\.gov\/api\/temporal\/daily|\/api\/observations\?/;

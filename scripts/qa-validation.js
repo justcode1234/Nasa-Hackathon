@@ -86,7 +86,7 @@ try {
     await navigate();
     await evaluate(`document.querySelector('#example-location').value='-31.89,116.77';document.querySelector('#example-location').dispatchEvent(new Event('change',{bubbles:true}));`);
     await waitFor(`document.querySelector('#catalog-status').textContent.startsWith('Australia:')`);
-    await evaluate(`document.querySelector('#load-evidence').click()`);
+    await evaluate(`document.querySelector('#tab-location').click();document.querySelector('#flow-next').click()`);
     await waitFor(`document.querySelector('#evidence-status').textContent.startsWith('Historical evidence loaded')`, 45_000);
     const evidence = await evaluate(`({text:document.querySelector('#evidence-output').innerText,url:document.querySelector('#evidence-output a').href,
       rows:[...document.querySelector('#evidence-output table:first-of-type tbody').rows].map(row=>row.innerText)})`);
@@ -137,12 +137,12 @@ try {
       await evaluate(`document.querySelector('#example-location').value='-31.89,116.77';document.querySelector('#example-location').dispatchEvent(new Event('change',{bubbles:true}));`);
       await waitFor(`document.querySelector('#catalog-status').textContent.startsWith('Australia:')`);
       await fill('reference-year', String(new Date().getUTCFullYear()-2));
-      await evaluate(`document.querySelector('#load-evidence').click()`);
+      await evaluate(`document.querySelector('#tab-location').click();document.querySelector('#flow-next').click()`);
       await waitFor(`document.querySelector('#evidence-status').classList.contains('error')`,45_000);
       assert.equal(await evaluate(`document.querySelector('#compare').disabled && document.querySelectorAll('.scenario').length===0`),true);
     } finally { await call('Network.setBlockedURLs', { urls:[] }, sessionId); }
     const error = await evaluate(`document.querySelector('#evidence-status').textContent`);
-    await evaluate(`document.querySelector('#load-evidence').click()`);
+    await evaluate(`document.querySelector('#retry-evidence').click()`);
     await waitFor(`document.querySelector('#evidence-status').textContent.startsWith('Historical evidence loaded')`,45_000);
     return { error, retry: await evaluate(`document.querySelector('#evidence-output').innerText.slice(0,600)`) };
   });
@@ -152,8 +152,10 @@ try {
       await navigate(); await openChat();
       if (item.id === 'Q05') await answer(plan.cases.find(item=>item.id==='Q04').prompt);
       if (['Q08','Q09'].includes(item.id)) await answer(plan.cases.find(item=>item.id==='Q07').prompt);
+      if(item.id==='Q09')await answer('Allowed crops: bush snap bean, garden pea');
       const actual = await answer(item.prompt);
       if (item.id === 'Q07') {
+        await answer('Allowed crops: bush snap bean, garden pea');
         await answer('at 18.5204, 73.8567');
         actual.followUp = await evaluate(`({retainedBaseline:JSON.stringify([1,2,3].map(i=>document.querySelector('#baseline-'+i).value))===JSON.stringify(['unassessed:fao-27','unassessed:fao-15','bush-bean']),irrigation:document.querySelector('#irrigation').value,unsupportedBaseline:/Rice.*unknown.*Wheat.*unknown/s.test(document.querySelector('.scenario')?.textContent??'')})`);
       }

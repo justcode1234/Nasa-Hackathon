@@ -19,7 +19,7 @@ test('lazy native rain cells match point evidence, slider and monthly table',asy
   await page.addInitScript(()=>{window.policyErrors=[];document.addEventListener('securitypolicyviolation',event=>window.policyErrors.push(event.violatedDirective));});
   await point(page);
   expect(requests.filter(url=>url.includes('/vendor/maplibre/'))).toEqual([]);
-  await page.getByRole('button',{name:'Load historical NASA evidence',exact:true}).click();
+  await page.locator('#flow-next').click();
   await expect(page.locator('#evidence-status')).toContainText('Historical evidence loaded',{timeout:45_000});
   await page.getByRole('tab',{name:/01.*Find farmland/}).click();await open(page);
   await expect(page.locator('#map3d-status')).toContainText('match the loaded point evidence');

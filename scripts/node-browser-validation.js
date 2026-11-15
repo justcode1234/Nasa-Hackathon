@@ -22,7 +22,7 @@ const check = text => { checks.push(text); console.log(`PASS: ${text}`); };
 try {
   browser = await openChrome();
   const { call, evaluate, waitFor } = browser;
-  const fill = (selector, value) => evaluate(`(() => { const node=document.querySelector(${JSON.stringify(selector)});node.value=${JSON.stringify(value)};node.dispatchEvent(new Event('input',{bubbles:true})); })()`);
+  const fill = (selector, value) => evaluate(`(() => { if(["#latitude","#longitude"].includes(${JSON.stringify(selector)})){const mode=document.querySelector("#location-method");mode.value="coordinates";mode.dispatchEvent(new Event("change",{bubbles:true}));} const node=document.querySelector(${JSON.stringify(selector)});node.value=${JSON.stringify(value)};node.dispatchEvent(new Event('input',{bubbles:true})); })()`);
   // The Node variant must work without a browser data worker or direct browser NASA access.
   await call('Network.setBlockedURLs', { urls: ['*power.larc.nasa.gov*', '*core-worker.bundle.js*'] });
   await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
@@ -53,7 +53,7 @@ try {
   await call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
   await evaluate('document.querySelector("#flow-next").click()');
   await waitFor('document.querySelector("#evidence-status").textContent.startsWith("Historical evidence loaded")');
-  assert.equal(await evaluate('document.querySelectorAll("#evidence-output svg").length'), 2);
+  assert.equal(await evaluate('document.querySelectorAll("#evidence-output svg").length'), 3);
   assert.ok(upstreamRequests.some(request => !request.intentionallyFailed));
   check('Node fetches real NASA observations while browser NASA access and the data worker are blocked');
 
@@ -96,13 +96,13 @@ try {
 
   rejectNasa = true;
   await fill('#reference-year', 2024);
-  await evaluate('document.querySelector("#tab-location").click();document.querySelector("#load-evidence").click()');
+  await evaluate('document.querySelector("#tab-location").click();document.querySelector("#flow-next").click()');
   await waitFor('document.querySelector("#evidence-status").classList.contains("error")');
   assert.equal(await evaluate('document.querySelector("#compare").disabled'), true);
   assert.ok(upstreamRequests.some(request => request.intentionallyFailed));
   check('Node upstream failure reaches the UI as an error and prevents stale-evidence comparison');
   rejectNasa = false;
-  await evaluate('document.querySelector("#load-evidence").click()');
+  await evaluate('document.querySelector("#retry-evidence").click()');
   await waitFor('document.querySelector("#evidence-status").textContent.startsWith("Historical evidence loaded")');
   check('retrying after the Node upstream failure retrieves real evidence successfully');
   await validateGuidedWorkflow({ evaluate, waitFor, fill, check });

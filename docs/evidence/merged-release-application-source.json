@@ -1,0 +1,306 @@
+{
+  "baseCommit": "c0690dc",
+  "description": "Final behavior source at release-gate restart. Documentation/submission materials are regenerated separately; deterministic build output hashes checked after publication.",
+  "files": [
+    {
+      "path": "package-lock.json",
+      "bytes": 87479,
+      "sha256": "1feaaad240f9abaaefce6605a84e61f6f878efe7c18fed65bf1ad443d052b998"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1356,
+      "sha256": "3c009f39c43dfa9dd6989b2c80219530ff3abadbba68706cbd44cd1b8deb9eea"
+    },
+    {
+      "path": "playwright.config.js",
+      "bytes": 1673,
+      "sha256": "09a72b95846e13feee7963e915f8af3da2ad072e17d77dc5fbd1423770a4b7f8"
+    },
+    {
+      "path": "public/credits.html",
+      "bytes": 5611,
+      "sha256": "982f80f31c4fe83aac860d6bc1bdaa522ab3de185668351e3600b033f782d72e"
+    },
+    {
+      "path": "public/css/app.css",
+      "bytes": 11018,
+      "sha256": "9d4d16fe93b7be862d5017ede7479de02d8deace39acd07a13767848ec1a4193"
+    },
+    {
+      "path": "public/index.html",
+      "bytes": 17299,
+      "sha256": "9552e9d4039cebfe11e74f5e0acaf98adacc1593bb9d65161dbd054ef78e1f9d"
+    },
+    {
+      "path": "public/js/app.js",
+      "bytes": 18346,
+      "sha256": "01f77c972ef769ee20fe09a898c9d96f2f5375b01c8cf90d6f758b79b3e1fc57"
+    },
+    {
+      "path": "public/js/lib/api.js",
+      "bytes": 2010,
+      "sha256": "720e6b8e11e0165d17d20d4f838673a457642ebb0c6afe8d52f814a405b67d0e"
+    },
+    {
+      "path": "public/js/lib/chat-intent.js",
+      "bytes": 924,
+      "sha256": "056b37da670cc2c697b459fceab2b305d4c5f53fb9c95aa9fcd1c446c9cdd31f"
+    },
+    {
+      "path": "public/js/lib/comparison-readiness.js",
+      "bytes": 1570,
+      "sha256": "a20b15a3f8ebc86ee71ad2a8f587dad89f1b181bb4869ab38f907d1e1a1f4ef9"
+    },
+    {
+      "path": "public/js/lib/core-worker-entry.js",
+      "bytes": 547,
+      "sha256": "656d7ca664ecd8e5b4d9992ef4aa6c8c6ca53dc906bf147b106fbf54bef7500e"
+    },
+    {
+      "path": "public/js/lib/countries.js",
+      "bytes": 2119,
+      "sha256": "5465de5e16ae45e4f0f80569298846d31285fed0c35b9cd23f96643ec01079a1"
+    },
+    {
+      "path": "public/js/lib/dom.js",
+      "bytes": 1483,
+      "sha256": "13c29ffba84d5d7f8b038e0ccfff3213aa79dcfd2abe927fa49fa42c72b60836"
+    },
+    {
+      "path": "public/js/lib/gibs-contract.js",
+      "bytes": 2137,
+      "sha256": "443639ba52a141b4b5357a09bc77208647dd7b34abd2f3d3269faa39c20d29e8"
+    },
+    {
+      "path": "public/js/lib/power-columns.js",
+      "bytes": 2947,
+      "sha256": "a91d708346a42472609f14ac09639495c4248688af4d289e0edc244b437a3526"
+    },
+    {
+      "path": "public/js/lib/tabs.js",
+      "bytes": 3014,
+      "sha256": "1f42e816734d8753d15b6c0117699420e89a7f515c674eb29c870f32287be06a"
+    },
+    {
+      "path": "public/js/lib/temperature.js",
+      "bytes": 244,
+      "sha256": "7ac336b4a49e6eb57cae7e1521d10ae7f78afd802b2a72f808eba4e884f640fa"
+    },
+    {
+      "path": "public/js/lib/weather-window.js",
+      "bytes": 1548,
+      "sha256": "ce60ee8bfd694eb42618344d8188128c4a6bb212ceeb4e20e34a72bd5ba84b88"
+    },
+    {
+      "path": "public/js/modules/chat.js",
+      "bytes": 14823,
+      "sha256": "650db4ab5313176a4325c3ec73bf786d87c3bb49216ad229147d33fcc744dd28"
+    },
+    {
+      "path": "public/js/modules/context.js",
+      "bytes": 14903,
+      "sha256": "cd7da18b22630c0f6557b0c0f546ec87fa3579f27b797875af2b2f3371b78df5"
+    },
+    {
+      "path": "public/js/modules/data-flow.js",
+      "bytes": 8866,
+      "sha256": "a78ca4fe415006e481885fbe647e8480b29186bbdd6132bbb5f862b203be6da0"
+    },
+    {
+      "path": "public/js/modules/gibs-controls.js",
+      "bytes": 5115,
+      "sha256": "68436d029fc6928dd38d1a605015255d2dcd84e80fbd4985810917c0a575e226"
+    },
+    {
+      "path": "public/js/modules/location-picker.js",
+      "bytes": 4275,
+      "sha256": "c100ca9463e9f7baa631b8256bcb2cb57a7818c14eb167ec515401c75293dbd0"
+    },
+    {
+      "path": "public/js/modules/map.js",
+      "bytes": 3486,
+      "sha256": "1087c73746a6ea83f71e9dd121f102313dc7c8520f1f8e54041bac7aeaf461cb"
+    },
+    {
+      "path": "public/js/modules/map3d.js",
+      "bytes": 12270,
+      "sha256": "819a6bf141929df22df4576706b8f76dcf21b40bc8ecff48654312184dce2256"
+    },
+    {
+      "path": "public/js/modules/mini-lm-worker.js",
+      "bytes": 5259,
+      "sha256": "ae81a29011d683247d3ba834c518b47ebef3996a045dcc9d0f39a4dde3ec6505"
+    },
+    {
+      "path": "public/js/modules/si.js",
+      "bytes": 7094,
+      "sha256": "6ee8c541952bd4e43e1bf1f0ed0cc234c7e644535b118c830e66825ede923164"
+    },
+    {
+      "path": "public/js/modules/speech.js",
+      "bytes": 10391,
+      "sha256": "89b8198e35f4675f00082fe1fe189ce1b0562d69edcba301f43125cf30b54de2"
+    },
+    {
+      "path": "public/js/modules/strategy.js",
+      "bytes": 9119,
+      "sha256": "10ae69ff7ea056fe81975e7240c81b58dae080c3466a2254f20f07c60173c8ed"
+    },
+    {
+      "path": "public/js/modules/stt-worker.js",
+      "bytes": 2635,
+      "sha256": "08814d78104562dcaf90c82c85a63510b98cd2db81742a437bd19223bf7b6b72"
+    },
+    {
+      "path": "public/js/modules/terrain-controls.js",
+      "bytes": 7211,
+      "sha256": "0fee03ac01682c41b3a37521defe7dc55de09dfb65607cb31bb08f46dfa83bc7"
+    },
+    {
+      "path": "public/js/modules/train-mini-lm.js",
+      "bytes": 7376,
+      "sha256": "f817ced58a8dd07ce002be6cae31a5f4030357765577c753a331de3e42fd1b3d"
+    },
+    {
+      "path": "public/js/modules/wasm-training-kernel.js",
+      "bytes": 1029,
+      "sha256": "232e944d7ee8afa53992bc9102b3dc039245ae149a40c116b80cd78ae500f1c4"
+    },
+    {
+      "path": "public/js/modules/workflow-assistant.js",
+      "bytes": 22470,
+      "sha256": "2b8eb72f2249fc051253d60a89af53e3962162d62b49dbe25d22307f658846de"
+    },
+    {
+      "path": "server/agronomy/answers.js",
+      "bytes": 10316,
+      "sha256": "49e3ba28d4f5ae2c4e92172f9787462aa585ac63111eb319c7af624554c1b6af"
+    },
+    {
+      "path": "server/agronomy/catalog.js",
+      "bytes": 1518,
+      "sha256": "3eb3bf85173033a1ce8fa58cca108167e5d3ce96198eee20386b432c4b2f44d5"
+    },
+    {
+      "path": "server/agronomy/conversation.js",
+      "bytes": 12789,
+      "sha256": "e4209b0932d4d292c60c02f5138291b299ebe21c87f81c3a452205671a751374"
+    },
+    {
+      "path": "server/agronomy/crops.json",
+      "bytes": 8618,
+      "sha256": "35bca1f17d598897c175f6cecb15f6bee63ae165b487fa9440351651b0220608"
+    },
+    {
+      "path": "server/agronomy/knowledge.json",
+      "bytes": 9603,
+      "sha256": "78db7683687ef5dd17b53bc84279baaf3c1bf0979201f3dfe44554099b3121ba"
+    },
+    {
+      "path": "server/agronomy/planning-help.js",
+      "bytes": 5105,
+      "sha256": "136805c36c57b950bb7505ca6264f3c8c15a7da95b7210b662d725eca478ec91"
+    },
+    {
+      "path": "server/agronomy/rotation.js",
+      "bytes": 21767,
+      "sha256": "90a2c9653e3e88790c75e6aeb4a7f0f59c4030fe4b0f19d943f918cec3425a28"
+    },
+    {
+      "path": "server/api.js",
+      "bytes": 5085,
+      "sha256": "ae48dfd9c58b1d63e3aced17ab58ad6cd2037e8b33d0f3ba0f45c47b45d1773e"
+    },
+    {
+      "path": "server/context/client.js",
+      "bytes": 2011,
+      "sha256": "e8ac9247279e4ccaf5203ceab0cb3ae39df019879464df6f9ce2edf8831f059f"
+    },
+    {
+      "path": "server/context/country-crops.json",
+      "bytes": 285777,
+      "sha256": "194ced0386eb53a3945c135983830ae06ce4f336ff1bbf907077929baabef73a"
+    },
+    {
+      "path": "server/context/crops.js",
+      "bytes": 3335,
+      "sha256": "d0bdb4e8c43924e74558d35f790762d753e0ca6e81ec05c0bc489a0b7f4d196d"
+    },
+    {
+      "path": "server/context/farms.js",
+      "bytes": 9044,
+      "sha256": "1844a0ae0033effb99b2e4e8874283dc0880a96e09e1fbf7b00f4ab233305509"
+    },
+    {
+      "path": "server/context/gibs.js",
+      "bytes": 5064,
+      "sha256": "7db6c05ddf2823af0f3a59b633215584c6e1379dfc68b0cf743ce7c4f2ad1f41"
+    },
+    {
+      "path": "server/context/locations.js",
+      "bytes": 2383,
+      "sha256": "679af75f921041626218124f559664b9583c728b38397dc85cc430e46fe73dad"
+    },
+    {
+      "path": "server/context/pests.js",
+      "bytes": 2974,
+      "sha256": "354943befbc74a949c914419e75c8d587fd1b1413c9e6251a5187164e1793808"
+    },
+    {
+      "path": "server/context/regional-crops.json",
+      "bytes": 1762,
+      "sha256": "8e3cc21b4a5a1ebefa3a5d67daefd146fd0b415c5a2b2af9089ef84ff3d6951c"
+    },
+    {
+      "path": "server/context/soil.js",
+      "bytes": 3249,
+      "sha256": "038bffd153f1dc8272b2c39ea3246f6c9188b80143b680fc13bdcd8e03fe1474"
+    },
+    {
+      "path": "server/context/terrain-math.js",
+      "bytes": 6569,
+      "sha256": "6d6823fc0d95c87ea8ed3bc246cfef8ef28dfb01e4e8513deef987d83ee97caf"
+    },
+    {
+      "path": "server/context/terrain.js",
+      "bytes": 7733,
+      "sha256": "3fcf429218aba5b7126087fbddda72d6d26ff44387e394ccd6992690aaae975f"
+    },
+    {
+      "path": "server/context/water.js",
+      "bytes": 2190,
+      "sha256": "3e67a7be791169aa64db83b125367db8bb7bfdeee4825be7b0f8e0006ed8e9be"
+    },
+    {
+      "path": "server/errors.js",
+      "bytes": 175,
+      "sha256": "310d11f75ae3fb903aceadccd0cd52122c79ff0fc9da1e48657421a2ba1a0a23"
+    },
+    {
+      "path": "server/index.js",
+      "bytes": 4978,
+      "sha256": "6a8f86f4e76e53b747436974de45454582f2e64ae20dcc23d5330d8c8d4e89ed"
+    },
+    {
+      "path": "server/nasa/power-grid.js",
+      "bytes": 5736,
+      "sha256": "929e7c264c838f2a1725653bf93deb3eff9469e5f3ba76931fd4a13d466f1c37"
+    },
+    {
+      "path": "server/nasa/power.js",
+      "bytes": 7780,
+      "sha256": "4feab63bf4a14d53ffa23ca5db22b55088aeca85e0a69c64f430e2170e5bfef8"
+    },
+    {
+      "path": "server/persistence.js",
+      "bytes": 1751,
+      "sha256": "cb1d1e5862b834b7d35518c37160ebcccc553db1b6e9eefc439ef5110ab92db1"
+    },
+    {
+      "path": "vercel.json",
+      "bytes": 1271,
+      "sha256": "fdd0143a8da71bdba318132b93bd15f8dc64168a2403c3165f9faf56a388e40d"
+    }
+  ]
+}

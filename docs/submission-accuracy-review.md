@@ -1,5 +1,13 @@
 # Submission and repository accuracy review
 
+**Later release decision:** the user subsequently approved merging all histories
+into `main` and deploying after all release checks pass. This report retains its
+dated review findings below. The [merged-release record](plans/2026-11-15-merged-release.md)
+tracks the later implementation, verification and publication; it supersedes the
+earlier no-merge boundary for that release. A public read-only check at 22:09 UTC+8
+on 15 November now reports the NASA project submitted at 21:04:58. No portal edit
+or submission was performed by this repository work.
+
 Review date: **15 November 2026 (UTC+8)**. Status: **review and verification complete;
 production/submission changes require owner approval**.
 

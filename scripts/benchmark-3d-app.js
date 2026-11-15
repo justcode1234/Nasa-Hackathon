@@ -5,20 +5,31 @@ import {sampleBrowserMemory,summarizeMemory} from './browser-memory.js';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {gzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
-const directory='artifacts/3d-app';await mkdir(directory,{recursive:true});
+import path from 'node:path';
+const directory=process.env.BENCH_OUTPUT_DIR??'artifacts/3d-app';await mkdir(directory,{recursive:true});
 const app=createStaticPreview();await new Promise(resolve=>app.listen(0,'127.0.0.1',resolve));
 const results=[];
 try{
   for(const viewport of [{width:1280,height:1000},{width:390,height:844}]){
-    const service=await chromium.launchServer({channel:'chrome',headless:true}),browser=await chromium.connect(service.wsEndpoint());
+    const service=await chromium.launchServer({channel:'chrome',headless:true,args:[
+      '--use-fake-ui-for-media-stream','--use-fake-device-for-media-stream',
+      `--use-file-for-fake-audio-capture=${path.resolve('tests/fixtures/TEST-synthetic-speech-tomatoes-kenya.wav')}%noloop`
+    ]}),browser=await chromium.connect(service.wsEndpoint());
     const samples=[],errors=[],responses=[];
     const sample=async phase=>{samples.push(await sampleBrowserMemory(service.process().pid,phase));await writeFile(`${directory}/${viewport.width}-samples.json`,JSON.stringify(samples,null,2));};
     try{
       const page=await browser.newPage({viewport,isMobile:viewport.width<500,hasTouch:viewport.width<500});
       page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(!r.url().startsWith('http://127.0.0.1'))responses.push({url:r.url(),status:r.status()});});
+      const initialResources=[],initialReads=[];let initialPhase=true;
+      page.on('response',response=>{if(initialPhase)initialReads.push((async()=>{
+        try{initialResources.push({url:response.url(),status:response.status(),decodedBytes:(await response.body()).length});}
+        catch(error){initialResources.push({url:response.url(),status:response.status(),unverified:error.message});}
+      })());});
       await page.route(/overpass-api\.de|overpass\.private\.coffee|maps\.mail\.ru/,r=>r.abort('failed'));
       await page.addInitScript(()=>{window.policyErrors=[];document.addEventListener('securitypolicyviolation',e=>window.policyErrors.push({directive:e.violatedDirective,url:e.blockedURI}));});
-      await page.goto(`http://127.0.0.1:${app.address().port}`,{waitUntil:'networkidle'});
+      const initialStart=Date.now();await page.goto(`http://127.0.0.1:${app.address().port}`,{waitUntil:'networkidle'});
+      await page.waitForFunction(()=>document.querySelectorAll('#country-select option').length>100&&!document.querySelector('#location-method').disabled);
+      const initialReadyMs=Date.now()-initialStart;initialPhase=false;await Promise.allSettled(initialReads);
       const lazyRequests=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>r.name.includes('/vendor/maplibre/')).length);
       await sample('2D before opt-in');
       await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption('-31.89,116.77');
@@ -52,15 +63,28 @@ try{
       await sample('3D plus loaded compact model and actual inference');
       const model=await page.evaluate(()=>({metrics:window.fieldshiftModelMetrics,selections:window.fieldshiftModelSelections}));
       if(!(model.selections>0))throw new Error('No actual compact model inference was observed.');
+      await page.locator('#mic').click();await page.locator('#start-dictation').click();
+      await page.waitForFunction(()=>document.querySelector('#mic').getAttribute('aria-pressed')==='true');
+      await page.waitForTimeout(4000);await sample('3D, compact model and English speech loading/recording');
+      await page.locator('#mic').click();
+      await page.waitForFunction(()=>/tomatoes in kenya/i.test(document.querySelector('#question').value),null,{timeout:240_000});
+      const speech=await page.evaluate(()=>({metrics:window.fieldshiftSpeechMetrics,transcript:document.querySelector('#question').value}));
+      await sample('3D, compact model and loaded English speech after actual transcription');
+      await page.locator('#assistant-settings>summary').click();await page.locator('#unload-speech').click();
+      await sample('3D and compact model after speech unload');
       await page.getByRole('button',{name:'Close assistant',exact:true}).click();await page.locator('#map3d-canvas').scrollIntoViewIfNeeded();await page.screenshot({path:`${directory}/${viewport.width}-terrain.png`});
       await page.getByRole('button',{name:'Regional view',exact:true}).click();await page.locator('#map3d-canvas').scrollIntoViewIfNeeded();await page.screenshot({path:`${directory}/${viewport.width}-columns.png`});
       const gpu=await(await browser.newBrowserCDPSession()).send('SystemInfo.getInfo');
-      results.push({checkedAt:new Date().toISOString(),viewport,lazyRequests,openToDataMs,frameRate,model,memory:summarizeMemory(samples),samples,
+      results.push({checkedAt:new Date().toISOString(),viewport,initialReadyMs,initialResources,
+        initialDecodedBodyBytes:initialResources.reduce((sum,r)=>sum+(r.decodedBytes??0),0),lazyRequests,openToDataMs,frameRate,model,speech,memory:summarizeMemory(samples),samples,
         gpu:{devices:gpu.gpu.devices,renderer:gpu.gpu.auxAttributes?.glRenderer},policyErrors:await page.evaluate(()=>window.policyErrors),errors,responses,
         limitations:['Headless desktop Chrome at desktop and phone-sized viewports; no real phone hardware.',
           'Cold isolated profile; open-to-data includes actual NASA grid retrieval and renderer load, not a stable network-independent guarantee.',
           'Memory samples are process-tree working sets, not exact simultaneous full-session peaks.',
-          'Field boundary path excluded because the live Overpass release gate is unavailable; no field was substituted.',
+          'Point-only performance path deliberately excludes field lookup; mandatory live field tests are recorded separately.',
+          'Initial readiness means network idle plus enabled location controls and loaded country options; it is not a standardized time-to-interactive metric.',
+          'Initial page weight sums observed decoded response bodies, including tiles; it is not compressed wire transfer or a full-site download size.',
+          'Speech uses the labelled synthetic English test fixture as microphone input, not a real farmer or an accent/noise evaluation.',
           'preserveDrawingBuffer is enabled in this application for screenshot verification.']});
       console.log(JSON.stringify({viewport,openToDataMs,frameRate,memory:results.at(-1).memory.maxSampledWorkingSetBytes,errors}));
     }finally{await browser.close();await service.close();}
