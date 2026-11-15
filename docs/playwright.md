@@ -1,5 +1,13 @@
 # Playwright workflow regression checks
 
+**Latest result (15 November, feature/3d-evidence-map): 117 offline and 116/116 browser
+cases passed, 29 per project, no skips or flaky results.** Summary:
+[v5-green-release-summary.json](evidence/v5-green-release-summary.json). The suite now has
+12 spec files, including live field-on-terrain, voice input and read-aloud. Live field
+cases use `tests/e2e/live-fields.js`: when every public lookup service is busy they press
+the app's Retry button like a user, at most twice, and still require real fields. The
+paragraphs below are the earlier history and are superseded where they report failures.
+
 Current branch result (15 November review work): **99 offline pass; full browser
 run 36/44 pass, 8 fail**. Every failure is a real Overpass field lookup in the
 example or human path. Four subsequently added field failure/retry UI cases pass

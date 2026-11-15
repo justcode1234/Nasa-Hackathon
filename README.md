@@ -73,14 +73,40 @@ context only. Terrain has a visible exaggeration factor and explicit DEM samplin
 and missingness. A supported step-4 crop-slot button opens the exact historical
 rain window used in its strategy result, rather than its entire four-month slot.
 
-This work has not been deployed. The public submission stays at Phase A, with four
-screening crops and 89/197 comparable-country coverage. This feature branch has
-seven screening crops and 166/197 coverage, but the real Overpass field-success
-release cases still fail. Point planning remains available; that does not prove the
-field selection/drape path. See [verification status](docs/3d-validation.md),
-[visual review](docs/3d-visual-review.md) and [measured feasibility](docs/3d-feasibility.md).
-Automatic Git deployment is disabled for this exact feature branch so it can be
-synced across devices while the release gate is red. Main/production is unchanged.
+**Status (15 November 2026).** On this feature branch the complete release gate
+passed: `npm run test:release` ran 117 offline and 116 browser cases with no skips or
+flaky results, including live field discovery, field-on-terrain and derived slope in
+both runtimes and viewport sizes. The earlier field failures came from a client
+deadline shorter than the real service response; lookups now overlap three public
+Overpass services with backoff. Those are shared volunteer services, so a later run
+can still fail when all are busy. See [verification status](docs/3d-validation.md),
+[validation record](docs/validation.md), [visual review](docs/3d-visual-review.md) and
+[measured feasibility](docs/3d-feasibility.md).
+
+**What is public.** The public submission site is still Phase A (`main` at f4c4fef):
+four screening crops, 89/197 comparable-country coverage, no 3D view and no voice
+input. This branch has seven screening crops and 166/197 coverage. It is deployed only
+as a login-protected Vercel preview, which is not a public demo link; see
+[deployment notes](docs/deployment.md). Automatic Git deployment stays disabled for
+this branch. Real-phone performance and memory are unverified.
+
+## Optional voice input and read-aloud (feature branch)
+
+The chat has a microphone button. Pressing it asks for microphone permission, then
+transcribes English speech on the device with Whisper tiny.en (about 43.5 MB model
+plus a 26.9 MB runtime, fetched only after the first press). The transcript is placed
+in the message box to check and edit; nothing is sent until Send is pressed. **Read
+aloud** speaks the written answer, including its limits, with an English voice already
+installed on the device. Typed chat never depends on either. Tested with a synthetic
+English clip on desktop Chrome only; real microphones, accents, noise, phones and
+other browsers are unverified.
+
+## Typed-judgment experiment (not used by the app)
+
+[models/judgment](models/judgment/README.md) holds a small classifier experiment
+inspired by TypeSafe AI's public description of Jev. It is not Jev. On 95 held-out
+messages it does not beat the existing rules (77/80/43 against 75/81/50), so the
+validated rules remain in charge and the classifier is not wired in.
 
 ## Sources and limits
 
@@ -113,16 +139,10 @@ node scripts/benchmark-mini-lm.js
 Browser checks use isolated profiles and built-in Chrome debugging; no browser is downloaded. `CHROME_PATH` can override discovery. Ignored `artifacts/` contains raw reports, screenshots and profiles. Static showcase tests verify no `/api` network requests; Node browser tests verify real `/api` calls and no browser-side NASA retrieval or data-worker load.
 
 The supplied [QA plan and automated answers](docs/qa-regression.md) have a separate
-acceptance runner. It records every actual reply and condition, and currently exits
-1 for nine unmet chatbot expectations. The saved [public report](docs/qa/latest-results.md)
-identifies the gaps. Its temporary browser profile is removed after each run.
+acceptance runner that records every actual reply and condition. Its original nine
+unmet chatbot expectations are fixed; all sixteen prompts also run inside
+`npm run test:release` in every project. Saved reports: [latest](docs/qa/latest-results.md)
+and the [original baseline](docs/qa/baseline-results.md).
 
-Firefox checks use native WebDriver BiDi with a separate temporary profile and no downloaded driver; `FIREFOX_PATH` can override discovery. Chrome process-memory snapshots are included in `node scripts/benchmark-mini-lm.js` on Windows. They count the isolated test browser and descendants, with explicit limits for shared pages and missed short-lived processes. See the [validation record](docs/validation.md).
-
-Actual browser training: `node scripts/build-mini-corpus.js` then `node scripts/train-mini-lm.js`. Rebuild afterward. The corpus has explicitly labelled synthetic question wording and source-linked continuations, no fabricated NASA observations. Python/Jupyter inspection and guarded training/reproduction paths are in [notebooks](notebooks/README.md). Pretrained fine-tuning and Keras export are separate, unexecuted experiments.
-
-## Submission
-
-The seven-slide HTML/PDF, submission copy, citations, AI disclosure and source archive are under `public/submission/`; the app footer links to them. [Handoff](docs/submission.md) identifies the Explorer/Singapore team page and final portal steps. A team-account submission and NASA acceptance are never implied by preparing files.
-
-Codex assisted implementation, research organization, tests, documentation, model experiment code and submission preparation. Runtime rules and source facts are deterministic; the compact model supplies guarded evidence assistance. This is an independent prototype, not an official NASA product.
+`npm run test:release` (offline tests, build, then Playwright in installed Chrome) is
+the required gate before any behaviour release. See [docs/playwright.md](docs/playwright.md).

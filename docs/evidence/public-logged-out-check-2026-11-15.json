@@ -1,0 +1,114 @@
+{
+ "checkedAt": "2026-11-15T09:42:35.600Z",
+ "target": "https://nasa-hackathon-three.vercel.app (production, Phase A)",
+ "method": "Phase A Playwright suite at commit f4c4fef, fresh logged-out Chrome contexts, TEST_BASE_URL",
+ "stats": {
+  "startTime": "2026-11-15T09:41:03.931Z",
+  "duration": 60500.381,
+  "expected": 16,
+  "skipped": 0,
+  "unexpected": 0,
+  "flaky": 0
+ },
+ "cases": [
+  {
+   "project": "public-desktop",
+   "title": "all sixteen original QA questions retain their grounded answers and workflow logic",
+   "status": "passed"
+  },
+  {
+   "project": "public-mobile",
+   "title": "all sixteen original QA questions retain their grounded answers and workflow logic",
+   "status": "passed"
+  },
+  {
+   "project": "public-desktop",
+   "title": "mouse Send preserves chat input focus and Escape returns to the launcher",
+   "status": "passed"
+  },
+  {
+   "project": "public-mobile",
+   "title": "mouse Send preserves chat input focus and Escape returns to the launcher",
+   "status": "passed"
+  },
+  {
+   "project": "public-desktop",
+   "title": "short zoom and landscape viewports retain sixty percent usable height",
+   "status": "passed"
+  },
+  {
+   "project": "public-mobile",
+   "title": "short zoom and landscape viewports retain sixty percent usable height",
+   "status": "passed"
+  },
+  {
+   "project": "public-desktop",
+   "title": "every example region returns at least three complete mapped fields",
+   "status": "passed"
+  },
+  {
+   "project": "public-mobile",
+   "title": "every example region returns at least three complete mapped fields",
+   "status": "passed"
+  },
+  {
+   "project": "public-desktop",
+   "title": "the submission fixture is enterable and reproduces the three live-engine scenarios",
+   "status": "passed"
+  },
+  {
+   "project": "public-mobile",
+   "title": "the submission fixture is enterable and reproduces the three live-engine scenarios",
+   "status": "passed"
+  },
+  {
+   "project": "public-desktop",
+   "title": "zero coverage explains the block beside Next and recovers without erasing farmer inputs",
+   "status": "passed"
+  },
+  {
+   "project": "public-mobile",
+   "title": "zero coverage explains the block beside Next and recovers without erasing farmer inputs",
+   "status": "passed"
+  },
+  {
+   "project": "public-desktop",
+   "title": "Next and Compare both complete a real baseline comparison and invalidate stale results",
+   "status": "passed"
+  },
+  {
+   "project": "public-mobile",
+   "title": "Next and Compare both complete a real baseline comparison and invalidate stale results",
+   "status": "passed"
+  },
+  {
+   "project": "public-desktop",
+   "title": "missing coordinates and a failed data request have visible validation and working retry",
+   "status": "passed"
+  },
+  {
+   "project": "public-mobile",
+   "title": "missing coordinates and a failed data request have visible validation and working retry",
+   "status": "passed"
+  }
+ ],
+ "publicLinks": {
+  "app": 200,
+  "deckHtml": 200,
+  "deckPdf": "200 application/pdf 86877 bytes",
+  "credits": 200,
+  "sourceZip": "200 application/zip 2452507 bytes"
+ },
+ "nasaTeamPage": {
+  "url": "https://www.spaceappschallenge.org/2026/find-a-team/explorer36/?tab=details",
+  "publicFields": {
+   "isSubmitted": false,
+   "projectSubmitted": false,
+   "submittedAt": null,
+   "savedAt": "2026-11-15T07:53:44Z",
+   "dataReferences": "(empty)",
+   "projectReferences": "(empty)"
+  },
+  "note": "Read from the public page data without logging in. Only the team owner can submit."
+ }
+}

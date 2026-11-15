@@ -558,3 +558,21 @@ Not verified: real phones or tablets, real microphones, accents and noise, memor
 use of the speech model, Safari/Firefox voice input, audible read-aloud output (only
 text, voice choice and Stop are checked), availability of the public field services
 at any other time, and independent review of classifier labels.
+
+## Logged-out public check and document reconciliation - 15 November 2026 (about 09:50 UTC)
+
+- Production https://nasa-hackathon-three.vercel.app/ : the Phase A Playwright suite
+  (commit f4c4fef) passed 16/16 desktop and mobile cases from fresh, logged-out
+  browser contexts. The app, deck page, seven-page PDF, credits page and source ZIP
+  all returned HTTP 200 without login. Production serves Phase A (no 3D view, no
+  voice input). Evidence: docs/evidence/public-logged-out-check-2026-11-15.json.
+- **NASA team page (public data, not logged in): `isSubmitted: false`,
+  `submittedAt: null`, last saved 2026-11-15T07:53Z; the data-references and
+  project-references fields were empty.** The project is a saved draft, not a
+  submission. Only the team owner can submit; the deadline is 23:59 Singapore time
+  on 15 November.
+- README, docs/playwright.md, docs/3d-validation.md and AGENTS.md section 10 were
+  reconciled with the green release gate. Older failing results are kept as history
+  and marked superseded.
+- The typed-judgment classifier remains an experiment; the validated rules stay in
+  charge of routing.
