@@ -1,0 +1,53 @@
+{
+ "command": "npm run test:release",
+ "startedAt": "2026-11-15T14:26:09.032Z",
+ "finishedLocal": "2026-11-15 22:48 UTC+8",
+ "source": "3e82b2c; 60 application files match merged-release-application-source.json (re-hashed after the run)",
+ "offlineTests": {
+  "passed": 128,
+  "failed": 0
+ },
+ "browser": {
+  "startTime": "2026-11-15T14:26:09.032Z",
+  "duration": 1311603.802,
+  "expected": 152,
+  "skipped": 0,
+  "unexpected": 0,
+  "flaky": 0
+ },
+ "projects": {
+  "static-desktop": {
+   "passed": 38,
+   "failed": 0
+  },
+  "static-mobile": {
+   "passed": 38,
+   "failed": 0
+  },
+  "node-desktop": {
+   "passed": 38,
+   "failed": 0
+  },
+  "node-mobile": {
+   "passed": 38,
+   "failed": 0
+  }
+ },
+ "casesPerSpecFile": {
+  "assistant.spec.js": 4,
+  "field-terrain.spec.js": 4,
+  "gibs.spec.js": 12,
+  "help-and-explanations.spec.js": 36,
+  "map3d-review.spec.js": 4,
+  "map3d.spec.js": 16,
+  "review-phase-a.spec.js": 16,
+  "review-phase-b.spec.js": 16,
+  "speech-microphone.spec.js": 12,
+  "speech.spec.js": 8,
+  "terrain.spec.js": 8,
+  "weather-window.spec.js": 4,
+  "workflow.spec.js": 12
+ },
+ "rawSha256": "b26cb920f74b29baefb6d771d3363075050dd803fc536b924ee942f9ca9c0b41",
+ "note": "The run was started by the Codex session and finished after it stopped; results were read and recorded by the Claude Code session. Live field cases depend on public Overpass availability."
+}

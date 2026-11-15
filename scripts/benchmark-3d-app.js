@@ -19,16 +19,17 @@ try{
     const sample=async phase=>{samples.push(await sampleBrowserMemory(service.process().pid,phase));await writeFile(`${directory}/${viewport.width}-samples.json`,JSON.stringify(samples,null,2));};
     try{
       const page=await browser.newPage({viewport,isMobile:viewport.width<500,hasTouch:viewport.width<500});
-      page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(!r.url().startsWith('http://127.0.0.1'))responses.push({url:r.url(),status:r.status()});});
+      const publicUrl=value=>{const url=new URL(value);return url.origin+url.pathname;};
+      page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(!r.url().startsWith('http://127.0.0.1'))responses.push({url:publicUrl(r.url()),status:r.status()});});
       const initialResources=[],initialReads=[];let initialPhase=true;
       page.on('response',response=>{if(initialPhase)initialReads.push((async()=>{
-        try{initialResources.push({url:response.url(),status:response.status(),decodedBytes:(await response.body()).length});}
-        catch(error){initialResources.push({url:response.url(),status:response.status(),unverified:error.message});}
+        try{initialResources.push({url:publicUrl(response.url()),status:response.status(),decodedBytes:(await response.body()).length});}
+        catch(error){initialResources.push({url:publicUrl(response.url()),status:response.status(),unverified:error.message});}
       })());});
       await page.route(/overpass-api\.de|overpass\.private\.coffee|maps\.mail\.ru/,r=>r.abort('failed'));
       await page.addInitScript(()=>{window.policyErrors=[];document.addEventListener('securitypolicyviolation',e=>window.policyErrors.push({directive:e.violatedDirective,url:e.blockedURI}));});
       const initialStart=Date.now();await page.goto(`http://127.0.0.1:${app.address().port}`,{waitUntil:'networkidle'});
-      await page.waitForFunction(()=>document.querySelectorAll('#country-select option').length>100&&!document.querySelector('#location-method').disabled);
+      await page.waitForFunction(()=>document.querySelectorAll('#pest-country option').length>100&&!document.querySelector('#location-method').disabled);
       const initialReadyMs=Date.now()-initialStart;initialPhase=false;await Promise.allSettled(initialReads);
       const lazyRequests=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>r.name.includes('/vendor/maplibre/')).length);
       await sample('2D before opt-in');

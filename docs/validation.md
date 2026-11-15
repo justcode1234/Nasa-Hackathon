@@ -640,3 +640,28 @@ The user also requested sourced local crop-type suggestions for empty areas,
 aligned Back/Next controls that open chat cannot cover, and three clickable chat
 starter examples. These are included in the remaining P0.6/P1 work. All three field
 services are retained by explicit user decision. No new dependency or deployment.
+
+## 15 November 2026 - merged release checkpoint (final gate pending)
+
+Current application checkpoint: 3e82b2c; final behavior hashes are retained in
+merged-release-application-source.json. All previous branch histories are ancestors
+of this checkpoint. Main and production remain f4c4fef until the authorized gate
+passes. 128 offline tests pass; legacy Chrome model-on 33, Node Chrome 19 and
+Firefox 18 checks passed before the final small launcher correction. Original
+QA 16 questions + six flows pass with model off/on (22/22 each). Their separate
+review checklist has five passes and two blocked items (local run cannot establish
+public-origin CORS or authenticated portal status). Independent public NASA status
+is recorded separately, not retroactively inserted into those results.
+
+Five-size before/after review covers all four steps and chat, with 3D/terrain after
+captures. It caught a closed-launcher overlap on short screens, now fixed and
+asserted. Two mobile prompt-sweep failures were test interactions under open chat;
+close/change/reopen repairs the harness without removing answer or state checks.
+Interrupted/failing logs are preserved. The fresh 152-case four-project gate is
+running; do not treat a partial run as a release pass.
+
+Durable review and actual QA replies: docs/merged-release-review.md and
+merged-release-* evidence. Real phones, Safari/WebKit, microphone/accent/noise,
+audible voice quality, exact session memory peaks and agronomic validation remain
+unverified. Installed English TTS training provenance is unverified and explicitly
+accepted for this release. No dependency or classifier activation was added.

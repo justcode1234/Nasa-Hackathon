@@ -645,3 +645,32 @@ The user also requested sourced local crop-type suggestions for empty areas,
 aligned Back/Next controls that open chat cannot cover, and three clickable chat
 starter examples. These are included in the remaining P0.6/P1 work. All three field
 services are retained by explicit user decision. No new dependency or deployment.
+
+## 15 November 2026 - approved merged release and English voice choice
+
+The user explicitly requested merging all histories into one main branch and
+approved deployment after all release checks pass. This supersedes the earlier
+Phase A freeze for this release. The user also chose the installed on-device
+English voice; its training-language provenance is unknown. No separately trained
+English-only TTS model is claimed. All three field-lookup services are retained.
+The typed-judgment classifier stays disconnected and no dependency was added.
+
+Implementation checkpoint 3e82b2c contains the location method/Next flow, three
+explained weather graphs and C/F display conversion, explicit allowed alternative
+crops, missing-check coverage explanations, factual orchard context, three chat
+starters, source-aware crop-choice help, separate official Aland records, Singapore
+unnamed-region recovery, speech consent/cancellation and aligned navigation.
+Missing national records do not establish that nothing grows locally. Regional
+production records and knowledge profiles do not create scenario screening rules.
+
+Original Phase A prepared files match f4c4fef byte-for-byte and are retained under
+public/submission/phase-a plus the phase-a-submission-2026-11-15 source tag. Current
+release materials are refreshed separately. No NASA portal edit is performed.
+The public record read at 22:09 UTC+8 reports submission at 21:04:58; the submitted
+coverage paragraph describes four crops/89 lists. The approved release has seven/
+166. Exact discrepancies and proposed owner wording are in merged-release-review.md.
+
+A first gate was interrupted to fix screenshot-discovered closed-launcher overlap.
+A second exposed mobile test-harness clicks beneath open chat; the helper now
+closes chat before manual selection and reopens it. No assertion was weakened.
+The fresh full gate is required before main changes or production publication.

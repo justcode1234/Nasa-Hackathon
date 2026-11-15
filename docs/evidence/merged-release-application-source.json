@@ -302,5 +302,6 @@
       "bytes": 1271,
       "sha256": "fdd0143a8da71bdba318132b93bd15f8dc64168a2403c3165f9faf56a388e40d"
     }
-  ]
+  ],
+  "applicationCommit": "3e82b2c"
 }
