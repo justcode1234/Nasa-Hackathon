@@ -216,7 +216,14 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   installed on-device English voice for read-aloud; training-language provenance
   is unverified. A separately trained English-only TTS model is not implemented.
   Typed-judgment classifier stays unwired. No new dependency in this release work.
-- **FINAL GATE PASSED 22:48; merged locally as b094f40 but NOT pushed or deployed (push to main needs the user to approve it in the active session). See the continuation checkpoint at the end of the merged-release plan.**
+- **RELEASED (15 Nov ~22:55 UTC+8):** user approved; main pushed to ef0e80e (merge b094f40);
+  production deployment dpl_DVZLzVaybdoLsXuQf57xfVynaeq8 serves the merged release; logged-out
+  public Playwright 76/76 passed; assets match. Rollback target and steps: docs/deployment.md.
+- **Post-release fix (whole-country chat flow, rice rotation answer):** see the latest entry in
+  docs/validation.md. Committed on main after its own full release gate; pushing it to
+  production needs the user's approval. Branch cleanup (one branch only, as the user asked in
+  the Codex session) is pending the same approval: detach the review worktree first, keep the
+  Kilo worktree and tag phase-a-submission-2026-11-15.
 - **Earlier checks:** 128/128 offline; focused static-desktop 14/14; legacy
   model-on Chrome 33, Node Chrome 19, Firefox 18; original QA 16 questions plus six
   flows pass both model-off and model-on (22/22 each). Full 152-case four-project

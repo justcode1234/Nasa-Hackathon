@@ -1,0 +1,13 @@
+{
+ "checkedAt": "2026-11-15T14:58:12.608Z",
+ "origin": "https://nasa-hackathon-three.vercel.app/",
+ "deployment": "dpl_DVZLzVaybdoLsXuQf57xfVynaeq8 (production, commit ef0e80e)",
+ "filesChecked": 77,
+ "identical": 75,
+ "different": [
+  "js/modules/data-flow.js 200",
+  "js/modules/strategy.js 200"
+ ],
+ "note": "dist/client is the local build of the tested source. Per-country location files are excluded from this pass.",
+ "differenceExplained": "Both listed files are byte-identical to the committed source (git show HEAD:...) and to the local build after removing CR characters; the local dist copy had CRLF line endings. Effective result: 77 of 77 match the tested source."
+}

@@ -95,6 +95,12 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     }
     if (!state.country) { actions.showStep('location'); return reply('Which country should we look at? Then we can explore the whole country or a particular area.'); }
     const countryName = COUNTRY_NAMES.of(state.country);
+    let inputsInForm = false;
+    const keepInputs = async () => {
+      if (!baseline && !allowed && !Object.keys(constraints).length) return;
+      try { await run('applyPlanning', { baseline, constraints, allowed }); inputsInForm = Boolean(baseline); }
+      catch (error) { if (error.name === 'AbortError') throw error; }
+    };
     if(allowed){
       const missing=allowed.filter(name=>!state.countryCrops.screeningCropIds.includes(resolveCropInput(name,state.catalog,state.countryCrops).id));
       if(missing.length)return reply(`Your requested alternatives include crops without screening rules for ${countryName}: ${missing.join(', ')}. This leaves fewer than two allowed crops or an incomplete requested set. I will not silently discard or replace them. Choose a supported allowed-crop list in step 3, or keep these crops only as an unassessed baseline.`);
@@ -105,9 +111,9 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       // A national request must not retain a field point or its NASA comparison.
       if (state.location || state.farm || state.regionCode) { await run('chooseCountry', state.country); state = getState(); }
     }
-    if (parsed.specificArea) { scope = 'area'; actions.showStep('location');const places=await getLocationList(state.country);guard();return areaPrompt(countryName,null,places.regions.some(region=>region.name&&normalizeName(region.name)!==normalizeName(countryName))); }
+    if (parsed.specificArea) { scope = 'area'; await keepInputs(); actions.showStep('location');const places=await getLocationList(state.country);guard();return areaPrompt(countryName,null,places); }
     const explicitPoint = parsed.location || parsed.farmId || parsed.farmIndex || (!parsed.wholeCountry && (parsed.usePoint || parsed.useFarm)) || choice?.type === 'farm' || choice?.type === 'town';
-    if (parsed.wholeCountry && !explicitPoint) return countryOverview(state);
+    if (parsed.wholeCountry && !explicitPoint) { await keepInputs(); return countryOverview(getState(), inputsInForm); }
     if (parsed.location) {
       const { latitude, longitude } = parsed.location;
       if (!Number.isFinite(latitude) || Math.abs(latitude) > 90 || !Number.isFinite(longitude) || Math.abs(longitude) > 180) return reply('Those coordinates are outside the latitude/longitude range. Please give latitude, longitude in decimal degrees.');
@@ -145,8 +151,8 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       const regionMatches = places.regions.filter(region => region.name&&normalizeName(region.name) !== normalizeName(countryName) && (` ${q} `).includes(` ${normalizeName(region.name)} `));
       if (regionMatches.length === 1) {
         const region = regionMatches[0];
-        await run('chooseRegion', region.id); areaRegion = region.id; scope = 'area';
-        return reply(`Which town or farmland in ${region.name}, ${countryName}? You can choose a town from the dropdown or name it here.`, [next(`Whole ${countryName}`, `Whole ${countryName}`)]);
+        await run('chooseRegion', region.id); areaRegion = region.id; scope = 'area'; await keepInputs();
+        return reply(`${region.name} is selected. Now choose a town in the Town list in step 1, or type a town name here. After you pick a town, press “Continue planning with this location”.`, [next(`Whole ${countryName}`, `Whole ${countryName}`)]);
       }
       const selectedRegion = areaRegion ?? state.regionCode ?? null;
       const matches = choice?.type === 'town' ? places.places.filter(place => place.id === choice.id) : places.places.filter(place => {
@@ -156,14 +162,15 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       if (matches.length === 1) {
         await run('chooseLocation', matches[0], state.country); scope = 'area';
         progress('Step 1: finding community-mapped fields near the town…');
-        await run('loadFarms'); state = getState();
+        await run('loadFarms'); await keepInputs(); state = getState();
         return fieldPrompt(state, `${matches[0].name} is selected as a town point. Choose the specific field; the town itself is not farmland.`);
       }
       if (matches.length > 1) return reply('Several listed towns match. Which one do you mean?', matches.slice(0, 3).map(place => ({ label: `${place.name} · ${place.regionCode}`, question: `Use ${place.name}`, workflowChoice: { type: 'town', id: place.id } })));
       if(!hasInput)return null;
+      await keepInputs();
       actions.showStep('location');
-      if (scope === 'country' && !explicitPoint) return countryOverview(state);
-      if (scope === 'area' || selectedRegion) return areaPrompt(countryName, places.regions.find(region => region.id === selectedRegion)?.name,places.regions.some(region=>region.name&&normalizeName(region.name)!==normalizeName(countryName)));
+      if (scope === 'country' && !explicitPoint) return countryOverview(getState(), inputsInForm);
+      if (scope === 'area' || selectedRegion) return areaPrompt(countryName, places.regions.find(region => region.id === selectedRegion)?.name, places);
       return reply(`Which part of ${countryName} should we focus on, or would you like an overview of the whole country?`,
         [next(`Whole ${countryName}`, `Whole ${countryName}`), next('A specific area', 'A specific area')]);
     }
@@ -184,14 +191,22 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     return reply(`Step 4 is ready: your baseline and two alternatives are displayed. The baseline is ${comparison.scenarios[0].timeline.map(slot => slot.cropName).join(' → ')}. Alternatives use the allowed starter crops. The plan starts in month ${state.planning.startMonth} of ${state.planning.planningYear}, using historical ${state.planning.referenceYear} weather. Missing soil, irrigation and local agronomy remain unknown; unsupported crops stay unassessed. Review the visible trade-offs and gaps before making a planting decision.`);
   }
   async function getLocationList(country){let data=locationLists.get(country);if(!data){data=await request(`/api/locations?country=${country}`);locationLists.set(country,data);while(locationLists.size>4)locationLists.delete(locationLists.keys().next().value);}return data;}
-  function areaPrompt(countryName, regionName, namedRegions=true) {
-    return reply(regionName ? `Which town or farmland in ${regionName}, ${countryName}? Choose a town from the dropdown or name it here.` :
-      namedRegions?`Which state, region or town in ${countryName}? You can name it here or use the location dropdowns.`:
+  function areaPrompt(countryName, regionName, places) {
+    const named = (places?.regions ?? []).filter(region => region.name && normalizeName(region.name) !== normalizeName(countryName));
+    const namedRegions = named.length > 0;
+    if (!regionName && namedRegions) {
+      const counts = new Map();
+      for (const place of places.places ?? []) counts.set(place.regionCode, (counts.get(place.regionCode) ?? 0) + 1);
+      const shortcuts = named.map(region => [region, counts.get(region.id) ?? 0]).filter(([, count]) => count > 0)
+        .sort((a, b) => b[1] - a[1] || a[0].name.localeCompare(b[0].name)).slice(0, 3).map(([region]) => next(region.name, region.name));
+      return reply(`Which state or region of ${countryName}? Tap one below, choose any region in the Region list in step 1, or type its name. The buttons are the three regions with the most towns in the saved place list, not a recommendation.`, shortcuts);
+    }
+    return reply(regionName ? `Which town or farmland in ${regionName}, ${countryName}? Choose it in the Town list in step 1 or type its name here. After you pick a town, press “Continue planning with this location”.` :
       `No named regions are available in this app’s place list for ${countryName}. Choose a town or place directly, select a field on the map, or enter your farm coordinates. The whole-country overview does not require a region.`,
     [next(`Whole ${countryName}`, `Whole ${countryName}`)]);
   }
-  async function countryOverview(state) {
-    actions.showStep('si');
+  async function countryOverview(state, inputsInForm = false) {
+    actions.showStep('location');
     const name = COUNTRY_NAMES.of(state.country), data = state.countryCrops;
     const places=await getLocationList(state.country),namedRegions=places.regions.some(region=>region.name&&normalizeName(region.name)!==normalizeName(name));
     const sequence = baseline ?? state.planning.baseline.filter(Boolean);
@@ -202,11 +217,11 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       const record = data.records.find(record => String(record.itemCode) === itemCode || record.screeningId === crop.id);
       return record ? `${record.name} (${record.year})` : `${crop.name}: no matching production category`;
     });
-    return reply([`Whole-country overview for ${name}.${sequence.length ? ` Your supplied crops are retained: ${cropNames.join(' → ')}.` : ''}`,
+    return reply([`Whole-country overview for ${name}.${sequence.length ? (inputsInForm ? ` Your crops are entered in step 3: ${cropNames.join(' → ')}.` : ` Your crops are remembered for this plan: ${cropNames.join(' → ')}.`) : ''}`,
       records.length ? `FAOSTAT national production records: ${records.join('; ')}. Snapshot retrieved ${data.source.retrievedAt.slice(0, 10)}; these are country records, not local suitability evidence.` :
         `${data.records.length} crop categories have saved national production records for 2020–2024. Missing categories remain unknown.`,
-      `There is no single country-wide planting calendar or field weather reading here. ${namedRegions?'Choose a region or town':'Choose a town, map field or farm coordinates directly; this place list has no named regions'} when you want to compare rotations for a particular farm.`],
-    [next(namedRegions?'Choose a region':'Choose a town or field', 'A specific area')], [data.source]);
+      `A rotation comparison needs NASA weather for one place, and a whole country has no single weather reading. ${namedRegions ? 'Choose a state or region next, then a town.' : 'Choose a town, a mapped field or farm coordinates next; this place list has no named regions.'} Your crops stay in step 3.`],
+    [next(namedRegions ? 'Choose a state or region' : 'Choose a town or field', 'A specific area')], [data.source]);
   }
   function fieldPrompt(state, message) {
     actions.showStep('location');
@@ -215,5 +230,5 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     return reply(`${message} ${state.farms.length} mapped fields were returned. You can also choose from the full field dropdown or use explicit farm coordinates.`, choices,
       [{ id: 'osm', title: 'OpenStreetMap contributors; community mapped land use, not verified ownership', url: 'https://www.openstreetmap.org/copyright' }]);
   }
-  return { respond, invalidate };
+  return { respond, invalidate, isActive: () => active };
 }

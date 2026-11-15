@@ -171,3 +171,22 @@ were read or stored. The push and post-push deployment check are pending here.
   three Overpass hosts included).
 - Not done: Playwright against the preview URL (needs a protection bypass or a public
   preview, which is the owner's decision), real-phone checks, promotion to production.
+
+## Merged release in production - 15 November 2026 (about 22:55 UTC+8)
+
+- User approval in the active session ("go ahead") after the full gate passed
+  (128 offline + 152 browser). `git push origin main` moved main from f4c4fef to
+  ef0e80e (merge commit b094f40 plus records). CLI identity justcode1234, project
+  nasa-hackathon.
+- Production deployment dpl_DVZLzVaybdoLsXuQf57xfVynaeq8
+  (nasa-hackathon-3hwgknx0t), target production, Ready in 24 s, serving
+  https://nasa-hackathon-three.vercel.app/ .
+- Logged-out public Playwright from ef0e80e: **76/76 passed** (public-desktop and
+  public-mobile), 0 skipped, 0 flaky. Raw: docs/evidence/merged-release-public-playwright.raw.json.gz.
+- Public asset hashes: 77 files checked against the local build of the tested source;
+  77 match the committed source (two showed CRLF-only differences in the local dist
+  copy). Evidence: docs/evidence/merged-release-public-assets.json.
+- /submission/phase-a/ (original Phase A materials), the current deck, PDF and credits
+  all return 200 without login.
+- **Rollback target:** previous production deployment nasa-hackathon-e5zj96p3p (Phase A,
+  f4c4fef). `vercel rollback` to it, then `git revert -m 1 b094f40` on main.

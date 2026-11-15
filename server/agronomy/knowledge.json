@@ -105,7 +105,13 @@
       "conditions": "For rice, check the local variety, water availability and establishment method together. IRRI describes a prepared seedbed for establishment; a country name alone cannot establish a suitable planting date.",
       "water": "Rice water management depends on the production system, establishment method and local water supply. The saved IRRI reference does not establish an irrigation amount for your field.",
       "harvest": "Rice harvest timing depends on the variety, locality and establishment method. I do not have a verified maturity duration for your local variety.",
-      "screeningEligible": false
+      "screeningEligible": false,
+      "rotation": "Cornell Extension groups rice in the grain family with wheat, maize (corn), barley, oats and rye. A rice–wheat sequence therefore stays in one family, while a crop from another family, such as a legume, is a family break. Paddy versus upland water management and the local break needed for pests are not assessed here.",
+      "topicSourceIds": {
+        "rotation": [
+          "cornell-rotation"
+        ]
+      }
     },
     {
       "id": "wheat",
@@ -124,7 +130,13 @@
       "overview": "Wheat has spring and winter growth types. Their response to cold differs, so the wheat type matters before discussing planting dates.",
       "conditions": "Winter wheat needs a period of cold for normal development; spring wheat does not have the same cold requirement. Select a locally adapted type before applying a planting calendar.",
       "harvest": "Wheat maturity varies by variety and season. The Minnesota reference timeline cannot be used as a harvest prediction for another region.",
-      "screeningEligible": false
+      "screeningEligible": false,
+      "rotation": "Cornell Extension groups wheat in the grain family with rice, maize (corn), barley, oats and rye. Wheat after rice or maize repeats that family, while a legume such as peas or beans is a family break. Local disease history and the break period needed still have to be checked.",
+      "topicSourceIds": {
+        "rotation": [
+          "cornell-rotation"
+        ]
+      }
     },
     {
       "id": "tomato",
@@ -172,7 +184,13 @@
       "conditions": "Cultivar, local chilling and flowering conditions, soil and orchard management need local review. The national production record does not establish suitability for this field.",
       "water": "This app has no orchard water-balance model or field irrigation requirement for apple.",
       "harvest": "No locally validated orchard harvest calendar or establishment-to-bearing model is available here. The three four-month annual slots must not be treated as an orchard prescription.",
-      "screeningEligible": false
+      "screeningEligible": false,
+      "rotation": "Apple is a long-lived fruit tree, so it is not rotated season by season like an annual crop. This app has no rule for orchard replanting or for crops grown between trees.",
+      "topicSourceIds": {
+        "rotation": [
+          "ncsu-apple"
+        ]
+      }
     },
     {
       "id": "apricot",
@@ -194,7 +212,13 @@
       "conditions": "Cultivar, local chilling and flowering conditions, soil and orchard management need local review. The national production record does not establish suitability for this field.",
       "water": "This app has no orchard water-balance model or field irrigation requirement for apricot.",
       "harvest": "No locally validated orchard harvest calendar or establishment-to-bearing model is available here. The three four-month annual slots must not be treated as an orchard prescription.",
-      "screeningEligible": false
+      "screeningEligible": false,
+      "rotation": "Apricot is a long-lived fruit tree, so it is not rotated season by season like an annual crop. This app has no rule for orchard replanting or for crops grown between trees.",
+      "topicSourceIds": {
+        "rotation": [
+          "ncsu-apricot"
+        ]
+      }
     }
   ]
 }

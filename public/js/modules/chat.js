@@ -178,10 +178,19 @@ export function initChat(getState, actions) {
   return { invalidate({ fromAssistant = false } = {}) {
     chatContext = null;
     if (fromAssistant) return;
+    const guided = workflow.isActive();
     workflow.invalidate(); pendingChoice = null; speech.stopSpeaking();
     revision++; request?.abort(); $('ask').disabled = false; chatContext = null;
     starters.forEach(button=>button.disabled=false);
     log.replaceChildren(el('p', 'Location or planning context changed. New messages use the current selection.'));
+    // A guided plan can continue after the user picks a town or field in step 1 themselves.
+    if (guided && getState().location) {
+      const group = el('div', null, { role: 'group', 'aria-label': 'Continue the guided plan' });
+      const button = el('button', 'Continue planning with this location', { type: 'button' });
+      button.addEventListener('click', () => { $('question').value = 'Use the selected point'; $('question-form').requestSubmit(); });
+      group.append(button);
+      log.append(el('p', 'You picked a location in step 1. Continue to load NASA evidence for it and compare the crops in step 3.'), group);
+    }
     $('answer-status').textContent = 'Answers include sources and limitations.';
   } };
 }

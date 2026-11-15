@@ -45,14 +45,19 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     }
     return Promise.all([placeTask, cropTask]);
   }
+  let loadedCountry = null;
   async function loadCountry(country, options = {}) {
+    // A new town or field in the same country keeps the loaded crop lists, so the
+    // farmer's step 3 selections are not wiped by an empty interim list.
+    if (country && country === loadedCountry) return;
+    loadedCountry = null;
     const version = token;
     onCountry(null, options);
     message('country-status', country ? `Loading recorded crops for ${names.of(country)}…` : 'Choose a country to see its recorded crops.');
     try {
       const data = await request(`/api/country-crops?country=${country}`);
       if (version !== token) return;
-      onCountry(data, options);
+      onCountry(data, options); loadedCountry = country;
       message('country-status', country ? `${names.of(country)} · ${data.records.length} crop production categories in the 2020–2024 source snapshot. National records do not establish field suitability.` : 'Choose a country to see its recorded crops.');
     } catch (error) { if (version === token) message('country-status', error.message, true); }
   }

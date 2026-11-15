@@ -120,9 +120,9 @@ test('specific-area mode accepts a sourced region and preserves crops through th
   const { assistant, calls, state } = setup({ locations: { regions: [{ id: '16', name: 'Maharashtra' }], places: [] } });
   await assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
   const area = await assistant.respond('A specific area');
-  assert.match(area.blocks[0].text, /Which state, region or town in India/);
+  assert.match(area.blocks[0].text, /Which state or region of India/);
   const region = await assistant.respond('Maharashtra');
-  assert.match(region.blocks[0].text, /Which town or farmland in Maharashtra/);
+  assert.match(region.blocks[0].text, /Maharashtra is selected.*choose a town/s);
   assert.equal(state.regionCode, '16');
   assert.ok(!calls.includes('NASA'));
   const result = await assistant.respond('at 18.52, 73.85');
@@ -135,8 +135,34 @@ test('whole-country mode can narrow directly to a named region without repeating
   await assistant.respond('Help me plan in India. Crops: rice, wheat, beans');
   await assistant.respond('Whole India');
   const answer = await assistant.respond('Punjab');
-  assert.match(answer.blocks[0].text, /Which town or farmland in Punjab/);
+  assert.match(answer.blocks[0].text, /Punjab is selected.*choose a town/s);
   assert.equal(state.regionCode, '23');
+});
+
+test('whole-country choice puts the supplied crops in step 3, offers tappable regions and can finish after a manual town pick', async () => {
+  const locations = { regions: [{ id: '16', name: 'Maharashtra' }, { id: '25', name: 'Tamil Nadu' }, { id: '23', name: 'Punjab' }, { id: '99', name: 'Goa' }],
+    places: [['1','16'],['2','16'],['3','25'],['4','25'],['5','25'],['6','23'],['7','99']].map(([id, regionCode]) => ({ id, name: 'TEST town ' + id, regionCode, latitude: 18.5, longitude: 73.8 })) };
+  const { assistant, calls, state } = setup({ point: false, country: 'IN', locations });
+  const scope = await assistant.respond('Help me plan a rotation in India. Crops: tomato, cabbage, bulb onion. Rainfed.');
+  assert.deepEqual(scope.followUps.map(f => f.label), ['Whole India', 'A specific area']);
+  const whole = await assistant.respond('Whole India');
+  // The claim matches the form: crops and the rainfed constraint are really in step 3.
+  assert.match(whole.blocks[0].text, /Your crops are entered in step 3: Tomato → Cabbage → Bulb onion/);
+  assert.deepEqual(state.planning.baseline, ['tomato', 'cabbage', 'onion']);
+  assert.equal(state.planning.irrigation, 'rainfed');
+  assert.ok(calls.includes('step:location') && !calls.includes('NASA') && !calls.includes('location'), 'no farm point or weather for a whole country');
+  const area = await assistant.respond(whole.followUps[0].question);
+  // Shortcuts follow the stated rule: most listed towns first.
+  assert.deepEqual(area.followUps.map(f => f.label), ['Tamil Nadu', 'Maharashtra', 'Goa']);
+  const region = await assistant.respond(area.followUps[1].question);
+  assert.match(region.blocks[0].text, /Maharashtra is selected/);
+  // The user picks a town in step 1 (manual edit clears assistant memory), then continues.
+  assistant.invalidate(); state.location = { latitude: 18.52, longitude: 73.85 };
+  assert.equal(assistant.isActive(), true);
+  const done = await assistant.respond('Use the selected point');
+  assert.match(done.blocks[0].text, /Step 4 is ready/);
+  assert.deepEqual(state.planning.baseline, ['tomato', 'cabbage', 'onion']);
+  assert.ok(calls.includes('NASA') && calls.includes('compare'));
 });
 
 test('scope choices apply to other countries and empty national coverage stays honest', async () => {

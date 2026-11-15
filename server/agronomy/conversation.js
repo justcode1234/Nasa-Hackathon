@@ -91,10 +91,10 @@ export function answerConversation(question, { country: selectedCountry = '', co
   const push = (kind, text, sourceIds = []) => blocks.push({ kind, text, sourceIds });
   if (profile) {
     const fact = profile[topic === 'production' ? 'overview' : topic];
-    if (topic !== 'production') push(fact ? 'sourced crop facts' : 'evidence gap', (fact ?? `I do not have a verified ${topic} rule for ${name}.`) + (profile.screeningEligible === false && topic !== 'rotation' ? ` ${profile.limitation ?? `${name} has knowledge coverage but is not in the rotation-screening catalog.`}` : ''), fact ? profile.topicSourceIds?.[topic] ?? profile.sourceIds : []);
+    if (topic !== 'production') push(fact ? 'sourced crop facts' : 'evidence gap', (fact ?? `I do not have verified ${topic} information for ${name}.`) + (profile.screeningEligible === false && topic !== 'rotation' && fact ? ` ${profile.limitation ?? `FieldShift has background facts for ${name} but no timing rules, so it cannot include ${name} in a rotation comparison yet.`}` : ''), fact ? profile.topicSourceIds?.[topic] ?? profile.sourceIds : []);
     if (country === 'SG' && profile.id === 'kai-lan') push('country context', 'NParks provides Singapore gardening guidance for kai lan. Local cultivar and farm conditions still need checking.', profile.sourceIds);
     else if (!record) push('reference scope', profile.referenceScope ?? `The growing reference is from ${COUNTRY_NAMES.of(profile.sourceCountry)}; ${countryName ?? 'your country'}-specific growing guidance is not verified here.`, []);
-    if (topic === 'rotation' && profile.screeningEligible === false) push('screening limit', profile.limitation ?? `${name} has knowledge coverage but is not in the rotation-screening catalog.`, []);
+    if (topic === 'rotation' && profile.screeningEligible === false) push('screening limit', profile.limitation ?? `FieldShift has background facts for ${name} but no timing rules, so it cannot include ${name} in a rotation comparison yet.`, []);
   } else if (starter) {
     if (topic === 'harvest') push('sourced crop facts', `${name}: the starter reference gives ${starter.maturityDays.join('–')} days to maturity. This reference range does not predict your harvest date.`, starter.sourceIds);
     else if (topic === 'rotation') push('sourced crop facts', `${name} belongs to ${starter.family}. Family repetition is one rotation check; it cannot establish pest prevention or the required local break period.`, [...starter.sourceIds, 'cornell-rotation']);
@@ -111,10 +111,11 @@ export function answerConversation(question, { country: selectedCountry = '', co
   if (!profile && !starter && (topic === 'conditions' || topic === 'water' || topic === 'rotation' || topic === 'harvest')) push('evidence gap', `I have a dated production category for ${name}, but no verified growing or rotation rule for this crop-country pair.`, []);
   if (ambiguousCornQuestion(question)) push('screening limit', cornScopeNotice, []);
   const suffix = countryName ? ` in ${countryName}` : '';
-  const followUps = [topic !== 'conditions' && { label: 'Growing conditions', question: `What growing conditions does ${name} need${suffix}?` },
-    topic !== 'harvest' && (profile || starter) && { label: 'Harvest timing', question: `How long does ${name} take to harvest${suffix}?` },
-    topic !== 'production' && { label: 'Country evidence', question: `What production evidence exists for ${name}${suffix}?` },
-    topic !== 'rotation' && { label: 'Rotation role', question: `How does ${name} fit a rotation${suffix}?` }].filter(Boolean).slice(0, 3);
+  const has = key => Boolean(starter || profile?.[key]);
+  const followUps = [topic !== 'conditions' && has('conditions') && { label: 'Growing conditions', question: `What growing conditions does ${name} need${suffix}?` },
+    topic !== 'harvest' && has('harvest') && { label: 'Harvest timing', question: `How long does ${name} take to harvest${suffix}?` },
+    topic !== 'production' && !blocks.some(block => block.kind === 'national production evidence') && { label: 'Country evidence', question: `What production evidence exists for ${name}${suffix}?` },
+    topic !== 'rotation' && has('rotation') && { label: 'Rotation role', question: `How does ${name} fit a rotation${suffix}?` }].filter(Boolean).slice(0, 3);
   const visible = blocks.slice(0, 3), ids = new Set(visible.flatMap(block => block.sourceIds));
   return { schemaVersion: 1, mode: 'deterministic crop-country evidence retrieval', question, topic,
     context: { cropKey, country }, blocks: visible, useSelectedLocation: false,

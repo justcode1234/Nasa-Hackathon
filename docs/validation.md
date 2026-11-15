@@ -665,3 +665,45 @@ merged-release-* evidence. Real phones, Safari/WebKit, microphone/accent/noise,
 audible voice quality, exact session memory peaks and agronomic validation remain
 unverified. Installed English TTS training provenance is unverified and explicitly
 accepted for this release. No dependency or classifier activation was added.
+
+## Merged release live; whole-country chat flow fixed - 15 November 2026 (evening)
+
+Public production (dpl_DVZLzVaybdoLsXuQf57xfVynaeq8, commit ef0e80e): 76/76 logged-out
+Playwright cases passed on desktop and mobile; live assets match the tested source.
+
+User report after release: the India starter button → "Whole India" "fails". Reproduced on
+production with a real browser:
+- The overview said "Your supplied crops are retained" but step 3 was empty.
+- It jumped to step 3 with no location, so comparison was impossible.
+- "Choose a region" then offered only a "Whole India" button (no way on by clicking).
+- Picking a town in step 1 wiped the step 3 crops: every same-country location change
+  briefly emptied the crop lists (context.js loadCountry) and lost the selections.
+A second report: "How does Rice fit a rotation in India?" (a button the chat itself offered)
+answered "I do not have a verified rotation rule" twice over.
+
+Fixes (feature work on main, not yet pushed at the time of writing):
+- Guided chat puts the farmer's crops and constraints into step 3 whenever it pauses for a
+  location, so the "entered in step 3" message is true and survives manual changes.
+- Whole country stays a national overview (no farm point, no weather) and stays on step 1.
+  "Choose a state or region" offers three tappable regions (rule stated in the reply: the
+  three with the most towns in the saved place list).
+- After a manual town/field pick in step 1, chat offers "Continue planning with this
+  location", which loads NASA evidence and compares.
+- A new town or field in the same country no longer reloads/empties the crop lists.
+- Rice and wheat rotation answers cite Cornell's grain-family grouping; apple/apricot explain
+  that tree crops are not rotated season by season. Follow-up buttons appear only when there
+  is sourced content (cassava no longer offers "Rotation role"). Plainer wording replaces
+  "rotation-screening catalog" for profiles without their own limitation text.
+Tests: new tests/e2e/whole-country-flow.spec.js (8/8 in four projects, real NASA data);
+new offline regression in tests/workflow-assistant.test.js; two prompt-wording assertions
+updated to the new text.
+
+Full `npm run test:release` with these fixes (started 15:18 UTC): **129/129 offline; 156/158
+browser**, 0 skipped, 0 flaky. All four whole-country-flow cases passed. The two failures were
+live field lookups (static-desktop example regions; static-mobile human path): the app reported
+"The field lookup services are busy or unavailable (8 / 7 attempts across 3 services). No fields
+were invented." and the test's two user retries also failed. A status check immediately after
+the run found all three public Overpass services unavailable (overpass-api.de connection error,
+maps.mail.ru 504, overpass.private.coffee timeout). Classified as **environment**, not a product
+defect; the field code was not changed. Those two cases must be re-run when the services recover.
+Evidence: docs/evidence/whole-country-fix-release.raw.json.gz and .log.gz.
