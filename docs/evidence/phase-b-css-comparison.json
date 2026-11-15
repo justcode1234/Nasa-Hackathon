@@ -1,0 +1,53 @@
+{
+  "computedStylesAndGeometryIdentical": true,
+  "screenshots": [
+    {
+      "width": 1366,
+      "height": 768,
+      "state": "location",
+      "pixelIdentical": true,
+      "beforeSha256": "05bf8914c97bf932d877bd4be05507af5bb54881476c0179dd76bab11fadc37f",
+      "afterSha256": "05bf8914c97bf932d877bd4be05507af5bb54881476c0179dd76bab11fadc37f"
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "state": "si",
+      "pixelIdentical": true,
+      "beforeSha256": "0908e2ec7fadf57439bca9c4ff1d1d584abe614ba1c711fc56b1f8aa804f5d32",
+      "afterSha256": "0908e2ec7fadf57439bca9c4ff1d1d584abe614ba1c711fc56b1f8aa804f5d32"
+    },
+    {
+      "width": 1280,
+      "height": 1000,
+      "state": "location",
+      "pixelIdentical": true,
+      "beforeSha256": "431bfb10ca748cca8dde84b54a6448a9a79b91b43d200b8cfcd7e6a0d223785a",
+      "afterSha256": "431bfb10ca748cca8dde84b54a6448a9a79b91b43d200b8cfcd7e6a0d223785a"
+    },
+    {
+      "width": 1280,
+      "height": 1000,
+      "state": "si",
+      "pixelIdentical": true,
+      "beforeSha256": "e4ffeeb68276d8c99b1d6c0a088fcc7efddfc1bc1911103b3c6829858fd9dbc4",
+      "afterSha256": "e4ffeeb68276d8c99b1d6c0a088fcc7efddfc1bc1911103b3c6829858fd9dbc4"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "location",
+      "pixelIdentical": true,
+      "beforeSha256": "eb6aa13b4f2c5fe3e10f0f03abc6fa78196787e46638c46a901dba4d46de50d9",
+      "afterSha256": "eb6aa13b4f2c5fe3e10f0f03abc6fa78196787e46638c46a901dba4d46de50d9"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "si",
+      "pixelIdentical": true,
+      "beforeSha256": "1b6cda3513367b2935cf621ed0d6e7f16e9bb2094f9a7cb41075ee31ed22a53d",
+      "afterSha256": "1b6cda3513367b2935cf621ed0d6e7f16e9bb2094f9a7cb41075ee31ed22a53d"
+    }
+  ]
+}

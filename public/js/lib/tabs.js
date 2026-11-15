@@ -1,3 +1,9 @@
+export function setNavigationLabel(button,label) {
+  const text=String(label),leading=text.startsWith('← '),trailing=text.endsWith(' →');
+  if(!leading&&!trailing){button.textContent=text;return;}
+  const arrow=document.createElement('span');arrow.setAttribute('aria-hidden','true');arrow.textContent=leading?'←':'→';
+  button.replaceChildren(...(leading?[arrow,` ${text.slice(2)}`]:[`${text.slice(0,-2)} `,arrow]));
+}
 export function initTabs() {
   const tabs = [...document.querySelectorAll('[role="tab"]')];
   const main = document.querySelector('main');
@@ -19,8 +25,8 @@ export function initTabs() {
     back.disabled = activeIndex === 0;
     next.hidden = activeIndex === tabs.length - 1;
     const label = index => tabs[index].textContent.replace(/^\d+\s*·\s*/, '');
-    next.textContent = activeIndex < tabs.length - 1 ? `Next: ${label(activeIndex + 1)} →` : 'Next';
-    back.textContent = activeIndex > 0 ? `← Back: ${label(activeIndex - 1)}` : 'Back';
+    setNavigationLabel(next,activeIndex < tabs.length - 1 ? `Next: ${label(activeIndex + 1)} →` : 'Next');
+    setNavigationLabel(back,activeIndex > 0 ? `← Back: ${label(activeIndex - 1)}` : 'Back');
     document.querySelector('#flow-progress').textContent = `Step ${activeIndex + 1} of ${tabs.length} · ${label(activeIndex)}`;
     window.dispatchEvent(new Event('fieldshift:tabchange'));
   }

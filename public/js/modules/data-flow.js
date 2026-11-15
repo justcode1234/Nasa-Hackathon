@@ -1,4 +1,6 @@
 import { el, list, number, table } from '../lib/dom.js';
+const monthLabel=(period,withYear=false)=>new Intl.DateTimeFormat('en',{month:'short',...(withYear?{year:'numeric'}:{}),timeZone:'UTC'}).format(new Date(`${period}-01T00:00:00Z`));
+export const displayUnits=units=>units==='C'?'°C':units;
 
 function chart(monthly, id, title, bars = false) {
   const ns = 'http://www.w3.org/2000/svg';
@@ -32,7 +34,7 @@ function chart(monthly, id, title, bars = false) {
     points = [];
   };
   values.forEach((value, i) => {
-    add('text', { x: x(i), y: 230, 'text-anchor': 'middle', 'font-size': 12 }, String(i + 1));
+    add('text', { x: x(i), y: 230, 'text-anchor': 'middle', 'font-size': 12 }, monthLabel(monthly[i].period));
     if (value === null) { flush(); return; }
     const partial = monthly[i].parameters[id].partial;
     if (bars) add('rect', { x: x(i) - 18, y: y(value), width: 36, height: Math.max(0, y(0) - y(value)), fill: partial ? '#9c6b20' : '#245a3a' });
@@ -48,21 +50,21 @@ function chart(monthly, id, title, bars = false) {
 export function renderEvidence(data) {
   const root = document.querySelector('#evidence-output');
   root.replaceChildren();
-  root.append(el('p', `NASA POWER · ${data.location.latitude}°, ${data.location.longitude}° · ${data.period.start} to ${data.period.end} (${data.period.timeStandard}). Retrieved ${data.retrievedAt}. ${data.cache.hit ? 'Served from this device’s six-hour cache; original retrieval time retained.' : 'Retrieved directly from NASA in this browser.'}`));
+  root.append(el('p', `NASA POWER · ${data.location.latitude}°, ${data.location.longitude}° · ${data.period.start} to ${data.period.end} (${data.period.timeStandard}). Retrieved ${data.retrievedAt}. ${data.cache.hit ? 'Cached response; original retrieval time retained.' : 'Retrieved from NASA.'}`));
   root.append(el('p', `Product: ${data.source.product}. Sources: ${data.source.products.join(', ')}. Values are estimated gridded observations. Latest non-missing day within this request: ${data.latestAvailableDate ?? 'none'}.`));
   const source = el('p');
   source.append(el('a', 'Open the exact NASA API response', { href: data.source.url, target: '_blank', rel: 'noreferrer' }));
   root.append(source);
-  root.append(table(['Parameter', 'Units', 'Nominal resolution (lat × lon)', 'Valid / requested days', 'Latest in requested period'],
-    Object.values(data.parameters).map(p => [p.label, p.units, `${p.resolution.latitudeDegrees}° × ${p.resolution.longitudeDegrees}°`,
-      `${p.validDays} / ${data.dates.length}`, p.latestAvailableDate ?? 'None']), 'Source metadata for every daily parameter'));
-  root.append(list(data.notices));
   root.append(chart(data.monthly, 'T2M', `Monthly mean air temperature (°C), ${data.period.start.slice(0, 4)}`));
   root.append(chart(data.monthly, 'PRECTOTCORR', `Monthly precipitation sum (mm), ${data.period.start.slice(0, 4)}`, true));
-  root.append(el('p', 'Charts: month numbers 1–12. Brown marks partial data; missing months remain blank. Table cells show value [valid/requested days]. Monthly air extremes are regional daily extremes. Solar is a monthly average of daily energy, not a monthly total.'));
+  root.append(table(['Parameter', 'Units', 'Nominal resolution (lat × lon)', 'Valid / requested days', 'Latest in requested period'],
+    Object.values(data.parameters).map(p => [p.label, displayUnits(p.units), `${p.resolution.latitudeDegrees}° × ${p.resolution.longitudeDegrees}°`,
+      `${p.validDays} / ${data.dates.length}`, p.latestAvailableDate ?? 'None']), 'Source metadata for every daily parameter'));
+  root.append(list(data.notices));
+  root.append(el('p', 'Brown marks partial data; missing months remain blank. Table cells show value [valid/requested days]. Monthly air extremes are regional daily extremes. Solar is a monthly average of daily energy, not a monthly total.'));
   const cell = (p, key) => `${number(p[key])} [${p.validDays}/${p.expectedDays}]${p.partial ? ' partial' : ''}`;
   root.append(table(['Month', 'Mean air (°C)', 'Lowest air (°C)', 'Highest air (°C)', 'Rain sum (mm)', 'Mean daily solar (MJ/m²/day)'],
-    data.monthly.map(m => [m.period, cell(m.parameters.T2M, 'mean'), cell(m.parameters.T2M_MIN, 'min'),
+    data.monthly.map(m => [monthLabel(m.period,true), cell(m.parameters.T2M, 'mean'), cell(m.parameters.T2M_MIN, 'min'),
       cell(m.parameters.T2M_MAX, 'max'), cell(m.parameters.PRECTOTCORR, 'sum'), cell(m.parameters.ALLSKY_SFC_SW_DWN, 'mean')]),
     'Monthly derived indicators — NASA POWER, with missingness'));
   const download = el('button', 'Download normalized evidence (JSON)', { type: 'button' });

@@ -14,7 +14,7 @@ import { answerConversation, questionTopic } from './agronomy/conversation.js';
 export const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://cdn.jsdelivr.net; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org; connect-src 'self' https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.hf.co https://power.larc.nasa.gov https://api.openstreetmap.org https://nominatim.openstreetmap.org https://api.gbif.org https://rest.isric.org; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://cdn.jsdelivr.net; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org; connect-src 'self' https://cdn.jsdelivr.net https://power.larc.nasa.gov https://overpass-api.de https://overpass.private.coffee https://nominatim.openstreetmap.org https://api.gbif.org https://rest.isric.org; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
 };
 
 export function createApiHandler({ getObservations = createPowerClient(), getFarms = createFarmClient(), getPlaces = createPlaceClient(), getPests = createPestClient(), getSoil = createSoilClient(), getLocations = createLocationClient() } = {}) {

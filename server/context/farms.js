@@ -11,6 +11,7 @@ export function locationInput(input) {
 }
 
 export function normalizeFarms(raw, center, retrievedAt) {
+  if (raw?.remark) throw new AppError('The field service returned an incomplete query. Retry the field search.', 502, 'CONTEXT_UNAVAILABLE');
   if (!Array.isArray(raw?.elements)) throw new AppError('Unrecognised OSM response.', 502, 'CONTEXT_SCHEMA');
   const nodes = new Map(raw.elements.filter(e => e.type === 'node').map(n => [n.id, [n.lon, n.lat]]));
   const farms = raw.elements.filter(e => e.type === 'way' && ['farmland', 'orchard', 'vineyard', 'plant_nursery'].includes(e.tags?.landuse)).flatMap(way => {
@@ -42,12 +43,19 @@ export function createFarmClient(options = {}) {
     // Quantise only the discovery search center for cache reuse, never NASA coordinates.
     const latitude = Math.round(center.latitude * 100) / 100, longitude = Math.round(center.longitude * 100) / 100;
     if (Math.abs(latitude) > 85 || Math.abs(longitude) > 179.98) throw new AppError('This bounded farmland search does not support the poles or antimeridian. Select a nearby place.');
-    const bbox = [longitude - .01, latitude - .01, longitude + .01, latitude + .01].map(v => v.toFixed(4)).join(',');
-    const url = `https://api.openstreetmap.org/api/0.6/map.json?bbox=${bbox}`;
-    const raw = await request(url);
-    const result = normalizeFarms(raw, { latitude, longitude }, new Date().toISOString());
-    return { ...result, sourceUrl: url, retrievedAt: raw._fieldshiftRetrievedAt ?? result.retrievedAt,
-      bounds: { south: latitude - .01, west: longitude - .01, north: latitude + .01, east: longitude + .01 } };
+    const bounds = { south: latitude - .02, west: longitude - .02, north: latitude + .02, east: longitude + .02 };
+    const bbox = [bounds.south, bounds.west, bounds.north, bounds.east].map(v => v.toFixed(4)).join(',');
+    const query = `[out:json][timeout:25];way["landuse"~"^(farmland|orchard|vineyard|plant_nursery)$"](${bbox});out meta geom;`;
+    for (const host of ['overpass-api.de', 'overpass.private.coffee']) {
+      const url = `https://${host}/api/interpreter?data=${encodeURIComponent(query)}`;
+      try {
+        const raw = await request(url, { timeoutMs: 25_000 });
+        const result = normalizeFarms(raw, { latitude, longitude }, new Date().toISOString());
+        return { ...result, sourceUrl: url, retrievedAt: raw._fieldshiftRetrievedAt ?? result.retrievedAt, bounds };
+      } catch (error) {
+        if (host === 'overpass.private.coffee') throw new AppError('Both field lookup services are unavailable or returned incomplete data. No fields were invented. Retry the field search.', 502, 'CONTEXT_UNAVAILABLE');
+      }
+    }
   };
 }
 

@@ -43,12 +43,28 @@
     {
       "id": "kai-lan",
       "name": "Kai lan",
-      "aliases": ["kai lan", "kai-lan", "kailan", "gai lan", "gai-lan", "chinese broccoli", "chinese kale"],
+      "aliases": [
+        "kai lan",
+        "kai-lan",
+        "kailan",
+        "gai lan",
+        "gai-lan",
+        "chinese broccoli",
+        "chinese kale"
+      ],
       "scientificName": "Brassica oleracea (Alboglabra Group)",
       "family": "Brassicaceae",
       "sourceCountry": "SG",
-      "sourceIds": ["nparks-leafy", "nparks-brassicas"],
-      "topicSourceIds": { "rotation": ["nparks-brassicas", "cornell-rotation"] },
+      "sourceIds": [
+        "nparks-leafy",
+        "nparks-brassicas"
+      ],
+      "topicSourceIds": {
+        "rotation": [
+          "nparks-brassicas",
+          "cornell-rotation"
+        ]
+      },
       "overview": "Kai lan is a leafy brassica in the Alboglabra group; its leaves and stems are used as vegetables.",
       "conditions": "NParks describes full sun, well-drained soil and moderate watering. This is Singapore gardening guidance, not a field-specific irrigation schedule.",
       "water": "NParks describes moderate watering for kai lan. That qualitative gardening guidance does not give an irrigation volume for your farm.",
@@ -60,9 +76,16 @@
     {
       "id": "rice",
       "name": "Rice",
-      "aliases": ["rice", "paddy"],
-      "itemIds": ["27"],
-      "sourceIds": ["irri-establishment"],
+      "aliases": [
+        "rice",
+        "paddy"
+      ],
+      "itemIds": [
+        "27"
+      ],
+      "sourceIds": [
+        "irri-establishment"
+      ],
       "referenceScope": "The IRRI reference describes establishment practices; it does not provide a planting calendar for every country.",
       "overview": "Rice can be established by direct seeding or transplanting. IRRI explains that planting time depends on the locality, variety, water availability and intended harvest time.",
       "conditions": "For rice, check the local variety, water availability and establishment method together. IRRI describes a prepared seedbed for establishment; a country name alone cannot establish a suitable planting date.",
@@ -73,10 +96,16 @@
     {
       "id": "wheat",
       "name": "Wheat",
-      "aliases": ["wheat"],
-      "itemIds": ["15"],
+      "aliases": [
+        "wheat"
+      ],
+      "itemIds": [
+        "15"
+      ],
       "sourceCountry": "US",
-      "sourceIds": ["umn-wheat"],
+      "sourceIds": [
+        "umn-wheat"
+      ],
       "referenceScope": "The cultivation reference describes Minnesota spring wheat; its calendar is not validated for other regions or wheat types.",
       "overview": "Wheat has spring and winter growth types. Their response to cold differs, so the wheat type matters before discussing planting dates.",
       "conditions": "Winter wheat needs a period of cold for normal development; spring wheat does not have the same cold requirement. Select a locally adapted type before applying a planting calendar.",
@@ -86,16 +115,28 @@
     {
       "id": "tomato",
       "name": "Tomato",
-      "aliases": ["tomato", "tomatoes"],
-      "itemIds": ["388"],
+      "aliases": [
+        "tomato",
+        "tomatoes"
+      ],
+      "itemIds": [
+        "388"
+      ],
       "sourceCountry": "US",
-      "sourceIds": ["umn-tomatoes"],
-      "referenceScope": "The cultivation reference is Minnesota home-garden guidance; local varieties and planting dates remain unverified.",
+      "sourceIds": [
+        "umn-tomatoes"
+      ],
+      "referenceScope": "Cultivation references cover Minnesota and South Carolina home gardens; local varieties and planting dates remain unverified.",
       "overview": "Tomatoes are warm-season, sun-loving plants. Bush and vining types differ in growth habit and harvest pattern.",
       "conditions": "UMN describes full sun and a frost-free growing period, with transplants set out after the soil warms. This is a general reference, not a local planting date.",
-      "harvest": "Bush tomatoes tend to ripen over a concentrated period; vining types continue flowering and fruiting while conditions permit. A local variety is needed to discuss days to harvest.",
+      "harvest": "Clemson gives 52-90 days to first harvest, depending on cultivar, without specifying seed or transplant timing. This is a reference range, not a local harvest forecast.",
       "rotation": "Tomatoes share a family group with potatoes, peppers and eggplants. The UMN gardening guide recommends rotating away from these related crops; the required local break still depends on pest history.",
-      "screeningEligible": false
+      "screeningEligible": true,
+      "topicSourceIds": {
+        "harvest": [
+          "clemson-tomato"
+        ]
+      }
     }
   ]
 }

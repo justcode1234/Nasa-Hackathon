@@ -35,6 +35,8 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     if (!countryCode && coordinates()) countryTimer = setTimeout(() => { ensureCountry(); }, 450);
     message('pest-status', 'Load country records for this selection. Country presence is not farm presence.');
     if (!preserveFields) {
+      $('find-farms').disabled = false;
+      $('find-farms').textContent = 'Find mapped fields around selection';
       farms = []; map.clearFarms();
       $('farm-results').replaceChildren(el('option', 'Load nearby fields first', { value: '' }));
       $('farm-results').disabled = true;
@@ -113,6 +115,7 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     if (!position) return message('farms-status', 'Choose a place or coordinate first.', true);
     const version = token;
     $('find-farms').disabled = true;
+    $('find-farms').textContent = 'Finding mapped fields…';
     message('farms-status', 'Loading community-mapped farmland in a small area around this point…');
     try {
       const data = await request(`/api/farms?${new URLSearchParams(position)}`);
@@ -123,8 +126,12 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
       $('farm-results').disabled = !farms.length;
       message('farms-status', `${farms.length} mapped fields returned. OSM data retrieved ${data.retrievedAt}. Coverage is incomplete; this is not land available for use.`);
       $('farm-details').replaceChildren(list(data.notices));
-    } catch (error) { if (version === token) message('farms-status', error.message, true); }
-    finally { $('find-farms').disabled = false; }
+      $('find-farms').textContent = 'Find mapped fields around selection';
+    } catch (error) { if (version === token) {
+      message('farms-status', error.message, true);
+      $('find-farms').textContent = 'Retry mapped field search';
+    } }
+    finally { if(version===token)$('find-farms').disabled = false; }
   }
   async function selectFarm(id, options = {}) {
     const farm = farms.find(f => f.id === id);

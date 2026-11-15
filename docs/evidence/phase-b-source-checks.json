@@ -1,0 +1,91 @@
+[
+  {
+    "id": "clemson-tomato",
+    "url": "https://hgic.clemson.edu/factsheet/tomato/",
+    "status": 200,
+    "retrievedAt": "2026-11-15T03:57:52.493Z",
+    "verifiedFacts": {
+      "maturityDays": [
+        52,
+        90
+      ],
+      "soilPh": [
+        6,
+        6.5
+      ],
+      "startBasis": "not specified"
+    }
+  },
+  {
+    "id": "clemson-cabbage",
+    "url": "https://hgic.clemson.edu/factsheet/cabbage-chinese-cabbage/",
+    "status": 200,
+    "retrievedAt": "2026-11-15T03:57:53.132Z",
+    "verifiedFacts": {
+      "maturityDays": [
+        60,
+        80
+      ],
+      "startBasis": "after transplanting",
+      "soilPh": [
+        5.8,
+        6.5
+      ],
+      "idealAirF": [
+        60,
+        65
+      ]
+    }
+  },
+  {
+    "id": "clemson-onion",
+    "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+    "status": 200,
+    "retrievedAt": "2026-11-15T03:57:53.777Z",
+    "verifiedFacts": {
+      "soilPh": [
+        6.2,
+        6.5
+      ],
+      "section": "Onions - Soil"
+    }
+  },
+  {
+    "id": "usu-onion",
+    "url": "https://extension.usu.edu/yardandgarden/research/onions-in-the-garden",
+    "status": 200,
+    "retrievedAt": "2026-11-15T03:57:54.613Z",
+    "verifiedFacts": {
+      "bulbMaturityDays": [
+        100,
+        120
+      ],
+      "greenOnionsExcluded": true
+    }
+  },
+  {
+    "id": "ncsu-seasons",
+    "url": "https://content.ces.ncsu.edu/home-vegetable-gardening-a-quick-reference-guide",
+    "status": 200,
+    "retrievedAt": "2026-11-15T03:57:55.916Z",
+    "verifiedFacts": {
+      "hardy": [
+        "cabbage",
+        "onion"
+      ],
+      "frostTender": [
+        "tomato"
+      ],
+      "scope": "North Carolina reference seasons"
+    }
+  },
+  {
+    "id": "ncsu-onion",
+    "url": "https://plants.ces.ncsu.edu/plants/allium-cepa/",
+    "status": 200,
+    "retrievedAt": "2026-11-15T03:57:57.056Z",
+    "verifiedFacts": {
+      "family": "Amaryllidaceae"
+    }
+  }
+]

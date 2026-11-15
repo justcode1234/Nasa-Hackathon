@@ -5,8 +5,9 @@ Written for Codex (and the team) to continue. Source: a Claude Code review of co
 verification). **Phase A is now implemented and verified** (app source 70eafb1):
 95 offline tests, 32 local Playwright cases and 16 public cases passed. The review
 baseline was 8b53619 with 95/95 tests. B4 licence/credit delivery was pulled forward
-to give A6 a working link. Other Phase B/C items remain proposed until built and
-verified; see section 10 of AGENTS.md and the phase-a reports in docs/evidence.
+to give A6 a working link. Phase B is implemented but its live field tests fail (36/44 browser cases pass);
+V0 is measured and awaits dependency approval. V1-V5 remain proposed. See
+docs/3d-feasibility.md and the phase-b reports; see section 10 of AGENTS.md and the phase-a reports in docs/evidence.
 
 ## 0. Deadline and order of work
 

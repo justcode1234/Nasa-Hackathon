@@ -16,8 +16,8 @@ test('short zoom and landscape viewports retain sixty percent usable height',asy
   const measurements=[];
   for(const [width,height] of [[683,384],[640,360],[844,390]]){
     await page.setViewportSize({width,height});await page.goto('/',{waitUntil:'domcontentloaded'});
-    await page.getByRole('combobox',{name:'Country',exact:true}).selectOption('SG');
-    await expect(page.locator('#catalog-status')).toContainText('Singapore');
+    await page.getByRole('combobox',{name:'Country',exact:true}).selectOption('KH');
+    await expect(page.locator('#catalog-status')).toContainText('Cambodia');
     await page.getByRole('tab',{name:/03.*Plan crops/}).click();
     await page.evaluate(()=>window.scrollTo(0,document.querySelector('main').offsetTop));
     const metric=await page.evaluate(()=>{const bar=document.querySelector('.workflow-navigation').getBoundingClientRect();return{width:innerWidth,height:innerHeight,usableFraction:(innerHeight-Math.max(0,Math.min(innerHeight,bar.bottom)-Math.max(0,bar.top)))/innerHeight,bodyOverflow:getComputedStyle(document.body).overflowY,mainOverflow:getComputedStyle(document.querySelector('main')).overflowY,horizontalOverflow:document.documentElement.scrollWidth>innerWidth};});
@@ -31,10 +31,10 @@ test('short zoom and landscape viewports retain sixty percent usable height',asy
 });
 
 test('every example region returns at least three complete mapped fields',async({page})=>{
-  test.setTimeout(120_000);await page.goto('/',{waitUntil:'domcontentloaded'});
+  test.setTimeout(240_000);await page.goto('/',{waitUntil:'domcontentloaded'});
   for(const point of ['52.19,0.09','-31.89,116.77','42,-93.69','-0.77,36.42']){
     await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption(point);
-    await expect.poll(async()=>page.locator('#farm-results option[value]:not([value=""])').count(),{timeout:30_000}).toBeGreaterThanOrEqual(3);
+    await expect.poll(async()=>page.locator('#farm-results option[value]:not([value=""])').count(),{timeout:60_000}).toBeGreaterThanOrEqual(3);
   }
 });
 
@@ -46,6 +46,7 @@ test('the submission fixture is enterable and reproduces the three live-engine s
   await expect(page.locator('#evidence-status')).toContainText('Historical evidence loaded',{timeout:45_000});
   await page.getByRole('button',{name:/Next: Plan crops/}).click();
   for(let i=0;i<3;i++)await page.getByRole('combobox',{name:['First crop','Second crop','Third crop'][i],exact:true}).selectOption(fixture.inputs.baseline[i]);
+  for(const choice of await page.locator('[name=allowedCrops]').all())await choice.setChecked(fixture.inputs.allowedCrops.includes(await choice.inputValue()));
   await page.getByRole('spinbutton',{name:'Planning year',exact:true}).fill(String(fixture.inputs.planningYear));
   await page.getByRole('combobox',{name:'First planting month',exact:true}).selectOption(String(fixture.inputs.startMonth));
   await page.getByRole('button',{name:'Compare baseline and two alternatives',exact:true}).click();

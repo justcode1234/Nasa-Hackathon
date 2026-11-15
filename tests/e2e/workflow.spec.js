@@ -5,7 +5,7 @@ async function country(page, code) {
   await page.locator('#pest-country').selectOption(code);
   await expect(page.locator('#country-status')).toContainText('crop production categories');
   await expect(page.locator('#place-region')).toBeEnabled();
-  await expect(page.locator('#catalog-status')).toContainText(code==='AU'?'Australia':'Singapore');
+  await expect(page.locator('#catalog-status')).toContainText(code==='AU'?'Australia':'Cambodia');
 }
 async function selectPoint(page) {
   await country(page,'AU');
@@ -24,7 +24,7 @@ test.beforeEach(async({page})=>{
 test.afterEach(async({page})=>{expect(pageErrors.get(page),'No uncaught browser errors').toEqual([]);});
 
 test('zero coverage explains the block beside Next and recovers without erasing farmer inputs',async({page},info)=>{
-  await country(page,'SG');await page.locator('#tab-si').click();
+  await country(page,'KH');await page.locator('#tab-si').click();
   const values=await page.locator('#baseline-1 option').evaluateAll(nodes=>nodes.filter(n=>n.value).slice(0,3).map(n=>n.value));
   expect(values.length).toBeGreaterThan(0);
   for(let i=1;i<=3;i++)await page.locator('#baseline-'+i).selectOption(values[(i-1)%values.length]);
@@ -35,7 +35,7 @@ test('zero coverage explains the block beside Next and recovers without erasing 
   // Exercise the user's actual failing click before checking any new helper UI.
   await page.locator('#flow-next').click();
   await expect(page.locator('#location')).toBeVisible();await expect(page.locator('#pest-country')).toBeFocused();
-  await expect(page.locator('#pest-country')).toHaveValue('SG');
+  await expect(page.locator('#pest-country')).toHaveValue('KH');
   await page.locator('#tab-si').click();
   await expect(page.locator('#allowed-crop-status')).toContainText('No alternatives are available');
   await page.locator('main').evaluate(node=>node.scrollTop=node.scrollHeight);
@@ -72,7 +72,7 @@ test('Next and Compare both complete a real baseline comparison and invalidate s
   await page.locator('#flow-back').click();await page.locator('#priority').selectOption('water');
   await expect(page.locator('.scenario')).toHaveCount(0);await page.locator('#compare').click();
   await expect(page.locator('#strategy')).toBeVisible();await expect(page.locator('.scenario')).toHaveCount(3);
-  await page.locator('#tab-location').click();await country(page,'SG');
+  await page.locator('#tab-location').click();await country(page,'KH');
   await expect(page.locator('#latitude')).toHaveValue('');await expect(page.locator('#evidence-output')).toBeEmpty();
   await expect(page.locator('.scenario')).toHaveCount(0);await expect(page.locator('#compare')).toBeDisabled();
 });

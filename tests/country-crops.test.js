@@ -12,7 +12,8 @@ test('country choices are sourced production records, never a global fallback', 
   assert.ok(!gb.screeningCropIds.includes('sweet-corn'));
   assert.deepEqual(getCountryCrops({ country: '' }).choices, []);
   assert.deepEqual(getCountryCrops({ country: 'AQ' }).choices, []);
-  assert.deepEqual(getCountryCrops({ country: 'SG' }).screeningCropIds, []);
+  assert.deepEqual(getCountryCrops({ country: 'SG' }).screeningCropIds, ['cabbage','tomato']);
+  assert.deepEqual(getCountryCrops({ country: 'KH' }).screeningCropIds, []);
   assert.throws(() => getCountryCrops({ country: 'Australia' }));
   assert.ok(au.records.every(r => r.tonnes > 0 && r.units === 't' && r.year >= 2020 && r.year <= 2024 && r.flagDescription));
   assert.ok(au.source.archiveSha256 && au.source.retrievedAt && au.source.license);

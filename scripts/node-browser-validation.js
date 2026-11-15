@@ -43,7 +43,7 @@ try {
   await evaluate('document.querySelector("#place-region").value="__all__";document.querySelector("#place-region").dispatchEvent(new Event("change",{bubbles:true}));');
   await waitFor('[...document.querySelector("#place-town").options].some(o=>o.textContent.startsWith("Cambridge ·"))');
   await evaluate('const t=document.querySelector("#place-town");t.value=[...t.options].find(o=>o.textContent.startsWith("Cambridge ·")).value;t.dispatchEvent(new Event("change",{bubbles:true}));');
-  await waitFor('document.querySelectorAll("[name=allowedCrops]").length===2');
+  await waitFor('document.querySelectorAll("[name=allowedCrops]").length===5');
   assert.ok(apiRequests.includes('/api/locations?country=GB'));
   assert.notEqual(await evaluate('document.querySelector("#latitude").value'), '');
   check('Node serves the sourced country town dropdown and choosing Cambridge sets the location');

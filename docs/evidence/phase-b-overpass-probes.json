@@ -1,0 +1,26 @@
+[
+  {
+    "latitude": 52.19,
+    "longitude": 0.09,
+    "error": "Both field lookup services are unavailable or returned incomplete data. No fields were invented. Retry the field search.",
+    "elapsedMs": 50027
+  },
+  {
+    "latitude": -31.89,
+    "longitude": 116.77,
+    "error": "Both field lookup services are unavailable or returned incomplete data. No fields were invented. Retry the field search.",
+    "elapsedMs": 50017
+  },
+  {
+    "latitude": 42,
+    "longitude": -93.69,
+    "error": "Both field lookup services are unavailable or returned incomplete data. No fields were invented. Retry the field search.",
+    "elapsedMs": 25784
+  },
+  {
+    "latitude": -0.77,
+    "longitude": 36.42,
+    "error": "Both field lookup services are unavailable or returned incomplete data. No fields were invented. Retry the field search.",
+    "elapsedMs": 50016
+  }
+]

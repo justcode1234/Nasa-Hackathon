@@ -245,3 +245,36 @@ LLM benchmarks and training are deferred until evidence and suitable labels exis
   No crop fact may be added without a source.
 - A partial implementation draft was reverted so main stays green. The plan file is
   the authoritative specification.
+
+## Phase B checkpoint - 2026-11-15
+
+Work is isolated on feature/review-phase-b. Production stays frozen at f4c4fef.
+Seven sourced screening crops now cover 166/197 countries. Generic maize, Napa
+cabbage and green onions remain distinct. Results/evidence wording, archived unused
+workers, tighter CSP, favicon/arrows and axe licence delivery are implemented.
+CSS consolidation produced identical computed styles/geometry and pixel-identical
+initial/planning screenshots at 1366x768, 1280x1000 and 390x844.
+
+Executed: 99 offline tests pass. The first focused desktop run passed axe in all five
+states and actual model-on Q01/Q03/Q16; the human field path failed. Overpass has
+25-second timeouts, one fallback, partial-response rejection and visible retry, but
+real probes failed for all four examples on both providers. The full release suite
+is running; failed live fields must stay red. No fabricated replacement fields or
+production deployment. V0-only MapLibre feasibility measurements may proceed; the
+application dependency and V1 still need the plan's explicit approval.
+
+## Verified Phase B / V0 checkpoint - 15 November 2026
+
+`npm.cmd run test:release` exited 1: 99/99 offline pass; 36/44 Playwright pass,
+8 fail, 0 skipped/flaky. All failures are live field selection/example checks on
+both runtimes and viewports. All 20 axe scans and model-on Q01/Q03/Q16 in all four
+projects pass. An additional four field transport-failure/retry UI tests pass.
+Raw reports: docs/evidence/phase-b-playwright-local.json and phase-b-playwright-retry.json.
+No Phase B behavior release or deployment is authorized while the gate is red.
+Production remains f4c4fef. The source/PDF submission artifacts remain the frozen
+Phase A version; regenerate them only for a qualified later release.
+
+V0 has measured real globe/terrain rendering, source metadata, native POWER centres
+and WebGL-disabled fallback; see docs/3d-feasibility.md. It downloads pinned renderer
+files only into ignored artifacts, never public or package.json. Approval of the
+application dependency is pending. V1-V5 remain unimplemented.

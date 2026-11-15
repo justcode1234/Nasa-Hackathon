@@ -7,10 +7,12 @@ export function findCrop(value) {
 
 export function mentionedCrops(question) {
   const text = String(question).toLowerCase();
-  return catalog.crops.filter(crop => [crop.id, crop.name.toLowerCase(), ...crop.aliases].some(alias => {
+  return catalog.crops.filter(crop => {
+    const scoped = crop.id==='cabbage' ? text.replace(/\b(?:chinese|napa)[ -]+cabbages?\b|\b(?:bok[ -]+choy|pak[ -]+choi)\b/g,' ') : crop.id==='onion' ? text.replace(/\b(?:green|spring|welsh|bunching)[ -]+onions?\b|\bscallions?\b/g,' ') : text;
+    return [crop.id, crop.name.toLowerCase(), ...crop.aliases].some(alias => {
     const escaped = alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return new RegExp(`\\b${escaped}\\b`, 'i').test(text);
-  }));
+    return new RegExp(`\\b${escaped}\\b`, 'i').test(scoped);
+  });});
 }
 
 export const nonSweetCornQuestion = question => /\b(?:grain|field|dent|flint|silage)\s+(?:corn|maize)\b|\b(?:corn|maize)\s+(?:for\s+)?grain\b|\b(?:popcorn|fieldcorn|graincorn)\b/i.test(String(question).replace(/[-_]/g,' '));

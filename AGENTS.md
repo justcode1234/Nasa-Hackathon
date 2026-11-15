@@ -188,6 +188,9 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 
 ## 10. Current implementation and cross-device handoff - 2026-11-15
 
+- **Phase B implemented but release blocked on feature/review-phase-b:** seven sourced crops cover 166/197 countries; 99 offline tests pass. Results/evidence wording, archived workers, tighter CSP, arrow semantics, axe licence and pixel-identical CSS cleanup are implemented. Full release: 36/44 Playwright cases pass, with all 8 failures at live Overpass field lookup; zero skips/flaky results. All 20 axe state scans and 12 model-on QA executions pass. Four additional transport-failure/retry UI cases pass after the full run. Production stays at f4c4fef; no Phase B deployment. Raw results: docs/evidence/phase-b-playwright-local.json and phase-b-playwright-retry.json.
+- **Phase C V0 measured, approval pending:** isolated MapLibre 5.24.0 experiment (not an app dependency) is under experiments/3d-v0; run node scripts/3d-v0-spike.js. JS+CSS are 1.13 MB raw / 287 KB gzip; desktop cold interactive 1.73 s, pan 60 fps, max sampled browser working set 620.5 MB on RTX 5060 Ti. Real phone and combined model memory remain unmeasured. Native POWER regional centres and the fixture SRTM tile were verified; a WebGL-disabled phone-size fallback passed. docs/3d-feasibility.md links screenshots, raw results and remaining gates. An explicit dependency question is pending; do not begin V1 before the answer.
+
 Update this section and docs/decisions.md / docs/validation.md after each substantive
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
@@ -365,7 +368,7 @@ state. Do not leave another device relying on an earlier planning assumption.
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry
-it out. **Status: Phase A released and verified; Phase B/C pending.** The review
+it out. **Status: Phase A released; Phase B implemented but live field verification fails; V0 measured and awaits approval.** The review
 baseline was 8b53619, where
 `npm test` passed 95/95 and `npm run test:e2e` passed 16/16 locally. Detail, evidence,
 exact file locations, verified source quotes and ready-to-apply crop entries are in

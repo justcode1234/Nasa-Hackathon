@@ -3,7 +3,7 @@ import { initMap } from './modules/map.js';
 import { renderEvidence } from './modules/data-flow.js';
 import { renderStrategy } from './modules/strategy.js';
 import { renderCatalog, updateCropChoices } from './modules/si.js';
-import { initTabs } from './lib/tabs.js';
+import { initTabs, setNavigationLabel } from './lib/tabs.js';
 import { initContext } from './modules/context.js';
 import { initChat } from './modules/chat.js';
 import { resolveCropInput } from './modules/workflow-assistant.js';
@@ -44,7 +44,7 @@ function syncControls() {
   $('#flow-blocker').hidden = !planning || gate.ready;
   $('#flow-blocker').textContent = gate.ready ? '' : gate.message;
   $('#flow-next').disabled = planning && (gate.code === 'catalog' || comparing);
-  if (planning) $('#flow-next').textContent = comparing ? 'Comparing…' : gate.label;
+  if (planning) setNavigationLabel($('#flow-next'),comparing ? 'Comparing…' : gate.label);
   $('#flow-next').setAttribute('aria-describedby', planning && !gate.ready ? 'flow-blocker' : 'flow-progress');
 }
 function getComparisonReadiness() {

@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.65.1",
+    "axe-core": "4.10.2",
     "esbuild": "0.28.2"
   }
 }

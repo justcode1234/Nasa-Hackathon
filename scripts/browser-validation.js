@@ -181,8 +181,8 @@ try {
   await screenshot('desktop-location-picker');
   assert.ok(await evaluate('[...document.querySelector("#baseline-1").options].some(o=>o.value==="unassessed:fao-27")'));
   await fill('#baseline-1', 'sweet-corn');
-  await evaluate('document.querySelector("#pest-country").value="SG";document.querySelector("#pest-country").dispatchEvent(new Event("change",{bubbles:true}));');
-  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Singapore:") && document.querySelector("#place-town").options.length > 1');
+  await evaluate('document.querySelector("#pest-country").value="KH";document.querySelector("#pest-country").dispatchEvent(new Event("change",{bubbles:true}));');
+  await waitFor('document.querySelector("#catalog-status").textContent.startsWith("Cambodia:") && document.querySelector("#place-town").options.length > 1');
   assert.equal(await evaluate('document.querySelector("#latitude").value'), '');
   assert.equal(await evaluate('document.querySelector("#place-town").value'), '');
   assert.equal(await evaluate('document.querySelectorAll("[name=allowedCrops]").length'), 0);
@@ -201,7 +201,7 @@ try {
   check('place-name search returns real Nominatim place choices');
   await evaluate('(() => { const s=document.querySelector("#example-location"); s.value="52.19,0.09"; s.dispatchEvent(new Event("change", {bubbles:true})); })()');
   await waitFor('document.querySelector("#farm-results").options.length > 1');
-  await waitFor('document.querySelectorAll("[name=allowedCrops]").length === 2');
+  await waitFor('document.querySelectorAll("[name=allowedCrops]").length === 5');
   assert.ok(await evaluate('![...document.querySelector("#baseline-1").options].some(o=>o.value==="unassessed:fao-27")'));
   await evaluate('(() => { const s=document.querySelector("#farm-results"); s.selectedIndex=1; s.dispatchEvent(new Event("change", {bubbles:true})); })()');
   assert.match(await evaluate('document.querySelector("#farm-details").textContent'), /OSM last edited/);
@@ -212,7 +212,7 @@ try {
   assert.match(await evaluate('document.querySelector("#evidence-output").textContent'), /MJ\/m\^2\/day/);
   check('real NASA year loads with units, source timestamps, daily metadata, monthly charts and tables');
   await evaluate('document.querySelector("#tab-si").click()');
-  await waitFor('document.querySelectorAll("[name=allowedCrops]").length === 2');
+  await waitFor('document.querySelectorAll("[name=allowedCrops]").length === 5');
   await fill('#baseline-1', 'bush-bean'); await fill('#baseline-2', 'pea'); await fill('#baseline-3', 'bush-bean');
   await evaluate('document.querySelector("#load-pests").click()');
   await waitFor('document.querySelector("#pest-status").textContent.startsWith("Country context loaded")');

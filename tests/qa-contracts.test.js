@@ -40,10 +40,10 @@ test('QA F02: India rice and wheat retain unknown scientific fields while its sc
   }
 });
 
-test('QA F03/R2: Singapore and Brazil cannot bypass missing screening coverage through the API', async () => {
+test('QA F03/R2: Countries without sufficient rules cannot bypass missing screening coverage through the API', async () => {
   let requests = 0;
   const api = createApiHandler({ getObservations: async () => { requests++; throw new Error('Must validate country coverage first'); } });
-  for (const country of ['SG', 'BR']) {
+  for (const country of ['KH', 'BI']) {
     assert.deepEqual(getCountryCrops({ country }).screeningCropIds, []);
     await assert.rejects(api({ method: 'POST', url: new URL('https://test.invalid/api/compare'), readJson: async () => ({ ...input(), country }) }), /selected country/);
   }
@@ -83,7 +83,7 @@ test('QA M10: all priorities retain the same hard warnings and disclose their ac
   }
   assert.match(results[1].ranking.orderedCriteria[5], /zero-rain run/);
   assert.match(results[2].ranking.orderedCriteria[5], /maturity/);
-  assert.match(results[3].ranking.orderedCriteria[5], /Pea days/);
+  assert.match(results[3].ranking.orderedCriteria[5], /Days above cited ideal/);
 });
 
 test('QA M11: irrigation availability alone cannot become sufficiency or calculated water savings', () => {

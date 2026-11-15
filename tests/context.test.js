@@ -29,9 +29,27 @@ test('bounded farm requests validate coordinates, use a fixed host, and cache or
   const input = { latitude: 52.19, longitude: .09 };
   const first = await client(input), second = await client(input);
   assert.equal(calls, 1); assert.equal(first.retrievedAt, second.retrievedAt);
-  assert.ok(requested.startsWith('https://api.openstreetmap.org/api/0.6/map.json?bbox='));
+  const url = new URL(requested);
+  assert.equal(url.hostname,'overpass-api.de');
+  assert.match(url.searchParams.get('data'), /\[timeout:25\].*\(52\.1700,0\.0700,52\.2100,0\.1100\);out meta geom;/);
+  assert.deepEqual(first.bounds,{south:52.19-.02,west:.09-.02,north:52.19+.02,east:.09+.02});
   await assert.rejects(client({ latitude: 90, longitude: 0 }));
   await assert.rejects(client({ latitude: '', longitude: 0 }));
+});
+test('field lookup falls back once and rejects partial Overpass responses',async()=>{
+  const calls=[];
+  const client=createFarmClient({fetchImpl:async(url,options)=>{
+    calls.push(new URL(url).hostname);assert.ok(options.signal);
+    return{ok:true,json:async()=>calls.length===1?{elements:[],remark:'runtime error: timeout'}:osm()};
+  }});
+  const result=await client({latitude:42,longitude:-93.69});
+  assert.deepEqual(calls,['overpass-api.de','overpass.private.coffee']);assert.equal(result.farms.length,2);
+  assert.equal(new URL(result.sourceUrl).hostname,'overpass.private.coffee');
+  let failures=0;
+  const unavailable=createFarmClient({fetchImpl:async()=>{failures++;throw Error('TEST transport failure');}});
+  await assert.rejects(unavailable({latitude:1,longitude:2}),/Both field lookup services.*No fields were invented/);
+  assert.equal(failures,2);
+  assert.throws(()=>normalizeFarms({elements:[],remark:'partial data'}, {}, 'TEST'),/incomplete query/);
 });
 test('context errors do not become empty success records', async () => {
   const request = createCachedJson({ fetchImpl: async () => ({ ok: false, status: 503 }) });

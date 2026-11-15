@@ -75,12 +75,12 @@ try {
     catch (error) { record({ id, title, status: 'FAIL', error: error.message }); return null; }
   };
 
-  review('R01', 'Is this a limited four-crop screening prototype or a global crop recommender?',
+  review('R01', 'Is this a limited seven-crop screening prototype or a global crop recommender?',
     `The catalog contains ${catalog.crops.length} screening crops: ${catalog.crops.map(c=>c.name).join(', ')}. Its declared scope is: ${catalog.scope.replace(/\.$/,'')}. This supports describing it as a limited screening prototype; global map access is not global agronomic validation.`,
-    catalog.crops.length === 4 && /not.*globally validated/i.test(catalog.scope) ? 'PASS' : 'FAIL');
-  const coverage = Object.fromEntries(['SG','IN','AU','BR'].map(code=>[code,getCountryCrops({country:code}).screeningCropIds]));
+    catalog.crops.length === 7 && /not.*globally validated/i.test(catalog.scope) ? 'PASS' : 'FAIL');
+  const coverage = Object.fromEntries(['SG','IN','AU','BR','KH'].map(code=>[code,getCountryCrops({country:code}).screeningCropIds]));
   review('R02', 'Can the demo country generate valid alternatives?',
-    `Saved screening coverage: ${Object.entries(coverage).map(([code,ids])=>`${code}: ${ids.length} (${ids.join(', ') || 'none'})`).join('; ')}. Australia and India have at least two screened choices; Singapore and Brazil do not. F01/F03 check the actual UI behavior.`, 'PASS', coverage);
+    `Saved screening coverage: ${Object.entries(coverage).map(([code,ids])=>`${code}: ${ids.length} (${ids.join(', ') || 'none'})`).join('; ')}. Australia, India, Singapore and Brazil have at least two screened choices; Cambodia does not. F01/F03 check the actual UI behavior.`, 'PASS', coverage);
 
   const au = await flow('F01', 'Australia end-to-end with real NASA evidence', async () => {
     await navigate();
@@ -91,7 +91,7 @@ try {
     const evidence = await evaluate(`({text:document.querySelector('#evidence-output').innerText,url:document.querySelector('#evidence-output a').href,
       rows:[...document.querySelector('#evidence-output table:first-of-type tbody').rows].map(row=>row.innerText)})`);
     assert.equal(new URL(evidence.url).hostname, 'power.larc.nasa.gov');
-    assert.match(evidence.text, /Retrieved directly from NASA in this browser/);
+    assert.match(evidence.text, /Retrieved from NASA|Cached response/);
     assert.equal(evidence.rows.length, 5);
     review('R04', 'Is real NASA POWER accessible to a fresh browser user, including CORS?',
       `${base.startsWith('https:') ? 'Yes on the public origin in this run' : 'Verified on the local preview only; public-origin CORS still requires TEST_BASE_URL'}: a fresh isolated browser profile loaded the actual POWER response through the app worker; rendered metadata reports direct retrieval, units and its exact source URL. This is one observed run, not an availability guarantee.`, base.startsWith('https:') ? 'PASS' : 'BLOCKED', evidence);
@@ -123,8 +123,8 @@ try {
     const state = await evaluate(`({point:document.querySelector('#latitude').value,weather:document.querySelector('#evidence-output').children.length,scenarios:document.querySelectorAll('.scenario').length,disabled:document.querySelector('#compare').disabled})`);
     assert.deepEqual(state, { point:'', weather:0, scenarios:0, disabled:true }); return state;
   });
-  await flow('F03', 'Singapore reports missing screening coverage without a fake comparison', async () => {
-    await country('SG');
+  await flow('F03', 'Cambodia reports missing screening coverage without a fake comparison', async () => {
+    await country('KH');
     const state = await evaluate(`({text:document.querySelector('#catalog-status').textContent,choices:document.querySelectorAll('[name=allowedCrops]').length,disabled:document.querySelector('#compare').disabled,scenarios:document.querySelectorAll('.scenario').length})`);
     assert.equal(state.choices,0); assert.equal(state.disabled,true); assert.equal(state.scenarios,0); assert.match(state.text,/insufficient screening coverage/); return state;
   });

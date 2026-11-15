@@ -1,5 +1,23 @@
 # Sources and scientific scope
 
+## Phase B branch: sourced expansion and read-service migration - 15 November
+
+The local preview branch has seven screening crops and 166/197 comparable countries;
+production remains the Phase A four-crop release. Tomato: Clemson 52-90 days to first
+harvest, starting method unspecified, pH 6-6.5. Head cabbage: Clemson 60-80 days after
+transplanting, pH 5.8-6.5, ideal air 60-65 F. Bulb onion: USU 100-120 days, start basis
+unspecified; Clemson Onions/Soil pH 6.2-6.5; NC State Amaryllidaceae taxonomy. These
+are regional US reference bounds, not local calendars or globally validated advice.
+Napa/Chinese cabbage and green onions are excluded from the new crop aliases.
+New sources and live HTTP checks: docs/evidence/phase-b-source-checks.json.
+
+The branch replaces the OSM editing API with bounded Overpass reads (25-second
+requests, one fallback, +/-0.02-degree box, one-day cache, complete closed ways only).
+Both services failed live probes on this device. Do not treat the historical Phase A
+field counts below as successful Overpass verification. The failed live field tests
+block a Phase B behavior release; retry remains visible and no fields are substituted.
+
+
 ## Example-region verification — 15 November 2026
 
 The Ames example now uses 42.00°, −93.69° (farmland west of Ames), returning 11
