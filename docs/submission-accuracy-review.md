@@ -27,6 +27,13 @@ returned 200 without authentication. Public core assets match `main` by SHA-256;
 see [public links](evidence/repository-review-public-links.json) and
 [asset comparison](evidence/repository-review-production-assets.json).
 
+Review commit `7c2f80f` is pushed to `origin/review/submission-accuracy`. Its README
+and report return 200 without login. After pushing, remote main still resolves to
+`f4c4fef`, production HTML has the same hash, and the GitHub deployment query for
+the review SHA contains no records. The branch's automatic deployment is disabled;
+no deploy or merge command was executed. This query is supporting evidence, not a
+complete Vercel account inventory. [Publication checkpoint](evidence/repository-review-publication.json).
+
 ## Overall assessment of the supplied summary and details
 
 The user's summary/details are broadly consistent with the public prototype and
@@ -171,5 +178,5 @@ was run as part of this documentation review.
   restrictions are distinct external limitations; never substitute fabricated results.
 - Real phones, Safari/WebKit, real microphone recognition, audible read-aloud,
   exact session memory peaks and independent agronomic validation are unverified.
-- Changes are local on a separate branch. Production and the NASA submission stay
+- Changes are on the separate review branch. Production and the NASA submission stay
   unchanged until the owner explicitly authorizes an appropriate action.

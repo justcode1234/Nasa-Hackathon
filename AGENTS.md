@@ -220,7 +220,11 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   fields but isSubmitted/projectSubmitted false. Source checks: 35/45 direct GETs
   reachable, eight 403 restrictions and two connection/redirect failures; official
   UF/IFAS PDF and UMN maturity table separately retrieved. This review branch's
-  automatic Git deployment is disabled; it may be pushed for review. No merge,
+  automatic Git deployment is disabled. Review changes were committed as 7c2f80f
+  and pushed to origin/review/submission-accuracy; README/report are publicly
+  accessible without login. A documentation-only publication checkpoint follows
+  that commit. Remote main and production HTML remained unchanged after the push;
+  see docs/evidence/repository-review-publication.json. No merge,
   deployment or portal edit is authorized/performed. It inherits feature code:
   do not merge it into main merely to adopt docs. Outstanding user reports (AX empty crop/chat explanation,
   Singapore country/region flow, navigation/chat overlap, three chat examples)
