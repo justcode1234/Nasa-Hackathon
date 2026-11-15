@@ -88,3 +88,33 @@ TTS model is claimed. The public NASA record at 22:09 UTC+8 reports submission a
 
 No dependency was added. Real phones, real microphone/accent/noise quality,
 audible read-aloud, Safari and independent agronomic validation remain unverified.
+
+## Continuation checkpoint - 15 November 2026, about 23:05 UTC+8 (Claude Code session)
+
+- **Final gate result:** the full run started as session 6649 finished at 22:48 with
+  **128/128 offline and 152/152 browser cases**, 38 per project, 0 skipped, 0 flaky.
+  Evidence: docs/evidence/merged-release-final-gate-summary.json (+ raw .json.gz and
+  .log.gz). All 60 files in merged-release-application-source.json were re-hashed after
+  the run and match. `npm test` was re-run afterwards: 128/128.
+- **Authorisation checked:** the Codex session log holds the user's messages "just
+  merge all and i should have just 1 branch now" and "Deploy after all release checks
+  pass".
+- **Merged locally, NOT pushed:** local `main` is merge commit b094f40 (feature branch
+  949d4c7 merged with --no-ff; identical content). `origin/main` is still f4c4fef and
+  production still serves Phase A. `git push origin main` was refused by the Claude
+  Code permission check because that approval was not given in that session. No
+  workaround was attempted.
+- **To finish (needs the user's go-ahead in the active session):**
+  1. `vercel whoami` = justcode1234; project nasa-hackathon (verified 23:00).
+  2. `git push origin main`; wait for the production deployment to be Ready.
+  3. From main: `TEST_BASE_URL=https://nasa-hackathon-three.vercel.app npx playwright
+     test`; check the app, /submission/, /submission/phase-a/, the PDF and credits
+     logged out; compare public asset hashes with `dist/client`.
+  4. Record deployment id and results in docs/deployment.md, AGENTS.md section 10,
+     decisions and validation.
+  5. Only then delete merged branches (local and remote feature/3d-evidence-map,
+     feature/review-phase-b, review/submission-accuracy). Detach the review worktree
+     first; leave the Kilo worktree alone; keep tag phase-a-submission-2026-11-15.
+- **Rollback target:** production deployment nasa-hackathon-e5zj96p3p (Phase A),
+  recorded in artifacts/final-quality/vercel-production-before.json; then revert the
+  merge on main with `git revert -m 1 b094f40`.

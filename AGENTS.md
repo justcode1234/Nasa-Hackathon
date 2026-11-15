@@ -216,7 +216,8 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   installed on-device English voice for read-aloud; training-language provenance
   is unverified. A separately trained English-only TTS model is not implemented.
   Typed-judgment classifier stays unwired. No new dependency in this release work.
-- **Latest executed checks:** 128/128 offline; focused static-desktop 14/14; legacy
+- **FINAL GATE PASSED 22:48; merged locally as b094f40 but NOT pushed or deployed (push to main needs the user to approve it in the active session). See the continuation checkpoint at the end of the merged-release plan.**
+- **Earlier checks:** 128/128 offline; focused static-desktop 14/14; legacy
   model-on Chrome 33, Node Chrome 19, Firefox 18; original QA 16 questions plus six
   flows pass both model-off and model-on (22/22 each). Full 152-case four-project
   Playwright release is currently running: session 6649, log
