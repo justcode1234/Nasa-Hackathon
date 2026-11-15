@@ -89,11 +89,12 @@
         <fieldset>
           <legend>Existing rotation (baseline)</legend>
           <div class="fields">
-            <label>First crop<select name="baseline-1" id="baseline-1" required></select></label>
+            <label>First crop<select name="baseline-1" id="baseline-1" aria-describedby="baseline-crop-status" required></select></label>
             <label>Second crop<select name="baseline-2" id="baseline-2" required></select></label>
             <label>Third crop<select name="baseline-3" id="baseline-3" required></select></label>
             <label>Crop before this plan (optional)<select name="previousCrop" id="previous-crop"></select></label>
           </div>
+          <p id="baseline-crop-status" hidden></p>
           <p id="recorded-crops">Choose crops yourself; a map tag does not provide a three-crop rotation history.</p>
         </fieldset>
         <fieldset>

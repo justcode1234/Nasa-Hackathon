@@ -189,6 +189,21 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 
 ## 10. Current implementation and cross-device handoff - 2026-11-15
 
+- **Cross-worktree continuation - repository review completed:** review branch
+  `review/submission-accuracy` is pushed (review commit 7c2f80f, followed by a
+  documentation publication checkpoint) in sibling `Nasa-Hackathon-repository-review`.
+  Read its AGENTS.md and docs/submission-accuracy-review.md. Visitor README, sources,
+  separate proposed submission wording and accuracy report are complete there.
+  Full release: 119 offline + 116 browser pass, no skips/flaky/unexpected; public
+  desktop/mobile: 16/16 cases and 32 original QA executions. Main remains f4c4fef.
+  No merge/deploy/portal edit. This review branch inherits feature code; do not merge
+  it into Phase A merely to adopt docs. The original dirty assistant/regional-crop
+  implementation is preserved here and excluded from that review. Resume P0.6
+  unexpected-answer repairs/tests, then legacy suites/P1 functional UX. Singapore
+  region handoff is reproduced on public desktop/mobile and still needs a real
+  product fix/regression, as do AX chat explanation, starters and nav/chat overlap.
+  NASA public record at 20:05 UTC+8 had references filled but was still unsubmitted.
+
 - **P0.4 source check complete:** live primary-source ranges match tomato/cabbage/onion; new duration-basis and unassessed-variant comparison checks pass. npm test: 119/119. User retained all three field services and requested sourced area crop suggestions, non-overlapping aligned navigation, and three clickable chat starters. These remain part of P0.6/P1. Phase A stays public; classifier unwired.
 
 - **Final quality handoff underway:** verified clean feature branch 25e9476 and frozen local/remote main f4c4fef. User chose Keep Phase A public and Keep all three field services. Public NASA page at 09:55 UTC remains unsubmitted with empty references; paste-ready Phase A fields are docs/submission-fields-2026-11-15.md. Baseline: 117 offline + 116 browser pass, no skips/flaky results. P0.3 scientific wording audit corrected the unsupported word validated in the kai-lan catalog limit; 117 offline tests pass after it. See docs/final-quality-review.md and evidence/final-quality-*. The user-reported Aland empty-crop/chat issue is reproduced, with official regional crop evidence found; implementation/regressions remain next. Classifier stays unwired; no new dependency or deployment.

@@ -13,6 +13,7 @@ import { createPowerGridClient } from './nasa/power-grid.js';
 import { createGibsClient } from './context/gibs.js';
 import { createTerrainClient } from './context/terrain.js';
 import { answerConversation, questionTopic } from './agronomy/conversation.js';
+import { answerPlanningQuestion } from './agronomy/planning-help.js';
 
 export const SECURITY_HEADERS = {
   'X-Content-Type-Options': 'nosniff',
@@ -46,6 +47,8 @@ export function createApiHandler({ getObservations = createPowerClient(), getPow
       if (url.pathname === '/api/ask') {
         const grounded = answerGroundedQuestion(body.question, body);
         if (grounded) return grounded;
+        const planning = answerPlanningQuestion(body.question, body);
+        if (planning) return planning;
         const conversation = answerConversation(body.question, { country: body.country ?? body.selectedCountry, context: body.chatContext });
         if (conversation) return conversation;
       }
