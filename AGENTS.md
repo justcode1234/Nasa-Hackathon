@@ -12,6 +12,11 @@
 > Never merge or deploy to production, or touch the NASA submission, without the
 > user's explicit approval.
 
+> **Repository review:** `review/submission-accuracy` in the sibling
+> worktree `Nasa-Hackathon-repository-review`, based on `4f9b8b3`. Read
+> `docs/submission-accuracy-review.md` for findings and verification status.
+> Preserve unfinished assistant changes in the original feature worktree.
+
 ## 1. Mission and product rules
 
 Build **FieldShift**, a **global, location-adaptive crop-rotation decision-support web app** for the 2026 NASA Space Apps Challenge: **“Field Shift: Adapting Farms with NASA Data.”**
@@ -189,20 +194,54 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 
 ## 10. Current implementation and cross-device handoff - 2026-11-15
 
-- **Cross-worktree continuation - repository review completed:** review branch
-  `review/submission-accuracy` is pushed (review commit 7c2f80f, followed by a
-  documentation publication checkpoint) in sibling `Nasa-Hackathon-repository-review`.
-  Read its AGENTS.md and docs/submission-accuracy-review.md. Visitor README, sources,
-  separate proposed submission wording and accuracy report are complete there.
-  Full release: 119 offline + 116 browser pass, no skips/flaky/unexpected; public
-  desktop/mobile: 16/16 cases and 32 original QA executions. Main remains f4c4fef.
-  No merge/deploy/portal edit. This review branch inherits feature code; do not merge
-  it into Phase A merely to adopt docs. The original dirty assistant/regional-crop
-  implementation is preserved here and excluded from that review. Resume P0.6
-  unexpected-answer repairs/tests, then legacy suites/P1 functional UX. Singapore
-  region handoff is reproduced on public desktop/mobile and still needs a real
-  product fix/regression, as do AX chat explanation, starters and nav/chat overlap.
-  NASA public record at 20:05 UTC+8 had references filled but was still unsubmitted.
+- **Latest user authorization - consolidate and release:** user approved merging
+  all repository branches into one `main` branch, and explicitly answered
+  "Deploy after all release checks pass". This supersedes the earlier Phase A
+  freeze/no-merge decision for this release. Finish three chat starter buttons,
+  current assistant gaps and speech/navigation UX, run the complete required gate,
+  then merge/push/deploy and verify the public app. Preserve Phase A submission
+  artifacts as a dated snapshot; do not edit the NASA portal. Remove the other
+  branches only after their histories are integrated safely. Keep the classifier
+  unwired and update this handoff with actual results, not intended passes.
+
+- **Repository/submission review (verified, 15 November):** the user requested a
+  visitor README, verified references, conservative organization and an accuracy
+  report, on a separate branch with no merge/deploy. Created
+  `review/submission-accuracy` at `4f9b8b3` in the sibling
+  `C:\Users\~\Documents\Life\Coding\github\Nasa-Hackathon-repository-review`.
+  The original feature worktree's incomplete assistant/regional-crop changes remain
+  untouched and are not included. Root runtime/configuration paths and third-party
+  notices stay in place; developer instructions move from README into
+  docs/development.md, with docs/README.md as the index. NASA submission copy and
+  public submission artifacts are unchanged; proposals go in separate review files.
+  Public source checks match main `f4c4fef`; live GitHub and public site return 200
+  without authentication. Supplied provider pages return 200 except GBIF homepage
+  (403 here; API documentation reachable). ISRIC announces a REST pause. Pinned
+  dependencies installed with npm ci --ignore-scripts: 0 audit vulnerabilities.
+  `npm.cmd run test:release` completed exit 0: 119/119 offline + 116/116 browser,
+  zero skips/flaky/unexpected, 19.8-minute browser phase. All four runtime/viewport
+  projects and mandatory real-field checks passed. Separate unauthenticated public
+  run: 16/16 cases at 1280/390 px, 32 original QA question executions, zero skips/
+  flaky/unexpected. Durable summary, complete compressed report, logs, hashes and
+  public results are docs/evidence/repository-review-*. Both test processes ended;
+  do not restart them based on the superseded in-progress note. Eleven protected
+  submission/package/licence/config files are byte-identical to review base; 14
+  public assets match main. Public NASA record at 20:05 UTC+8 has populated reference
+  fields but isSubmitted/projectSubmitted false. Source checks: 35/45 direct GETs
+  reachable, eight 403 restrictions and two connection/redirect failures; official
+  UF/IFAS PDF and UMN maturity table separately retrieved. This review branch's
+  automatic Git deployment is disabled. Review changes were committed as 7c2f80f
+  and pushed to origin/review/submission-accuracy; README/report are publicly
+  accessible without login. A documentation-only publication checkpoint follows
+  that commit. Remote main and production HTML remained unchanged after the push;
+  see docs/evidence/repository-review-publication.json. No merge,
+  deployment or portal edit is authorized/performed. It inherits feature code:
+  do not merge it into main merely to adopt docs. Outstanding user reports (AX empty crop/chat explanation,
+  Singapore country/region flow, navigation/chat overlap, three chat examples)
+  remain product work; do not claim them fixed by documentation changes. Singapore
+  region wording reproduced publicly on both widths, with replies/screenshots saved.
+  Continue original P0.6 assistant regressions/repairs, then P0.5 legacy suites and
+  P1 functional chat/navigation/voice UX, respecting the existing quality handoff.
 
 - **P0.4 source check complete:** live primary-source ranges match tomato/cabbage/onion; new duration-basis and unassessed-variant comparison checks pass. npm test: 119/119. User retained all three field services and requested sourced area crop suggestions, non-overlapping aligned navigation, and three clickable chat starters. These remain part of P0.6/P1. Phase A stays public; classifier unwired.
 

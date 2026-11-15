@@ -1,0 +1,751 @@
+{
+  "checkedAt": "2026-11-15T12:04:27.681Z",
+  "files": [
+    "README.md",
+    "docs/README.md",
+    "docs/development.md",
+    "docs/references.md",
+    "docs/submission-accuracy-review.md",
+    "docs/submission-review-proposed.md"
+  ],
+  "local": [
+    {
+      "file": "README.md",
+      "target": "docs/references.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "docs/submission-accuracy-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "docs/development.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "docs/README.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "THIRD-PARTY-NOTICES.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "docs/references.md#ai-assistance",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "../README.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "references.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "data-sources.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "../THIRD-PARTY-NOTICES.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "submission-accuracy-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "submission-review-proposed.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "submission.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "development.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "submission-accuracy-review.md#verification",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "playwright.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "qa-regression.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "validation.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "deployment.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "decisions.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "../AGENTS.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "plans/codex-final-quality-handoff.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "3d-feasibility.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "3d-validation.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "3d-visual-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../README.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../AGENTS.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "decisions.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "playwright.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "qa-regression.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "validation.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "submission-accuracy-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../public/js/modules/si.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../public/js/modules/map.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../public/js/modules/data-flow.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../public/js/modules/strategy.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../server/api.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../models/README.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "references.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "deployment.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/repository-review-public-links.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/repository-review-production-assets.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/nasa/power.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/country-crops.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../scripts/build-country-crops.py",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/soil.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/farms.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../public/data/locations/manifest.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../scripts/build-locations.py",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/pests.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/water.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/agronomy/crops.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/agronomy/knowledge.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/final-quality-crop-source-probes-2026-11-15.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/final-quality-p04-unit-final.log",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/gibs.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../public/licenses/terrain-attribution.txt",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../LICENSE",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../THIRD-PARTY-NOTICES.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../public/licenses/",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../public/credits.html",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../models/README.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-public-links.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-production-assets.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "submission-review-proposed.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/api.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/agronomy/answers.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/agronomy/conversation.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/chat.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/workflow-assistant.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/mini-lm-worker.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/map.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/context/locations.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/context/farms.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/nasa/power.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/data-flow.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/lib/api.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/index.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/agronomy/rotation.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/strategy.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/agronomy/crops.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-review-proposed.md",
+      "target": "submission-accuracy-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-review-proposed.md",
+      "target": "references.md",
+      "status": "ok"
+    }
+  ],
+  "external": [
+    {
+      "requested": "https://power.larc.nasa.gov/",
+      "checkedAt": "2026-11-15T12:04:00.735Z",
+      "url": "https://power.larc.nasa.gov/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/",
+      "checkedAt": "2026-11-15T12:04:00.671Z",
+      "url": "https://nasa-hackathon-three.vercel.app/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/submission/",
+      "checkedAt": "2026-11-15T12:04:00.733Z",
+      "url": "https://nasa-hackathon-three.vercel.app/submission/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/submission/fieldshift-deck.pdf",
+      "checkedAt": "2026-11-15T12:04:00.734Z",
+      "url": "https://nasa-hackathon-three.vercel.app/submission/fieldshift-deck.pdf",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/",
+      "checkedAt": "2026-11-15T12:04:00.786Z",
+      "url": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://www.openstreetmap.org/copyright",
+      "checkedAt": "2026-11-15T12:04:00.789Z",
+      "url": "https://www.openstreetmap.org/copyright",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://www.fao.org/faostat/en/#data/QCL",
+      "checkedAt": "2026-11-15T12:04:00.787Z",
+      "url": "https://www.fao.org/faostat/en/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://isric.org/explore/soilgrids/",
+      "checkedAt": "2026-11-15T12:04:00.788Z",
+      "url": "https://isric.org/explore/soilgrids/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://power.larc.nasa.gov/docs/methodology/",
+      "checkedAt": "2026-11-15T12:04:01.514Z",
+      "url": "https://power.larc.nasa.gov/docs/methodology/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/credits.html",
+      "checkedAt": "2026-11-15T12:04:01.514Z",
+      "url": "https://nasa-hackathon-three.vercel.app/credits.html",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://www.gbif.org/",
+      "checkedAt": "2026-11-15T12:04:01.512Z",
+      "url": "https://www.gbif.org/",
+      "http": 403,
+      "status": "access-restricted"
+    },
+    {
+      "requested": "https://www.geonames.org/export/",
+      "checkedAt": "2026-11-15T12:04:01.511Z",
+      "url": "https://www.geonames.org/export/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://power.larc.nasa.gov/docs/tutorials/",
+      "checkedAt": "2026-11-15T12:04:02.206Z",
+      "url": "https://power.larc.nasa.gov/docs/tutorials/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://www.fao.org/contact-us/terms/db-terms-of-use/en/",
+      "checkedAt": "2026-11-15T12:04:02.207Z",
+      "url": "https://www.fao.org/contact-us/terms/db-terms-of-use/en/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "checkedAt": "2026-11-15T12:04:02.206Z",
+      "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://unstats.un.org/unsd/methodology/m49/overview/",
+      "checkedAt": "2026-11-15T12:04:02.207Z",
+      "url": "https://unstats.un.org/unsd/methodology/m49/overview/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://operations.osmfoundation.org/policies/nominatim/",
+      "checkedAt": "2026-11-15T12:04:03.428Z",
+      "url": "https://operations.osmfoundation.org/policies/nominatim/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://operations.osmfoundation.org/policies/tiles/",
+      "checkedAt": "2026-11-15T12:04:03.427Z",
+      "url": "https://operations.osmfoundation.org/policies/tiles/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_04.html",
+      "checkedAt": "2026-11-15T12:04:03.427Z",
+      "url": "https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_04.html",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://doi.org/10.5194/soil-7-217-2021",
+      "checkedAt": "2026-11-15T12:04:03.426Z",
+      "url": "https://soil.copernicus.org/articles/7/217/2021/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://techdocs.gbif.org/en/openapi/v1/occurrence",
+      "checkedAt": "2026-11-15T12:04:05.456Z",
+      "url": "https://techdocs.gbif.org/en/openapi/v1/occurrence",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://download.geonames.org/export/dump/readme.txt",
+      "checkedAt": "2026-11-15T12:04:05.455Z",
+      "url": "https://download.geonames.org/export/dump/readme.txt",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://ippc.int/en/the-global-action-for-fall-armyworm-control/about-fall-armyworm/",
+      "checkedAt": "2026-11-15T12:04:05.456Z",
+      "url": "https://ippc.int/en/the-global-action-for-fall-armyworm-control/about-fall-armyworm/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://ask.ifas.ufl.edu/publication/IN276",
+      "checkedAt": "2026-11-15T12:04:05.457Z",
+      "status": "unverified",
+      "error": "fetch failed"
+    },
+    {
+      "requested": "https://www.abs.gov.au/website-privacy-copyright-and-disclaimer",
+      "checkedAt": "2026-11-15T12:04:12.383Z",
+      "url": "https://www.abs.gov.au/website-privacy-copyright-and-disclaimer",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://www.abs.gov.au/statistics/industry/agriculture/water-use-australian-farms/2020-21",
+      "checkedAt": "2026-11-15T12:04:12.382Z",
+      "url": "https://www.abs.gov.au/statistics/industry/agriculture/water-use-australian-farms/2020-21",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://extension.umn.edu/agriculture/specialty-crops/vegetable-farming/climate-resilience-resources-for-vegetable-growers-in-minnesota",
+      "checkedAt": "2026-11-15T12:04:12.384Z",
+      "url": "https://extension.umn.edu/agriculture/specialty-crops/vegetable-farming/climate-resilience-resources-for-vegetable-growers-in-minnesota",
+      "http": 403,
+      "status": "access-restricted"
+    },
+    {
+      "requested": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/living-soil-healthy-garden",
+      "checkedAt": "2026-11-15T12:04:12.384Z",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/living-soil-healthy-garden",
+      "http": 403,
+      "status": "access-restricted"
+    },
+    {
+      "requested": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-beans",
+      "checkedAt": "2026-11-15T12:04:12.830Z",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-beans",
+      "http": 403,
+      "status": "access-restricted"
+    },
+    {
+      "requested": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-peas",
+      "checkedAt": "2026-11-15T12:04:12.829Z",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-peas",
+      "http": 403,
+      "status": "access-restricted"
+    },
+    {
+      "requested": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-sweet-corn",
+      "checkedAt": "2026-11-15T12:04:12.830Z",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-sweet-corn",
+      "http": 403,
+      "status": "access-restricted"
+    },
+    {
+      "requested": "https://allegany.cce.cornell.edu/gardening/food-gardening/vegetable-garden/rotating-vegetables-by-family",
+      "checkedAt": "2026-11-15T12:04:12.828Z",
+      "url": "https://allegany.cce.cornell.edu/gardening/food-gardening/vegetable-garden/rotating-vegetables-by-family",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://extension.umn.edu/agriculture/crop-production/small-grains/spring-wheat-growth-and-development-guide",
+      "checkedAt": "2026-11-15T12:04:14.655Z",
+      "url": "https://extension.umn.edu/agriculture/crop-production/small-grains/spring-wheat-growth-and-development-guide",
+      "http": 403,
+      "status": "access-restricted"
+    },
+    {
+      "requested": "https://www.nparks.gov.sg/publications-resources/articles/tips-on-growing-barssica-edibles",
+      "checkedAt": "2026-11-15T12:04:14.654Z",
+      "url": "https://www.nparks.gov.sg/publications-resources/articles/tips-on-growing-barssica-edibles",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://www.nparks.gov.sg/publications-resources/articles/growing-five-leafy-vegetables",
+      "checkedAt": "2026-11-15T12:04:14.653Z",
+      "url": "https://www.nparks.gov.sg/publications-resources/articles/growing-five-leafy-vegetables",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://www.knowledgebank.irri.org/images/docs/planting-establishment.pdf",
+      "checkedAt": "2026-11-15T12:04:14.654Z",
+      "status": "unverified",
+      "error": "fetch failed"
+    },
+    {
+      "requested": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-tomatoes",
+      "checkedAt": "2026-11-15T12:04:25.165Z",
+      "url": "https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-tomatoes",
+      "http": 403,
+      "status": "access-restricted"
+    },
+    {
+      "requested": "https://extension.usu.edu/yardandgarden/research/onions-in-the-garden",
+      "checkedAt": "2026-11-15T12:04:25.167Z",
+      "url": "https://extension.usu.edu/yardandgarden/research/onions-in-the-garden",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://hgic.clemson.edu/factsheet/cabbage-chinese-cabbage/",
+      "checkedAt": "2026-11-15T12:04:25.166Z",
+      "url": "https://hgic.clemson.edu/factsheet/cabbage-chinese-cabbage/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://hgic.clemson.edu/factsheet/tomato/",
+      "checkedAt": "2026-11-15T12:04:25.166Z",
+      "url": "https://hgic.clemson.edu/factsheet/tomato/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://nasa-gibs.github.io/gibs-api-docs/",
+      "checkedAt": "2026-11-15T12:04:26.351Z",
+      "url": "https://nasa-gibs.github.io/gibs-api-docs/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+      "checkedAt": "2026-11-15T12:04:26.350Z",
+      "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://plants.ces.ncsu.edu/plants/allium-cepa/",
+      "checkedAt": "2026-11-15T12:04:26.350Z",
+      "url": "https://plants.ces.ncsu.edu/plants/allium-cepa/",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://content.ces.ncsu.edu/home-vegetable-gardening-a-quick-reference-guide",
+      "checkedAt": "2026-11-15T12:04:26.351Z",
+      "url": "https://content.ces.ncsu.edu/home-vegetable-gardening-a-quick-reference-guide",
+      "http": 200,
+      "status": "reachable"
+    },
+    {
+      "requested": "https://registry.opendata.aws/terrain-tiles/",
+      "checkedAt": "2026-11-15T12:04:27.645Z",
+      "url": "https://registry.opendata.aws/terrain-tiles/",
+      "http": 200,
+      "status": "reachable"
+    }
+  ],
+  "externalRequested": true,
+  "summary": {
+    "localLinks": 83,
+    "localBroken": 0,
+    "externalLinks": 45,
+    "externalFlagged": 10
+  },
+  "limitations": "Markdown inline links only; HTTP status is not a guarantee of correct content or API availability. Access restrictions and timeouts remain unverified, not passed."
+}

@@ -1,0 +1,105 @@
+{
+  "checkedAt": "2026-11-15T12:04:11.555Z",
+  "main": "f4c4fef9202d133a4f412973a8a8653fd3d21965",
+  "checks": [
+    {
+      "path": "index.html",
+      "status": 200,
+      "mainSha256": "b3b025a5e44cf671eddd86c285d904500325b37146eed0c403cd468f8c4db1fe",
+      "publicSha256": "b3b025a5e44cf671eddd86c285d904500325b37146eed0c403cd468f8c4db1fe",
+      "matchesMain": true
+    },
+    {
+      "path": "css/app.css",
+      "status": 200,
+      "mainSha256": "b00f7d12eadc696fe1f56114b032433c5cd2f4d76d2359b1d1ee0a219f9a2591",
+      "publicSha256": "b00f7d12eadc696fe1f56114b032433c5cd2f4d76d2359b1d1ee0a219f9a2591",
+      "matchesMain": true
+    },
+    {
+      "path": "js/app.js",
+      "status": 200,
+      "mainSha256": "573f1a818bc04fd9f7dcde52e234641824cbf010e174e4f8c43d046b7f34ad22",
+      "publicSha256": "573f1a818bc04fd9f7dcde52e234641824cbf010e174e4f8c43d046b7f34ad22",
+      "matchesMain": true
+    },
+    {
+      "path": "js/modules/chat.js",
+      "status": 200,
+      "mainSha256": "c49647947495ab13b6dc9009de0efb4990065954715724b183d4564e42f122f5",
+      "publicSha256": "c49647947495ab13b6dc9009de0efb4990065954715724b183d4564e42f122f5",
+      "matchesMain": true
+    },
+    {
+      "path": "js/modules/mini-lm-worker.js",
+      "status": 200,
+      "mainSha256": "ae81a29011d683247d3ba834c518b47ebef3996a045dcc9d0f39a4dde3ec6505",
+      "publicSha256": "ae81a29011d683247d3ba834c518b47ebef3996a045dcc9d0f39a4dde3ec6505",
+      "matchesMain": true
+    },
+    {
+      "path": "js/modules/si.js",
+      "status": 200,
+      "mainSha256": "fac834508dba734e17407a722a192dd8df567dc62bfce643288e93a00839f1d8",
+      "publicSha256": "fac834508dba734e17407a722a192dd8df567dc62bfce643288e93a00839f1d8",
+      "matchesMain": true
+    },
+    {
+      "path": "js/modules/map.js",
+      "status": 200,
+      "mainSha256": "1087c73746a6ea83f71e9dd121f102313dc7c8520f1f8e54041bac7aeaf461cb",
+      "publicSha256": "1087c73746a6ea83f71e9dd121f102313dc7c8520f1f8e54041bac7aeaf461cb",
+      "matchesMain": true
+    },
+    {
+      "path": "js/modules/data-flow.js",
+      "status": 200,
+      "mainSha256": "c86d6a22ecb7a64c98c850b55ba55f985f5d0237fc35641f73b1fb6da136d542",
+      "publicSha256": "c86d6a22ecb7a64c98c850b55ba55f985f5d0237fc35641f73b1fb6da136d542",
+      "matchesMain": true
+    },
+    {
+      "path": "js/modules/strategy.js",
+      "status": 200,
+      "mainSha256": "c45cfb95585ae0e33d8a95d4c855ebf1373b77f0119a7bcdf68511ef64ceca00",
+      "publicSha256": "c45cfb95585ae0e33d8a95d4c855ebf1373b77f0119a7bcdf68511ef64ceca00",
+      "matchesMain": true
+    },
+    {
+      "path": "js/modules/workflow-assistant.js",
+      "status": 200,
+      "mainSha256": "02e2bfd3cfc3fae66d9b26c4dcd3978822901a12b00fca4e05903d64a58bd317",
+      "publicSha256": "02e2bfd3cfc3fae66d9b26c4dcd3978822901a12b00fca4e05903d64a58bd317",
+      "matchesMain": true
+    },
+    {
+      "path": "data/locations/manifest.json",
+      "status": 200,
+      "mainSha256": "131ebc97b434261b6880947fa3de1c0394cb8b6712554538ceca11045c39ba7d",
+      "publicSha256": "131ebc97b434261b6880947fa3de1c0394cb8b6712554538ceca11045c39ba7d",
+      "matchesMain": true
+    },
+    {
+      "path": "models/fieldshift-mini/model.json",
+      "status": 200,
+      "mainSha256": "6752c266a71cfc3ec24d934b1a4b775d46045d69cf5e8d201af74485a565db03",
+      "publicSha256": "6752c266a71cfc3ec24d934b1a4b775d46045d69cf5e8d201af74485a565db03",
+      "matchesMain": true
+    },
+    {
+      "path": "models/fieldshift-mini/weights.bin",
+      "status": 200,
+      "mainSha256": "719822007d383409dcb223461cdc54019736f48dbeefdd33277ae69c983f33c6",
+      "publicSha256": "719822007d383409dcb223461cdc54019736f48dbeefdd33277ae69c983f33c6",
+      "matchesMain": true
+    },
+    {
+      "path": "submission/submission-text.txt",
+      "status": 200,
+      "mainSha256": "89f78635fcf1fe43edc5c45a89cbbad306c0feba8c92bcd48192d620f7d09d64",
+      "publicSha256": "89f78635fcf1fe43edc5c45a89cbbad306c0feba8c92bcd48192d620f7d09d64",
+      "matchesMain": true
+    }
+  ],
+  "sourceArchiveManifest": 422
+}

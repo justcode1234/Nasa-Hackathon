@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-11-15T12:20:54.837Z",
+  "publishedReviewCommit": "7c2f80f6740195ab7d3b7dc50620477f1f61b72d",
+  "checks": [
+    {
+      "requested": "https://api.github.com/repos/justcode1234/Nasa-Hackathon/commits/main",
+      "status": 200,
+      "url": "https://api.github.com/repos/justcode1234/Nasa-Hackathon/commits/main",
+      "commit": "f4c4fef9202d133a4f412973a8a8653fd3d21965"
+    },
+    {
+      "requested": "https://api.github.com/repos/justcode1234/Nasa-Hackathon/commits/7c2f80f6740195ab7d3b7dc50620477f1f61b72d",
+      "status": 200,
+      "url": "https://api.github.com/repos/justcode1234/Nasa-Hackathon/commits/7c2f80f6740195ab7d3b7dc50620477f1f61b72d",
+      "commit": "7c2f80f6740195ab7d3b7dc50620477f1f61b72d"
+    },
+    {
+      "requested": "https://github.com/justcode1234/Nasa-Hackathon/blob/review/submission-accuracy/README.md",
+      "status": 200,
+      "url": "https://github.com/justcode1234/Nasa-Hackathon/blob/review/submission-accuracy/README.md"
+    },
+    {
+      "requested": "https://github.com/justcode1234/Nasa-Hackathon/blob/review/submission-accuracy/docs/submission-accuracy-review.md",
+      "status": 200,
+      "url": "https://github.com/justcode1234/Nasa-Hackathon/blob/review/submission-accuracy/docs/submission-accuracy-review.md"
+    },
+    {
+      "requested": "https://api.github.com/repos/justcode1234/Nasa-Hackathon/deployments?sha=7c2f80f6740195ab7d3b7dc50620477f1f61b72d",
+      "status": 200,
+      "url": "https://api.github.com/repos/justcode1234/Nasa-Hackathon/deployments?sha=7c2f80f6740195ab7d3b7dc50620477f1f61b72d",
+      "githubDeploymentRecordsForSha": 0
+    },
+    {
+      "requested": "https://nasa-hackathon-three.vercel.app/",
+      "status": 200,
+      "url": "https://nasa-hackathon-three.vercel.app/",
+      "sha256": "b3b025a5e44cf671eddd86c285d904500325b37146eed0c403cd468f8c4db1fe"
+    }
+  ],
+  "limits": "GitHub deployment-record query is supporting evidence, not a full Vercel account inventory. Review branch automatic deployment is disabled in vercel.json; no deploy or merge command was executed."
+}

@@ -2,6 +2,21 @@
 
 ## Current accepted user decisions — supersede the earlier G0 plan
 
+- **Repository/submission review (15 November 2026):** use separate branch
+  `review/submission-accuracy` and sibling worktree `Nasa-Hackathon-repository-review`,
+  based on feature source `4f9b8b3`. The user requires no merge/deployment without
+  approval and no NASA submission edits. A branch push for review uses an explicit
+  automatic-deployment exclusion. Preserve the original dirty assistant worktree.
+  This branch inherits preview features; do not merge it into main merely for docs.
+  README describes public Phase A; detailed development and preview information
+  moves to docs/development.md. Keep essential root files and application paths.
+  Preserve notices; add detailed sources, ChatGPT/Claude/Codex disclosures and a
+  separate proposal/report instead of overwriting submitted descriptions. No new
+  dependency/model is activated. Full local gate: 119 offline + 116 browser pass;
+  logged-out production: 16 cases pass. References retain access failures/ISRIC's
+  REST pause. Public record at 20:05 UTC+8 remains unsubmitted with references filled.
+  See [findings and remaining work](submission-accuracy-review.md).
+
 - **Review-plan Phase A (2026-11-15, in verification).** Use a country-validated
   York/Australia submission fixture, with real NASA observations and matching deck
   and app outputs. Keep one dated model benchmark across submission materials.

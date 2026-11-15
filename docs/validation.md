@@ -1,4 +1,37 @@
-﻿# Validation record — current release candidate
+# Validation record — current release candidate
+
+## Repository documentation review - 15 November 2026
+
+On separate branch `review/submission-accuracy`, application source base `4f9b8b3`:
+
+- `npm ci --ignore-scripts`: pinned dependencies installed, 0 audit vulnerabilities.
+- `npm.cmd run test:release`: **119/119 offline and 116/116 Playwright**, exit 0,
+  no skipped/flaky/unexpected results; browser duration 19.8 minutes. Static and
+  Node runtimes at desktop/mobile widths exercise the four-module workflow, real
+  field discovery, real NASA retrieval/retry, exact baseline preservation and two
+  alternatives, invalidation, accessibility, preview 3D/GIBS/terrain and speech fixtures.
+- Separate logged-out production run of workflow.spec.js, review-phase-a.spec.js
+  and assistant.spec.js: **16/16** desktop/mobile cases, 32 original QA question
+  executions, no skipped/flaky/unexpected results. Public source remains Phase A;
+  these cases do not claim public 3D/voice support.
+- Fourteen selected public assets match main f4c4fef by SHA-256; eleven protected
+  submission/licence/package/config files match the review base byte for byte.
+- New documentation local links and checker syntax pass. External references:
+  35/45 ordinary GETs reachable; eight 403 restrictions and two connection/redirect
+  failures remain flagged. UMN's maturity table and an official UF/IFAS PDF were
+  independently retrieved through the web reader; IRRI remained unavailable.
+- Singapore's confusing whole-country to region prompt reproduced in fresh public
+  contexts at both widths, with no page errors and no assumed field coordinates.
+  This documentation review records the issue; it does not fix that product flow.
+
+Raw log, summary, all 116 original browser results (gzip), public report, source
+hashes, URL outcomes and screenshots: [repository accuracy report](submission-accuracy-review.md#verification)
+and `docs/evidence/repository-review-*`. No tests weakened/removed, no dependencies
+added, no CSS/application edits, no merge/deployment/portal edit. This review did
+not run fresh Firefox/Safari/real-phone or real-microphone/audible-speech checks.
+
+The following sections preserve earlier release/feature checkpoints; their counts
+describe those dated runs, not the fresh review above.
 
 Date: 2026-11-15 (local). This section supersedes the earlier planning assumptions; the user selected a Node.js backend for local testing alongside a browser-only static Vercel showcase. Previously recorded styling is preserved; no CSS polishing was added.
 

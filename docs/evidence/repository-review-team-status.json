@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-15T12:05:14.380Z",
+  "url": "https://www.spaceappschallenge.org/2026/find-a-team/explorer36/?tab=details",
+  "status": 200,
+  "method": "Unauthenticated HTTPS GET; parse JSON string fragments only, no scripts executed or portal edits",
+  "htmlSha256": "271053530407564c0c7839189e06fab413e1734cc92fb5e36af9febf67c7e1a9",
+  "isSubmitted": false,
+  "projectSubmitted": false,
+  "submittedAt": null,
+  "savedAt": "2026-11-15T11:40:36.576737Z",
+  "dataReferences": "[NASA POWER — Daily Meteorological Data API](https://power.larc.nasa.gov/docs/services/api/temporal/daily/)\n[NASA POWER — Data and Documentation](https://power.larc.nasa.gov/)",
+  "projectReferences": "[FAOSTAT — Crops and Livestock Products](https://www.fao.org/faostat/en/#data/QCL)\n[ISRIC SoilGrids — Soil Properties](https://isric.org/explore/soilgrids/)\n[OpenStreetMap — Geospatial Data](https://www.openstreetmap.org/copyright)\n[GeoNames — Geographic Locations](https://www.geonames.org/export/)\n[GBIF — Biodiversity Records](https://www.gbif.org/)"
+}

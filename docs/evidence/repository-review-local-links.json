@@ -1,0 +1,507 @@
+{
+  "checkedAt": "2026-11-15T12:21:38.441Z",
+  "files": [
+    "README.md",
+    "docs/README.md",
+    "docs/development.md",
+    "docs/references.md",
+    "docs/submission-accuracy-review.md",
+    "docs/submission-review-proposed.md"
+  ],
+  "local": [
+    {
+      "file": "README.md",
+      "target": "docs/references.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "docs/submission-accuracy-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "docs/development.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "docs/README.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "THIRD-PARTY-NOTICES.md",
+      "status": "ok"
+    },
+    {
+      "file": "README.md",
+      "target": "docs/references.md#ai-assistance",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "../README.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "references.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "data-sources.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "../THIRD-PARTY-NOTICES.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "submission-accuracy-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "submission-review-proposed.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "submission.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "development.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "submission-accuracy-review.md#verification",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "playwright.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "qa-regression.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "validation.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "deployment.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "decisions.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "../AGENTS.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "plans/codex-final-quality-handoff.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "3d-feasibility.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "3d-validation.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/README.md",
+      "target": "3d-visual-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../README.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../AGENTS.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "decisions.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "playwright.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "qa-regression.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "validation.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "submission-accuracy-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../public/js/modules/si.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../public/js/modules/map.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../public/js/modules/data-flow.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../public/js/modules/strategy.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../server/api.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "../models/README.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "references.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/development.md",
+      "target": "deployment.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/repository-review-public-links.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/repository-review-production-assets.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/nasa/power.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/country-crops.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../scripts/build-country-crops.py",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/soil.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/farms.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../public/data/locations/manifest.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../scripts/build-locations.py",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/pests.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/repository-review-documentation-links.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/water.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/agronomy/crops.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/agronomy/knowledge.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/final-quality-crop-source-probes-2026-11-15.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "evidence/final-quality-p04-unit-final.log",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../server/context/gibs.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../public/licenses/terrain-attribution.txt",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../LICENSE",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../THIRD-PARTY-NOTICES.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../public/licenses/",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../public/credits.html",
+      "status": "ok"
+    },
+    {
+      "file": "docs/references.md",
+      "target": "../models/README.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-public-links.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-production-assets.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-publication.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "submission-review-proposed.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-team-status.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/api.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/agronomy/answers.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/agronomy/conversation.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/chat.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/workflow-assistant.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/mini-lm-worker.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/map.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/context/locations.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/context/farms.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/nasa/power.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/data-flow.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/lib/api.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/index.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/agronomy/rotation.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../public/js/modules/strategy.js",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "../server/agronomy/crops.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-release.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-release.log",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-release.raw.json.gz",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-public-playwright.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-public-playwright.log",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-local-links.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-documentation-links.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-reference-followup.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-production-assets.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-scope.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-accuracy-review.md",
+      "target": "evidence/repository-review-singapore.json",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-review-proposed.md",
+      "target": "submission-accuracy-review.md",
+      "status": "ok"
+    },
+    {
+      "file": "docs/submission-review-proposed.md",
+      "target": "references.md",
+      "status": "ok"
+    }
+  ],
+  "external": [],
+  "externalRequested": false,
+  "summary": {
+    "localLinks": 97,
+    "localBroken": 0,
+    "externalLinks": 0,
+    "externalFlagged": 0
+  },
+  "limitations": "Markdown inline links only; HTTP status is not a guarantee of correct content or API availability. Access restrictions and timeouts remain unverified, not passed."
+}

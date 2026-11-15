@@ -1,5 +1,13 @@
 # Sources and scientific scope
 
+**Current version-aware inventory:** [references.md](references.md) distinguishes
+public Phase A sources, preview imagery/terrain, licences and access failures.
+The dated implementation notes below preserve history; earlier statements that
+SMAP/GPM/MODIS are not integrated refer to Phase A, while later GIBS entries refer
+to preview imagery only. They do not establish numerical crop-model integration.
+ISRIC's product page currently announces a SoilGrids REST pause (checked
+15 November 2026); an implemented adapter does not guarantee service availability.
+
 ## Phase B branch: sourced expansion and read-service migration - 15 November
 
 The local preview branch has seven screening crops and 166/197 comparable countries;
