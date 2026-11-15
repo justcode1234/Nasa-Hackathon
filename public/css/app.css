@@ -121,3 +121,5 @@ summary { cursor: pointer; padding-block: .5rem; font-weight: 600; }
   .workflow-navigation { position: sticky; bottom: 0; z-index: 1000; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }
+
+#gibs-legend img { max-width: 100%; height: auto; background: white; }

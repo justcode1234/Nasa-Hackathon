@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+  "retrievedAt": "2026-11-15T07:12:25.145Z",
+  "layers": [
+    {
+      "id": "MODIS_Terra_Land_Surface_Temp_Day",
+      "name": "MODIS Terra daytime land-surface temperature",
+      "units": "K",
+      "spatialResolution": "1 km sensor and imagery resolution",
+      "referenceUrl": "https://raw.githubusercontent.com/nasa-gibs/worldview/main/config/default/common/config/metadata/layers/modis/terra/MODIS_Terra_Land_Surface_Temp_Day.md",
+      "product": "Land Surface Temperature (Day, MODIS, Terra)",
+      "kind": "imagery",
+      "matrix": "GoogleMapsCompatible_Level7",
+      "maxZoom": 7,
+      "intervals": [
+        {
+          "start": "2000-02-24",
+          "end": "2000-04-25",
+          "stepDays": 1
+        },
+        {
+          "start": "2000-04-28",
+          "end": "2000-08-06",
+          "stepDays": 1
+        },
+        {
+          "start": "2000-08-18",
+          "end": "2001-06-15",
+          "stepDays": 1
+        },
+        {
+          "start": "2001-07-03",
+          "end": "2002-03-19",
+          "stepDays": 1
+        },
+        {
+          "start": "2002-03-28",
+          "end": "2003-12-16",
+          "stepDays": 1
+        },
+        {
+          "start": "2003-12-24",
+          "end": "2008-12-20",
+          "stepDays": 1
+        },
+        {
+          "start": "2008-12-23",
+          "end": "2016-02-18",
+          "stepDays": 1
+        },
+        {
+          "start": "2016-02-27",
+          "end": "2022-10-10",
+          "stepDays": 1
+        },
+        {
+          "start": "2022-10-23",
+          "end": "2026-11-15",
+          "stepDays": 1
+        }
+      ],
+      "defaultDate": "2026-11-15",
+      "template": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_Land_Surface_Temp_Day/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png",
+      "legendUrl": "https://gibs.earthdata.nasa.gov/legends/MODIS_Land_Surface_Temp_H.svg",
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+      "retrievedAt": "2026-11-15T07:12:25.145Z",
+      "attribution": "NASA GIBS / NASA Worldview",
+      "missingness": "Transparent or unavailable tiles can indicate missing coverage. Imagery is visual context; values are not extracted."
+    },
+    {
+      "id": "IMERG_Precipitation_Rate",
+      "name": "IMERG precipitation rate (daily imagery)",
+      "units": "mm/hour",
+      "spatialResolution": "0.1° × 0.1° source grid (about 11 km at the Equator)",
+      "referenceUrl": "https://raw.githubusercontent.com/nasa-gibs/worldview/main/config/default/common/config/metadata/layers/multi-mission/imerg/IMERG_Precipitation_Rate.md",
+      "product": "Precipitation Rate (IMERG)",
+      "kind": "imagery",
+      "matrix": "GoogleMapsCompatible_Level6",
+      "maxZoom": 6,
+      "intervals": [
+        {
+          "start": "2000-06-01",
+          "end": "2025-10-22",
+          "stepDays": 1
+        },
+        {
+          "start": "2025-10-30",
+          "end": "2026-01-07",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-01-09",
+          "end": "2026-02-02",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-02-04",
+          "end": "2026-02-09",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-02-12",
+          "end": "2026-05-24",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-05-27",
+          "end": "2026-11-13",
+          "stepDays": 1
+        }
+      ],
+      "defaultDate": "2026-11-13",
+      "template": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/IMERG_Precipitation_Rate/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png",
+      "legendUrl": "https://gibs.earthdata.nasa.gov/legends/GPM_Precipitation_Rate_H.svg",
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+      "retrievedAt": "2026-11-15T07:12:25.145Z",
+      "attribution": "NASA GIBS / NASA Worldview",
+      "missingness": "Transparent or unavailable tiles can indicate missing coverage. Imagery is visual context; values are not extracted."
+    },
+    {
+      "id": "SMAP_L4_Analyzed_Surface_Soil_Moisture",
+      "name": "SMAP L4 surface soil moisture (model value-added)",
+      "units": "m³/m³",
+      "spatialResolution": "9 km EASE-Grid; model-derived top 5 cm soil moisture",
+      "referenceUrl": "https://raw.githubusercontent.com/nasa-gibs/worldview/main/config/default/common/config/metadata/layers/smap/SMAP_L4_Analyzed_Surface_Soil_Moisture.md",
+      "product": "Surface Soil Moisture (L4, 12z Instantaneous, Model Value-Added, SMAP)",
+      "kind": "imagery",
+      "matrix": "GoogleMapsCompatible_Level6",
+      "maxZoom": 6,
+      "intervals": [
+        {
+          "start": "2015-03-31",
+          "end": "2025-07-27",
+          "stepDays": 1
+        },
+        {
+          "start": "2025-07-29",
+          "end": "2025-10-09",
+          "stepDays": 1
+        },
+        {
+          "start": "2025-12-12",
+          "end": "2026-03-16",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-03-18",
+          "end": "2026-05-10",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-05-12",
+          "end": "2026-05-16",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-05-19",
+          "end": "2026-08-09",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-08-16",
+          "end": "2026-08-30",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-09-01",
+          "end": "2026-11-06",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-11-08",
+          "end": "2026-11-10",
+          "stepDays": 1
+        }
+      ],
+      "defaultDate": "2026-11-10",
+      "template": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/SMAP_L4_Analyzed_Surface_Soil_Moisture/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png",
+      "legendUrl": "https://gibs.earthdata.nasa.gov/legends/SMAP_Analyzed_Soil_Moisture_H.svg",
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+      "retrievedAt": "2026-11-15T07:12:25.145Z",
+      "attribution": "NASA GIBS / NASA Worldview",
+      "missingness": "Transparent or unavailable tiles can indicate missing coverage. Imagery is visual context; values are not extracted."
+    },
+    {
+      "id": "MODIS_Terra_NDVI_8Day",
+      "name": "MODIS Terra greenness (rolling 8-day NDVI)",
+      "units": "unitless NDVI",
+      "spatialResolution": "250 m sensor and imagery resolution",
+      "referenceUrl": "https://raw.githubusercontent.com/nasa-gibs/worldview/main/config/default/common/config/metadata/layers/modis/terra/MODIS_Terra_NDVI_8Day.md",
+      "product": "Vegetation Index (rolling 8-Day, MODIS, Terra)",
+      "kind": "imagery",
+      "matrix": "GoogleMapsCompatible_Level9",
+      "maxZoom": 9,
+      "intervals": [
+        {
+          "start": "2025-02-12",
+          "end": "2025-08-21",
+          "stepDays": 1
+        },
+        {
+          "start": "2025-08-23",
+          "end": "2025-09-04",
+          "stepDays": 1
+        },
+        {
+          "start": "2025-09-06",
+          "end": "2025-09-16",
+          "stepDays": 1
+        },
+        {
+          "start": "2025-09-18",
+          "end": "2026-02-08",
+          "stepDays": 1
+        },
+        {
+          "start": "2026-02-10",
+          "end": "2026-11-14",
+          "stepDays": 1
+        }
+      ],
+      "defaultDate": "2026-11-14",
+      "template": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_NDVI_8Day/default/{Time}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png",
+      "legendUrl": "https://gibs.earthdata.nasa.gov/legends/MODIS_NDVI_H.svg",
+      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/1.0.0/WMTSCapabilities.xml",
+      "retrievedAt": "2026-11-15T07:12:25.145Z",
+      "attribution": "NASA GIBS / NASA Worldview",
+      "missingness": "Transparent or unavailable tiles can indicate missing coverage. Imagery is visual context; values are not extracted."
+    }
+  ],
+  "unavailable": []
+}

@@ -165,3 +165,31 @@ are deliberately absent. No rainfall sufficiency or excess-water threshold is in
 Legumes may fix nitrogen with compatible rhizobia; harvested biomass and management
 affect any subsequent benefit. No nitrogen credits, soil improvement, pest reductions,
 yield, water savings or economic estimates are computed.
+
+## V2 dated NASA imagery - locally verified, 15 November
+
+Added on-demand GIBS controls inside the existing 3D map: NDVI, SMAP L4 surface
+soil moisture, IMERG precipitation rate and MODIS daytime land-surface temperature.
+Node and browser worker share /api/gibs-layers. The adapter parses current WMTS
+capabilities into a fixed product allowlist, native product resolution, exact
+availability intervals/default dates, maximum tile zoom, templates and legends.
+Gaps and invalid dates are rejected; XML entities/foreign resource hosts are not
+accepted. Metadata is cached with its original retrieval time. Units/resolution
+were checked against NASA Worldview's own product descriptions: NDVI 250 m;
+SMAP model-derived top-5-cm moisture 9 km in m3/m3; IMERG 0.1-degree source grid
+in mm/hour; MODIS LST 1 km in K. Tile zoom is not native product resolution.
+
+Layers are labelled imagery, values not extracted; POWER data and crop screening
+never read map colours. The user chooses an advertised date, can adjust opacity,
+and can turn imagery off. Coverage and overzoom limits remain visible. Metadata
+failures have a real retry; tile failures leave a visible notice and the rain table.
+No provider failures are replaced with made-up imagery or dates.
+
+Executed: 107/107 offline tests; 12/12 GIBS browser cases across four projects,
+covering all four real products (16 selections), real metadata retry and aborted
+tile transport. V1's 16-case report is retained separately. Three-dimensional tests
+deliberately abort unrelated field transport rather than hammering Overpass; the
+eight separate real-field success checks remain mandatory release blockers.
+Reports: docs/evidence/v2-playwright-complete.json and v2-gibs-metadata.json.
+Small subsequent lifecycle guards avoid updates after map closure. A final complete
+release/a11y/performance run is still required after V3/V4. Production is frozen.

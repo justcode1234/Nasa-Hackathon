@@ -1,5 +1,8 @@
 import {test,expect} from '@playwright/test';
 async function point(page){
+  // Field availability has its own live release cases; do not hammer an unrelated
+  // service while testing NASA/3D. This is a transport failure, never fake fields.
+  await page.context().route(/overpass-api\.de|overpass\.private\.coffee|\/api\/farms\?/,route=>route.abort('failed'));
   await page.goto('/',{waitUntil:'domcontentloaded'});
   await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption('-31.89,116.77');
   await expect(page.locator('#catalog-status')).toContainText('Australia:');

@@ -1,6 +1,7 @@
 import {api} from '../lib/api.js';
 import {el,list,table,number} from '../lib/dom.js';
 import {columnData} from '../lib/power-columns.js';
+import {imageryControls} from './gibs-controls.js';
 
 let library;
 async function renderer(){
@@ -88,6 +89,7 @@ export async function createEvidenceMap({getState,onClose}){
   map.addLayer({id:'power-missing',type:'fill',source:'power-cells',filter:['==',['get','missing'],true],paint:{'fill-pattern':'missing-hatch','fill-opacity':.8}});
   map.addLayer({id:'power-columns',type:'fill-extrusion',source:'power-cells',filter:['==',['get','missing'],false],paint:{'fill-extrusion-height':['get','height'],'fill-extrusion-base':0,'fill-extrusion-opacity':.8,'fill-extrusion-color':'#2171b5'}});
   map.addLayer({id:'power-edges',type:'line',source:'power-cells',paint:{'line-color':['case',['get','selected'],'#173d2c','#657368'],'line-width':['case',['get','selected'],3,1]}});
+  root.insertBefore(imageryControls({map,isClosed:()=>closed}),canvas);
   await load();
   })().catch(error=>{dispose();throw error;});
   return instance;

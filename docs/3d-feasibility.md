@@ -4,7 +4,7 @@ The user approved preview implementation on 15 November. V1 is now implemented
 and locally verified (104 offline +16 browser tests); MapLibre 6.4.1 is the pinned
 security-fixed dependency. The original 5.24.0 V0 measurements below are historical
 and superseded by the security/measurement section at the end. Production remains
-frozen, Leaflet stays default, and V2-V5 are still pending.
+frozen, Leaflet stays default, V2 adds dated imagery with 12 passing browser cases; V3-V5 are pending.
 
 Reproduce locally: `node scripts/3d-v0-spike.js`, then open
 http://127.0.0.1:4175. It downloads the exact pinned npm package into ignored

@@ -10,6 +10,7 @@ import { getWaterContext } from './context/water.js';
 import { getCountryCrops } from './context/crops.js';
 import { createLocationClient } from './context/locations.js';
 import { createPowerGridClient } from './nasa/power-grid.js';
+import { createGibsClient } from './context/gibs.js';
 import { answerConversation, questionTopic } from './agronomy/conversation.js';
 
 export const SECURITY_HEADERS = {
@@ -18,7 +19,7 @@ export const SECURITY_HEADERS = {
   'Content-Security-Policy': "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://cdn.jsdelivr.net; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://tile.openstreetmap.org https://gibs.earthdata.nasa.gov; connect-src 'self' https://cdn.jsdelivr.net https://power.larc.nasa.gov https://overpass-api.de https://overpass.private.coffee https://nominatim.openstreetmap.org https://api.gbif.org https://rest.isric.org https://gibs.earthdata.nasa.gov https://elevation-tiles-prod.s3.amazonaws.com; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
 };
 
-export function createApiHandler({ getObservations = createPowerClient(), getPowerGrid = createPowerGridClient(), getFarms = createFarmClient(), getPlaces = createPlaceClient(), getPests = createPestClient(), getSoil = createSoilClient(), getLocations = createLocationClient() } = {}) {
+export function createApiHandler({ getObservations = createPowerClient(), getPowerGrid = createPowerGridClient(), getGibsLayers = createGibsClient(), getFarms = createFarmClient(), getPlaces = createPlaceClient(), getPests = createPestClient(), getSoil = createSoilClient(), getLocations = createLocationClient() } = {}) {
   return async function handle({ method, url, readJson }) {
     const query = Object.fromEntries(url.searchParams);
     if (method === 'GET') {
@@ -33,6 +34,7 @@ export function createApiHandler({ getObservations = createPowerClient(), getPow
       if (url.pathname === '/api/water-context') return getWaterContext(query);
       if (url.pathname === '/api/observations') return getObservations(query);
       if (url.pathname === '/api/power-grid') return getPowerGrid(query);
+      if (url.pathname === '/api/gibs-layers') return getGibsLayers();
     }
     if (method === 'POST' && ['/api/compare', '/api/ask'].includes(url.pathname)) {
       const body = await readJson();
