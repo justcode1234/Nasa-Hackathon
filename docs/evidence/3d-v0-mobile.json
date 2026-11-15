@@ -1,0 +1,21 @@
+{
+  "checkedAt": "2026-11-15T04:16:32.004Z",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "emulatedNotPhoneHardware": true,
+  "reducedMotion": true,
+  "horizontalOverflow": false,
+  "policyErrors": [],
+  "metrics": {
+    "errors": [],
+    "requestsBeforeOpen": [
+      "http://127.0.0.1:4175/app.css",
+      "http://127.0.0.1:4175/spike.js"
+    ],
+    "interactiveMs": 1494.2999999998137,
+    "renderer": "WebKit WebGL"
+  },
+  "axeViolations": []
+}

@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-11-15T04:06:20.120Z",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "webglDisabled": true,
+  "fallbackText": "3D unavailable: Failed to initialize WebGL. Use the submitted 2D app below.",
+  "horizontalOverflow": false,
+  "submitted2DLink": "https://nasa-hackathon-three.vercel.app/"
+}
