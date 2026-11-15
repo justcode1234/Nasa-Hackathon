@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-15T09:55:45.158Z",
+  "url": "https://www.spaceappschallenge.org/2026/find-a-team/explorer36/?tab=details",
+  "status": 200,
+  "method": "Unauthenticated HTTPS GET; JSON-decoded public Next flight data, no page script execution or login",
+  "htmlSha256": "2673e694fa57c7ed0d18eb05305a3f289d4181a1a88c19e2ca09cdb8b445ca35",
+  "isSubmitted": false,
+  "submittedAt": null,
+  "savedAt": "2026-11-15T09:45:12.352627Z",
+  "projectSubmitted": false,
+  "dataReferences": "",
+  "projectReferences": ""
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "clemson-tomato",
+    "url": "https://hgic.clemson.edu/factsheet/tomato/",
+    "resolvedUrl": "https://hgic.clemson.edu/factsheet/tomato/",
+    "status": 200,
+    "retrievedAt": "2026-11-15T10:01:48.279Z",
+    "sha256": "39ea016f7e1bef38d579eb26d07ca642fce680a9842f83e901617f5ca16cca42",
+    "numericChecks": [
+      {
+        "pattern": "/52\\s*(?:to|[-?])\\s*90\\s*days/i",
+        "matched": true,
+        "excerpt": "52 to 90 days"
+      },
+      {
+        "pattern": "/6\\.0\\s*(?:and|to|[-?])\\s*6\\.5/i",
+        "matched": true,
+        "excerpt": "6.0 and 6.5"
+      }
+    ]
+  },
+  {
+    "id": "clemson-cabbage",
+    "url": "https://hgic.clemson.edu/factsheet/cabbage-chinese-cabbage/",
+    "resolvedUrl": "https://hgic.clemson.edu/factsheet/cabbage-chinese-cabbage/",
+    "status": 200,
+    "retrievedAt": "2026-11-15T10:01:49.324Z",
+    "sha256": "2b883669e1ca6dd791c5bea48a90ba249a56a7bb559d8a6b6689cc72e0e55c37",
+    "numericChecks": [
+      {
+        "pattern": "/60\\s*(?:to|[-?])\\s*80\\s*days/i",
+        "matched": true,
+        "excerpt": "60 to 80 days"
+      },
+      {
+        "pattern": "/5\\.8\\s*(?:and|to|[-?])\\s*6\\.5/i",
+        "matched": true,
+        "excerpt": "5.8 to 6.5"
+      },
+      {
+        "pattern": "/60\\s*(?:to|[-?])\\s*65/i",
+        "matched": true,
+        "excerpt": "60 to 65"
+      }
+    ]
+  },
+  {
+    "id": "clemson-onion",
+    "url": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+    "resolvedUrl": "https://hgic.clemson.edu/factsheet/onion-leek-shallot-garlic/",
+    "status": 200,
+    "retrievedAt": "2026-11-15T10:01:50.181Z",
+    "sha256": "19c2744bc6a53d95f061c845e79755731020e6a7223bebe9c2553c878b6452d8",
+    "numericChecks": [
+      {
+        "pattern": "/6\\.2\\s*(?:and|to|[-?])\\s*6\\.5/i",
+        "matched": true,
+        "excerpt": "6.2 and 6.5"
+      }
+    ]
+  },
+  {
+    "id": "usu-onion",
+    "url": "https://extension.usu.edu/yardandgarden/research/onions-in-the-garden",
+    "resolvedUrl": "https://extension.usu.edu/yardandgarden/research/onions-in-the-garden",
+    "status": 200,
+    "retrievedAt": "2026-11-15T10:01:51.049Z",
+    "sha256": "3f570ab286770327acae120cf96e6a893e3c4fb980a1b05b635b6eac92221321",
+    "numericChecks": [
+      {
+        "pattern": "/100\\s*(?:to|[-?])\\s*120\\s*days/i",
+        "matched": true,
+        "excerpt": "100-120 days"
+      }
+    ]
+  },
+  {
+    "id": "ncsu-onion",
+    "url": "https://plants.ces.ncsu.edu/plants/allium-cepa/",
+    "resolvedUrl": "https://plants.ces.ncsu.edu/plants/allium-cepa/",
+    "status": 200,
+    "retrievedAt": "2026-11-15T10:01:52.348Z",
+    "sha256": "31fc727ea86ddb57bc3aef2e6c76c5518d946c410fc6cfc85390d6e01925740c",
+    "numericChecks": [
+      {
+        "pattern": "/Amaryllidaceae/i",
+        "matched": true,
+        "excerpt": "Amaryllidaceae"
+      }
+    ]
+  }
+]

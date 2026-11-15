@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-15T10:18:35.626Z",
+  "publisher": "Statistics and Research Aland (ASUB)",
+  "url": "https://www.asub.ax/sites/default/files/media/document/ALSIFF25ENG.pdf",
+  "title": "Aland in Figures 2025",
+  "publicationYear": 2025,
+  "observationYear": 2024,
+  "pdfPageIndex": 12,
+  "printedPage": 11,
+  "table": "Agricultural production 2024",
+  "sha256": "3034a1e9ce5b136b41da258a2e3f9a4aefcb40b2de482b586f51a0bf160b6cc9",
+  "verification": "Parsed primary-source text and visually inspected the rendered table. Existing pdftoppm was used; no dependency installed.",
+  "records": [
+    {
+      "name": "Wheat",
+      "tonnes": 3100
+    },
+    {
+      "name": "Barley, oats (combined)",
+      "tonnes": 810
+    },
+    {
+      "name": "Rye",
+      "tonnes": 660
+    },
+    {
+      "name": "Table potatoes",
+      "tonnes": 170
+    },
+    {
+      "name": "Onions",
+      "tonnes": 7100
+    }
+  ],
+  "scope": "Territory-level published production/sales statistics, not field suitability, cultivar identity, local crop calendars or yield predictions.",
+  "missingness": "Selected annual crop categories only, not a complete inventory. Do not split the combined barley/oats quantity.",
+  "attribution": "Source: ASUB. Publisher asks for source attribution when facts are reused; no broader software or publication licence is asserted."
+}

@@ -71,7 +71,7 @@
       "harvest": "NParks gives 21–55 days to harvest. Cultivar, establishment method and local conditions affect timing; this is a reference range, not a harvest prediction.",
       "rotation": "As a brassica, kai lan shares a crop-family group with crops such as radish. A family change can be one rotation consideration; local pest history and a suitable break period are still needed.",
       "screeningEligible": false,
-      "limitation": "Kai lan is available as sourced knowledge, but it has not been added to the validated rotation-screening catalog."
+      "limitation": "Kai lan is available as sourced knowledge, but it has not been added to the sourced rotation-screening catalog."
     },
     {
       "id": "rice",

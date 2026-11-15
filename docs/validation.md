@@ -576,3 +576,19 @@ at any other time, and independent review of classifier labels.
   and marked superseded.
 - The typed-judgment classifier remains an experiment; the validated rules stay in
   charge of routing.
+
+
+## Final quality handoff: baseline, submission support and P0.3
+
+At start the tree was clean on feature/3d-evidence-map at 25e9476; local/remote main
+were f4c4fef. The user chose to keep Phase A public and retain all three existing
+Overpass services. No merge, deployment, project setting or NASA portal edit was made.
+The 09:55 UTC public NASA page still showed an unsubmitted draft and empty references;
+paste-ready Phase A fields were prepared in docs/submission-fields-2026-11-15.md.
+Baseline commands actually passed: npm test 117/117; npm run test:release 117 offline
+and 116 browser, zero skips/flaky/unexpected. Evidence: final-quality-baseline-*.
+P0.3 reviewed all ten named scientific presentation modules. The kai-lan catalog
+claim now says sourced instead of validated; npm test again passed 117/117.
+See docs/final-quality-review.md. User-reported Aland crop selection/chat failure
+was reproduced on this branch and is not fixed yet; sourced regional context and
+new prompt regressions are next. The classifier remains unwired. No dependency added.
