@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-11-15T01:49:15.632Z",
+  "origin": "https://nasa-hackathon-three.vercel.app",
+  "sourceCommit": "0fe50ce1fd20179f6bfad7fe327981314e9eb6ea",
+  "assets": [
+    {
+      "path": "/index.html",
+      "status": 200,
+      "sha256": "cdd8da282259bc29cc128171e0719c960d4f33c90fcb561d753c894298de822c",
+      "matched": true
+    },
+    {
+      "path": "/css/app.css",
+      "status": 200,
+      "sha256": "4bbc56b3c68c243559a368282b17e05703ce846b222838f2e37b13b102d40419",
+      "matched": true
+    },
+    {
+      "path": "/js/app.js",
+      "status": 200,
+      "sha256": "c0a3609fa1472e2fadb4f668c8fc4b5c5d72a359b6a8627c0ce468c2b68698c0",
+      "matched": true
+    },
+    {
+      "path": "/js/lib/comparison-readiness.js",
+      "status": 200,
+      "sha256": "a20b15a3f8ebc86ee71ad2a8f587dad89f1b181bb4869ab38f907d1e1a1f4ef9",
+      "matched": true
+    },
+    {
+      "path": "/js/modules/si.js",
+      "status": 200,
+      "sha256": "fac834508dba734e17407a722a192dd8df567dc62bfce643288e93a00839f1d8",
+      "matched": true
+    },
+    {
+      "path": "/js/modules/chat.js",
+      "status": 200,
+      "sha256": "9bc7fa58be551636b6593d39eb990f75b4efd75d6cfd15f25aa15e627ac55afb",
+      "matched": true
+    },
+    {
+      "path": "/js/modules/workflow-assistant.js",
+      "status": 200,
+      "sha256": "02e2bfd3cfc3fae66d9b26c4dcd3978822901a12b00fca4e05903d64a58bd317",
+      "matched": true
+    },
+    {
+      "path": "/js/lib/core-worker.bundle.js",
+      "status": 200,
+      "sha256": "512996ce1c22421055d04fa0892ba394b2df95d7a44fe21a0deead5894be02c4",
+      "matched": true
+    },
+    {
+      "path": "/models/fieldshift-mini/model.json",
+      "status": 200,
+      "sha256": "6752c266a71cfc3ec24d934b1a4b775d46045d69cf5e8d201af74485a565db03",
+      "matched": true
+    },
+    {
+      "path": "/models/fieldshift-mini/tokenizer.json",
+      "status": 200,
+      "sha256": "5ae04a94f226cf20822029d4cefd5ff38d9fe60e9b971e5b166f89aeb40e9a84",
+      "matched": true
+    },
+    {
+      "path": "/models/fieldshift-mini/weights.bin",
+      "status": 200,
+      "sha256": "719822007d383409dcb223461cdc54019736f48dbeefdd33277ae69c983f33c6",
+      "matched": true
+    },
+    {
+      "path": "/submission/fieldshift-deck.pdf",
+      "status": 200,
+      "sha256": "62d9fef7bdc59c8f2747e34a88c55b1a43ab26a72e2503978931876060e21a74",
+      "matched": true
+    },
+    {
+      "path": "/submission/fieldshift-source.zip",
+      "status": 200,
+      "sha256": "360a30d07fa1e3fa4338ef3238cc21285bf7eecc5b463d55769d2091607d5bf2",
+      "matched": true
+    },
+    {
+      "path": "/submission/source-manifest.json",
+      "status": 200,
+      "sha256": "e31316e4b08158b92d57480e17cc98f1fe307abbdd1991b21f9f4145e01791cd",
+      "matched": true
+    }
+  ]
+}

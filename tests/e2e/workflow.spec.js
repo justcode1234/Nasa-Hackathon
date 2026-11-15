@@ -66,7 +66,9 @@ test('Next and Compare both complete a real baseline comparison and invalidate s
   await page.locator('#baseline-3').selectOption('bush-bean');await page.locator('#flow-next').click();
   await expect(page.locator('#strategy')).toBeVisible();await expect(page.locator('.scenario')).toHaveCount(3);
   await expect(page.locator('.timeline>li')).toHaveCount(9);
-  await expect(page.locator('.timeline').first()).toContainText('Sweet corn');
+  await expect(page.locator('.timeline').first().locator('h4')).toHaveText(['1. Sweet corn','2. Garden pea','3. Bush snap bean']);
+  const sequences=await page.locator('.timeline').evaluateAll(nodes=>nodes.map(node=>[...node.querySelectorAll('h4')].map(h=>h.textContent).join(' / ')));
+  expect(new Set(sequences).size,'Baseline and both alternatives must be distinct').toBe(3);
   await page.locator('#flow-back').click();await page.locator('#priority').selectOption('water');
   await expect(page.locator('.scenario')).toHaveCount(0);await page.locator('#compare').click();
   await expect(page.locator('#strategy')).toBeVisible();await expect(page.locator('.scenario')).toHaveCount(3);

@@ -186,7 +186,7 @@ Update this section and docs/decisions.md / docs/validation.md after each substa
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
 
-- **Active goal: fix Next/Compare and require Playwright flow tests.** The user
+- **Current goal: Next/Compare fix and Playwright flow tests (verified release).** The user
   reproduced a blocked step-3 screen. Earlier coverage tests checked that Compare
   was disabled but missed the unusable Next/recovery experience. The new Playwright
   test failed against the previous public app on the actual Next click (step 01
@@ -202,8 +202,14 @@ state. Do not leave another device relying on an earlier planning assumption.
   unit/logic tests plus Playwright: 95 offline + 16 Playwright tests pass locally,
   including all sixteen original QA prompts in every project (64 executions).
   The existing 33 Chrome and 18 Firefox checks also pass on this UI fix.
-  Publishing/public Playwright checks are in progress; do not yet claim the public
-  fix is deployed. A disabled Compare assertion alone is not a flow test.
+  Public verification passes all 8 desktop/mobile Playwright cases (32 original
+  QA question executions), with no skips/flaky/unexpected results. App source
+  0fe50ce is deployed at the existing origin, deployment
+  dpl_uzcTt6tDRGxXKXwBVHHE2kz1fhnX. Fourteen public assets match the build. Source
+  and test hashes, raw answers and results are under docs/evidence/playwright-*.json;
+  docs/playwright.md explains the release command and coverage. A disabled Compare
+  assertion alone is not a flow test. Both Next and Compare must preserve the exact
+  baseline and render two distinct alternatives; the browser tests assert this.
 
 - **Current user goal — resolve QA gaps and improve the tiny LM (verified release):**
   fix all nine failed prompts in shared grounded answers and validated action
@@ -301,8 +307,11 @@ state. Do not leave another device relying on an earlier planning assumption.
 - **Vercel setup:** CLI 65.16.0 is installed; current CLI identity was verified as
   justcode1234. This checkout is linked to justcode1234s-projects/nasa-hackathon.
   Global Codex Vercel plugin 0.54.1 is enabled; the shared MCP URL is
-  https://mcp.vercel.com and OAuth login succeeded. Active-session MCP tool discovery
-  still needs verification. Do not alter unrelated MCP entries or approval settings.
+  https://mcp.vercel.com. Current connector tools are available, but list_teams
+  returned no teams and the known project deployment returned a scoped-access
+  403. The existing CLI login works as justcode1234 and is used for release checks.
+  Connector team consent remains separate. Preserve the user's 4chatgptsim account;
+  do not alter unrelated MCP entries, logins or approval settings.
   Recheck `vercel whoami` and linked project before deploying; never store credentials
   in this repository. The CLI-created .env.local and .vercel directory are ignored.
 - **Deployment:** existing public origin is https://nasa-hackathon-three.vercel.app/ .
@@ -317,8 +326,10 @@ state. Do not leave another device relying on an earlier planning assumption.
   dry run initially included local browser artifacts, so .vercelignore now excludes
   those, local dependencies, credentials and generated output. Build inputs and
   public showcase files remain included. Verify the dry-run file list before upload.
-- **Latest executed checks:** 93 offline tests, 33 static Chrome checks,
-  19 Node-backed Chrome checks, 18 Firefox checks and 77 JavaScript syntax checks
+- **Latest executed checks:** 95 offline tests, 16 local Playwright cases across
+  four runtime/viewport projects, 8 public desktop/mobile Playwright cases,
+  33 static Chrome checks,
+  19 Node-backed Chrome checks, 18 Firefox checks and 83 JavaScript syntax checks
   passed. Seven-slide PDF and source ZIP are regenerated before publishing.
   The public origin also passed all 33 Chrome checks, including the new scope flow.
   Reports live under docs/evidence; transient profiles/logs are ignored in artifacts.

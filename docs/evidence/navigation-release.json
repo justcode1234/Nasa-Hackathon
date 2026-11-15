@@ -1,0 +1,10 @@
+{
+  "appSourceCommit": "0fe50ce1fd20179f6bfad7fe327981314e9eb6ea",
+  "origin": "https://nasa-hackathon-three.vercel.app",
+  "deploymentId": "dpl_uzcTt6tDRGxXKXwBVHHE2kz1fhnX",
+  "deploymentUrl": "nasa-hackathon-o6raqkuif-justcode1234s-projects.vercel.app",
+  "state": "READY",
+  "localPlaywrightCases": 16,
+  "publicPlaywrightCases": 8,
+  "offlineTests": 95
+}

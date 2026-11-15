@@ -2,8 +2,11 @@
 
 Latest local result: 95 offline tests and 16 Playwright tests passed across all
 four projects, including 64 executions of the original QA questions. Zero skips,
-unexpected failures or flaky outcomes. Public verification of this UI fix follows
-deployment; the pre-fix public test deliberately failed on the reported Next bug.
+unexpected failures or flaky outcomes. The public release passes 8 desktop/mobile
+cases, including 32 original QA question executions. The pre-fix public test failed
+on the actual reported Next click. Raw results and source/test hashes:
+[local](evidence/playwright-local.json), [public](evidence/playwright-public.json),
+[before fix](evidence/playwright-before-fix.json). App source: 0fe50ce.
 
 The blocked Next/Compare report exposed a coverage gap in our tests: checking that
 Compare is disabled does not prove that the farmer understands the reason or can

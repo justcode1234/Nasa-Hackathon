@@ -31,6 +31,18 @@ on preferred port 3001; its `/api/health` returns 200. Both can run together.
 
 ## Public host and release
 
+**Next/Compare release, 2026-11-15 local:** app source
+`0fe50ce1fd20179f6bfad7fe327981314e9eb6ea`, deployment
+`dpl_uzcTt6tDRGxXKXwBVHHE2kz1fhnX`, at the same public origin. Playwright passes
+16 local cases across Node/static and desktop/mobile, and 8 public desktop/mobile
+cases. The actual Next-click regression failed on the previous release and now
+passes; exact baselines, distinct alternatives, blocked prerequisites, input
+preservation and data-error retry are checked. Fourteen public files match the
+build. `npm run test:release` is required before future behavior releases.
+Raw evidence and file hashes: docs/evidence/playwright-local.json,
+playwright-public.json and public-navigation-assets.json. Later documentation and
+source-package updates preserve the tested app/model bytes.
+
 **Assistant/model release, 2026-11-15 local:** app source
 `0d2c71789951e9eead08e0b6139a4938b7cf6ced` is deployed at the same public origin,
 deployment `dpl_EerXCncopFA9U7H6UZXG6AoTkBuw`,

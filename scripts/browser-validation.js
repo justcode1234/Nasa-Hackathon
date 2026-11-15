@@ -224,6 +224,8 @@ try {
   assert.equal(await evaluate('document.querySelector("#strategy").hidden'), false);
   assert.equal(await evaluate('document.querySelector("#flow-next").hidden'), true);
   assert.equal(await evaluate('document.querySelectorAll(".timeline > li").length'), 9);
+  assert.deepEqual(await evaluate('[...document.querySelector(".timeline").querySelectorAll("h4")].map(node=>node.textContent)'), ['1. Bush snap bean','2. Garden pea','3. Bush snap bean']);
+  assert.equal(await evaluate('new Set([...document.querySelectorAll(".timeline")].map(node=>[...node.querySelectorAll("h4")].map(h=>h.textContent).join(" / "))).size'),3);
   await evaluate('document.querySelector("#strategy").scrollIntoView()');
   await screenshot('desktop-comparison');
   await evaluate('document.querySelector(".timeline").scrollIntoView()');

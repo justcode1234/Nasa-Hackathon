@@ -20,8 +20,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 28810,
-      "sha256": "22ba5735d3c35583fb6ceed5ce14f7f1153bc0f1d5e13a21691365bc212722bf"
+      "bytes": 29629,
+      "sha256": "61d6bdd145a249addd0eabb473e596bef6e17d47faf72fb391528db480e462b6"
     },
     {
       "path": "docs/challenge-alignment.md",
@@ -45,13 +45,13 @@
     },
     {
       "path": "docs/deployment.md",
-      "bytes": 6784,
-      "sha256": "1f6c66011a2dd5064b474635bfd6086861d87161a0bd64701cc31ab8517a6934"
+      "bytes": 7577,
+      "sha256": "78f1e3c8397f64222444e0149e9a6cea88966a0a4784164afff38e74276526e7"
     },
     {
       "path": "docs/evidence/browser-validation.json",
       "bytes": 3440,
-      "sha256": "5b1aaf389747f276e188253af1f1100b2d902d9bbdc1c2faf10c55a21f6df6e2"
+      "sha256": "dbbe1a3a63658cdc69ddc787fdc79097fa95c1ebbe9fd005106d4f6449c53389"
     },
     {
       "path": "docs/evidence/firefox-validation.json",
@@ -99,6 +99,11 @@
       "sha256": "e68b336a2f6d1e0c0afa141e038c51057b1f88b91236bea8feb375d7bfb096df"
     },
     {
+      "path": "docs/evidence/navigation-release.json",
+      "bytes": 360,
+      "sha256": "43dd4b3ae44148ac1d8d53a58d5ebbb9c98eeca5b50aed19f0c9e2dc6d8f17a1"
+    },
+    {
       "path": "docs/evidence/node-browser-validation.json",
       "bytes": 4989,
       "sha256": "d1e47628c581b161a14f91f6fac880cf82d4552a3fef781ff97129d438cb7889"
@@ -110,8 +115,13 @@
     },
     {
       "path": "docs/evidence/playwright-local.json",
-      "bytes": 156899,
-      "sha256": "49291fb0204b42e764a6e7bbc7797b9d2927fa9d976c7c0ea7c9eba50b1188b3"
+      "bytes": 156988,
+      "sha256": "52721d57797d646e83ba74134cf891496a2763d1fca6b3b90436035c2da7d8bf"
+    },
+    {
+      "path": "docs/evidence/playwright-public.json",
+      "bytes": 80808,
+      "sha256": "b6cd9285f248c9551085f718c25a7efe089e0af3ebd1181f44bff0d2179db996"
     },
     {
       "path": "docs/evidence/public-assets-current.json",
@@ -129,14 +139,19 @@
       "sha256": "18cbe495a1788d66c8c1e1421036350395cd43318c642830a2f9b8982f67e23f"
     },
     {
+      "path": "docs/evidence/public-navigation-assets.json",
+      "bytes": 2758,
+      "sha256": "25b1bb57ef007771bcb63007be023677866c205cf249aafbb5b619ee85c49a58"
+    },
+    {
       "path": "docs/evidence/sourced-context-validation.json",
       "bytes": 6073,
       "sha256": "4e0d643237f039dddf4ea3f01f6fecf60f89b1d2b053e7226ff461915501fd44"
     },
     {
       "path": "docs/playwright.md",
-      "bytes": 3183,
-      "sha256": "e4a9b0b1793d9d05928ea676fbeeaba2b40784e9dc48b2e1d2749a4dd1d640a8"
+      "bytes": 3412,
+      "sha256": "8c2df7aa6892a1b885f0e9b4fd1266a6ade9a5844ed05b3f0e42b695522d2aea"
     },
     {
       "path": "docs/qa/baseline-results.json",
@@ -215,8 +230,8 @@
     },
     {
       "path": "docs/validation.md",
-      "bytes": 24277,
-      "sha256": "5e3853f8c09f886a23dea78f078260ab7d7f1e10d318699ed34ba8795800e8d7"
+      "bytes": 24886,
+      "sha256": "8fc971bbde09ebc59de103c6292d5bf1353f8eed7dcb7ac69b73c69229a36394"
     },
     {
       "path": "models/mini-development-questions.json",
@@ -1646,7 +1661,7 @@
     {
       "path": "public/submission/fieldshift-deck.pdf",
       "bytes": 86914,
-      "sha256": "62d9fef7bdc59c8f2747e34a88c55b1a43ab26a72e2503978931876060e21a74"
+      "sha256": "7ff0a6b7ef5465664c6859b6736277ca5c79d6df0968aa0ad79c0d64303d0432"
     },
     {
       "path": "public/submission/index.html",
@@ -1690,8 +1705,8 @@
     },
     {
       "path": "scripts/browser-validation.js",
-      "bytes": 25747,
-      "sha256": "0a7c4ffe4f4f49c29c97ff39258c59344a31deca275fbc8e7f107799d74b29e6"
+      "bytes": 26110,
+      "sha256": "4eca866545091686deafd717ed37a5193049ee7939b04ddf97d921e04824042a"
     },
     {
       "path": "scripts/build-browser.js",
@@ -1955,8 +1970,8 @@
     },
     {
       "path": "tests/e2e/workflow.spec.js",
-      "bytes": 6917,
-      "sha256": "48b5c4eb8633e5ebc2c3437ad9e9902c0d4ba2563bf0fbe1494512299c0fe855"
+      "bytes": 7217,
+      "sha256": "b38df334181d8021f60c1216e190b64b9f647811c5d3db856e96e010627cc0d6"
     },
     {
       "path": "tests/fixtures.js",

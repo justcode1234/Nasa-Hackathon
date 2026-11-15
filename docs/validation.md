@@ -27,8 +27,16 @@ also passed after this UI change. The mobile coverage screenshot was inspected:
 the complete reason and recovery control remain visible while the form scrolls.
 
 `npm run test:release` is required before future behavior releases. Details and
-failure artifacts: [Playwright checks](playwright.md). Public fix verification is
-still pending; older public reports below describe earlier releases.
+failure artifacts: [Playwright checks](playwright.md). The public fix passes all
+8 Playwright desktop/mobile cases, including 32 exact original QA question
+executions. Both release commands returned exit code 0, with zero skips, flaky
+outcomes or unexpected results. The successful comparison checks assert the exact
+three-crop baseline and three distinct sequences, not just the number of cards.
+App source `0fe50ce1fd20179f6bfad7fe327981314e9eb6ea`, deployment
+`dpl_uzcTt6tDRGxXKXwBVHHE2kz1fhnX`; fourteen public assets matched the build.
+Current raw reports and file hashes: docs/evidence/playwright-local.json,
+playwright-public.json, public-navigation-assets.json and navigation-release.json.
+Older public reports below describe earlier releases.
 
 ## Assistant improvements — verified local and public release
 
