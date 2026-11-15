@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-15T04:22:24.070Z",
+  "origin": "https://nasa-hackathon-three.vercel.app",
+  "expectedAppSource": "70eafb18db248f3b84a1f6b4af872fcb22dfe7df",
+  "assets": [
+    {
+      "path": "/index.html",
+      "status": 200,
+      "sha256": "b3b025a5e44cf671eddd86c285d904500325b37146eed0c403cd468f8c4db1fe",
+      "matchedPhaseA": true
+    },
+    {
+      "path": "/css/app.css",
+      "status": 200,
+      "sha256": "b00f7d12eadc696fe1f56114b032433c5cd2f4d76d2359b1d1ee0a219f9a2591",
+      "matchedPhaseA": true
+    },
+    {
+      "path": "/js/app.js",
+      "status": 200,
+      "sha256": "573f1a818bc04fd9f7dcde52e234641824cbf010e174e4f8c43d046b7f34ad22",
+      "matchedPhaseA": true
+    },
+    {
+      "path": "/js/lib/core-worker.bundle.js",
+      "status": 200,
+      "sha256": "6851ac6c5f5981fe5d82805fda45a18db79fcebd54b13248a7539e06b5666745",
+      "matchedPhaseA": true
+    }
+  ]
+}

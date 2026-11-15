@@ -22,7 +22,7 @@ async function compare(page){
   await expect(page.locator('.timeline').first().locator('h4')).toHaveText(['1. Tomato','2. Cabbage','3. Bulb onion']);
 }
 
-test('a failed field request leaves a visible explanation and a reachable retry',async({page,context})=>{
+test('a failed field request has a reachable retry and still permits a point-based comparison',async({page,context})=>{
   await context.route(/overpass-api\.de|overpass\.private\.coffee|\/api\/farms\?/,r=>r.abort('failed'));
   await page.goto('/',{waitUntil:'domcontentloaded'});await openExample(page);
   await expect(page.locator('#farms-status')).toHaveClass(/error/);
@@ -30,6 +30,14 @@ test('a failed field request leaves a visible explanation and a reachable retry'
   await expect(page.getByRole('button',{name:'Retry mapped field search',exact:true})).toBeEnabled();
   await expect(page.getByRole('combobox',{name:'Mapped field',exact:true})).toBeDisabled();
   await expect(page.locator('.scenario')).toHaveCount(0);
+  await expect(page.locator('#farms-status')).toContainText('continue with the selected map point or coordinates');
+  const latitude=await page.getByRole('spinbutton',{name:/Latitude/}).inputValue();
+  await page.getByRole('button',{name:'Retry mapped field search',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Retry mapped field search',exact:true})).toBeEnabled();
+  await expect(page.getByRole('spinbutton',{name:/Latitude/})).toHaveValue(latitude);
+  // Field outlines are optional. Retain the explicit point and use real NASA data.
+  await evidence(page);await compare(page);
+  await expect(page.locator('#farm-results')).toBeDisabled();
 });
 
 test('human dropdowns, map click, fields and a new-crop comparison form a working path',async({page},info)=>{

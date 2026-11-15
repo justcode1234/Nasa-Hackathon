@@ -4,11 +4,11 @@ try{
  const page=await browser.newPage({viewport:{width:1280,height:1000}});page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(!r.url().startsWith('http://127.0.0.1'))rows.push({url:r.url(),status:r.status()});});
  await page.goto(`http://127.0.0.1:${app.address().port}`,{waitUntil:'networkidle'});
  const before=await page.evaluate(()=>performance.getEntriesByType('resource').filter(r=>/maplibre/.test(r.name)).length);samples.push(await sampleBrowserMemory(service.process().pid,'2D experiment shell before renderer load'));
- await page.getByRole('button',{name:'Open 3D experiment',exact:true}).click();await page.waitForFunction(()=>window.spikeMetrics.interactiveMs,{timeout:60000});
- await page.waitForFunction(()=>window.spikeMap.areTilesLoaded(),{timeout:60000});samples.push(await sampleBrowserMemory(service.process().pid,'globe loaded'));
+ await page.getByRole('button',{name:'Open 3D experiment',exact:true}).click();await page.waitForFunction(()=>window.spikeMetrics.interactiveMs,null,{timeout:60000});
+ await page.waitForFunction(()=>window.spikeMap.areTilesLoaded(),null,{timeout:60000});samples.push(await sampleBrowserMemory(service.process().pid,'globe loaded'));
  await page.screenshot({path:'artifacts/3d-v0/globe.png'});
  await page.getByRole('button',{name:'View terrain at the demonstration point',exact:true}).click();
- await page.waitForFunction(()=>window.spikeMap.areTilesLoaded()&&Number.isFinite(window.spikeMap.queryTerrainElevation([116.77,-31.89])),{timeout:60000});
+ await page.waitForFunction(()=>window.spikeMap.areTilesLoaded()&&Number.isFinite(window.spikeMap.queryTerrainElevation([116.77,-31.89])),null,{timeout:60000});
  const terrainElevation=await page.evaluate(()=>window.spikeMap.queryTerrainElevation([116.77,-31.89]));samples.push(await sampleBrowserMemory(service.process().pid,'terrain and basemap loaded'));
  await page.screenshot({path:'artifacts/3d-v0/terrain.png'});const frameRate=await page.evaluate(()=>window.spikePan());samples.push(await sampleBrowserMemory(service.process().pid,'after scripted pan benchmark'));
  const gpu=await(await browser.newBrowserCDPSession()).send('SystemInfo.getInfo');

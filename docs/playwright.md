@@ -1,12 +1,17 @@
 # Playwright workflow regression checks
 
-Latest local result: 95 offline tests and 16 Playwright tests passed across all
-four projects, including 64 executions of the original QA questions. Zero skips,
-unexpected failures or flaky outcomes. The public release passes 8 desktop/mobile
-cases, including 32 original QA question executions. The pre-fix public test failed
-on the actual reported Next click. Raw results and source/test hashes:
-[local](evidence/playwright-local.json), [public](evidence/playwright-public.json),
-[before fix](evidence/playwright-before-fix.json). App source: 0fe50ce.
+Current branch result (15 November review work): **99 offline pass; full browser
+run 36/44 pass, 8 fail**. Every failure is a real Overpass field lookup in the
+example or human path. Four subsequently added field failure/retry UI cases pass
+in a separate run. The suite now enumerates **48 local cases**; a complete green
+48-case run is still required before release. There are no skips or hidden retries.
+Reports: [full run](evidence/phase-b-playwright-local.json),
+[failure/retry/point-comparison cases](evidence/phase-b-playwright-field-degradation.json),
+[actual browser network failure](evidence/phase-b-field-network-diagnostic.json).
+
+Phase A remains the public submission: 95 offline +32 local Playwright and 16
+public cases passed before freezing production. Earlier Next/Compare source 0fe50ce
+and its [before-fix regression](evidence/playwright-before-fix.json) are historical.
 
 The blocked Next/Compare report exposed a coverage gap in our tests: checking that
 Compare is disabled does not prove that the farmer understands the reason or can
@@ -26,6 +31,12 @@ development only and adds no browser runtime/framework to the app.
 | static-desktop / static-mobile | 1280×1000 / 390×844 | Real browser worker |
 | node-desktop / node-mobile | 1280×1000 / 390×844 | Real Node HTTP APIs |
 
+Phase B adds semantic country/region/town, place-search, map-click and actual field
+selection checks, new-crop comparisons, all four example regions, 20 axe-core
+4.10.2 state scans across the four projects, model-on Q01/Q03/Q16 with actual worker
+inference, short-height/landscape coverage and mouse-Send/Escape focus. Cambodia
+is the zero-coverage fixture; Singapore now has cabbage/tomato screening coverage.
+
 The suite tests zero screening coverage, actionable Next recovery, farmer-input
 preservation, a fully visible blocker on mobile, missing coordinates/evidence,
 zero/one/two selected alternatives, required baseline fields, successful Next and
@@ -35,6 +46,7 @@ their original semantic graders and captures actual answers as report attachment
 NASA success paths use actual observations; deliberate transport failures never
 return synthetic NASA measurements. Tests run serially to limit provider traffic.
 Failed expectations fail the command, without retries that hide a first failure.
+A disabled Compare assertion alone never establishes a working human flow.
 
 Reports, screenshots and failure traces are under `artifacts/playwright/`. Open the
 HTML report with `npx playwright show-report artifacts/playwright/report`. Only
@@ -50,3 +62,7 @@ start local servers. Reset that variable before local tests. For a focused check
 Provider outages are real test failures and must be distinguished from app defects
 using the retained trace. These cases do not guarantee every possible flow is
 bug-free, real-device usability, Safari support or scientific agronomic validity.
+
+For a small real-browser field diagnosis, run `node scripts/diagnose-fields.js`.
+It builds current sources, captures network failures and the actual UI status,
+and exits nonzero while the York example returns fewer than three fields.

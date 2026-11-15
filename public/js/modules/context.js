@@ -128,7 +128,7 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
       $('farm-details').replaceChildren(list(data.notices));
       $('find-farms').textContent = 'Find mapped fields around selection';
     } catch (error) { if (version === token) {
-      message('farms-status', error.message, true);
+      message('farms-status', `${error.message} You can continue with the selected map point or coordinates without field outlines.`, true);
       $('find-farms').textContent = 'Retry mapped field search';
     } }
     finally { if(version===token)$('find-farms').disabled = false; }

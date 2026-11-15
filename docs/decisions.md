@@ -278,3 +278,29 @@ V0 has measured real globe/terrain rendering, source metadata, native POWER cent
 and WebGL-disabled fallback; see docs/3d-feasibility.md. It downloads pinned renderer
 files only into ignored artifacts, never public or package.json. Approval of the
 application dependency is pending. V1-V5 remain unimplemented.
+
+## Field outage follow-up - 15 November, 04:23 UTC
+
+A fresh actual-browser probe captured both Overpass requests ending with
+net::ERR_ABORTED at the configured 25-second deadlines, with no console/CSP errors.
+Both service status endpoints also failed 10-second probes from this device.
+This does not establish global service availability; it identifies the current
+local request failure. Evidence: phase-b-field-network-diagnostic.json and
+phase-b-service-status-recheck.json under docs/evidence.
+
+The field error now explains that the user can continue with the selected point.
+The enhanced failure case exercises Retry, preserves coordinates, loads real NASA
+data and completes a tomato/cabbage/onion baseline comparison in all four projects:
+4/4 pass, 0 skips/flaky outcomes (phase-b-playwright-field-degradation.json).
+The first test draft used a role locator after its panel became hidden; that test
+locator was corrected before the accepted 4/4 run. Actual-field success checks
+remain unchanged and still block release. The complete suite enumerates 48 cases;
+no complete green 48-case run is claimed.
+
+Production index/CSS/app/core-worker hashes were rechecked against the frozen Phase A
+manifest; all four match (phase-a-freeze-recheck.json). A reusable real-browser
+diagnostic is scripts/diagnose-fields.js (writes artifacts/field-network-diagnostic.json
+and exits nonzero if fewer than three fields return). The original browser probe
+was executed; the reusable wrapper has syntax validation. The V0 benchmark's
+Playwright timeout argument was corrected to the options position; the previously
+measured fast rendering result is unchanged. MapLibre approval remains pending.

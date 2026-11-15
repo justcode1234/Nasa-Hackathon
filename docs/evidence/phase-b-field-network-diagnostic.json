@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-15T04:23:04.908Z",
+  "uiStatus": "Both field lookup services are unavailable or returned incomplete data. No fields were invented. Retry the field search.",
+  "requests": [
+    {
+      "kind": "failed",
+      "url": "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bway%5B%22landuse%22~%22%5E(farmland%7Corchard%7Cvineyard%7Cplant_nursery)%24%22%5D(-31.9100%2C116.7500%2C-31.8700%2C116.7900)%3Bout%20meta%20geom%3B",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "kind": "failed",
+      "url": "https://overpass.private.coffee/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3Bway%5B%22landuse%22~%22%5E(farmland%7Corchard%7Cvineyard%7Cplant_nursery)%24%22%5D(-31.9100%2C116.7500%2C-31.8700%2C116.7900)%3Bout%20meta%20geom%3B",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "fieldOptionsIncludingPlaceholder": 1
+}
