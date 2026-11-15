@@ -147,3 +147,27 @@ the complete release gate, then deliberate deployment/re-enablement. CLI identit
 was rechecked as justcode1234; linked project and team IDs match the established
 nasa-hackathon project. Preserve the separate 4chatgptsim account. No credentials
 were read or stored. The push and post-push deployment check are pending here.
+
+## Feature-branch push and protected preview - 15 November 2026
+
+- `feature/3d-evidence-map` pushed to origin at 36e4ce2 after the complete release
+  gate passed (117 offline, 116 browser). `git.deploymentEnabled` is false for this
+  branch in vercel.json, and `vercel ls` showed no new deployment after the push.
+- Remote `main` is still f4c4fef. The public production origin
+  https://nasa-hackathon-three.vercel.app/ still serves Phase A (no mic control, no
+  speech runtime: `/vendor/transformers/...wasm` returns 404 there).
+- Manual preview (CLI identity justcode1234, project nasa-hackathon,
+  `vercel deploy --yes`, no `--prod`): deployment dpl_GRtYSt2eaYTbQMAhJA4auBiJRPJA,
+  target preview, Ready,
+  https://nasa-hackathon-crjbv8ur9-justcode1234s-projects.vercel.app .
+- The preview is behind Vercel Deployment Protection: it shows a Vercel login page to
+  anyone not signed in to the project's account. No protection setting or bypass
+  secret was created or changed. It is therefore not a public demo link.
+- Verified through `vercel curl` (authenticated bypass): 12 of 14 checked assets are
+  byte-identical to the local build, including the speech worker, the 26.9 MB WASM,
+  MapLibre, the worker bundle and model weights. index.html and credits.html differ
+  only by the feedback-toolbar script Vercel injects into preview HTML. The served
+  CSP connect-src lists the expected hosts (huggingface.co, us.aws.cdn.hf.co and the
+  three Overpass hosts included).
+- Not done: Playwright against the preview URL (needs a protection bypass or a public
+  preview, which is the owner's decision), real-phone checks, promotion to production.
