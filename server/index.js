@@ -44,19 +44,24 @@ export function createApp(dependencies = {}) {
       if (!['GET', 'HEAD'].includes(request.method)) throw new AppError('Method not allowed.', 405);
       let base = path.join(root, 'public');
       let relative = decodeURIComponent(url.pathname === '/' ? '/index.html' : url.pathname).replace(/^\/+/, '');
-      if (relative.startsWith('vendor/leaflet/')) {
+      const leafletLicense = relative === 'vendor/leaflet/LICENSE.txt';
+      if (leafletLicense) {
+        base = path.join(root, 'node_modules/leaflet');
+        relative = 'LICENSE';
+      } else if (relative.startsWith('vendor/leaflet/')) {
         base = path.join(root, 'node_modules/leaflet/dist');
         relative = relative.slice('vendor/leaflet/'.length);
       }
       const filename = path.resolve(base, relative);
-      if (!filename.startsWith(`${base}${path.sep}`) || !types[path.extname(filename)]) throw new AppError('Not found.', 404);
+      const contentType = leafletLicense ? 'text/plain; charset=utf-8' : types[path.extname(filename)];
+      if (!filename.startsWith(`${base}${path.sep}`) || !contentType) throw new AppError('Not found.', 404);
       let data = await readFile(filename);
       if (filename === path.join(root, 'public', 'index.html')) {
         const marker = '<meta name="fieldshift-transport" content="worker">';
         if (!data.toString('utf8').includes(marker)) throw new Error('The app entry is missing its explicit transport marker.');
         data = Buffer.from(data.toString('utf8').replace(marker, '<meta name="fieldshift-transport" content="http">'));
       }
-      response.writeHead(200, { 'Content-Type': types[path.extname(filename)], 'Cache-Control': 'no-cache' });
+      response.writeHead(200, { 'Content-Type': contentType, 'Cache-Control': 'no-cache' });
       response.end(request.method === 'HEAD' ? undefined : data);
     } catch (error) {
       const status = error.status ?? (error.code === 'ENOENT' || error.code === 'EISDIR' ? 404 : 500);

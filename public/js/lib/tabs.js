@@ -15,6 +15,7 @@ export function initTabs() {
     });
     history.replaceState(null, '', `#${id}`);
     main.scrollTop = 0;
+    if (window.matchMedia('(max-height: 560px)').matches) window.scrollTo(0, 0);
     back.disabled = activeIndex === 0;
     next.hidden = activeIndex === tabs.length - 1;
     const label = index => tabs[index].textContent.replace(/^\d+\s*·\s*/, '');

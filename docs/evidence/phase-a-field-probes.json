@@ -1,0 +1,67 @@
+[
+  {
+    "name": "ames-west",
+    "center": {
+      "latitude": 42,
+      "longitude": -93.69
+    },
+    "retrievedAt": "2026-11-15T02:56:03.934Z",
+    "sourceUrl": "https://api.openstreetmap.org/api/0.6/map.json?bbox=-93.7000,41.9900,-93.6800,42.0100",
+    "source": {
+      "title": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "license": "ODbL 1.0"
+    },
+    "bounds": {
+      "south": 41.99,
+      "west": -93.7,
+      "north": 42.01,
+      "east": -93.67999999999999
+    },
+    "count": 11,
+    "fieldIds": [
+      "way/732026029",
+      "way/732026036",
+      "way/732026035",
+      "way/732026030",
+      "way/732026033",
+      "way/732026031",
+      "way/732026034",
+      "way/732026032",
+      "way/732026027",
+      "way/732026037",
+      "way/732026028"
+    ]
+  },
+  {
+    "name": "naivasha-south",
+    "center": {
+      "latitude": -0.77,
+      "longitude": 36.42
+    },
+    "retrievedAt": "2026-11-15T02:56:04.909Z",
+    "sourceUrl": "https://api.openstreetmap.org/api/0.6/map.json?bbox=36.4100,-0.7800,36.4300,-0.7600",
+    "source": {
+      "title": "OpenStreetMap contributors",
+      "url": "https://www.openstreetmap.org/copyright",
+      "license": "ODbL 1.0"
+    },
+    "bounds": {
+      "south": -0.78,
+      "west": 36.410000000000004,
+      "north": -0.76,
+      "east": 36.43
+    },
+    "count": 8,
+    "fieldIds": [
+      "way/1055111745",
+      "way/1055111746",
+      "way/1132170372",
+      "way/455059269",
+      "way/1055111747",
+      "way/455059270",
+      "way/455059255",
+      "way/455059266"
+    ]
+  }
+]

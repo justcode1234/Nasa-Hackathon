@@ -124,3 +124,11 @@ footer { padding-block: .4rem; border: 0; color: #5a6c55; font-size: .8rem; }
 #si p { margin-block: .6rem; }
 @media (max-width: 900px) { .map-workspace { grid-template-columns: minmax(0, 1fr) 290px; } #si { grid-template-columns: 1fr; } #si > *, #published-context { grid-column: 1; grid-row: auto; } }
 @media (max-width: 700px) { header { padding: .5rem .8rem; } main { padding-inline: .8rem; } .map-workspace { grid-template-columns: 1fr; } .location-controls { max-height: none; } #map { height: 300px; } nav button { padding: .35rem .4rem; } }
+
+/* At zoomed/landscape heights, scroll the document rather than trapping content. */
+@media (max-height: 560px) {
+  body { height: auto; min-height: 100dvh; overflow: visible; }
+  main { flex: none; overflow: visible; min-height: 60dvh; }
+  .location-controls { max-height: none; overflow: visible; }
+  .workflow-navigation { position: sticky; bottom: 0; z-index: 1000; }
+}

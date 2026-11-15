@@ -19,6 +19,8 @@ The four modules are Geospatial Map, Data Flow, SI Model and Strategy Logic. The
 
 The visible workflow is numbered 01 Find farmland, 02 NASA evidence, 03 Plan crops and 04 Compare, with persistent Next/Back navigation. Crop dropdowns follow the selected country, using 9,238 dated FAOSTAT production records across 197 countries/areas. Crop years, national tonnes, official/estimated flags and citations remain inspectable. Broad commodity categories are qualified proxies for starter rules, never cultivar or farm-suitability proof. Missing coverage stays unknown; countries with fewer than two screened crops cannot generate alternatives. Country changes remove unavailable choices and invalidate old comparisons.
 
+At this release, 89 of those 197 countries/areas have at least two screened crops and can produce alternatives. Radish is a sourced catalog reference but has no mapped FAOSTAT category, so country lists never offer it. The submission example uses York, Western Australia, with three crops that can actually be selected: Sweet corn → Garden pea → Bush snap bean.
+
 NASA POWER Daily supplies T2M, T2M_MAX, T2M_MIN, PRECTOTCORR and ALLSKY_SFC_SW_DWN for a selected historical year. The app retains actual response units, source product and URL, requested period, latest available day within the request, retrieval time, spatial support and missingness. Daily regional estimated observations support monthly charts and tables. Fill values remain missing rather than becoming zero rainfall. Failed sources show errors; synthetic observations are never substituted.
 
 The sourced starter crop catalog contains bush snap bean, garden pea, sweet corn and radish. Three four-month slots define an equal 12-month horizon for the existing baseline and two distinct allowed alternatives. Deterministic criteria compare family repetition, calendar fit, missing weather, frost exposure, limited heat/pH/drainage rules and historical zero-rain exposure. Farmer priorities order transparent criteria. These are rule counts, not confidence percentages, yield predictions or profitability scores. Unsupported crops remain selectable and unassessed. Grain maize is not assigned sweet-corn rules.
@@ -33,15 +35,15 @@ The Vercel showcase architecture is static HTML/CSS/JavaScript with Leaflet and 
 
 ## What was actually validated
 
-- 95 offline unit/logic checks and 16 Playwright cases pass across Node/static transports and desktop/mobile layouts, including 64 executions of the original QA questions. Navigation blockers, successful Next/Compare, invalidation and real-data retry are exercised. The earlier model release also passed the supplied 16-question/six-flow suite with the model enabled and disabled.
+- 95 offline unit/logic checks and 32 Playwright cases pass across Node/static transports and desktop/mobile layouts, including 64 executions of the original QA questions. Navigation blockers, successful Next/Compare, invalidation and real-data retry are exercised. The earlier model release also passed the supplied 16-question/six-flow suite with the model enabled and disabled.
 - 33 browser checks passed in Chrome against the static build, including named crop-country questions, focused follow-ups, guided execution through step 4, pending-location edits, Next/Back navigation, country-dependent choices, real field selection, NASA evidence, timelines, invalidation, model load/unload, failures and seven-page PDF output.
 - 19 Node-backed browser checks passed with direct browser NASA access and the data worker blocked, including chat-driven country/location/crop selection, real backend retrieval, comparison and failure/retry.
 - 18 separate Firefox 160 workflow checks passed using native BiDi, including crop-country chat, guided execution through step 4, blocked model/NASA requests, model recovery and narrow-viewport keyboard navigation.
-- Windows process-tree snapshots measured 607 MB aggregate working set after model load/inference and a maximum sampled 749 MB after the additional developer generation/reload check. Shared pages and missed short-lived processes limit interpretation; the exact session peak and real mobile memory remain unverified.
+- The same 15 November model benchmark measured approximately 741 MB aggregate working set after load/inference and a maximum sampled 755 MB after developer generation/reload. Shared pages and missed short-lived processes limit interpretation; the exact session peak and real mobile memory remain unverified.
 - A static-only preview with no backend API retrieved real NASA/SoilGrids data and rendered dated ABS ratios; farm pH remained unknown and soil/water chat answers retained source limitations.
 - NASA 2025 retrievals at Perth, Minneapolis and Nairobi had all five requested parameters present in those requests and different seasonal temperature evidence.
 - Browser TensorFlow.js/WASM retraining completed. On the same development questions the new model matched 85/126 overall versus 83/126 before, and 14/36 additional fixed free-form questions versus 8/36. Legacy matches fell from 75/90 to 71/90; the gain is modest. Vocabulary uses training rows only. This is not agronomic accuracy.
-- One development-machine benchmark measured 903 ms cold model load, 652.6 ms warm load, 84 ms inference and 10 ms to the first evidence answer. These are not device guarantees. WASM heap capacity was 16 MiB; full browser peak memory and real mobile performance remain unmeasured.
+- The dated benchmark of 15 November 2026 (UTC+8; docs/evidence/mini-lm-benchmark-current.json) measured 3.26 s cold model load, 0.16 s warm load, 20 ms inference and 4 ms to the first evidence answer on this development machine, matching slide 5. These are not device guarantees. WASM heap capacity was 16 MiB; exact full-session peak and real mobile performance remain unmeasured.
 
 ## NASA data and resources
 
@@ -67,6 +69,8 @@ The Vercel showcase architecture is static HTML/CSS/JavaScript with Leaflet and 
 - Leaflet 1.9.4, BSD-2-Clause; TensorFlow.js/WASM 4.22.0, Apache-2.0; esbuild build tooling. Third-party licenses remain applicable.
 
 ## SI / AI disclosure
+
+Claude Code (Anthropic) was used on 2026-11-15 to review the app (automated tests, accessibility audit, licence check, source verification) and to write the follow-up plan.
 
 Codex assisted with code, documentation, tests, research organization, model-experiment code and submission preparation. Scientific ranking is deterministic. The custom compact language model was trained on explicitly developmental synthetic question wording and source-linked explanatory continuations; no fabricated NASA observations were used. Its limited evaluation and failures remain public. Only traceable retrieval facts and limitations appear as scientific answers. There is no cloud model inference, autonomous tool execution, generated-code execution or invented-source workflow.
 

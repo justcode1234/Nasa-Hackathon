@@ -103,6 +103,7 @@ export function initChat(getState, actions) {
     const version = revision, question = $('question').value.trim(), serial = ++messageSerial;
     if (!question) return;
     request?.abort(); request = new AbortController();
+    $('question').focus();
     $('ask').disabled = true; $('answer-status').textContent = 'Retrieving source facts…';
     const user = el('article', null, { class: 'chat-message' });
     user.append(el('h3', 'You'), el('p', question)); log.append(user);

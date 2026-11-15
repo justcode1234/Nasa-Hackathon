@@ -2,6 +2,14 @@
 
 ## Current accepted user decisions — supersede the earlier G0 plan
 
+- **Review-plan Phase A (2026-11-15, in verification).** Use a country-validated
+  York/Australia submission fixture, with real NASA observations and matching deck
+  and app outputs. Keep one dated model benchmark across submission materials.
+  Fix Send/Escape focus and short-viewport document scrolling within the approved
+  design. Ship the selected MIT code licence and third-party notices/credits early
+  because the Phase A footer needs a working credits link. Verify and deploy A,
+  then keep production fixed and use preview branches for B/C until the owner
+  decides otherwise. MapLibre V0 approval is still a separate measured gate.
 - **Playwright release checks and actionable blocked navigation (2026-11-15).**
   The user reported Next/Compare stalling with no supported alternatives and
   explicitly required Playwright flow/logic coverage. Use the installed browser,
@@ -222,3 +230,18 @@ LLM benchmarks and training are deferred until evidence and suitable labels exis
   Do not add a cosmetic model loader that cannot load a verified model.
 - Detailed visual design awaits a separate user-reviewed proposal. Current CSS
   supplies responsive layout, focus, forms and readable data only.
+
+## Review plan and user decisions — 2026-11-15 (proposed, not implemented)
+
+- The user chose the **MIT licence** for the team's own code (holder "Team Explorer").
+  Third-party code and data keep their own licences (see the plan, B4).
+- The user asked for a **3D data-visualization plan** and handed implementation to
+  Codex. Proposal: a "globe to field" 3D evidence map inside module 02 (not a new
+  module), using MapLibre GL JS behind a lazy toggle, with Leaflet 2D kept as default and
+  fallback. Adding the dependency still needs user approval after the V0 measurements
+  (AGENTS.md rule 7).
+- Widening crop coverage (tomato, cabbage, bulb onion) is proposed only with the
+  verified extension quotes recorded in docs/plans/2026-11-15-review-fixes-and-3d-plan.md.
+  No crop fact may be added without a source.
+- A partial implementation draft was reverted so main stays green. The plan file is
+  the authoritative specification.

@@ -2,6 +2,25 @@
 
 Date: 2026-11-15 (local). This section supersedes the earlier planning assumptions; the user selected a Node.js backend for local testing alongside a browser-only static Vercel showcase. Previously recorded styling is preserved; no CSS polishing was added.
 
+## Review-plan Phase A — in progress
+
+The deck now uses York/Australia, a country-validated three-crop fixture and real
+NASA POWER 2025 observations; the generated engine result is saved under
+docs/evidence/submission-comparison-current.json. It correctly reports family
+repetition rather than the old impossible UK/radish example. Seven-slide layout
+and seven-page PDF checks pass. The model timings now use the same dated shipped-
+model benchmark as the submission text. National comparison coverage recomputes
+to 89/197, and radish's missing FAOSTAT mapping is explicit.
+
+Node source probes returned 11 complete fields west of Ames and 8 south of
+Naivasha. The full release check passed 95 offline and 32 Playwright cases, exit 0,
+across all four runtime/viewport projects. Send/Escape, all four examples and exact
+submission sequences pass. Usable height is 73.0%, 65.7%, 68.8% at the three specified
+short viewports, all with document scrolling and no horizontal overflow. Full
+Leaflet/MIT licence content is asserted, and the Node credit/licence routes pass.
+Raw report: docs/evidence/phase-a-playwright-local.json. Credits are implemented;
+production is unchanged until the full suite and public checks pass.
+
 ## Next/Compare regression and Playwright release gate
 
 The reported step-3 block was real: the previous tests checked disabled Compare,
@@ -204,3 +223,21 @@ The user resolved the architecture question by requesting both Node testing and 
 - A source-data edge case supplies blank administrative-region codes for some towns. The optional filter now uses a distinct All-regions value; selecting Region not recorded genuinely filters that subset. The Node-backed browser check exercises this with the UK list. The mobile picker screenshot was reviewed. Added slide copy initially overflowed slide 3; shorter copy restored the verified seven-page layout without CSS changes.
 
 The main scientific limits remain: four starter crop types, a historical-year analogue, no crop water balance or validated global planting advice. Real mobile hardware, Safari/WebKit and exact full-session peak memory remain unverified. Vercel publication and portal submission have not occurred.
+
+## Claude Code review — 2026-11-15 (commit 8b53619, no code changes kept)
+
+Executed: `npm test` 95/95 pass; `npm run test:e2e` 16/16 pass (static/Node × desktop/
+mobile). A scratch Playwright audit (outside the repo) found:
+- axe-core 4.10.2 (WCAG 2.2 AA + best practice): 0 violations in 10 states.
+- Public site matched the local build.
+- The country→region→town path works.
+
+Defects found (see docs/plans/2026-11-15-review-fixes-and-3d-plan.md, section 1):
+- Usable content is 54–78 px at 200% zoom and 127 px in phone landscape.
+- Chat focus is lost after clicking Send.
+- Ames and Naivasha example regions return 0 mapped fields.
+- Only 89/197 countries can produce a comparison.
+- Deck slide 4 is not reproducible in the current app.
+- Step-4 uncertainty text is unlabelled.
+
+These are open until fixed and re-tested.

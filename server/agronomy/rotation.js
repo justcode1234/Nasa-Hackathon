@@ -194,7 +194,7 @@ export function compareRotations(inputs, observations) {
           inputs.priority === 'short-season' ? ['Summed maturity upper bounds', 'Family repeats', 'Pea days above ideal'] :
             ['Pea days above ideal', 'Family repeats', 'Summed maturity upper bounds'])],
       limitation: 'Counts are screening rules, not suitability probabilities. Unequal thermal evidence between crops limits the ordering; unknown heat risk is not zero risk. Shorter maturity does not imply lower water demand.' },
-    uncertainty: 'High — local agronomic validation and future weather are unavailable', gaps,
+    uncertainty: 'Uncertainty: high — local agronomic validation and future weather are unavailable', gaps,
     assumptions: ['One field; one crop starts each four-month slot; 12-month horizon.',
       'Maturity upper bound plus 14 days for harvest and turnaround; remaining days are unallocated.',
       `Every crop day uses the same month/day in ${inputs.referenceYear}; windows wrap across the reference year. February 29 uses February 28 if absent.`],

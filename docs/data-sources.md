@@ -1,5 +1,22 @@
 # Sources and scientific scope
 
+## Example-region verification — 15 November 2026
+
+The Ames example now uses 42.00°, −93.69° (farmland west of Ames), returning 11
+complete mapped fields; Naivasha uses −0.77°, 36.42° (south of town), returning 8.
+These are public OSM land-use records, not ownership or available-land claims.
+The existing bounded ±0.01° adapter was used. Raw source URLs, retrieval timestamps,
+bounds and way IDs are in docs/evidence/phase-a-field-probes.json. Larger discovery
+requests hit OSM's 50,000-node limit; no missing fields were fabricated. Browser and
+Node verification is recorded in the phase-A Playwright report once executed.
+The planned read-service migration to Overpass remains separate from this fix.
+
+The submission example is public/data/submission-example.json: explicitly DEMO
+planning inputs for York, Western Australia, and real NASA POWER 2025 observations.
+docs/evidence/submission-comparison-current.json records the generated engine
+results, observations and source metadata. Radish has no mapped FAOSTAT category;
+it is not silently added to any country's alternative choices.
+
 Updated scope: named-place search, actual OSM field polygons/crop tags, GBIF country
 pest context, sourced crop pH/drainage checks and an optional browser model are now
 integrated. The first-pass notes below describe the NASA layer scope.

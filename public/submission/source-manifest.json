@@ -20,8 +20,8 @@
     },
     {
       "path": "AGENTS.md",
-      "bytes": 29629,
-      "sha256": "61d6bdd145a249addd0eabb473e596bef6e17d47faf72fb391528db480e462b6"
+      "bytes": 35836,
+      "sha256": "12aff7e10ce3996c626ca8dfb866bc95bc87e115ff14657d4870e53cffedfec7"
     },
     {
       "path": "docs/challenge-alignment.md",
@@ -30,13 +30,13 @@
     },
     {
       "path": "docs/data-sources.md",
-      "bytes": 10800,
-      "sha256": "6d4147f8630bf684b5d1976caf96f29855a21b552847514980a309423d5bac86"
+      "bytes": 11904,
+      "sha256": "1a934be88757ca93ad2515c93d96342e22713c10ebfaa0bf7d9a7e626108c02e"
     },
     {
       "path": "docs/decisions.md",
-      "bytes": 16138,
-      "sha256": "7289180ab3c73cf2c4db3d66741ccadc199e101ec446097e2f47be547c19d302"
+      "bytes": 17719,
+      "sha256": "32d78043068c43ad4d03821d48c9d5c1ea4b2ea740ecb0ba486e9941f296b8bd"
     },
     {
       "path": "docs/demo-script.md",
@@ -109,6 +109,16 @@
       "sha256": "d1e47628c581b161a14f91f6fac880cf82d4552a3fef781ff97129d438cb7889"
     },
     {
+      "path": "docs/evidence/phase-a-field-probes.json",
+      "bytes": 1590,
+      "sha256": "ffff44c833b7b84a324ccf132dbf791c9a036c3d07d83976bed8956cbad2c3b7"
+    },
+    {
+      "path": "docs/evidence/phase-a-playwright-local.json",
+      "bytes": 174107,
+      "sha256": "5504382cf3acf12756b0d8682ac3034ae31fda33250511231ecdbffc3fbc4fff"
+    },
+    {
       "path": "docs/evidence/playwright-before-fix.json",
       "bytes": 11108,
       "sha256": "4f5d682d12f2809ba97d47f39d45d994e59eafaebd178169179e338ab496197c"
@@ -147,6 +157,16 @@
       "path": "docs/evidence/sourced-context-validation.json",
       "bytes": 6073,
       "sha256": "4e0d643237f039dddf4ea3f01f6fecf60f89b1d2b053e7226ff461915501fd44"
+    },
+    {
+      "path": "docs/evidence/submission-comparison-current.json",
+      "bytes": 85009,
+      "sha256": "f4a7198ee1498897ecb1581f2a3100698cf8c32009c5b744dc41b915b0d96d4c"
+    },
+    {
+      "path": "docs/plans/2026-11-15-review-fixes-and-3d-plan.md",
+      "bytes": 24652,
+      "sha256": "c03d1d88fed921a4409a71d1718aac32062f37a789036dbcfcc78aea29473398"
     },
     {
       "path": "docs/playwright.md",
@@ -225,13 +245,18 @@
     },
     {
       "path": "docs/submission.md",
-      "bytes": 14724,
-      "sha256": "5db0b86d64975cfa6d72d08c040d9daa095fd6964bba1ad1d7dd8717183f512e"
+      "bytes": 15273,
+      "sha256": "89f78635fcf1fe43edc5c45a89cbbad306c0feba8c92bcd48192d620f7d09d64"
     },
     {
       "path": "docs/validation.md",
-      "bytes": 24886,
-      "sha256": "8fc971bbde09ebc59de103c6292d5bf1353f8eed7dcb7ac69b73c69229a36394"
+      "bytes": 26958,
+      "sha256": "66202bab978044f24c1eaac57f891f9c53e1a7975345b172b5cc9e3656e372e0"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1083,
+      "sha256": "30b8017aaecb6af49b7cf88726a689e2d3220f33a1dbb59e8a666bafa670fd2d"
     },
     {
       "path": "models/mini-development-questions.json",
@@ -275,13 +300,13 @@
     },
     {
       "path": "package-lock.json",
-      "bytes": 16331,
-      "sha256": "35f6bf8748dcd598514fcdacbd46468a85461ddda7995a5e792138adeb0841b5"
+      "bytes": 16355,
+      "sha256": "711264b4f3c8082f9f6e0796cbe69372b3403a4fc715a290ff41d6c9a481c6ee"
     },
     {
       "path": "package.json",
-      "bytes": 1206,
-      "sha256": "e6e97a47d87c219078bed279f9335b7ee5ed7fc8e5505b7ba06ffce12c178f2e"
+      "bytes": 1226,
+      "sha256": "10f55ba533760172f78104c563cd843af6ab99376cf1b5bb52ca5a0244d66af5"
     },
     {
       "path": "playwright.config.js",
@@ -289,9 +314,14 @@
       "sha256": "09a72b95846e13feee7963e915f8af3da2ad072e17d77dc5fbd1423770a4b7f8"
     },
     {
+      "path": "public/credits.html",
+      "bytes": 4079,
+      "sha256": "41741437906f25c77bfacef14eb628085f273096ae00cb3f7db5ef7192ab8ee5"
+    },
+    {
       "path": "public/css/app.css",
-      "bytes": 9662,
-      "sha256": "4bbc56b3c68c243559a368282b17e05703ce846b222838f2e37b13b102d40419"
+      "bytes": 10037,
+      "sha256": "b00f7d12eadc696fe1f56114b032433c5cd2f4d76d2359b1d1ee0a219f9a2591"
     },
     {
       "path": "public/data/locations/AD.json",
@@ -1524,14 +1554,19 @@
       "sha256": "b5835ef234b53ba756a5f3ca134f5ebe8db652ada802f547093870a48fc6d903"
     },
     {
+      "path": "public/data/submission-example.json",
+      "bytes": 491,
+      "sha256": "47f9995c69374d1cbee3d1ff96e2d779acac9edfac2b593e281c96d0a1ceb470"
+    },
+    {
       "path": "public/index.html",
-      "bytes": 13363,
-      "sha256": "cdd8da282259bc29cc128171e0719c960d4f33c90fcb561d753c894298de822c"
+      "bytes": 13517,
+      "sha256": "b3b025a5e44cf671eddd86c285d904500325b37146eed0c403cd468f8c4db1fe"
     },
     {
       "path": "public/js/app.js",
-      "bytes": 13469,
-      "sha256": "c0a3609fa1472e2fadb4f668c8fc4b5c5d72a359b6a8627c0ce468c2b68698c0"
+      "bytes": 13485,
+      "sha256": "573f1a818bc04fd9f7dcde52e234641824cbf010e174e4f8c43d046b7f34ad22"
     },
     {
       "path": "public/js/lib/api.js",
@@ -1565,8 +1600,8 @@
     },
     {
       "path": "public/js/lib/tabs.js",
-      "bytes": 2494,
-      "sha256": "55916c3dafef0606e2dabf6e3746c0378cf4470d3852f02e04017ee5047d35f7"
+      "bytes": 2575,
+      "sha256": "08c3970579818e93ca7c6a7923b6614355612c837df7058c173617c6813d962a"
     },
     {
       "path": "public/js/modules/candidate-worker.js",
@@ -1575,8 +1610,8 @@
     },
     {
       "path": "public/js/modules/chat.js",
-      "bytes": 12843,
-      "sha256": "9bc7fa58be551636b6593d39eb990f75b4efd75d6cfd15f25aa15e627ac55afb"
+      "bytes": 12870,
+      "sha256": "c49647947495ab13b6dc9009de0efb4990065954715724b183d4564e42f122f5"
     },
     {
       "path": "public/js/modules/context.js",
@@ -1634,6 +1669,36 @@
       "sha256": "02e2bfd3cfc3fae66d9b26c4dcd3978822901a12b00fca4e05903d64a58bd317"
     },
     {
+      "path": "public/licenses/esbuild-mit.txt",
+      "bytes": 1069,
+      "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681"
+    },
+    {
+      "path": "public/licenses/fieldshift-mit.txt",
+      "bytes": 1083,
+      "sha256": "30b8017aaecb6af49b7cf88726a689e2d3220f33a1dbb59e8a666bafa670fd2d"
+    },
+    {
+      "path": "public/licenses/playwright-apache-2.0.txt",
+      "bytes": 11601,
+      "sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb"
+    },
+    {
+      "path": "public/licenses/playwright-NOTICE.txt",
+      "bytes": 254,
+      "sha256": "6d602191187b35b9b01d2cffa01c8469c2c8d9de8a96f1bf868e0f264f51c81d"
+    },
+    {
+      "path": "public/licenses/playwright-third-party-notices.txt",
+      "bytes": 705,
+      "sha256": "b17ac0bd6f4b8207e440639cc8e0ba1bf1d9eaf9b12236764ab93b346c7abd8e"
+    },
+    {
+      "path": "public/licenses/tensorflow-apache-2.0.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
       "path": "public/models/fieldshift-mini/corpus.json",
       "bytes": 232008,
       "sha256": "b3d5e95be491e904ab7c2446a3fa844371a0d49eebc665b305199b4ee2672c5a"
@@ -1660,18 +1725,18 @@
     },
     {
       "path": "public/submission/fieldshift-deck.pdf",
-      "bytes": 86914,
-      "sha256": "7ff0a6b7ef5465664c6859b6736277ca5c79d6df0968aa0ad79c0d64303d0432"
+      "bytes": 86877,
+      "sha256": "73579d653ba288dc4ff2c1d3b3dd854a31819108569db39806496a7ceafe608c"
     },
     {
       "path": "public/submission/index.html",
-      "bytes": 10838,
-      "sha256": "7f8d2438e00bbfef557f49283e751523eb15746c6209c46a56b4f9d0fe6065cc"
+      "bytes": 10817,
+      "sha256": "f6a033e365c2a95460359591b4f5546def25152c695776a824978ad1bed22ab8"
     },
     {
       "path": "public/submission/submission-text.txt",
-      "bytes": 14724,
-      "sha256": "5db0b86d64975cfa6d72d08c040d9daa095fd6964bba1ad1d7dd8717183f512e"
+      "bytes": 15273,
+      "sha256": "89f78635fcf1fe43edc5c45a89cbbad306c0feba8c92bcd48192d620f7d09d64"
     },
     {
       "path": "public/submission/validation.txt",
@@ -1710,8 +1775,8 @@
     },
     {
       "path": "scripts/build-browser.js",
-      "bytes": 945,
-      "sha256": "0c949873bd4e5881edbd5071d716123c13c968493e6372fb4e93e12dabf343b3"
+      "bytes": 1508,
+      "sha256": "9c8eae8e35600a8d57725a84fb33c382198cc46c0776401f0b9ea9ca9c88bd4d"
     },
     {
       "path": "scripts/build-country-crops.py",
@@ -1780,8 +1845,8 @@
     },
     {
       "path": "scripts/package-source.py",
-      "bytes": 2484,
-      "sha256": "aec4433d24f3aa993d4d744c12dde0ea627b9e344209cb0beb8226e1c070918c"
+      "bytes": 2521,
+      "sha256": "9310e294f82a63f83de8e97a755822b8f169d4e9caba3611f463e2d37f3bf029"
     },
     {
       "path": "scripts/playwright-server.js",
@@ -1790,8 +1855,8 @@
     },
     {
       "path": "scripts/prepare-submission.js",
-      "bytes": 13082,
-      "sha256": "6e45d171494cd7891242017c2940f4212631b0a790c970efee806583cb06073a"
+      "bytes": 13919,
+      "sha256": "45e5cc79f2b66de9f17e280cde7836e66fd4914a8df1cac1252e81d38f3ae389"
     },
     {
       "path": "scripts/qa-assertions.js",
@@ -1850,8 +1915,8 @@
     },
     {
       "path": "server/agronomy/rotation.js",
-      "bytes": 19917,
-      "sha256": "3ef2e0b33c16e2818d399248f9273ce0f18d588f2cbea3194ec16c3c688cab99"
+      "bytes": 19930,
+      "sha256": "f0f5ef21004c9375cbe37cb886276deba8738621327223e2244bf22c3b4cc68a"
     },
     {
       "path": "server/api.js",
@@ -1905,8 +1970,8 @@
     },
     {
       "path": "server/index.js",
-      "bytes": 4267,
-      "sha256": "c928c2c95adddbf8b6946426185cf33679aaae2404f3fe00acba5ef1409adbab"
+      "bytes": 4528,
+      "sha256": "5f38bcb6748bb2c8aeddd97096cefb8ad6385ce4ccb9490cc6441fd2ccbc1327"
     },
     {
       "path": "server/nasa/power.js",
@@ -1960,13 +2025,18 @@
     },
     {
       "path": "tests/deployment.test.js",
-      "bytes": 1191,
-      "sha256": "209969033f1cafccfd78e46a97f851fc5ff3ff30a8c5c46361d9445f1e098ff5"
+      "bytes": 1614,
+      "sha256": "dcafb22c600304471196eb1aad688152da79651dd2c5e374473aca7a0dd4fdac"
     },
     {
       "path": "tests/e2e/assistant.spec.js",
       "bytes": 2847,
       "sha256": "e1e83a2a7e251a81f36ddc4e07f4a72e7038eaedd7d022adb51efaeaae2cc90a"
+    },
+    {
+      "path": "tests/e2e/review-phase-a.spec.js",
+      "bytes": 4836,
+      "sha256": "5936a3ee8cdbe390491d3e07c8573f9dce31fc87a96157f22a0a3ea037d37fee"
     },
     {
       "path": "tests/e2e/workflow.spec.js",
@@ -1980,8 +2050,8 @@
     },
     {
       "path": "tests/integration.test.js",
-      "bytes": 5384,
-      "sha256": "66b6d936fd740b0e2a4241160599dd135d2096c58e40173e959dabf8ef1c27bc"
+      "bytes": 5464,
+      "sha256": "80d8221b4db0778d35eda058773ad4d25d5fb4834efd1abacb037085d0f5173f"
     },
     {
       "path": "tests/locations.test.js",
@@ -2022,6 +2092,11 @@
       "path": "tests/workflow-assistant.test.js",
       "bytes": 13706,
       "sha256": "cc40a5afae19226bac95fc827c9f92103a4d021c4af1b6834674c31643bdd79a"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "bytes": 2417,
+      "sha256": "bcf70960ea8c923e083aa1eb972cf3fb26e79ffacc007d2bf825f8f1baa527ac"
     },
     {
       "path": "vercel.json",

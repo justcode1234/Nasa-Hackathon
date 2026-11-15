@@ -33,7 +33,7 @@ test('HTTP conversational crop-country answers bypass NASA and planning validati
 
 test('HTTP end to end: static modules, local map assets, NASA contract, comparison, sourced assistant', async () => {
   await withApp(async base => {
-    for (const file of ['/', '/js/app.js', '/js/modules/map.js', '/js/modules/si.js', '/js/modules/strategy.js', '/js/modules/data-flow.js', '/css/app.css', '/vendor/leaflet/leaflet.js', '/vendor/leaflet/images/marker-icon.png']) {
+    for (const file of ['/', '/credits.html', '/licenses/fieldshift-mit.txt', '/vendor/leaflet/LICENSE.txt', '/js/app.js', '/js/modules/map.js', '/js/modules/si.js', '/js/modules/strategy.js', '/js/modules/data-flow.js', '/css/app.css', '/vendor/leaflet/leaflet.js', '/vendor/leaflet/images/marker-icon.png']) {
       const response = await fetch(base + file);
       assert.equal(response.status, 200, file);
       assert.ok(response.headers.get('content-security-policy'));

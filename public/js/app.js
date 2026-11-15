@@ -10,7 +10,7 @@ import { resolveCropInput } from './modules/workflow-assistant.js';
 import { comparisonReadiness } from './lib/comparison-readiness.js';
 
 const $ = selector => document.querySelector(selector);
-$('#runtime-status').textContent = getTransport() === 'http' ? 'Node.js testing mode' : 'Browser showcase mode';
+$('#runtime-status').textContent = getTransport() === 'http' ? 'Node.js testing mode' : 'Runs in your browser · no account needed';
 let observations = null;
 let comparedInputs = null;
 let catalogReady = false;
@@ -140,7 +140,7 @@ $('#reference-year').addEventListener('input', () => invalidate(true));
 $('#example-location').addEventListener('change', () => {
   if (!$('#example-location').value) return;
   const [latitude, longitude] = $('#example-location').value.split(',').map(Number);
-  const countryCode = { '52.19,0.09': 'GB', '-31.89,116.77': 'AU', '42.03,-93.62': 'US', '-0.717,36.43': 'KE' }[$('#example-location').value];
+  const countryCode = { '52.19,0.09': 'GB', '-31.89,116.77': 'AU', '42,-93.69': 'US', '-0.77,36.42': 'KE' }[$('#example-location').value];
   $('#latitude').value = latitude;
   $('#longitude').value = longitude;
   invalidate(true);

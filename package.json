@@ -2,6 +2,7 @@
   "name": "fieldshift",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "description": "NASA POWER evidence and transparent crop-rotation screening",
   "engines": {

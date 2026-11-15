@@ -4,6 +4,12 @@
 
 > **Current implementation and cross-device handoff:** read section 10 at the end
 > before resuming work. It records later user decisions and current verified state.
+>
+> **Next work (start here):** section 11 is the active plan from the 2026-11-15 review:
+> pre-deadline fixes, then crop coverage, accessibility, licences and tests, then a 3D
+> evidence map. Full detail: docs/plans/2026-11-15-review-fixes-and-3d-plan.md.
+> Phase A is being implemented; section 10 records executed verification. Later
+> phases remain proposed until their checks and approval gates pass.
 
 ## 1. Mission and product rules
 
@@ -186,6 +192,19 @@ Update this section and docs/decisions.md / docs/validation.md after each substa
 implementation change. Record what changed, actual checks, remaining work and deployment
 state. Do not leave another device relying on an earlier planning assumption.
 
+- **Review plan execution, Phase A in progress:** submission example now uses
+  enterable York/Australia baseline and allowed crops, with saved real NASA/engine
+  output. New rural Ames and Naivasha points returned 11 and 8 complete OSM fields
+  in Node probes. Chat Send focus, labelled uncertainty, readable runtime/footer,
+  credits/licence delivery and short-height document scrolling are implemented.
+  `npm run test:release` passed 95 offline and 32 Playwright cases, exit 0, across
+  both runtimes and viewports. All four examples return at least 3 complete fields;
+  the fixture's exact sequences match the live UI. At 683×384, 640×360 and 844×390,
+  measured usable height is 73.0%, 65.7% and 68.8%, with no horizontal overflow.
+  Seven-slide layout/PDF checks pass. Public release verification is pending.
+  MIT/third-party delivery (B4) is pulled forward because A6 needs a real credits
+  link. Main production is not updated yet; Phase B/C stay proposed.
+
 - **Current goal: Next/Compare fix and Playwright flow tests (verified release).** The user
   reproduced a blocked step-3 screen. Earlier coverage tests checked that Compare
   was disabled but missed the unusable Next/recovery experience. The new Playwright
@@ -337,3 +356,75 @@ state. Do not leave another device relying on an earlier planning assumption.
 - **Still deferred/unverified:** CSS polishing, real mobile hardware, Safari/WebKit,
   exact full-session memory peaks, independent agronomic validation and NASA portal
   submission. Keep these distinct from the tested prototype behavior.
+
+## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
+
+A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry
+it out. **Status: proposed, not implemented.** The tree was left clean at 8b53619, where
+`npm test` passed 95/95 and `npm run test:e2e` passed 16/16 locally. Detail, evidence,
+exact file locations, verified source quotes and ready-to-apply crop entries are in
+**docs/plans/2026-11-15-review-fixes-and-3d-plan.md**. Read it before starting. Update
+section 10 as items become verified; do not mark any item done without executed checks.
+
+**User decisions (2026-11-15):** MIT licence for the team's own code (holder "Team
+Explorer"). Deploy after `npm run test:release` passes; reconfirm if scope changes. The
+user asked for a 3D data-visualization plan. Approval of the MapLibre dependency still
+waits on the V0 measurements.
+
+**Deadline:** Nov 15, 2026, 11:59 PM Singapore time (UTC+8). Only the owner can submit
+in the NASA portal. Do Phase A first, deploy, verify the public site, and remind the
+owner to submit. Then keep production equal to the submitted version until judging
+ends (use Vercel preview URLs for later work) unless the user decides otherwise.
+
+**Phase A — before submission (small, low risk):**
+1. Deck slide 4 shows a result the app cannot reproduce (UK + radish, 0 family repeats).
+   Regenerate the deck, PDF, ZIP and manifest from a current, enterable example.
+   Reconcile the model timing numbers between the deck and submission.md.
+2. Ames and Naivasha example regions return 0 mapped fields. Move them to verified
+   farmland points (≥3 fields), then record coordinates and the retrieval date.
+3. Step 4 shows "High — …" without a label. Change it to "Uncertainty: high — …".
+4. Submission text: state comparable-country coverage (89/197 today), and say radish has
+   no FAOSTAT category, so country lists never offer it.
+5. AI disclosure: add Claude Code (review, accessibility audit, source checks, plan).
+6. Footer: replace "Browser showcase mode" with plain text. Add "Not affiliated with or
+   endorsed by NASA" and a licences/credits link.
+7. Chat: clicking Send drops focus to `<body>`, so Escape stops working. Keep focus in
+   the input.
+8. Short viewports: the fixed app shell leaves 54–78 px of content at 200% zoom and
+   127 px in phone landscape. Under `max-height: 560px`, let the page scroll with a
+   sticky step bar. Target ≥60% usable height.
+
+**Phase B — after Phase A is live:**
+- Add tomato, cabbage and bulb onion (FAO 388, 358, 403), sourced from Clemson HGIC,
+  Utah State, NC State and Cornell. Comparable countries rise from 89 to 166 of 197.
+  Generalise the pea-only heat label (`peaDaysAboveIdeal` → `daysAboveIdealAir`). Move
+  the zero-coverage Playwright case off Singapore.
+- Rework step 4: results first, method in `<details>`, plain words and human dates.
+  Evidence view: °C, month names, charts first.
+- Add MIT `LICENSE`, `THIRD-PARTY-NOTICES.md` and a shipped credits page (ship the full
+  Leaflet BSD-2 text). Move field outlines from the OSM editing API to Overpass (slow and
+  504-prone in today's probe, so add a timeout, fallback endpoint and retry state).
+  Remove the unreferenced Hugging Face workers and their CSP hosts. Add favicon and
+  `aria-hidden` arrows. Merge the CSS override layers with no visual change.
+- Tests: human path (dropdowns, example fields, search, map click); axe-core 4.10.2 dev
+  dependency with zero violations in all projects; zoom/landscape; chat focus; one
+  model-on QA case; example regions return fields. Prefer role/label locators.
+
+**Phase C — 3D evidence map ("globe to field"), inside module 02, never a fifth
+module:**
+- Purpose: show that one NASA POWER value covers a 0.5° × 0.625° cell (1° × 1° solar),
+  then its neighbours, its terrain and the field inside it.
+- Layers:
+  - True-size POWER cell columns: height and colour encode one metric, with a month
+    slider synced to the monthly table; missing values stay missing.
+  - SRTM-derived terrain with a visible exaggeration factor.
+  - The OSM field draped on terrain, with derived slope/aspect as context only.
+  - Dated NASA GIBS overlays (NDVI, SMAP, IMERG, LST), labelled as imagery.
+  - A link from step-4 crop slots to their weather window.
+- Technology: propose MapLibre GL JS 5.x (BSD-3), pinned, vendored and lazy-loaded.
+  Leaflet 2D stays the default and fallback.
+- Rules: no auto-rotation, starfields or glow; reduced motion respected; table/text
+  equivalents; WebGL fallback; size, memory and fps measured, not claimed.
+- Gates: V0 spike + feasibility doc + user approval → V1 columns → V2 GIBS →
+  V3 terrain/field → V4 step-4 link → V5 validation and design review. Build on branch
+  `feature/3d-evidence-map` and deploy previews only.

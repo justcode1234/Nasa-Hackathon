@@ -1,0 +1,12 @@
+{
+  "kind": "DEMO planning inputs only; NASA observations are retrieved separately",
+  "label": "York, Western Australia",
+  "inputs": {
+    "country": "AU", "latitude": -31.89, "longitude": 116.77,
+    "referenceYear": 2025, "planningYear": 2027, "startMonth": 1,
+    "baseline": ["sweet-corn", "pea", "bush-bean"],
+    "allowedCrops": ["bush-bean", "pea", "sweet-corn"],
+    "previousCrop": "", "irrigation": "unknown", "soil": "unknown",
+    "pestHistory": "", "priority": "family"
+  }
+}
