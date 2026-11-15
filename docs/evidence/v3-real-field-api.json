@@ -1,0 +1,67 @@
+{
+  "label": "Live DEM API verification using one previously known OSM object; not a discovery fallback or browser-field-flow pass",
+  "fieldSource": {
+    "url": "https://api.openstreetmap.org/api/0.6/way/732026029/full.json",
+    "retrievedAt": "2026-11-15T07:34:23.820Z",
+    "id": "way/732026029"
+  },
+  "status": 200,
+  "result": {
+    "id": "terrain-context",
+    "product": "Terrain Tiles Terrarium DEM mosaic",
+    "kind": "derived",
+    "units": {
+      "elevation": "m",
+      "slope": "degrees",
+      "aspect": "degrees clockwise from north"
+    },
+    "date": null,
+    "observationDate": null,
+    "retrievedAt": "2026-11-15T07:39:10.376Z",
+    "spatialResolution": {
+      "zoom": 12,
+      "tilePixels": 256
+    },
+    "attribution": "Mapzen Terrain Tiles / contributing datasets including USGS SRTM",
+    "url": "https://registry.opendata.aws/terrain-tiles/",
+    "sourceTiles": [
+      {
+        "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/981/1520.png",
+        "retrievedAt": "2026-11-15T07:39:09.853Z",
+        "fileModifiedAt": "Sun, 12 Nov 2017 09:46:01 GMT",
+        "sourceFiles": "ned/ned19_n42x00_w093x75_ia_central_northcentral_2008.tif, ned/ned19_n42x00_w094x00_ia_central_northcentral_2008.tif, ned/ned19_n42x25_w093x75_ia_central_northcentral_2008.tif, ned/ned19_n42x25_w094x00_ia_central_northcentral_2008.tif"
+      },
+      {
+        "url": "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/982/1520.png",
+        "retrievedAt": "2026-11-15T07:39:10.376Z",
+        "fileModifiedAt": "Sun, 12 Nov 2017 09:46:05 GMT",
+        "sourceFiles": "ned/ned19_n42x00_w093x75_ia_central_northcentral_2008.tif, ned/ned19_n42x25_w093x75_ia_central_northcentral_2008.tif"
+      }
+    ],
+    "missingness": "Missing DEM pixels and gradients stay unknown. Source headers can be unavailable to browser clients.",
+    "notices": [
+      "Historical DEM mosaic including SRTM and other providers, not a surveyed farm height or current observation.",
+      "Tile sampling spacing is not source accuracy. Elevation datum, source resolution and age can vary.",
+      "Slope uses central differences of unexaggerated elevation and neighbouring pixels; aspect is downhill, clockwise from north.",
+      "Only DEM pixel centres inside the supplied polygon, excluding holes, are summarised. Boundaries are approximate.",
+      "Transparent and lowest encoded elevation pixels remain missing. Fewer than nine valid interior gradients leave slope/aspect unassessed.",
+      "Terrain is context only: no erosion prediction, crop suitability, ownership or access is established."
+    ],
+    "fieldId": "way/732026029",
+    "assessed": true,
+    "interiorPixels": 907,
+    "validElevationPixels": 907,
+    "validGradientPixels": 907,
+    "missingGradientPixels": 0,
+    "elevationMinM": 308.18359375,
+    "elevationMaxM": 318.84765625,
+    "slopeMedianDegrees": 0.9767722432865966,
+    "slopeMaxDegrees": 4.531299099955668,
+    "aspectMeanDegrees": 77.95826309250168,
+    "nonFlatAspectPixels": 907,
+    "sampleSpacingM": [
+      28.399753020817077,
+      28.404535867834113
+    ]
+  }
+}

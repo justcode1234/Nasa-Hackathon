@@ -1,0 +1,511 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "terrain"
+    ],
+    "configFile": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\playwright.config.js",
+    "rootDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "static-desktop",
+        "name": "static-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "static-mobile",
+        "name": "static-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "node-desktop",
+        "name": "node-desktop",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/artifacts/playwright/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "node-mobile",
+        "name": "node-mobile",
+        "testDir": "C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "static-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "static-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "static-mobile",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4173",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "static-mobile"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "node-desktop",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 1280,
+            "height": 1000
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "node-desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\artifacts\\playwright\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "node-mobile",
+        "testDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "snapshotDir": "C:\\Users\\~\\Documents\\Life\\Coding\\github\\Nasa-Hackathon\\tests\\e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 90000,
+        "use": {
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "actionTimeout": 15000,
+          "navigationTimeout": 30000,
+          "trace": "retain-on-failure",
+          "screenshot": "only-on-failure",
+          "baseURL": "http://127.0.0.1:4174",
+          "viewport": {
+            "width": 390,
+            "height": 844
+          },
+          "isMobile": true,
+          "hasTouch": true
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "node-mobile"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        {
+          "printSteps": true
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "artifacts/playwright/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "artifacts/playwright/report",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "terrain.spec.js",
+      "file": "terrain.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "real terrain keeps actual scale and leaves field slope unknown without a boundary",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-desktop",
+              "projectName": "static-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5544,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:39:01.323Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Actual DEM point context",
+                      "contentType": "application/json",
+                      "body": "ewogICJpZCI6ICJ0ZXJyYWluLWNvbnRleHQiLAogICJwcm9kdWN0IjogIlRlcnJhaW4gVGlsZXMgVGVycmFyaXVtIERFTSBtb3NhaWMiLAogICJraW5kIjogImVzdGltYXRlZCIsCiAgInVuaXRzIjogewogICAgImVsZXZhdGlvbiI6ICJtIiwKICAgICJzbG9wZSI6ICJkZWdyZWVzIiwKICAgICJhc3BlY3QiOiAiZGVncmVlcyBjbG9ja3dpc2UgZnJvbSBub3J0aCIKICB9LAogICJkYXRlIjogbnVsbCwKICAib2JzZXJ2YXRpb25EYXRlIjogbnVsbCwKICAicmV0cmlldmVkQXQiOiAiMjAyNi0xMS0xNVQwNzozOTowNi4yNTZaIiwKICAic3BhdGlhbFJlc29sdXRpb24iOiB7CiAgICAiem9vbSI6IDEyLAogICAgInRpbGVQaXhlbHMiOiAyNTYKICB9LAogICJhdHRyaWJ1dGlvbiI6ICJNYXB6ZW4gVGVycmFpbiBUaWxlcyAvIGNvbnRyaWJ1dGluZyBkYXRhc2V0cyBpbmNsdWRpbmcgVVNHUyBTUlRNIiwKICAidXJsIjogImh0dHBzOi8vcmVnaXN0cnkub3BlbmRhdGEuYXdzL3RlcnJhaW4tdGlsZXMvIiwKICAic291cmNlVGlsZXMiOiBbCiAgICB7CiAgICAgICJ1cmwiOiAiaHR0cHM6Ly9lbGV2YXRpb24tdGlsZXMtcHJvZC5zMy5hbWF6b25hd3MuY29tL3RlcnJhcml1bS8xMi8zMzc2LzI0MzEucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDc6Mzk6MDYuMjU2WiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJNb24sIDIwIE5vdiAyMDE3IDA0OjE0OjEyIEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJzcnRtL1MzMkUxMTYudGlmIgogICAgfQogIF0sCiAgIm1pc3NpbmduZXNzIjogIk1pc3NpbmcgREVNIHBpeGVscyBhbmQgZ3JhZGllbnRzIHN0YXkgdW5rbm93bi4gU291cmNlIGhlYWRlcnMgY2FuIGJlIHVuYXZhaWxhYmxlIHRvIGJyb3dzZXIgY2xpZW50cy4iLAogICJub3RpY2VzIjogWwogICAgIkhpc3RvcmljYWwgREVNIG1vc2FpYyBpbmNsdWRpbmcgU1JUTSBhbmQgb3RoZXIgcHJvdmlkZXJzLCBub3QgYSBzdXJ2ZXllZCBmYXJtIGhlaWdodCBvciBjdXJyZW50IG9ic2VydmF0aW9uLiIsCiAgICAiVGlsZSBzYW1wbGluZyBzcGFjaW5nIGlzIG5vdCBzb3VyY2UgYWNjdXJhY3kuIEVsZXZhdGlvbiBkYXR1bSwgc291cmNlIHJlc29sdXRpb24gYW5kIGFnZSBjYW4gdmFyeS4iLAogICAgIlNsb3BlIHVzZXMgY2VudHJhbCBkaWZmZXJlbmNlcyBvZiB1bmV4YWdnZXJhdGVkIGVsZXZhdGlvbiBhbmQgbmVpZ2hib3VyaW5nIHBpeGVsczsgYXNwZWN0IGlzIGRvd25oaWxsLCBjbG9ja3dpc2UgZnJvbSBub3J0aC4iLAogICAgIk9ubHkgREVNIHBpeGVsIGNlbnRyZXMgaW5zaWRlIHRoZSBzdXBwbGllZCBwb2x5Z29uLCBleGNsdWRpbmcgaG9sZXMsIGFyZSBzdW1tYXJpc2VkLiBCb3VuZGFyaWVzIGFyZSBhcHByb3hpbWF0ZS4iLAogICAgIlRyYW5zcGFyZW50IGFuZCBsb3dlc3QgZW5jb2RlZCBlbGV2YXRpb24gcGl4ZWxzIHJlbWFpbiBtaXNzaW5nLiBGZXdlciB0aGFuIG5pbmUgdmFsaWQgaW50ZXJpb3IgZ3JhZGllbnRzIGxlYXZlIHNsb3BlL2FzcGVjdCB1bmFzc2Vzc2VkLiIsCiAgICAiVGVycmFpbiBpcyBjb250ZXh0IG9ubHk6IG5vIGVyb3Npb24gcHJlZGljdGlvbiwgY3JvcCBzdWl0YWJpbGl0eSwgb3duZXJzaGlwIG9yIGFjY2VzcyBpcyBlc3RhYmxpc2hlZC4iCiAgXSwKICAibG9jYXRpb24iOiB7CiAgICAibGF0aXR1ZGUiOiAtMzEuODksCiAgICAibG9uZ2l0dWRlIjogMTE2Ljc3CiAgfSwKICAiZWxldmF0aW9uTSI6IDE3OCwKICAic2FtcGxlU3BhY2luZ00iOiAzMi40NDk5NjA4NDUzOTgwMiwKICAic2FtcGxpbmciOiAiTmVhcmVzdCBERU0gcGl4ZWwgYXQgdGhlIHNlbGVjdGVkIGNvb3JkaW5hdGU7IG5vdCBhIHN1cnZleWVkIHBvaW50LiBTbG9wZS9hc3BlY3QgcmVxdWlyZSBhIHNlbGVjdGVkIGZpZWxkLiIKfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-mobile",
+              "projectName": "static-mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4950,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:39:11.823Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Actual DEM point context",
+                      "contentType": "application/json",
+                      "body": "ewogICJpZCI6ICJ0ZXJyYWluLWNvbnRleHQiLAogICJwcm9kdWN0IjogIlRlcnJhaW4gVGlsZXMgVGVycmFyaXVtIERFTSBtb3NhaWMiLAogICJraW5kIjogImVzdGltYXRlZCIsCiAgInVuaXRzIjogewogICAgImVsZXZhdGlvbiI6ICJtIiwKICAgICJzbG9wZSI6ICJkZWdyZWVzIiwKICAgICJhc3BlY3QiOiAiZGVncmVlcyBjbG9ja3dpc2UgZnJvbSBub3J0aCIKICB9LAogICJkYXRlIjogbnVsbCwKICAib2JzZXJ2YXRpb25EYXRlIjogbnVsbCwKICAicmV0cmlldmVkQXQiOiAiMjAyNi0xMS0xNVQwNzozOToxNi4xNzBaIiwKICAic3BhdGlhbFJlc29sdXRpb24iOiB7CiAgICAiem9vbSI6IDEyLAogICAgInRpbGVQaXhlbHMiOiAyNTYKICB9LAogICJhdHRyaWJ1dGlvbiI6ICJNYXB6ZW4gVGVycmFpbiBUaWxlcyAvIGNvbnRyaWJ1dGluZyBkYXRhc2V0cyBpbmNsdWRpbmcgVVNHUyBTUlRNIiwKICAidXJsIjogImh0dHBzOi8vcmVnaXN0cnkub3BlbmRhdGEuYXdzL3RlcnJhaW4tdGlsZXMvIiwKICAic291cmNlVGlsZXMiOiBbCiAgICB7CiAgICAgICJ1cmwiOiAiaHR0cHM6Ly9lbGV2YXRpb24tdGlsZXMtcHJvZC5zMy5hbWF6b25hd3MuY29tL3RlcnJhcml1bS8xMi8zMzc2LzI0MzEucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDc6Mzk6MTYuMTcwWiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJNb24sIDIwIE5vdiAyMDE3IDA0OjE0OjEyIEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJzcnRtL1MzMkUxMTYudGlmIgogICAgfQogIF0sCiAgIm1pc3NpbmduZXNzIjogIk1pc3NpbmcgREVNIHBpeGVscyBhbmQgZ3JhZGllbnRzIHN0YXkgdW5rbm93bi4gU291cmNlIGhlYWRlcnMgY2FuIGJlIHVuYXZhaWxhYmxlIHRvIGJyb3dzZXIgY2xpZW50cy4iLAogICJub3RpY2VzIjogWwogICAgIkhpc3RvcmljYWwgREVNIG1vc2FpYyBpbmNsdWRpbmcgU1JUTSBhbmQgb3RoZXIgcHJvdmlkZXJzLCBub3QgYSBzdXJ2ZXllZCBmYXJtIGhlaWdodCBvciBjdXJyZW50IG9ic2VydmF0aW9uLiIsCiAgICAiVGlsZSBzYW1wbGluZyBzcGFjaW5nIGlzIG5vdCBzb3VyY2UgYWNjdXJhY3kuIEVsZXZhdGlvbiBkYXR1bSwgc291cmNlIHJlc29sdXRpb24gYW5kIGFnZSBjYW4gdmFyeS4iLAogICAgIlNsb3BlIHVzZXMgY2VudHJhbCBkaWZmZXJlbmNlcyBvZiB1bmV4YWdnZXJhdGVkIGVsZXZhdGlvbiBhbmQgbmVpZ2hib3VyaW5nIHBpeGVsczsgYXNwZWN0IGlzIGRvd25oaWxsLCBjbG9ja3dpc2UgZnJvbSBub3J0aC4iLAogICAgIk9ubHkgREVNIHBpeGVsIGNlbnRyZXMgaW5zaWRlIHRoZSBzdXBwbGllZCBwb2x5Z29uLCBleGNsdWRpbmcgaG9sZXMsIGFyZSBzdW1tYXJpc2VkLiBCb3VuZGFyaWVzIGFyZSBhcHByb3hpbWF0ZS4iLAogICAgIlRyYW5zcGFyZW50IGFuZCBsb3dlc3QgZW5jb2RlZCBlbGV2YXRpb24gcGl4ZWxzIHJlbWFpbiBtaXNzaW5nLiBGZXdlciB0aGFuIG5pbmUgdmFsaWQgaW50ZXJpb3IgZ3JhZGllbnRzIGxlYXZlIHNsb3BlL2FzcGVjdCB1bmFzc2Vzc2VkLiIsCiAgICAiVGVycmFpbiBpcyBjb250ZXh0IG9ubHk6IG5vIGVyb3Npb24gcHJlZGljdGlvbiwgY3JvcCBzdWl0YWJpbGl0eSwgb3duZXJzaGlwIG9yIGFjY2VzcyBpcyBlc3RhYmxpc2hlZC4iCiAgXSwKICAibG9jYXRpb24iOiB7CiAgICAibGF0aXR1ZGUiOiAtMzEuODksCiAgICAibG9uZ2l0dWRlIjogMTE2Ljc3CiAgfSwKICAiZWxldmF0aW9uTSI6IDE3OCwKICAic2FtcGxlU3BhY2luZ00iOiAzMi40NDk5NjA4NDUzOTgwMiwKICAic2FtcGxpbmciOiAiTmVhcmVzdCBERU0gcGl4ZWwgYXQgdGhlIHNlbGVjdGVkIGNvb3JkaW5hdGU7IG5vdCBhIHN1cnZleWVkIHBvaW50LiBTbG9wZS9hc3BlY3QgcmVxdWlyZSBhIHNlbGVjdGVkIGZpZWxkLiIKfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-desktop",
+              "projectName": "node-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5516,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:39:22.169Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Actual DEM point context",
+                      "contentType": "application/json",
+                      "body": "ewogICJpZCI6ICJ0ZXJyYWluLWNvbnRleHQiLAogICJwcm9kdWN0IjogIlRlcnJhaW4gVGlsZXMgVGVycmFyaXVtIERFTSBtb3NhaWMiLAogICJraW5kIjogImVzdGltYXRlZCIsCiAgInVuaXRzIjogewogICAgImVsZXZhdGlvbiI6ICJtIiwKICAgICJzbG9wZSI6ICJkZWdyZWVzIiwKICAgICJhc3BlY3QiOiAiZGVncmVlcyBjbG9ja3dpc2UgZnJvbSBub3J0aCIKICB9LAogICJkYXRlIjogbnVsbCwKICAib2JzZXJ2YXRpb25EYXRlIjogbnVsbCwKICAicmV0cmlldmVkQXQiOiAiMjAyNi0xMS0xNVQwNzozOToyNy4wMDlaIiwKICAic3BhdGlhbFJlc29sdXRpb24iOiB7CiAgICAiem9vbSI6IDEyLAogICAgInRpbGVQaXhlbHMiOiAyNTYKICB9LAogICJhdHRyaWJ1dGlvbiI6ICJNYXB6ZW4gVGVycmFpbiBUaWxlcyAvIGNvbnRyaWJ1dGluZyBkYXRhc2V0cyBpbmNsdWRpbmcgVVNHUyBTUlRNIiwKICAidXJsIjogImh0dHBzOi8vcmVnaXN0cnkub3BlbmRhdGEuYXdzL3RlcnJhaW4tdGlsZXMvIiwKICAic291cmNlVGlsZXMiOiBbCiAgICB7CiAgICAgICJ1cmwiOiAiaHR0cHM6Ly9lbGV2YXRpb24tdGlsZXMtcHJvZC5zMy5hbWF6b25hd3MuY29tL3RlcnJhcml1bS8xMi8zMzc2LzI0MzEucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDc6Mzk6MjcuMDA5WiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJNb24sIDIwIE5vdiAyMDE3IDA0OjE0OjEyIEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJzcnRtL1MzMkUxMTYudGlmIgogICAgfQogIF0sCiAgIm1pc3NpbmduZXNzIjogIk1pc3NpbmcgREVNIHBpeGVscyBhbmQgZ3JhZGllbnRzIHN0YXkgdW5rbm93bi4gU291cmNlIGhlYWRlcnMgY2FuIGJlIHVuYXZhaWxhYmxlIHRvIGJyb3dzZXIgY2xpZW50cy4iLAogICJub3RpY2VzIjogWwogICAgIkhpc3RvcmljYWwgREVNIG1vc2FpYyBpbmNsdWRpbmcgU1JUTSBhbmQgb3RoZXIgcHJvdmlkZXJzLCBub3QgYSBzdXJ2ZXllZCBmYXJtIGhlaWdodCBvciBjdXJyZW50IG9ic2VydmF0aW9uLiIsCiAgICAiVGlsZSBzYW1wbGluZyBzcGFjaW5nIGlzIG5vdCBzb3VyY2UgYWNjdXJhY3kuIEVsZXZhdGlvbiBkYXR1bSwgc291cmNlIHJlc29sdXRpb24gYW5kIGFnZSBjYW4gdmFyeS4iLAogICAgIlNsb3BlIHVzZXMgY2VudHJhbCBkaWZmZXJlbmNlcyBvZiB1bmV4YWdnZXJhdGVkIGVsZXZhdGlvbiBhbmQgbmVpZ2hib3VyaW5nIHBpeGVsczsgYXNwZWN0IGlzIGRvd25oaWxsLCBjbG9ja3dpc2UgZnJvbSBub3J0aC4iLAogICAgIk9ubHkgREVNIHBpeGVsIGNlbnRyZXMgaW5zaWRlIHRoZSBzdXBwbGllZCBwb2x5Z29uLCBleGNsdWRpbmcgaG9sZXMsIGFyZSBzdW1tYXJpc2VkLiBCb3VuZGFyaWVzIGFyZSBhcHByb3hpbWF0ZS4iLAogICAgIlRyYW5zcGFyZW50IGFuZCBsb3dlc3QgZW5jb2RlZCBlbGV2YXRpb24gcGl4ZWxzIHJlbWFpbiBtaXNzaW5nLiBGZXdlciB0aGFuIG5pbmUgdmFsaWQgaW50ZXJpb3IgZ3JhZGllbnRzIGxlYXZlIHNsb3BlL2FzcGVjdCB1bmFzc2Vzc2VkLiIsCiAgICAiVGVycmFpbiBpcyBjb250ZXh0IG9ubHk6IG5vIGVyb3Npb24gcHJlZGljdGlvbiwgY3JvcCBzdWl0YWJpbGl0eSwgb3duZXJzaGlwIG9yIGFjY2VzcyBpcyBlc3RhYmxpc2hlZC4iCiAgXSwKICAibG9jYXRpb24iOiB7CiAgICAibGF0aXR1ZGUiOiAtMzEuODksCiAgICAibG9uZ2l0dWRlIjogMTE2Ljc3CiAgfSwKICAiZWxldmF0aW9uTSI6IDE3OCwKICAic2FtcGxlU3BhY2luZ00iOiAzMi40NDk5NjA4NDUzOTgwMiwKICAic2FtcGxpbmciOiAiTmVhcmVzdCBERU0gcGl4ZWwgYXQgdGhlIHNlbGVjdGVkIGNvb3JkaW5hdGU7IG5vdCBhIHN1cnZleWVkIHBvaW50LiBTbG9wZS9hc3BlY3QgcmVxdWlyZSBhIHNlbGVjdGVkIGZpZWxkLiIKfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-mobile",
+              "projectName": "node-mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2505,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:39:31.236Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "Actual DEM point context",
+                      "contentType": "application/json",
+                      "body": "ewogICJpZCI6ICJ0ZXJyYWluLWNvbnRleHQiLAogICJwcm9kdWN0IjogIlRlcnJhaW4gVGlsZXMgVGVycmFyaXVtIERFTSBtb3NhaWMiLAogICJraW5kIjogImVzdGltYXRlZCIsCiAgInVuaXRzIjogewogICAgImVsZXZhdGlvbiI6ICJtIiwKICAgICJzbG9wZSI6ICJkZWdyZWVzIiwKICAgICJhc3BlY3QiOiAiZGVncmVlcyBjbG9ja3dpc2UgZnJvbSBub3J0aCIKICB9LAogICJkYXRlIjogbnVsbCwKICAib2JzZXJ2YXRpb25EYXRlIjogbnVsbCwKICAicmV0cmlldmVkQXQiOiAiMjAyNi0xMS0xNVQwNzozOToyNy4wMDlaIiwKICAic3BhdGlhbFJlc29sdXRpb24iOiB7CiAgICAiem9vbSI6IDEyLAogICAgInRpbGVQaXhlbHMiOiAyNTYKICB9LAogICJhdHRyaWJ1dGlvbiI6ICJNYXB6ZW4gVGVycmFpbiBUaWxlcyAvIGNvbnRyaWJ1dGluZyBkYXRhc2V0cyBpbmNsdWRpbmcgVVNHUyBTUlRNIiwKICAidXJsIjogImh0dHBzOi8vcmVnaXN0cnkub3BlbmRhdGEuYXdzL3RlcnJhaW4tdGlsZXMvIiwKICAic291cmNlVGlsZXMiOiBbCiAgICB7CiAgICAgICJ1cmwiOiAiaHR0cHM6Ly9lbGV2YXRpb24tdGlsZXMtcHJvZC5zMy5hbWF6b25hd3MuY29tL3RlcnJhcml1bS8xMi8zMzc2LzI0MzEucG5nIiwKICAgICAgInJldHJpZXZlZEF0IjogIjIwMjYtMTEtMTVUMDc6Mzk6MjcuMDA5WiIsCiAgICAgICJmaWxlTW9kaWZpZWRBdCI6ICJNb24sIDIwIE5vdiAyMDE3IDA0OjE0OjEyIEdNVCIsCiAgICAgICJzb3VyY2VGaWxlcyI6ICJzcnRtL1MzMkUxMTYudGlmIgogICAgfQogIF0sCiAgIm1pc3NpbmduZXNzIjogIk1pc3NpbmcgREVNIHBpeGVscyBhbmQgZ3JhZGllbnRzIHN0YXkgdW5rbm93bi4gU291cmNlIGhlYWRlcnMgY2FuIGJlIHVuYXZhaWxhYmxlIHRvIGJyb3dzZXIgY2xpZW50cy4iLAogICJub3RpY2VzIjogWwogICAgIkhpc3RvcmljYWwgREVNIG1vc2FpYyBpbmNsdWRpbmcgU1JUTSBhbmQgb3RoZXIgcHJvdmlkZXJzLCBub3QgYSBzdXJ2ZXllZCBmYXJtIGhlaWdodCBvciBjdXJyZW50IG9ic2VydmF0aW9uLiIsCiAgICAiVGlsZSBzYW1wbGluZyBzcGFjaW5nIGlzIG5vdCBzb3VyY2UgYWNjdXJhY3kuIEVsZXZhdGlvbiBkYXR1bSwgc291cmNlIHJlc29sdXRpb24gYW5kIGFnZSBjYW4gdmFyeS4iLAogICAgIlNsb3BlIHVzZXMgY2VudHJhbCBkaWZmZXJlbmNlcyBvZiB1bmV4YWdnZXJhdGVkIGVsZXZhdGlvbiBhbmQgbmVpZ2hib3VyaW5nIHBpeGVsczsgYXNwZWN0IGlzIGRvd25oaWxsLCBjbG9ja3dpc2UgZnJvbSBub3J0aC4iLAogICAgIk9ubHkgREVNIHBpeGVsIGNlbnRyZXMgaW5zaWRlIHRoZSBzdXBwbGllZCBwb2x5Z29uLCBleGNsdWRpbmcgaG9sZXMsIGFyZSBzdW1tYXJpc2VkLiBCb3VuZGFyaWVzIGFyZSBhcHByb3hpbWF0ZS4iLAogICAgIlRyYW5zcGFyZW50IGFuZCBsb3dlc3QgZW5jb2RlZCBlbGV2YXRpb24gcGl4ZWxzIHJlbWFpbiBtaXNzaW5nLiBGZXdlciB0aGFuIG5pbmUgdmFsaWQgaW50ZXJpb3IgZ3JhZGllbnRzIGxlYXZlIHNsb3BlL2FzcGVjdCB1bmFzc2Vzc2VkLiIsCiAgICAiVGVycmFpbiBpcyBjb250ZXh0IG9ubHk6IG5vIGVyb3Npb24gcHJlZGljdGlvbiwgY3JvcCBzdWl0YWJpbGl0eSwgb3duZXJzaGlwIG9yIGFjY2VzcyBpcyBlc3RhYmxpc2hlZC4iCiAgXSwKICAibG9jYXRpb24iOiB7CiAgICAibGF0aXR1ZGUiOiAtMzEuODksCiAgICAibG9uZ2l0dWRlIjogMTE2Ljc3CiAgfSwKICAiZWxldmF0aW9uTSI6IDE3OCwKICAic2FtcGxlU3BhY2luZ00iOiAzMi40NDk5NjA4NDUzOTgwMiwKICAic2FtcGxpbmciOiAiTmVhcmVzdCBERU0gcGl4ZWwgYXQgdGhlIHNlbGVjdGVkIGNvb3JkaW5hdGU7IG5vdCBhIHN1cnZleWVkIHBvaW50LiBTbG9wZS9hc3BlY3QgcmVxdWlyZSBhIHNlbGVjdGVkIGZpZWxkLiIKfQ=="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372293df4719bdb16f6e-447d7d3baec200e0f133",
+          "file": "terrain.spec.js",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "failed terrain remains unknown and an explicit retry restores real pixels",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-desktop",
+              "projectName": "static-desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4070,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:39:07.046Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "static-mobile",
+              "projectName": "static-mobile",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4562,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:39:16.944Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-desktop",
+              "projectName": "node-desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2683,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:39:27.860Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "node-mobile",
+              "projectName": "node-mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2190,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-15T07:39:33.918Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372293df4719bdb16f6e-3a44205f0c923a2c2d31",
+          "file": "terrain.spec.js",
+          "line": 29,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T07:38:59.936Z",
+    "duration": 36536.8,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -19,6 +19,10 @@ licences, source attribution and the exact runtime package versions.
   Their licence and installed NOTICE files are included under public/licenses.
 - axe-core 4.10.2: MPL-2.0, Deque Systems; test-only accessibility tooling.
   Its full installed-package licence is included under public/licenses.
+- Terrain Tiles: source-specific licences/attribution, including USGS SRTM,
+  NED/3DEP, GMTED, Geoscience Australia and other contributors. Full attribution
+  ships in public/licenses/terrain-attribution.txt. Per-tile source headers are
+  retained when exposed; the mosaic is not uniformly NASA or a farm survey.
 - NASA POWER: NASA data attribution and the exact request/product metadata remain
   attached to observations. NASA names and logos are not licensed by our MIT text.
 - GeoNames: CC BY 4.0; adapted, dated city extract. OpenStreetMap contributors:

@@ -2,6 +2,7 @@ import {api} from '../lib/api.js';
 import {el,list,table,number} from '../lib/dom.js';
 import {columnData} from '../lib/power-columns.js';
 import {imageryControls} from './gibs-controls.js';
+import {terrainControls} from './terrain-controls.js';
 
 let library;
 async function renderer(){
@@ -23,9 +24,10 @@ export async function createEvidenceMap({getState,onClose}){
   const legend=el('p','',{id:'map3d-legend'}),metadata=el('div',null,{id:'map3d-metadata'}),values=el('div',null,{id:'map3d-values'});
   const tileNotice=el('p','',{class:'notice',role:'status',hidden:''});
   root.append(controls,status,tileNotice,canvas,label,legend,metadata,values);
-  let map,data,features=[],month=1,revision=0,closed=false;
+  let map,data,terrain,features=[],month=1,revision=0,closed=false;
   try{
-    map=new lib.Map({container:canvas,center:[0,0],zoom:1.5,preserveDrawingBuffer:true,style:{version:8,projection:{type:'globe'},sources:{
+    const initial=getState().location;if(!initial)throw new Error('The selected location changed. Open 3D for the new point.');
+    map=new lib.Map({container:canvas,center:[initial.longitude,Math.max(-85,Math.min(85,initial.latitude))],zoom:6.8,pitch:50,preserveDrawingBuffer:true,style:{version:8,projection:{type:'mercator'},sources:{
       globe:{type:'raster',tiles:['https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg'],tileSize:256,maxzoom:8,attribution:'<a href="https://gibs.earthdata.nasa.gov/">NASA GIBS Blue Marble</a> (static composite)'},
       osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,minzoom:9,maxzoom:19,attribution:'<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a>'}
     },layers:[{id:'globe',type:'raster',source:'globe',maxzoom:9},{id:'osm',type:'raster',source:'osm',minzoom:9}]}});
@@ -33,9 +35,10 @@ export async function createEvidenceMap({getState,onClose}){
   map.addControl(new lib.NavigationControl());
   map.on('error',()=>{tileNotice.hidden=false;tileNotice.textContent='Some 3D map tiles could not load. The text table and 2D map remain available.';});
   function view(global=false){
-    if(!data)return;
+    const selection=data?.selection??getState().location;if(!selection)return;
+    terrain?.disable();
     map.setProjection({type:global?'globe':'mercator'});
-    map.jumpTo({center:[data.selection.longitude,Math.max(-85,Math.min(85,data.selection.latitude))],zoom:global?1.5:6.8,pitch:global?0:50,bearing:0});
+    map.jumpTo({center:[selection.longitude,Math.max(-85,Math.min(85,selection.latitude))],zoom:global?1.5:6.8,pitch:global?0:50,bearing:0});
   }
   globe.addEventListener('click',()=>view(true));regional.addEventListener('click',()=>view());
   function highlight(period){
@@ -73,11 +76,11 @@ export async function createEvidenceMap({getState,onClose}){
       metadata.append(el('p','Globe basemap: NASA GIBS Blue Marble static composite; no observation date is supplied by its layer. Raster tiles provide context, not extra rainfall values.'));
       if(!matches)metadata.append(el('p','The regional grid differs from the currently loaded point evidence. Reload the point evidence before comparing or linking its values.',{class:'notice'}));
       status.textContent=`${data.cells.length} native cells loaded. ${observations?(matches?'Selected-cell monthly values match the loaded point evidence.':'Point/grid values differ; review the notice below.'):'Load point evidence in step 2 for a direct comparison.'}`;
-      draw();view();
+      draw();
     }catch(error){if(!closed&&version===revision){status.textContent=`${error.message} No replacement readings were generated.`;retry.hidden=false;}}
   }
   retry.addEventListener('click',()=>load());
-  function dispose(){if(closed)return;closed=true;revision++;map.remove();root.remove();if(window.fieldshift3D===instance)delete window.fieldshift3D;}
+  function dispose(){if(closed)return;closed=true;revision++;map.remove();root.remove();if(window.fieldshift3D===instance){delete window.fieldshift3D;delete window.fieldshiftTerrainContext;}}
   back.addEventListener('click',()=>{dispose();onClose();});
   const instance={close:dispose,resize(){map.resize();},get map(){return map;},snapshot(){return{data,month,features};}};
   window.fieldshift3D=instance;
@@ -91,6 +94,10 @@ export async function createEvidenceMap({getState,onClose}){
   map.addLayer({id:'power-edges',type:'line',source:'power-cells',paint:{'line-color':['case',['get','selected'],'#173d2c','#657368'],'line-width':['case',['get','selected'],3,1]}});
   root.insertBefore(imageryControls({map,isClosed:()=>closed}),canvas);
   await load();
+  if(!closed){
+    terrain=terrainControls({map,getState,isClosed:()=>closed,setRainVisible:visible=>{legend.hidden=!visible;for(const id of ['power-columns','power-missing','power-edges'])map.setLayoutProperty(id,'visibility',visible?'visible':'none');}});
+    root.insertBefore(terrain.root,canvas);
+  }
   })().catch(error=>{dispose();throw error;});
   return instance;
 }

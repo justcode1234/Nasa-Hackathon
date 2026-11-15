@@ -11,13 +11,13 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const previewId = createHash('sha256').update(path.resolve(root)).digest('hex').slice(0, 16);
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.bin': 'application/octet-stream', '.pdf': 'application/pdf', '.zip': 'application/zip', '.txt': 'text/plain; charset=utf-8' };
 
-async function readJson(request) {
+async function readJson(request,limit=16_384) {
   if (!request.headers['content-type']?.startsWith('application/json')) throw new AppError('Send application/json.', 415);
   const chunks = [];
   let size = 0;
   for await (const chunk of request) {
     size += chunk.length;
-    if (size > 16_384) throw new AppError('Request body is too large.', 413);
+    if (size > limit) throw new AppError('Request body is too large.', 413);
     chunks.push(chunk);
   }
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); }
@@ -39,7 +39,7 @@ export function createApp(dependencies = {}) {
         return json({ app: 'fieldshift-node-preview', previewId });
       }
       if (url.pathname.startsWith('/api/')) {
-        return json(await handleApi({ method: request.method, url, readJson: () => readJson(request) }));
+        return json(await handleApi({ method: request.method, url, readJson: () => readJson(request,url.pathname==='/api/terrain-context'?65_536:16_384) }));
       }
       if (!['GET', 'HEAD'].includes(request.method)) throw new AppError('Method not allowed.', 405);
       let base = path.join(root, 'public');

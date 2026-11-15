@@ -381,3 +381,41 @@ eight separate real-field success checks remain mandatory release blockers.
 Reports: docs/evidence/v2-playwright-complete.json and v2-gibs-metadata.json.
 Small subsequent lifecycle guards avoid updates after map closure. A final complete
 release/a11y/performance run is still required after V3/V4. Production is frozen.
+
+## V3 terrain and field context - implemented, partial live verification
+
+Added shared Node/worker terrain-point and terrain-context endpoints. Terrarium
+PNG decoding validates CRCs, dimensions, filters, bounded decompression and missing
+pixels with no new dependency. Field context masks pixel centres against a Polygon
+and its holes; gradients use unexaggerated central differences with actual Web
+Mercator ground sampling. Circular aspect handles north wrapping and cancellation.
+Fewer than nine valid gradients leaves slope/aspect unassessed; nine is an
+engineering support threshold, not agronomic validation or a confidence percentage.
+Analysis is limited to 1,000 vertices, 50,000 candidate pixels and nine zoom-12 tiles.
+Dateline-crossing fields and non-Mercator polar areas remain explicitly unsupported.
+
+The optional view has DEM terrain, hillshade, an explicit x1/x2/x3 exaggeration
+control, selected-point marker and selected-field fill/outline when present.
+Terrain view hides scaled rain columns; returning to regional/globe restores them.
+Exaggeration changes display only. Missing terrain has an actual retry and no
+substituted values. Full provider attribution is shipped and linked. The DEM is a
+mosaic including SRTM and other sources, not uniformly NASA, a current survey or
+an erosion/crop prediction. Per-tile source headers are retained when exposed;
+file modification dates are not acquisition dates.
+
+Executed: 112/112 offline tests, including known RGB pixels independently checked
+with Pillow, malformed PNG rejection, synthetic plane slopes/aspects, hole masks,
+small-field gaps and cache/failure contracts. Eight real-terrain browser cases pass
+across static/Node and desktop/mobile: actual pixels, sampling, x1 default, numeric
+invariance under x2, explicit no-field gap, tile/API failure and real retry.
+
+A one-object provenance check (not a discovery fallback) captured two previously
+known OSM outlines. The Ames Node HTTP endpoint assessed 907 gradients, median
+slope 0.9768 degrees, circular aspect 77.96 degrees, using NED mosaic tiles.
+The Naivasha outline had only five gradients and correctly stayed unassessed;
+its sources include SRTM/GMTED. These are derived DEM examples, not surveyed farm
+facts. The actual browser field-selection/drape path is still unverified because
+Overpass has not returned the field list. Those original live success tests are
+unchanged and still block release. No recorded outline substitutes for them.
+Evidence: docs/evidence/v3-*. V4 strategy linkage and V5 full validation remain;
+production is frozen and no new branch has been deployed.
