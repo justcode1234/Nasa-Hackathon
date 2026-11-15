@@ -1,3 +1,4 @@
+import { historicalWindow, rainIndicators } from '../../public/js/lib/weather-window.js';
 import { AppError } from '../errors.js';
 import { validateLocation } from '../nasa/power.js';
 import { catalog, findCrop, mentionedCrops, ambiguousCornQuestion, cornScopeNotice } from './catalog.js';
@@ -41,21 +42,6 @@ export function validateInputs(body) {
   };
 }
 
-function historicalWindow(observations, start, length) {
-  const referenceYear = Number(observations.period.start.slice(0, 4));
-  const indexes = new Map(observations.dates.map((date, i) => [date.slice(5), i]));
-  const days = [];
-  let leapDaySubstitutions = 0;
-  for (let i = 0; i < length; i++) {
-    let monthDay = iso(start + i * DAY).slice(5);
-    if (monthDay === '02-29' && !indexes.has(monthDay)) { monthDay = '02-28'; leapDaySubstitutions++; }
-    const index = indexes.get(monthDay);
-    const day = { referenceDate: `${referenceYear}-${monthDay}` };
-    for (const id of ['T2M', 'T2M_MIN', 'T2M_MAX', 'PRECTOTCORR']) day[id] = observations.parameters[id]?.values[index] ?? null;
-    days.push(day);
-  }
-  return { days, leapDaySubstitutions };
-}
 
 function evaluate(ids, inputs, observations, label, baseline = false) {
   const seen = new Set();
@@ -110,13 +96,8 @@ function evaluate(ids, inputs, observations, label, baseline = false) {
     criteria.missingEvidenceDays += missing;
     criteria.frostRiskDays += frost;
     criteria.daysAboveIdealAir += heat ?? 0;
-    const rain = days.map(d => d.PRECTOTCORR).filter(v => v !== null);
-    let run = 0, longestZeroRainRunDays = 0;
-    for (const day of days) {
-      run = day.PRECTOTCORR === 0 ? run + 1 : 0;
-      longestZeroRainRunDays = Math.max(longestZeroRainRunDays, run);
-    }
-    criteria.longestZeroRainRunDays = Math.max(criteria.longestZeroRainRunDays, longestZeroRainRunDays);
+    const rain = rainIndicators(days);
+    criteria.longestZeroRainRunDays = Math.max(criteria.longestZeroRainRunDays, rain.longestZeroRainRunDays);
     const minimums = days.map(d => d.T2M_MIN).filter(v => v !== null);
     const maximums = days.map(d => d.T2M_MAX).filter(v => v !== null);
     if (frost) risks.push(`Slot ${i + 1}: ${frost} historical analogue days had regional minimum air temperature ≤0°C for frost-tender ${crop.name}.`);
@@ -127,9 +108,7 @@ function evaluate(ids, inputs, observations, label, baseline = false) {
       indicators: { kind: 'derived from historical analogue, not a forecast', sourceId: 'nasa-power',
         referenceYear: inputs.referenceYear, assessedDays: duration, missingEvidenceDays: missing,
         frostRiskDays: crop.frostTender ? frost : null, daysAboveIdealAir: heat,
-        precipitationMm: rain.length ? rain.reduce((a, b) => a + b, 0) : null,
-        precipitationValidDays: rain.length, precipitationPartial: rain.length !== duration,
-        longestZeroRainRunDays, minAirC: minimums.length ? Math.min(...minimums) : null,
+        ...rain, minAirC: minimums.length ? Math.min(...minimums) : null,
         maxAirC: maximums.length ? Math.max(...maximums) : null, leapDaySubstitutions },
       soilChecks, notes: crop.notes };
   });

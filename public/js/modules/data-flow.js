@@ -80,8 +80,10 @@ export function renderEvidence(data) {
 }
 globalThis.window?.addEventListener('fieldshift:monthchange',event=>{
   document.querySelectorAll('[data-evidence-month]').forEach(row=>{
-    const selected=row.dataset.evidenceMonth===event.detail.period;
+    const periods=event.detail.periods??[event.detail.period];
+    const selected=periods.includes(row.dataset.evidenceMonth);
     row.classList.toggle('selected-evidence-month',selected);
-    if(selected)row.setAttribute('aria-current','true');else row.removeAttribute('aria-current');
+    if(selected&&periods.length===1)row.setAttribute('aria-current','true');else row.removeAttribute('aria-current');
+    if(selected&&event.detail.window)row.setAttribute('aria-description','This month overlaps the selected crop window. This row is a full-month total, not a crop-window total.');else row.removeAttribute('aria-description');
   });
 });

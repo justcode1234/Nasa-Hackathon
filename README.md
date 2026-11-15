@@ -64,6 +64,24 @@ The retrained model matched **14/36 new free-form development questions**, versu
 
 The earlier 184 MB SmolLM2 experiment and a 12.5 MB TinyStories candidate were benchmarked. They are not the default assistant: the latter failed both evidence-following checks. No cloud model inference occurs.
 
+## Optional 3D evidence preview
+
+On `feature/3d-evidence-map`, choose a point and open **3D evidence map** in step 1.
+It lazy-loads MapLibre; Leaflet remains the default and WebGL fallback. Native POWER
+rain cells and exact tables follow the month control. Dated GIBS layers are visual
+context only. Terrain has a visible exaggeration factor and explicit DEM sampling
+and missingness. A supported step-4 crop-slot button opens the exact historical
+rain window used in its strategy result, rather than its entire four-month slot.
+
+This work has not been deployed. The public submission stays at Phase A, with four
+screening crops and 89/197 comparable-country coverage. This feature branch has
+seven screening crops and 166/197 coverage, but the real Overpass field-success
+release cases still fail. Point planning remains available; that does not prove the
+field selection/drape path. See [verification status](docs/3d-validation.md),
+[visual review](docs/3d-visual-review.md) and [measured feasibility](docs/3d-feasibility.md).
+Automatic Git deployment is disabled for this exact feature branch so it can be
+synced across devices while the release gate is red. Main/production is unchanged.
+
 ## Sources and limits
 
 - **NASA POWER**: actual T2M, T2M_MAX, T2M_MIN, PRECTOTCORR and ALLSKY_SFC_SW_DWN. Temperature/rain support is nominally 0.5° × 0.625°; solar 1° × 1°. A historical year is not a forecast or climate normal. Values retain units, period, retrieval time, source URL and missingness.
@@ -73,7 +91,7 @@ The earlier 184 MB SmolLM2 experiment and a 12.5 MB TinyStories candidate were b
 - **GeoNames**: dated, country-sized town lists and administrative-region names, with source hashes and CC BY 4.0 attribution. Country selection clears the old point; town selection sets a gazetteer coordinate, not a farm boundary. Smaller places may need search or map selection. The largest current country file is about 454 KB and loads only when that country is chosen.
 - **GBIF + IPPC/UF IFAS**: a small sourced host watchlist and historical country occurrences for fall armyworm/diamondback moth. Country presence is not farm presence, outbreak status or pest probability.
 - **FAOSTAT QCL + UN M49**: dated national primary-crop production records drive country lists, not trade/imports or generic climate guesses. Commodity categories are broader than cultivars; green beans/peas/corn provide explicitly qualified starter-rule mappings. Absence is unknown, not proof a crop cannot grow. Full source flags, years, units, source hash, licence and reproducible extraction are included.
-- **UMN/Cornell Extension**: the four sourced starter vegetables are bush snap bean, garden pea, sweet corn and radish. Source-region evidence is not worldwide validation.
+- **UMN/Cornell/Clemson/Utah State/NC State Extension**: this branch has screening rules for bush snap bean, garden pea, sweet corn, radish, tomato, cabbage and bulb onion. Commodity/cultivar and timing limitations remain explicit. Source-region evidence is not worldwide validation.
 
 Comparisons assume one field, three four-month slots, maturity upper bounds plus a disclosed 14-day harvest/turnaround allowance. They screen family repeats, calendar fit, missing evidence, frost exposure, limited heat/pH/drainage rules and rain-free exposure. They do not calculate crop water demand, fertilizer credit, pest prevention, yield gains, soil improvement, profitability or savings. Unsupported crops remain visible and unassessed.
 

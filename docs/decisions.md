@@ -419,3 +419,125 @@ Overpass has not returned the field list. Those original live success tests are
 unchanged and still block release. No recorded outline substitutes for them.
 Evidence: docs/evidence/v3-*. V4 strategy linkage and V5 full validation remain;
 production is frozen and no new branch has been deployed.
+
+
+## V4 exact strategy weather windows; V5 focused review - 15 November 2026
+
+A supported crop-slot button opens 3D at the exact upper-maturity assessment
+window used by the strategy. Shared historicalWindow/rainIndicators functions
+serve both paths; the UI does not approximate the four-month slot. Daily selected
+cell/point equality and exact strategy sum, valid-day, partial, zero-run and leap
+checks reject stale or different weather. Reference calendar dates wrap December;
+a missing reference leap day maps to February 28 exactly as before. The map table,
+legend and overlapping full-month evidence rows follow the window, with an explicit
+warning that whole-month rows are not partial-window totals. Monthly browsing is
+paused/hidden until Return to monthly view. Constraint edits remove the linked
+window; location/year changes still close and dispose 3D. Unsupported slots have
+no invented weather-window action.
+
+Executed: npm test 114/114; focused weather-window + map3d-review Playwright 8/8
+across all four projects, including 24 axe scans, no CSP/page errors, reduced
+motion, no idle camera movement, short-screen layout and focus return. The review
+caught a real missing OSM connect-src permission (MapLibre uses fetch rather than
+Leaflet image loading); both Node/static policies now allow the exact tile host.
+The before-fix failure is retained in v5-csp-regression-before-fix.json; passing
+focused report is v4-v5-playwright-focused.json. A later tiny UI change hides the
+paused month control; the complete release run will recheck it.
+
+The actual full application benchmark, including native POWER data, dated NDVI,
+terrain and a loaded compact model with actual inference, measured 2.899 s desktop
+and 1.619 s phone-sized open-to-data, about 60 fps, and 846.6 / 762.0 MB maximum
+sampled working set. Zero renderer requests before opt-in; zero page/CSP errors or
+observed HTTP error responses. Model inference completed but its proposed topic
+was rejected by the grounded-answer guard; this is not model accuracy evidence.
+The 293,319-byte gzip lazy renderer remains unchanged. Report and screenshots:
+docs/evidence/v5-app-*. Both runs used desktop headless Chrome; real phone memory,
+exact full-session peak and the live-field path are unverified. Benchmark script:
+node scripts/benchmark-3d-app.js (build first). Its first attempt failed at a wrong
+Close-button locator; the corrected run completed both viewports.
+
+The existing real-example field test now also requires the live-returned Ames
+outline to render on terrain with derived slope context; no fixture can satisfy
+it. This new section has not yet executed past discovery. The 07:58 UTC curl status
+probe received HTTP 406 from overpass-api.de; earlier app probes timed out. Do not
+try alternate identities to bypass rejection. The required full release, real
+field selection/drape, user visual signoff and preview delivery remain open.
+Production remains frozen at Phase A and nothing was pushed or deployed.
+
+
+## Cross-device branch sync without deployment
+
+The preview implementation remains on feature/3d-evidence-map. Its vercel.json now
+sets git.deploymentEnabled to false for that exact branch only. Vercel documents
+this as preventing automatic deployments for matching branch commits:
+https://vercel.com/docs/project-configuration/git-configuration . This lets the
+feature source/handoff be pushed for another device without bypassing the user's
+green-release requirement. Main remains enabled by its existing configuration;
+no production branch or alias setting is changed. A future preview still requires
+the complete release gate, then deliberate deployment/re-enablement. CLI identity
+was rechecked as justcode1234; linked project and team IDs match the established
+nasa-hackathon project. Preserve the separate 4chatgptsim account. No credentials
+were read or stored. The push and post-push deployment check are pending here.
+
+
+## V5 full-run checkpoint and visual approval
+
+The user approved the current actual 3D visuals for preview on 15 November 2026.
+No further visual approval is needed for this reviewed layout. Production remains
+frozen; this approval does not waive the failed release gate.
+
+npm run test:release completed: 114/114 offline and 84/92 browser cases passed,
+eight field-lookup failures, zero skips/flaky cases. Each project has 21 passes and
+two field failures. All original 16 QA prompts ran in every project (64 executions),
+and the four model-on cases ran Q01/Q03/Q16 (12 executions). All 44 axe state scans
+passed: 20 existing flow states and 24 3D/crop-window states. All point terrain,
+GIBS, native-cell, exact crop-window, fallback, retry, focus and reduced-motion
+cases passed in the complete run. Current product sources were unchanged during
+the run except the branch-only Git deployment suppression metadata.
+
+The Node desktop trace shows Cambridge /api/farms returned 200 and its field count
+passed before York returned 502; service availability is partial/unreliable, not
+proven globally down. The Ames drape assertion was unreachable behind earlier
+example failures, so it has been moved into a standalone real-discovery test.
+The original every-example and human-path success requirements remain intact.
+The new standalone four-project run is in progress. No saved outline is injected.
+
+Complete failure summary: docs/evidence/v5-release-summary.json. The report with
+actual replies/values is v5-release.json; the original report is preserved losslessly
+as v5-release.raw.json.gz with its SHA-256. Large passed-rule axe node lists are
+compacted only in the readable copy; failure details and raw evidence are retained.
+This avoids committing repeated multi-megabyte passed-node lists. Current public
+core assets still match Phase A (v5-production-freeze.json); remote main remains
+f4c4fef. No behavior release has been made.
+
+
+## Added user requests - 15 November 2026
+
+The user approved the 3D visual direction for preview. The separate live Ames
+field-terrain test failed in all four projects at field discovery (v5-field-terrain.json).
+The live field-selection/drape path remains unverified; future full release now
+contains 96 browser cases, including the standalone field case. Do not deploy.
+
+New authorized work: add small English-only STT and TTS with a mic icon/control in
+chat, loaded on demand, and investigate/train a compact local classification/
+decision model inspired by TypeSafe AI Jev. The user corrected the earlier JEPA/
+LeJEPA interpretation: do NOT build JEPA. Reference supplied: https://jevtypesafe.org/ .
+That page identifies itself as an unofficial third-party host, so verify TypeSafe's
+own documentation before making claims. Do not call a locally trained classifier
+Jev, claim access to proprietary weights, or assume exponential speedup. Benchmark
+schema correctness, held-out performance, abstention and latency against the existing
+rule engine and tiny language model. Keep validated actions/scientific rules final.
+No cloud model/account/paid service is authorized by these requests; prefer local.
+Speech transcripts should be editable before Send; voice playback must use the
+actual grounded response and have Stop/Unload controls. Real microphone permission
+comes only from an explicit mic click. No audio was recorded in the research step.
+
+Research so far: OpenAI whisper-tiny.en explicitly has English-only training and
+39M parameters; Xenova provides ONNX exports for Transformers.js. KittenTTS Nano
+int8 advertises 15M parameters and about 25 MB, but its exact English-only training
+provenance/runtime still needs verification. The official KittenTTS web SDK docs
+mention optional analytics (must be off); npm @kittentts/web currently returns 404,
+so do not pretend that advertised install works. No new speech dependency has yet
+been installed. Current registry Transformers.js is 4.3.2; evaluate/pin only after
+review and browser feasibility. The previous HF workers remain archived; any new
+speech-only runtime needs an explicit narrow CSP and licence update.

@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 async function prepare(page){
-  await page.context().route(/overpass-api\.de|overpass\.private\.coffee|\/api\/farms\?/,route=>route.abort('failed'));
+  await page.context().route(/overpass-api\.de|overpass\.private\.coffee|maps\.mail\.ru|\/api\/farms\?/,route=>route.abort('failed'));
   await page.goto('/',{waitUntil:'domcontentloaded'});
   await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption('-31.89,116.77');
   await page.getByRole('button',{name:'Open 3D evidence map',exact:true}).click();

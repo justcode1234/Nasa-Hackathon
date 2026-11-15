@@ -4,7 +4,7 @@ The user approved preview implementation on 15 November. V1 is now implemented
 and locally verified (104 offline +16 browser tests); MapLibre 6.4.1 is the pinned
 security-fixed dependency. The original 5.24.0 V0 measurements below are historical
 and superseded by the security/measurement section at the end. Production remains
-frozen, Leaflet stays default, V2 adds dated imagery with 12 passing browser cases; V3-V5 are pending.
+frozen, Leaflet stays default, V2 adds dated imagery with 12 passing browser cases; V3 is implemented with its live field browser path unverified; V4 is locally verified and V5 is in progress.
 
 Reproduce locally: `node scripts/3d-v0-spike.js`, then open
 http://127.0.0.1:4175. It downloads the exact pinned npm package into ignored
@@ -142,3 +142,17 @@ actual terrain rendering. A console favicon 404 in that run was fixed afterward.
 Raw results: docs/evidence/maplibre-6.4.1-benchmark.json and package-size.json.
 These replace the 5.24 measurements for the approved preview; real-phone and
 combined-model memory remain unmeasured. Production remains frozen.
+
+## Actual application measurement - V5 checkpoint
+
+The actual full application benchmark, including native POWER data, dated NDVI,
+terrain and a loaded compact model with actual inference, measured 2.899 s desktop
+and 1.619 s phone-sized open-to-data, about 60 fps, and 846.6 / 762.0 MB maximum
+sampled working set. Zero renderer requests before opt-in; zero page/CSP errors or
+observed HTTP error responses. Model inference completed but its proposed topic
+was rejected by the grounded-answer guard; this is not model accuracy evidence.
+The 293,319-byte gzip lazy renderer remains unchanged. Report and screenshots:
+docs/evidence/v5-app-*. Both runs used desktop headless Chrome; real phone memory,
+exact full-session peak and the live-field path are unverified. Benchmark script:
+node scripts/benchmark-3d-app.js (build first). Its first attempt failed at a wrong
+Close-button locator; the corrected run completed both viewports.

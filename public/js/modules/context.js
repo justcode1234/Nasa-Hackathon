@@ -116,7 +116,7 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     const version = token;
     $('find-farms').disabled = true;
     $('find-farms').textContent = 'Finding mapped fields…';
-    message('farms-status', 'Loading community-mapped farmland in a small area around this point…');
+    message('farms-status', 'Loading community-mapped farmland in a small area around this point… The shared OpenStreetMap lookup services can take up to a minute when busy.');
     try {
       const data = await request(`/api/farms?${new URLSearchParams(position)}`);
       if (version !== token) return;

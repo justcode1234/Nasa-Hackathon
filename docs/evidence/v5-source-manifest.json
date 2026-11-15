@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-11-15T08:33:13.328792+00:00",
+  "baseCommit": "ef11d3a",
+  "productChangesAfterFullRun": "none; only exact-branch Git deployment suppression metadata was added during the run",
+  "testNote": "The unreachable Ames section was subsequently moved from the example-region case to a standalone case and executed in all four projects; all four stopped at live discovery. Full 92-case report and standalone four-case report are separate.",
+  "files": [
+    {
+      "path": "public/js/app.js",
+      "sha256": "baf5a8aee7ca4faf3a15b5c8fc1c845c2fd35e08e63811fc71caecc3fa576521"
+    },
+    {
+      "path": "public/js/lib/weather-window.js",
+      "sha256": "ce60ee8bfd694eb42618344d8188128c4a6bb212ceeb4e20e34a72bd5ba84b88"
+    },
+    {
+      "path": "public/js/lib/power-columns.js",
+      "sha256": "a91d708346a42472609f14ac09639495c4248688af4d289e0edc244b437a3526"
+    },
+    {
+      "path": "public/js/modules/map3d.js",
+      "sha256": "4a8f06a419d3782f0cd986d638e1c89d4a91a933c265d91713137b9015d7a83f"
+    },
+    {
+      "path": "public/js/modules/strategy.js",
+      "sha256": "9f8b39d26e1250ba677c05b2325dc8916b78554bd01ff936e3f05ec1919c90c0"
+    },
+    {
+      "path": "public/js/modules/data-flow.js",
+      "sha256": "dc7a8e42a2ecb5977ffd6d0de7c5546edfe98765a48cd0f98028bd11a887c828"
+    },
+    {
+      "path": "server/agronomy/rotation.js",
+      "sha256": "b65ed43b4b55c59250b9f48e073fe424a5e728d4678d597bf3e90096cb455231"
+    },
+    {
+      "path": "server/api.js",
+      "sha256": "72748148663be5e133a09a1c3f0f652cdaeb0dd20ccb90d71dc034856f7c12ba"
+    },
+    {
+      "path": "vercel.json",
+      "sha256": "d134b6dc0525249c111db0c42d1166ddfd4e2b3e33889e06d131cb93fb0a079f"
+    },
+    {
+      "path": "tests/e2e/field-terrain.spec.js",
+      "sha256": "20a1e9579fa4f794669dd5c20f8acf97244e357467ec3abe4abb01f5027657f2"
+    },
+    {
+      "path": "tests/e2e/weather-window.spec.js",
+      "sha256": "96adda4a8f2581ba5527c590ac8e3ced19d5451cd6b8283d92252dba12d186a8"
+    },
+    {
+      "path": "tests/e2e/map3d-review.spec.js",
+      "sha256": "01f9a8bab7b7b51d0a56a7ba7c03a27c90decefb5b4dab43fdd02855fac8ab81"
+    },
+    {
+      "path": "tests/weather-window.test.js",
+      "sha256": "a6329a18a640d7be12677eb6790253c51972b139ec1d38200903a88308e029cc"
+    }
+  ]
+}

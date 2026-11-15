@@ -41,6 +41,9 @@ export function renderStrategy(result) {
           el('p', 'Derived from NASA POWER daily estimates. Historical conditions do not predict the planned crop window.'));
         li.append(el('p', `Longest observed zero-rain run: ${d.longestZeroRainRunDays} days. Missing days are not treated as rain-free.`), list(slot.soilChecks));
         if (d.leapDaySubstitutions) li.append(el('p', `${d.leapDaySubstitutions} leap day mapped to February 28.`));
+        const weather=el('button','View historical rain in 3D',{type:'button','aria-label':`View historical rain in 3D: ${scenario.label}, slot ${slot.slot}, ${slot.cropName}`});
+        weather.addEventListener('click',()=>window.dispatchEvent(new CustomEvent('fieldshift:weather-window',{detail:{slot,scenarioLabel:scenario.label,inputs:result.inputs}})));
+        li.append(weather);
       }
       li.append(list(slot.notes));
       timeline.append(li);

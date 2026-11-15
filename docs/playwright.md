@@ -66,3 +66,18 @@ bug-free, real-device usability, Safari support or scientific agronomic validity
 For a small real-browser field diagnosis, run `node scripts/diagnose-fields.js`.
 It builds current sources, captures network failures and the actual UI status,
 and exits nonzero while the York example returns fewer than three fields.
+
+## Optional 3D preview release coverage
+
+The feature branch adds actual POWER native-cell rendering/equality, real GIBS
+metadata and imagery limits, DEM/terrain failure and retry, crop-window equality,
+WebGL fallback, stale-load cleanup, and 3D axe/reduced-motion/short-screen/CSP checks.
+These run in both delivery modes and both viewport sizes with the normal release
+command. The example-region test additionally requires a live-returned Ames field
+to render on terrain and produce derived context. Its field-discovery prerequisite
+is not replaced by a recorded outline. Three-dimensional tests unrelated to fields
+abort that transport deliberately to avoid unnecessary Overpass requests; the
+separate real-field release cases stay mandatory. See docs/3d-validation.md for
+scope, raw evidence and remaining gates. Do not run the feature branch's 3D specs
+against the frozen Phase A origin and treat missing preview features as regressions;
+public Phase A has its own retained release report.

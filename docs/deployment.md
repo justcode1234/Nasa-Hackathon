@@ -132,3 +132,18 @@ queries, missing/error states and device-local caching. The browser sends its
 normal origin/referrer; Node-only identifying User-Agent headers are not attempted
 in browser requests. A production application with large traffic would need an
 approved higher-capacity data service; this prototype does not silently add one.
+
+
+## Cross-device branch sync without deployment
+
+The preview implementation remains on feature/3d-evidence-map. Its vercel.json now
+sets git.deploymentEnabled to false for that exact branch only. Vercel documents
+this as preventing automatic deployments for matching branch commits:
+https://vercel.com/docs/project-configuration/git-configuration . This lets the
+feature source/handoff be pushed for another device without bypassing the user's
+green-release requirement. Main remains enabled by its existing configuration;
+no production branch or alias setting is changed. A future preview still requires
+the complete release gate, then deliberate deployment/re-enablement. CLI identity
+was rechecked as justcode1234; linked project and team IDs match the established
+nasa-hackathon project. Preserve the separate 4chatgptsim account. No credentials
+were read or stored. The push and post-push deployment check are pending here.

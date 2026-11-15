@@ -46,9 +46,19 @@ test('field lookup falls back once and rejects partial Overpass responses',async
   assert.deepEqual(calls,['overpass-api.de','overpass.private.coffee']);assert.equal(result.farms.length,2);
   assert.equal(new URL(result.sourceUrl).hostname,'overpass.private.coffee');
   let failures=0;
-  const unavailable=createFarmClient({fetchImpl:async()=>{failures++;throw Error('TEST transport failure');}});
-  await assert.rejects(unavailable({latitude:1,longitude:2}),/Both field lookup services.*No fields were invented/);
-  assert.equal(failures,2);
+  const unavailable=createFarmClient({deadlineMs:1500,staggerMs:50,backoffMs:100,fetchImpl:async()=>{failures++;throw Error('TEST transport failure');}});
+  await assert.rejects(unavailable({latitude:1,longitude:2}),/field lookup services are busy or unavailable.*No fields were invented/);
+  assert.equal(failures,9,'each of three services gets three attempts with backoff before giving up');
+  // A slow preferred service must not block a later service that answers first.
+  const order=[];
+  const hedged=createFarmClient({staggerMs:30,fetchImpl:async url=>{const host=new URL(url).hostname;order.push(host);
+    if(host==='overpass-api.de')await new Promise(resolve=>setTimeout(resolve,400));return{ok:true,json:async()=>osm()};}});
+  const fast=await hedged({latitude:3,longitude:4});
+  assert.equal(new URL(fast.sourceUrl).hostname,'overpass.private.coffee');assert.deepEqual(order,['overpass-api.de','overpass.private.coffee']);
+  // A busy service that recovers on retry is used; no second service is needed.
+  let busy=0;
+  const recovered=createFarmClient({staggerMs:5000,backoffMs:20,hosts:['overpass-api.de'],fetchImpl:async()=>{busy++;return busy<3?{ok:false,status:502}:{ok:true,json:async()=>osm()};}});
+  assert.equal((await recovered({latitude:5,longitude:6})).farms.length,2);assert.equal(busy,3);
   assert.throws(()=>normalizeFarms({elements:[],remark:'partial data'}, {}, 'TEST'),/incomplete query/);
 });
 test('context errors do not become empty success records', async () => {

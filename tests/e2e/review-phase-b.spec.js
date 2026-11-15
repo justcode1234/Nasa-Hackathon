@@ -1,3 +1,4 @@
+import {waitForLiveFields} from './live-fields.js';
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
@@ -23,7 +24,7 @@ async function compare(page){
 }
 
 test('a failed field request has a reachable retry and still permits a point-based comparison',async({page,context})=>{
-  await context.route(/overpass-api\.de|overpass\.private\.coffee|\/api\/farms\?/,r=>r.abort('failed'));
+  await context.route(/overpass-api\.de|overpass\.private\.coffee|maps\.mail\.ru|\/api\/farms\?/,r=>r.abort('failed'));
   await page.goto('/',{waitUntil:'domcontentloaded'});await openExample(page);
   await expect(page.locator('#farms-status')).toHaveClass(/error/);
   await expect(page.locator('#farms-status')).toContainText(/No fields were invented|Failed to fetch|fetch failed|NetworkError/);
@@ -41,7 +42,7 @@ test('a failed field request has a reachable retry and still permits a point-bas
 });
 
 test('human dropdowns, map click, fields and a new-crop comparison form a working path',async({page},info)=>{
-  test.setTimeout(180_000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  test.setTimeout(480_000);const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('/',{waitUntil:'domcontentloaded'});
   await page.getByRole('combobox',{name:'Country',exact:true}).selectOption('AU');
   const regions=page.getByRole('combobox',{name:'Region (optional filter)',exact:true});
@@ -62,7 +63,7 @@ test('human dropdowns, map click, fields and a new-crop comparison form a workin
   }
   await openExample(page);
   const fields=page.getByRole('combobox',{name:'Mapped field',exact:true});
-  await expect(fields).toBeEnabled({timeout:60_000});
+  await waitForLiveFields(page,info);await expect(fields).toBeEnabled();
   const id=await fields.locator('option').nth(1).getAttribute('value');await fields.selectOption(id);
   await expect(page.getByRole('link',{name:'View mapped field and history',exact:true})).toHaveAttribute('href',`https://www.openstreetmap.org/${id}`);
   await expect(page.locator('#farm-details')).toContainText('Ownership, access and current production are unverified');

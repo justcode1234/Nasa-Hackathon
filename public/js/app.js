@@ -21,7 +21,8 @@ function closeMap3D(){
   if(wasOpen)$('#map3d-notice').textContent='3D closed. The 2D map is available.';
   window.dispatchEvent(new Event('fieldshift:tabchange'));
 }
-$('#open-map3d').addEventListener('click',async()=>{
+async function openEvidenceMap3D(){
+  if(evidenceMap3D){await evidenceMap3D.ready;return evidenceMap3D;}
   if($('#latitude').value===''||$('#longitude').value===''||!$('#location-form').checkValidity()){
     $('#map3d-notice').textContent='Select a town, map point or valid coordinates first.';$('#latitude').focus();return;
   }
@@ -32,8 +33,18 @@ $('#open-map3d').addEventListener('click',async()=>{
     const instance=await module.createEvidenceMap({getState:()=>({location:$('#latitude').value===''||$('#longitude').value===''?null:{latitude:Number($('#latitude').value),longitude:Number($('#longitude').value)},year:Number($('#reference-year').value),observations,farm:selectedFarm}),onClose:()=>{closeMap3D();$('#open-map3d').focus();}});
     if(version!==map3DVersion){instance.close();await instance.ready.catch(()=>{});return;}evidenceMap3D=instance;
     await instance.ready;
-    if(version===map3DVersion)$('#map3d-notice').textContent='3D evidence view open. Use Return to 2D at any time.';
+    if(version===map3DVersion){$('#map3d-notice').textContent='3D evidence view open. Use Return to 2D at any time.';return instance;}
   }catch(error){if(version===map3DVersion){closeMap3D();$('#map3d-notice').textContent=error.message;}}
+}
+$('#open-map3d').addEventListener('click',()=>openEvidenceMap3D());
+window.addEventListener('fieldshift:weather-window',async event=>{
+  const version=revision,{slot,scenarioLabel,inputs}=event.detail;
+  if(!comparedInputs||JSON.stringify(inputs)!==JSON.stringify(comparedInputs))return;
+  activateTab('location');
+  try{
+    const instance=await openEvidenceMap3D();
+    if(instance&&version===revision){instance.showWindow(slot,scenarioLabel);document.querySelector('#map3d-window').focus();}
+  }catch(error){$('#map3d-notice').textContent=error.message;}
 });
 let comparedInputs = null;
 let catalogReady = false;
@@ -74,9 +85,10 @@ function getComparisonReadiness() {
   return comparisonReadiness({catalogReady,catalogFailed,country:countryCrops,observations,
     allowedCount:document.querySelectorAll('[name="allowedCrops"]:checked').length});
 }
-window.addEventListener('fieldshift:tabchange', syncControls);
+window.addEventListener('fieldshift:tabchange',()=>{syncControls();evidenceMap3D?.resize();});
 function invalidate(clearEvidence, options = {}) {
   revision++;
+  evidenceMap3D?.clearWindow();
   controller?.abort();
   comparing = false;
   comparedInputs = null;
@@ -250,7 +262,7 @@ async function runComparison(options = {}) {
     const result = await api('/api/compare', { method: 'POST', body: inputs, signal: controller.signal });
     if (version !== revision) return;
     renderStrategy(result);
-    comparedInputs = inputs;
+    comparedInputs = result.inputs;
     status('#comparison-status', 'Baseline and two alternatives ready. Review the trade-offs in module 04.');
     status('#answer-status', 'Ask about a catalog crop, water, soil, pest limits or the comparison.');
     activateTab('strategy');

@@ -1,3 +1,4 @@
+import {waitForLiveFields} from './live-fields.js';
 import {test,expect} from '@playwright/test';
 import {readFileSync} from 'node:fs';
 const fixture=JSON.parse(readFileSync(new URL('../../public/data/submission-example.json',import.meta.url),'utf8'));
@@ -30,11 +31,12 @@ test('short zoom and landscape viewports retain sixty percent usable height',asy
   await info.attach('Measured usable content height',{body:Buffer.from(JSON.stringify(measurements,null,2)),contentType:'application/json'});
 });
 
-test('every example region returns at least three complete mapped fields',async({page})=>{
-  test.setTimeout(240_000);await page.goto('/',{waitUntil:'domcontentloaded'});
+test('every example region returns at least three complete mapped fields',async({page},info)=>{
+  test.setTimeout(900_000);await page.goto('/',{waitUntil:'domcontentloaded'});
   for(const point of ['52.19,0.09','-31.89,116.77','42,-93.69','-0.77,36.42']){
     await page.getByRole('combobox',{name:'Explore an example farming region',exact:true}).selectOption(point);
-    await expect.poll(async()=>page.locator('#farm-results option[value]:not([value=""])').count(),{timeout:60_000}).toBeGreaterThanOrEqual(3);
+    await waitForLiveFields(page,info,3);
+
   }
 });
 

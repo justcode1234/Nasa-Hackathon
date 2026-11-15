@@ -1,0 +1,82 @@
+{
+  "stats": {
+    "startTime": "2026-11-15T08:07:25.331Z",
+    "duration": 906045.4720000001,
+    "expected": 84,
+    "skipped": 0,
+    "unexpected": 8,
+    "flaky": 0
+  },
+  "offlineTests": {
+    "passed": 114,
+    "failed": 0
+  },
+  "projects": {
+    "static-desktop": {
+      "passed": 21,
+      "failed": 2
+    },
+    "static-mobile": {
+      "passed": 21,
+      "failed": 2
+    },
+    "node-desktop": {
+      "passed": 21,
+      "failed": 2
+    },
+    "node-mobile": {
+      "passed": 21,
+      "failed": 2
+    }
+  },
+  "failures": [
+    {
+      "project": "static-desktop",
+      "title": "every example region returns at least three complete mapped fields",
+      "file": "review-phase-a.spec.js",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 60000ms exceeded while waiting on the predicate"
+    },
+    {
+      "project": "static-mobile",
+      "title": "every example region returns at least three complete mapped fields",
+      "file": "review-phase-a.spec.js",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 60000ms exceeded while waiting on the predicate"
+    },
+    {
+      "project": "node-desktop",
+      "title": "every example region returns at least three complete mapped fields",
+      "file": "review-phase-a.spec.js",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 60000ms exceeded while waiting on the predicate"
+    },
+    {
+      "project": "node-mobile",
+      "title": "every example region returns at least three complete mapped fields",
+      "file": "review-phase-a.spec.js",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m0\u001b[39m\n\nCall Log:\n- Timeout 60000ms exceeded while waiting on the predicate"
+    },
+    {
+      "project": "static-desktop",
+      "title": "human dropdowns, map click, fields and a new-crop comparison form a working path",
+      "file": "review-phase-b.spec.js",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n"
+    },
+    {
+      "project": "static-mobile",
+      "title": "human dropdowns, map click, fields and a new-crop comparison form a working path",
+      "file": "review-phase-b.spec.js",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n"
+    },
+    {
+      "project": "node-desktop",
+      "title": "human dropdowns, map click, fields and a new-crop comparison form a working path",
+      "file": "review-phase-b.spec.js",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n"
+    },
+    {
+      "project": "node-mobile",
+      "title": "human dropdowns, map click, fields and a new-crop comparison form a working path",
+      "file": "review-phase-b.spec.js",
+      "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('combobox', { name: 'Mapped field', exact: true })\nExpected: enabled\nReceived: disabled\nTimeout:  60000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeEnabled\" getByRole('combobox', { name: 'Mapped field', exact: true }) with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('combobox', { name: 'Mapped field', exact: true })\u001b[22m\n\u001b[2m    120 × locator resolved to <select disabled id=\"farm-results\">…</select>\u001b[22m\n\u001b[2m        - unexpected value \"disabled\"\u001b[22m\n"
+    }
+  ]
+}

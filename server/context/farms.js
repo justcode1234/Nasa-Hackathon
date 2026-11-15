@@ -36,7 +36,10 @@ export function normalizeFarms(raw, center, retrievedAt) {
       'Only complete closed OSM ways are drawn; relation-only boundaries and incomplete ways are omitted. Representative points are bounding-box centers, not surveyed field centroids.'] };
 }
 
-export function createFarmClient(options = {}) {
+// Public Overpass instances, in preference order. They are shared community services
+// that are often at capacity, so one slow or failed attempt must not end the lookup.
+export const OVERPASS_HOSTS = ['overpass-api.de', 'overpass.private.coffee', 'maps.mail.ru/osm/tools/overpass'];
+export function createFarmClient({ deadlineMs = 75_000, staggerMs = 6_000, backoffMs = 3_000, maxAttempts = 3, hosts = OVERPASS_HOSTS, ...options } = {}) {
   const request = createCachedJson(options);
   return async input => {
     const center = locationInput(input);
@@ -46,16 +49,37 @@ export function createFarmClient(options = {}) {
     const bounds = { south: latitude - .02, west: longitude - .02, north: latitude + .02, east: longitude + .02 };
     const bbox = [bounds.south, bounds.west, bounds.north, bounds.east].map(v => v.toFixed(4)).join(',');
     const query = `[out:json][timeout:25];way["landuse"~"^(farmland|orchard|vineyard|plant_nursery)$"](${bbox});out meta geom;`;
-    for (const host of ['overpass-api.de', 'overpass.private.coffee']) {
-      const url = `https://${host}/api/interpreter?data=${encodeURIComponent(query)}`;
-      try {
-        const raw = await request(url, { timeoutMs: 25_000 });
-        const result = normalizeFarms(raw, { latitude, longitude }, new Date().toISOString());
-        return { ...result, sourceUrl: url, retrievedAt: raw._fieldshiftRetrievedAt ?? result.retrievedAt, bounds };
-      } catch (error) {
-        if (host === 'overpass.private.coffee') throw new AppError('Both field lookup services are unavailable or returned incomplete data. No fields were invented. Retry the field search.', 502, 'CONTEXT_UNAVAILABLE');
+    // Hedged lookup: the preferred service starts first; the next one joins when the
+    // previous has failed or after a stagger. Failed services retry with exponential
+    // backoff (as the services request) until one shared deadline. The first complete
+    // real response wins. Nothing is substituted when every service fails.
+    const startedAt = Date.now(), remaining = () => deadlineMs - (Date.now() - startedAt);
+    let settled = false, wakeAll = [];
+    const pause = ms => new Promise(resolve => { const timer = setTimeout(done, ms); function done() { clearTimeout(timer); resolve(); } wakeAll.push(done); });
+    const attempts = [];
+    const tryHost = async (host, index, previousFailed) => {
+      if (index) await Promise.race([pause(staggerMs * index), previousFailed]);
+      for (let wait = backoffMs, attempt = 1; !settled && remaining() > 1_000; wait *= 2, attempt++) {
+        const url = `https://${host}/api/interpreter?data=${encodeURIComponent(query)}`;
+        attempts.push(host);
+        try {
+          const raw = await request(url, { timeoutMs: Math.max(1_000, Math.min(45_000, remaining())) });
+          const result = normalizeFarms(raw, { latitude, longitude }, new Date().toISOString());
+          return { ...result, sourceUrl: url, retrievedAt: raw._fieldshiftRetrievedAt ?? result.retrievedAt, bounds };
+        } catch (error) {
+          failed[index]?.();
+          if (settled || attempt >= maxAttempts || remaining() <= wait) break;
+          await pause(wait);
+        }
       }
-    }
+      throw new Error(`${host} unavailable`);
+    };
+    const failed = [], failedSignals = hosts.map((_, i) => new Promise(resolve => { failed[i] = resolve; }));
+    try {
+      return await Promise.any(hosts.map((host, i) => tryHost(host, i, i ? failedSignals[i - 1] : null)));
+    } catch {
+      throw new AppError(`The field lookup services are busy or unavailable (${attempts.length} attempts across ${new Set(attempts).size} services). No fields were invented. Retry the field search.`, 502, 'CONTEXT_UNAVAILABLE');
+    } finally { settled = true; wakeAll.forEach(wake => wake()); }
   };
 }
 
