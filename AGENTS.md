@@ -189,6 +189,8 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
 
 ## 10. Current implementation and cross-device handoff - 2026-11-15
 
+- **P0.4 source check complete:** live primary-source ranges match tomato/cabbage/onion; new duration-basis and unassessed-variant comparison checks pass. npm test: 119/119. User retained all three field services and requested sourced area crop suggestions, non-overlapping aligned navigation, and three clickable chat starters. These remain part of P0.6/P1. Phase A stays public; classifier unwired.
+
 - **Final quality handoff underway:** verified clean feature branch 25e9476 and frozen local/remote main f4c4fef. User chose Keep Phase A public and Keep all three field services. Public NASA page at 09:55 UTC remains unsubmitted with empty references; paste-ready Phase A fields are docs/submission-fields-2026-11-15.md. Baseline: 117 offline + 116 browser pass, no skips/flaky results. P0.3 scientific wording audit corrected the unsupported word validated in the kai-lan catalog limit; 117 offline tests pass after it. See docs/final-quality-review.md and evidence/final-quality-*. The user-reported Aland empty-crop/chat issue is reproduced, with official regional crop evidence found; implementation/regressions remain next. Classifier stays unwired; no new dependency or deployment.
 
 - **Release gate GREEN; voice input and typed-judgment experiment added (Claude Code session, 15 Nov):**

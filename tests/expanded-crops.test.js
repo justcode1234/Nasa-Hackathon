@@ -40,3 +40,23 @@ test('tomato knowledge uses the sourced harvest range and no obsolete screening 
   assert.ok(answer.sources.some(source=>source.id==='clemson-tomato'));
   assert.ok(!answer.blocks.some(block=>block.kind==='screening limit'));
 });
+
+test('new crop references retain the verified duration bases and pH ranges',()=>{
+  const tomato=findCrop('tomato'),cabbage=findCrop('cabbage'),onion=findCrop('onion');
+  assert.deepEqual(tomato.maturityDays,[52,90]);assert.deepEqual(tomato.soilPhRange,[6,6.5]);
+  assert.match(tomato.notes.join(' '),/first harvest.*without stating seed or transplant/i);
+  assert.deepEqual(cabbage.maturityDays,[60,80]);assert.deepEqual(cabbage.soilPhRange,[5.8,6.5]);
+  assert.match(cabbage.notes.join(' '),/after planting head-cabbage transplants/i);
+  assert.ok(Math.abs(cabbage.idealAirC[0]-(60-32)*5/9)<1e-9);
+  assert.ok(Math.abs(cabbage.idealAirC[1]-(65-32)*5/9)<1e-9);
+  assert.deepEqual(onion.maturityDays,[100,120]);assert.deepEqual(onion.soilPhRange,[6.2,6.5]);
+  assert.equal(onion.family,'Amaryllidaceae');assert.match(onion.notes.join(' '),/without stating seed, set or transplant/i);
+});
+
+test('related unscreened vegetables never acquire the new crops rules in a comparison',()=>{
+  const baseline=['Chinese cabbage','bok choy','spring onion'];
+  const input=validateInputs({latitude:1.35,longitude:103.8,country:'SG',referenceYear:2025,planningYear:2027,startMonth:1,baseline,allowedCrops:['cabbage','tomato'],priority:'family',soil:'unknown',irrigation:'unknown'});
+  const result=compareRotations(input,syntheticObservations());
+  assert.deepEqual(result.scenarios[0].timeline.map(slot=>slot.originalInput),baseline);
+  for(const slot of result.scenarios[0].timeline){assert.equal(slot.indicators,null);assert.equal(slot.maturityDays,null);assert.equal(slot.family,null);}
+});

@@ -54,3 +54,18 @@ new request: Åland in Figures 2025, printed page 11, observations for 2024.
 It documents wheat, a combined barley/oats category, rye, table potatoes and onions.
 These support local crop-type context, not field suitability or new rotation rules.
 Source/provenance: evidence/final-quality-aland-source-2026-11-15.json.
+
+
+## P0.4 completed - new crop source and exclusion checks
+
+Live primary-source numbers match the stored tomato, head-cabbage and bulb-onion
+entries; no numeric crop rules changed. Added duration-basis/pH/temperature checks
+and an actual comparison contract proving Chinese cabbage, bok choy and spring
+onion remain unassessed. An initial added wording assertion omitted the existing
+qualifier head-cabbage; corrected that test defect to require head-cabbage
+transplants. Final npm test: 119/119 pass. Source and both test-run reports are
+under docs/evidence/final-quality-crop-source-probes-* and final-quality-p04-*.
+The user also requested sourced local crop-type suggestions for empty areas,
+aligned Back/Next controls that open chat cannot cover, and three clickable chat
+starter examples. These are included in the remaining P0.6/P1 work. All three field
+services are retained by explicit user decision. No new dependency or deployment.

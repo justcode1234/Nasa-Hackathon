@@ -1,600 +1,600 @@
-
-> fieldshift@0.1.0 test
-> node --test tests/*.test.js
-
-TAP version 13
-# Subtest: QA gaps: confidence, exact yield and guarantees get explicit calibrated limits with or without a comparison
-ok 1 - QA gaps: confidence, exact yield and guarantees get explicit calibrated limits with or without a comparison
-  ---
-  duration_ms: 15.3402
-  ...
-# Subtest: QA gaps: farmer-reported pH and drainage are checked against source facts without certifying safety
-ok 2 - QA gaps: farmer-reported pH and drainage are checked against source facts without certifying safety
-  ---
-  duration_ms: 1.1346
-  ...
-# Subtest: QA gaps: crop-family explanations remain read-only and preserve the shared-family caveat
-ok 3 - QA gaps: crop-family explanations remain read-only and preserve the shared-family caveat
-  ---
-  duration_ms: 3.8092
-  ...
-# Subtest: QA gaps: contrasting grain maize with sweet corn does not transfer sweet-corn facts
-ok 4 - QA gaps: contrasting grain maize with sweet corn does not transfer sweet-corn facts
-  ---
-  duration_ms: 0.8908
-  ...
-# Subtest: QA gaps: kai lan overview includes the actual eligibility boundary
-ok 5 - QA gaps: kai lan overview includes the actual eligibility boundary
-  ---
-  duration_ms: 6.3659
-  ...
-# Subtest: explicit Node transport sends form inputs as JSON and preserves abort signals
-ok 6 - explicit Node transport sends form inputs as JSON and preserves abort signals
-  ---
-  duration_ms: 4.0067
-  ...
-# Subtest: Node transport exposes provider errors and never treats unreadable responses as successful evidence
-ok 7 - Node transport exposes provider errors and never treats unreadable responses as successful evidence
-  ---
-  duration_ms: 1.9649
-  ...
-# Subtest: browser showcase defaults to worker transport without probing an absent backend
-ok 8 - browser showcase defaults to worker transport without probing an absent backend
-  ---
-  duration_ms: 0.2558
-  ...
-# Subtest: memory accounting includes descendants in any order and excludes unrelated user browsers
-ok 9 - memory accounting includes descendants in any order and excludes unrelated user browsers
-  ---
-  duration_ms: 2.563
-  ...
-# Subtest: lifetime peak bookkeeping retains observed exited processes and distinguishes reused process IDs
-ok 10 - lifetime peak bookkeeping retains observed exited processes and distinguishes reused process IDs
-  ---
-  duration_ms: 1.2564
-  ...
-# Subtest: unavailable or malformed memory evidence is never reported as zero usage
-ok 11 - unavailable or malformed memory evidence is never reported as zero usage
-  ---
-  duration_ms: 0.6784
-  ...
-# Subtest: comparison blockers distinguish unavailable coverage from missing farmer selections
-ok 12 - comparison blockers distinguish unavailable coverage from missing farmer selections
-  ---
-  duration_ms: 1.5273
-  ...
-# Subtest: comparison navigation prerequisites recover to country/evidence and permit ready inputs
-ok 13 - comparison navigation prerequisites recover to country/evidence and permit ready inputs
-  ---
-  duration_ms: 0.2559
-  ...
-# Subtest: moving while country lookup is pending starts a lookup for the new coordinates and ignores the old result
-ok 14 - moving while country lookup is pending starts a lookup for the new coordinates and ignores the old result
-  ---
-  duration_ms: 14.8498
-  ...
-# Subtest: an outdated country-lookup failure cannot overwrite the newer country selection
-ok 15 - an outdated country-lookup failure cannot overwrite the newer country selection
-  ---
-  duration_ms: 11.2113
-  ...
-# Subtest: OSM normalization draws only complete rings, preserves crop tags and edit dates, and leaves absent crops unknown
-ok 16 - OSM normalization draws only complete rings, preserves crop tags and edit dates, and leaves absent crops unknown
-  ---
-  duration_ms: 21.2769
-  ...
-# Subtest: bounded farm requests validate coordinates, use a fixed host, and cache original retrieval times
-ok 17 - bounded farm requests validate coordinates, use a fixed host, and cache original retrieval times
-  ---
-  duration_ms: 3.4803
-  ...
-# Subtest: field lookup falls back once and rejects partial Overpass responses
-ok 18 - field lookup falls back once and rejects partial Overpass responses
-  ---
-  duration_ms: 452.1498
-  ...
-# Subtest: context errors do not become empty success records
-ok 19 - context errors do not become empty success records
-  ---
-  duration_ms: 0.3224
-  ...
-# Subtest: place searches are validated and contain the country returned by Nominatim
-ok 20 - place searches are validated and contain the country returned by Nominatim
-  ---
-  duration_ms: 1.9285
-  ...
-# Subtest: point verification requests regional detail from the fixed place service and retains its region
-ok 21 - point verification requests regional detail from the fixed place service and retains its region
-  ---
-  duration_ms: 1.1714
-  ...
-# Subtest: pest occurrence counts are country records, zero means no records, and query failures stay unknown
-ok 22 - pest occurrence counts are country records, zero means no records, and query failures stay unknown
-  ---
-  duration_ms: 1.2763
-  ...
-# Subtest: general crop questions return sourced facts without needing a field or synthetic NASA evidence
-ok 23 - general crop questions return sourced facts without needing a field or synthetic NASA evidence
-  ---
-  duration_ms: 1.4579
-  ...
-# Subtest: catalog answers match explicit multiword sweet-corn names and explain unsupported generic corn
-ok 24 - catalog answers match explicit multiword sweet-corn names and explain unsupported generic corn
-  ---
-  duration_ms: 1.4503
-  ...
-# Subtest: soil model values use source unit factors, retain intervals and never become farm measurements
-ok 25 - soil model values use source unit factors, retain intervals and never become farm measurements
-  ---
-  duration_ms: 0.6994
-  ...
-# Subtest: Australian irrigation benchmark is a reproducible annual aggregate, never applied to other countries
-ok 26 - Australian irrigation benchmark is a reproducible annual aggregate, never applied to other countries
-  ---
-  duration_ms: 0.2975
-  ...
-# Subtest: greetings and thanks remain brief and need no scientific sources
-ok 27 - greetings and thanks remain brief and need no scientific sources
-  ---
-  duration_ms: 6.2072
-  ...
-# Subtest: kai lan from Singapore is sourced independently of the selected country
-ok 28 - kai lan from Singapore is sourced independently of the selected country
-  ---
-  duration_ms: 8.8242
-  ...
-# Subtest: topic buttons and typed follow-ups retrieve one part of crop knowledge at a time
-ok 29 - topic buttons and typed follow-ups retrieve one part of crop knowledge at a time
-  ---
-  duration_ms: 4.2959
-  ...
-# Subtest: common crop-country pairs resolve to their actual national records
-ok 30 - common crop-country pairs resolve to their actual national records
-  ---
-  duration_ms: 13.6821
-  ...
-# Subtest: a country-only follow-up keeps the crop while a named new crop changes it
-ok 31 - a country-only follow-up keeps the crop while a named new crop changes it
-  ---
-  duration_ms: 2.8049
-  ...
-# Subtest: national production and source-region references do not become local cultivation proof
-ok 32 - national production and source-region references do not become local cultivation proof
-  ---
-  duration_ms: 2.5333
-  ...
-# Subtest: named-country weather never reuses observations for a different map country
-ok 33 - named-country weather never reuses observations for a different map country
-  ---
-  duration_ms: 1.8977
-  ...
-# Subtest: country names use complete matches and ask for a focus when two are named
-ok 34 - country names use complete matches and ask for a focus when two are named
-  ---
-  duration_ms: 2.8839
-  ...
-# Subtest: answers stay bounded and every visible source ID resolves once
-ok 35 - answers stay bounded and every visible source ID resolves once
-  ---
-  duration_ms: 4.1617
-  ...
-# Subtest: country choices are sourced production records, never a global fallback
-ok 36 - country choices are sourced production records, never a global fallback
-  ---
-  duration_ms: 24.4693
-  ...
-# Subtest: country constraints reject foreign alternatives and preserve named unassessed baselines
-ok 37 - country constraints reject foreign alternatives and preserve named unassessed baselines
-  ---
-  duration_ms: 43.3006
-  ...
-# Built static browser app in dist/client. No server functions or /api network calls.
-# Subtest: Vercel build is static and includes browser workers, crop data and local map assets
-ok 38 - Vercel build is static and includes browser workers, crop data and local map assets
-  ---
-  duration_ms: 623.8481
-  ...
-# Subtest: sourced expansion covers 166 countries without a radish or variant mapping
-ok 39 - sourced expansion covers 166 countries without a radish or variant mapping
-  ---
-  duration_ms: 18.4274
-  ...
-# Subtest: cabbage heat checks name the crop and onion calendar limits remain visible
-ok 40 - cabbage heat checks name the crop and onion calendar limits remain visible
-  ---
-  duration_ms: 48.1937
-  ...
-# Subtest: tomato knowledge uses the sourced harvest range and no obsolete screening exclusion
-ok 41 - tomato knowledge uses the sourced harvest range and no obsolete screening exclusion
-  ---
-  duration_ms: 2.6922
-  ...
-# Subtest: GIBS retains exact date gaps, native resolution, source and palette units
-ok 42 - GIBS retains exact date gaps, native resolution, source and palette units
-  ---
-  duration_ms: 5.5243
-  ...
-# Subtest: GIBS rejects external resource URLs, entities and unsupported intervals
-ok 43 - GIBS rejects external resource URLs, entities and unsupported intervals
-  ---
-  duration_ms: 1.2164
-  ...
-# Subtest: GIBS client deduplicates real-host metadata requests and preserves retrieval dates
-ok 44 - GIBS client deduplicates real-host metadata requests and preserves retrieval dates
-  ---
-  duration_ms: 2.171
-  ...
-# Subtest: HTTP conversational crop-country answers bypass NASA and planning validation
-ok 45 - HTTP conversational crop-country answers bypass NASA and planning validation
-  ---
-  duration_ms: 82.9058
-  ...
-# Subtest: HTTP end to end: static modules, local map assets, NASA contract, comparison, sourced assistant
-ok 46 - HTTP end to end: static modules, local map assets, NASA contract, comparison, sourced assistant
-  ---
-  duration_ms: 3155.6792
-  ...
-# Subtest: invalid HTTP inputs are rejected before NASA retrieval
-ok 47 - invalid HTTP inputs are rejected before NASA retrieval
-  ---
-  duration_ms: 12.1364
-  ...
-# Subtest: upstream failure surfaces honest error; server remains usable
-ok 48 - upstream failure surfaces honest error; server remains usable
-  ---
-  duration_ms: 5.3206
-  ...
-# Subtest: static file routing cannot expose project files, dependencies outside Leaflet, or directories
-ok 49 - static file routing cannot expose project files, dependencies outside Leaflet, or directories
-  ---
-  duration_ms: 8.5372
-  ...
-# Subtest: typed-judgment data keeps acceptance prompts out of every split and the held-out set separate
-ok 50 - typed-judgment data keeps acceptance prompts out of every split and the held-out set separate
-  ---
-  duration_ms: 16.4994
-  ...
-# Subtest: typed-judgment report matches the saved weights, uses only schema options and makes no agronomic claim
-ok 51 - typed-judgment report matches the saved weights, uses only schema options and makes no agronomic claim
-  ---
-  duration_ms: 4.4477
-  ...
-# Subtest: read aloud only ever selects an on-device English voice
-ok 52 - read aloud only ever selects an on-device English voice
-  ---
-  duration_ms: 0.7189
-  ...
-# Subtest: country-sized location files match their source manifest, hashes and coordinate contract
-ok 53 - country-sized location files match their source manifest, hashes and coordinate contract
-  ---
-  duration_ms: 244.1969
-  ...
-# Subtest: country lists expose real source towns and regions; missing coverage never uses another country
-ok 54 - country lists expose real source towns and regions; missing coverage never uses another country
-  ---
-  duration_ms: 10.591
-  ...
-# Subtest: place-list failures are visible and a retry can succeed with the original source metadata
-ok 55 - place-list failures are visible and a retry can succeed with the original source metadata
-  ---
-  duration_ms: 7.609
-  ...
-# Subtest: malformed or cross-country place data cannot become selectable locations
-ok 56 - malformed or cross-country place data cannot become selectable locations
-  ---
-  duration_ms: 0.6288
-  ...
-# Subtest: compact artifact is a trained word-level sequence LM with traceable weights and candid evaluation
-ok 57 - compact artifact is a trained word-level sequence LM with traceable weights and candid evaluation
-  ---
-  duration_ms: 38.2259
-  ...
-# Subtest: WASM embedding gradient sums repeated IDs correctly and ignores negative segment IDs
-ok 58 - WASM embedding gradient sums repeated IDs correctly and ignores negative segment IDs
-  ---
-  duration_ms: 0.7598
-  ...
-# Subtest: validates global coordinates and historical complete-year bounds
-ok 59 - validates global coordinates and historical complete-year bounds
-  ---
-  duration_ms: 3.7084
-  ...
-# Subtest: normalises fill and absent dates without turning missing rainfall into zero
-ok 60 - normalises fill and absent dates without turning missing rainfall into zero
-  ---
-  duration_ms: 9.3984
-  ...
-# Subtest: all-missing parameters have no observed date, mean or total
-ok 61 - all-missing parameters have no observed date, mean or total
-  ---
-  duration_ms: 5.1179
-  ...
-# Subtest: rejects schema and unit changes instead of applying incorrect rules
-ok 62 - rejects schema and unit changes instead of applying incorrect rules
-  ---
-  duration_ms: 8.8548
-  ...
-# Subtest: coalesces concurrent requests, caches original retrieval time, separates coordinates and expires
-ok 63 - coalesces concurrent requests, caches original retrieval time, separates coordinates and expires
-  ---
-  duration_ms: 44.15
-  ...
-# Subtest: upstream HTTP, JSON and network failures return errors and never cache substitutes
-ok 64 - upstream HTTP, JSON and network failures return errors and never cache substitutes
-  ---
-  duration_ms: 1.4207
-  ...
-# Subtest: MERRA output centre bounds wrap at the date line and clip at poles
-ok 65 - MERRA output centre bounds wrap at the date line and clip at poles
-  ---
-  duration_ms: 3.8464
-  ...
-# Subtest: regional rain keeps zero, missing days, partial sums and exact returned geometry
-ok 66 - regional rain keeps zero, missing days, partial sums and exact returned geometry
-  ---
-  duration_ms: 27.6957
-  ...
-# Subtest: regional adapter validates inputs and uses one bounded fixed-host parameter request
-ok 67 - regional adapter validates inputs and uses one bounded fixed-host parameter request
-  ---
-  duration_ms: 37.8307
-  ...
-# Subtest: column display preserves missing versus true zero and keeps a fixed annual scale
-ok 68 - column display preserves missing versus true zero and keeps a fixed annual scale
-  ---
-  duration_ms: 18.3833
-  ...
-# Subtest: date-line fallback requests one actual native centre and never copies neighbours
-ok 69 - date-line fallback requests one actual native centre and never copies neighbours
-  ---
-  duration_ms: 3.7889
-  ...
-# Subtest: QA F01/R2: Australia produces three distinct comparable scenarios from its recorded screened subset
-ok 70 - QA F01/R2: Australia produces three distinct comparable scenarios from its recorded screened subset
-  ---
-  duration_ms: 189.0261
-  ...
-# Subtest: QA F02: India rice and wheat retain unknown scientific fields while its screened alternatives stay constrained
-ok 71 - QA F02: India rice and wheat retain unknown scientific fields while its screened alternatives stay constrained
-  ---
-  duration_ms: 69.518
-  ...
-# Subtest: QA F03/R2: Countries without sufficient rules cannot bypass missing screening coverage through the API
-ok 72 - QA F03/R2: Countries without sufficient rules cannot bypass missing screening coverage through the API
-  ---
-  duration_ms: 2.1587
-  ...
-# Subtest: QA M03: impossible coordinates and the incomplete current year are rejected before provider access
-ok 73 - QA M03: impossible coordinates and the incomplete current year are rejected before provider access
-  ---
-  duration_ms: 0.5128
-  ...
-# Subtest: QA M06: changing pH/drainage changes sourced soil warnings without changing weather or baseline
-ok 74 - QA M06: changing pH/drainage changes sourced soil warnings without changing weather or baseline
-  ---
-  duration_ms: 212.9344
-  ...
-# Subtest: QA M10: all priorities retain the same hard warnings and disclose their actual ordering
-ok 75 - QA M10: all priorities retain the same hard warnings and disclose their actual ordering
-  ---
-  duration_ms: 397.1556
-  ...
-# Subtest: QA M11: irrigation availability alone cannot become sufficiency or calculated water savings
-ok 76 - QA M11: irrigation availability alone cannot become sufficiency or calculated water savings
-  ---
-  duration_ms: 195.2438
-  ...
-# Subtest: rankings repeat exactly; baseline and two distinct alternatives share one 12-month horizon
-ok 77 - rankings repeat exactly; baseline and two distinct alternatives share one 12-month horizon
-  ---
-  duration_ms: 419.3541
-  ...
-# Subtest: family repetition includes bean/pea, nonadjacent crops and supplied previous crop
-ok 78 - family repetition includes bean/pea, nonadjacent crops and supplied previous crop
-  ---
-  duration_ms: 155.6224
-  ...
-# Subtest: unsupported baseline is preserved and is never assigned crop facts
-ok 79 - unsupported baseline is preserved and is never assigned crop facts
-  ---
-  duration_ms: 149.8356
-  ...
-# Subtest: unspecified corn and maize remain unassessed instead of inheriting sweet-corn maturity rules
-ok 80 - unspecified corn and maize remain unassessed instead of inheriting sweet-corn maturity rules
-  ---
-  duration_ms: 149.2396
-  ...
-# Subtest: alternatives respect crop restrictions while baseline remains intact
-ok 81 - alternatives respect crop restrictions while baseline remains intact
-  ---
-  duration_ms: 5.7817
-  ...
-# Subtest: missing weather prevents an apparently clean screening and produces null totals
-ok 82 - missing weather prevents an apparently clean screening and produces null totals
-  ---
-  duration_ms: 140.9131
-  ...
-# Subtest: frost-tender historical exposure is counted; it is not called a safe candidate
-ok 83 - frost-tender historical exposure is counted; it is not called a safe candidate
-  ---
-  duration_ms: 146.4679
-  ...
-# Subtest: calendar screening catches maturity overruns and handles year-wrap and leap-day mapping
-ok 84 - calendar screening catches maturity overruns and handles year-wrap and leap-day mapping
-  ---
-  duration_ms: 297.7083
-  ...
-# Subtest: input validation rejects missing constraints, oversized text and impossible alternatives
-ok 85 - input validation rejects missing constraints, oversized text and impossible alternatives
-  ---
-  duration_ms: 0.9062
-  ...
-# Subtest: priority changes the documented tie-break ordering, not safety checks
-ok 86 - priority changes the documented tie-break ordering, not safety checks
-  ---
-  duration_ms: 0.4732
-  ...
-# Subtest: sourced soil pH and drainage checks use farmer inputs while unassessed crops remain explicit
-ok 87 - sourced soil pH and drainage checks use farmer inputs while unassessed crops remain explicit
-  ---
-  duration_ms: 145.4869
-  ...
-# Subtest: rain-free exposure counts exact zeros, never missing values or water savings
-ok 88 - rain-free exposure counts exact zeros, never missing values or water savings
-  ---
-  duration_ms: 144.3065
-  ...
-# Subtest: crop and water questions use traceable facts and deterministic limitations
-ok 89 - crop and water questions use traceable facts and deterministic limitations
-  ---
-  duration_ms: 140.4281
-  ...
-# Subtest: starting twice reuses the project preview and opens the same browser URL
-ok 90 - starting twice reuses the project preview and opens the same browser URL
-  ---
-  duration_ms: 84.8249
-  ...
-# Subtest: an unrelated app keeps its port and FieldShift opens the next free one
-ok 91 - an unrelated app keeps its port and FieldShift opens the next free one
-  ---
-  duration_ms: 15.4388
-  ...
-# Subtest: a preview of a different directory is never reused as this project
-ok 92 - a preview of a different directory is never reused as this project
-  ---
-  duration_ms: 17.4481
-  ...
-# Subtest: Node testing and static showcase previews keep separate identities and can run together
-ok 93 - Node testing and static showcase previews keep separate identities and can run together
-  ---
-  duration_ms: 22.0789
-  ...
-# Subtest: Terrarium PNG decoding matches independently checked recorded RGB pixels and rejects corruption
-ok 94 - Terrarium PNG decoding matches independently checked recorded RGB pixels and rejects corruption
-  ---
-  duration_ms: 49.52
-  ...
-# Subtest: minimal synthetic PNG preserves fractional heights and missing pixels
-ok 95 - minimal synthetic PNG preserves fractional heights and missing pixels
-  ---
-  duration_ms: 4.3009
-  ...
-# Subtest: finite differences recover plane slope, downhill aspect and flat/unknown cases
-ok 96 - finite differences recover plane slope, downhill aspect and flat/unknown cases
-  ---
-  duration_ms: 0.5219
-  ...
-# Subtest: polygon masking excludes holes and never invents a small-field slope
-ok 97 - polygon masking excludes holes and never invents a small-field slope
-  ---
-  duration_ms: 7.2982
-  ...
-# Subtest: terrain point client uses bounded fixed-host tiles and retains cached provenance
-ok 98 - terrain point client uses bounded fixed-host tiles and retains cached provenance
-  ---
-  duration_ms: 27.2682
-  ...
-# Subtest: shared historical window preserves leap substitution, year wrap and missing rain
-ok 99 - shared historical window preserves leap substitution, year wrap and missing rain
-  ---
-  duration_ms: 18.3593
-  ...
-# Subtest: 3D crop-window columns equal strategy daily calculations and reject stale or unsupported slots
-ok 100 - 3D crop-window columns equal strategy daily calculations and reject stale or unsupported slots
-  ---
-  duration_ms: 39.4082
-  ...
-# Subtest: workflow parser distinguishes actions from read-only crop questions
-ok 101 - workflow parser distinguishes actions from read-only crop questions
-  ---
-  duration_ms: 11.3671
-  ...
-# Subtest: explicit country, coordinates and farmer crops execute through step 4 in order
-ok 102 - explicit country, coordinates and farmer crops execute through step 4 in order
-  ---
-  duration_ms: 5.2292
-  ...
-# Subtest: country without a field asks for a point and retains supplied crops across messages
-ok 103 - country without a field asks for a point and retains supplied crops across messages
-  ---
-  duration_ms: 1.7344
-  ...
-# Subtest: whole-country replies use national evidence without loading point weather or comparing
-ok 104 - whole-country replies use national evidence without loading point weather or comparing
-  ---
-  duration_ms: 10.9233
-  ...
-# Subtest: combined place/coordinate sentences resolve a coherent point and reject region/town conflicts
-ok 105 - combined place/coordinate sentences resolve a coherent point and reject region/town conflicts
-  ---
-  duration_ms: 5.4224
-  ...
-# Subtest: national scope clears an existing field point and keeps the farmer sequence
-ok 106 - national scope clears an existing field point and keeps the farmer sequence
-  ---
-  duration_ms: 0.8061
-  ...
-# Subtest: specific-area mode accepts a sourced region and preserves crops through the local comparison
-ok 107 - specific-area mode accepts a sourced region and preserves crops through the local comparison
-  ---
-  duration_ms: 1.896
-  ...
-# Subtest: whole-country mode can narrow directly to a named region without repeating the crops
-ok 108 - whole-country mode can narrow directly to a named region without repeating the crops
-  ---
-  duration_ms: 1.3927
-  ...
-# Subtest: scope choices apply to other countries and empty national coverage stays honest
-ok 109 - scope choices apply to other countries and empty national coverage stays honest
-  ---
-  duration_ms: 1.6381
-  ...
-# Subtest: a selected point still needs three farmer crops and never fills missing slots
-ok 110 - a selected point still needs three farmer crops and never fills missing slots
-  ---
-  duration_ms: 0.9381
-  ...
-# Subtest: coordinate-country disagreement stops before location and NASA actions
-ok 111 - coordinate-country disagreement stops before location and NASA actions
-  ---
-  duration_ms: 0.7591
-  ...
-# Subtest: field actions require a currently returned source ID
-ok 112 - field actions require a currently returned source ID
-  ---
-  duration_ms: 0.5221
-  ...
-# Subtest: an explicitly numbered returned field is selected without guessing another outline
-ok 113 - an explicitly numbered returned field is selected without guessing another outline
-  ---
-  duration_ms: 0.5123
-  ...
-# Subtest: provider failure is not reported as a successful comparison
-ok 114 - provider failure is not reported as a successful comparison
-  ---
-  duration_ms: 0.614
-  ...
-# Subtest: manual edits cancel a pending continuation before comparison runs
-ok 115 - manual edits cancel a pending continuation before comparison runs
-  ---
-  duration_ms: 10.6093
-  ...
-# Subtest: restricting alternatives to unsupported crops never silently substitutes other crops
-ok 116 - restricting alternatives to unsupported crops never silently substitutes other crops
-  ---
-  duration_ms: 1.0261
-  ...
-# Subtest: crop resolution preserves unknown varieties and existing FAO selections
-ok 117 - crop resolution preserves unknown varieties and existing FAO selections
-  ---
-  duration_ms: 0.8173
-  ...
-1..117
-# tests 117
-# suites 0
-# pass 117
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 3541.9806
+
+> fieldshift@0.1.0 test
+> node --test tests/*.test.js
+
+TAP version 13
+# Subtest: QA gaps: confidence, exact yield and guarantees get explicit calibrated limits with or without a comparison
+ok 1 - QA gaps: confidence, exact yield and guarantees get explicit calibrated limits with or without a comparison
+  ---
+  duration_ms: 15.3402
+  ...
+# Subtest: QA gaps: farmer-reported pH and drainage are checked against source facts without certifying safety
+ok 2 - QA gaps: farmer-reported pH and drainage are checked against source facts without certifying safety
+  ---
+  duration_ms: 1.1346
+  ...
+# Subtest: QA gaps: crop-family explanations remain read-only and preserve the shared-family caveat
+ok 3 - QA gaps: crop-family explanations remain read-only and preserve the shared-family caveat
+  ---
+  duration_ms: 3.8092
+  ...
+# Subtest: QA gaps: contrasting grain maize with sweet corn does not transfer sweet-corn facts
+ok 4 - QA gaps: contrasting grain maize with sweet corn does not transfer sweet-corn facts
+  ---
+  duration_ms: 0.8908
+  ...
+# Subtest: QA gaps: kai lan overview includes the actual eligibility boundary
+ok 5 - QA gaps: kai lan overview includes the actual eligibility boundary
+  ---
+  duration_ms: 6.3659
+  ...
+# Subtest: explicit Node transport sends form inputs as JSON and preserves abort signals
+ok 6 - explicit Node transport sends form inputs as JSON and preserves abort signals
+  ---
+  duration_ms: 4.0067
+  ...
+# Subtest: Node transport exposes provider errors and never treats unreadable responses as successful evidence
+ok 7 - Node transport exposes provider errors and never treats unreadable responses as successful evidence
+  ---
+  duration_ms: 1.9649
+  ...
+# Subtest: browser showcase defaults to worker transport without probing an absent backend
+ok 8 - browser showcase defaults to worker transport without probing an absent backend
+  ---
+  duration_ms: 0.2558
+  ...
+# Subtest: memory accounting includes descendants in any order and excludes unrelated user browsers
+ok 9 - memory accounting includes descendants in any order and excludes unrelated user browsers
+  ---
+  duration_ms: 2.563
+  ...
+# Subtest: lifetime peak bookkeeping retains observed exited processes and distinguishes reused process IDs
+ok 10 - lifetime peak bookkeeping retains observed exited processes and distinguishes reused process IDs
+  ---
+  duration_ms: 1.2564
+  ...
+# Subtest: unavailable or malformed memory evidence is never reported as zero usage
+ok 11 - unavailable or malformed memory evidence is never reported as zero usage
+  ---
+  duration_ms: 0.6784
+  ...
+# Subtest: comparison blockers distinguish unavailable coverage from missing farmer selections
+ok 12 - comparison blockers distinguish unavailable coverage from missing farmer selections
+  ---
+  duration_ms: 1.5273
+  ...
+# Subtest: comparison navigation prerequisites recover to country/evidence and permit ready inputs
+ok 13 - comparison navigation prerequisites recover to country/evidence and permit ready inputs
+  ---
+  duration_ms: 0.2559
+  ...
+# Subtest: moving while country lookup is pending starts a lookup for the new coordinates and ignores the old result
+ok 14 - moving while country lookup is pending starts a lookup for the new coordinates and ignores the old result
+  ---
+  duration_ms: 14.8498
+  ...
+# Subtest: an outdated country-lookup failure cannot overwrite the newer country selection
+ok 15 - an outdated country-lookup failure cannot overwrite the newer country selection
+  ---
+  duration_ms: 11.2113
+  ...
+# Subtest: OSM normalization draws only complete rings, preserves crop tags and edit dates, and leaves absent crops unknown
+ok 16 - OSM normalization draws only complete rings, preserves crop tags and edit dates, and leaves absent crops unknown
+  ---
+  duration_ms: 21.2769
+  ...
+# Subtest: bounded farm requests validate coordinates, use a fixed host, and cache original retrieval times
+ok 17 - bounded farm requests validate coordinates, use a fixed host, and cache original retrieval times
+  ---
+  duration_ms: 3.4803
+  ...
+# Subtest: field lookup falls back once and rejects partial Overpass responses
+ok 18 - field lookup falls back once and rejects partial Overpass responses
+  ---
+  duration_ms: 452.1498
+  ...
+# Subtest: context errors do not become empty success records
+ok 19 - context errors do not become empty success records
+  ---
+  duration_ms: 0.3224
+  ...
+# Subtest: place searches are validated and contain the country returned by Nominatim
+ok 20 - place searches are validated and contain the country returned by Nominatim
+  ---
+  duration_ms: 1.9285
+  ...
+# Subtest: point verification requests regional detail from the fixed place service and retains its region
+ok 21 - point verification requests regional detail from the fixed place service and retains its region
+  ---
+  duration_ms: 1.1714
+  ...
+# Subtest: pest occurrence counts are country records, zero means no records, and query failures stay unknown
+ok 22 - pest occurrence counts are country records, zero means no records, and query failures stay unknown
+  ---
+  duration_ms: 1.2763
+  ...
+# Subtest: general crop questions return sourced facts without needing a field or synthetic NASA evidence
+ok 23 - general crop questions return sourced facts without needing a field or synthetic NASA evidence
+  ---
+  duration_ms: 1.4579
+  ...
+# Subtest: catalog answers match explicit multiword sweet-corn names and explain unsupported generic corn
+ok 24 - catalog answers match explicit multiword sweet-corn names and explain unsupported generic corn
+  ---
+  duration_ms: 1.4503
+  ...
+# Subtest: soil model values use source unit factors, retain intervals and never become farm measurements
+ok 25 - soil model values use source unit factors, retain intervals and never become farm measurements
+  ---
+  duration_ms: 0.6994
+  ...
+# Subtest: Australian irrigation benchmark is a reproducible annual aggregate, never applied to other countries
+ok 26 - Australian irrigation benchmark is a reproducible annual aggregate, never applied to other countries
+  ---
+  duration_ms: 0.2975
+  ...
+# Subtest: greetings and thanks remain brief and need no scientific sources
+ok 27 - greetings and thanks remain brief and need no scientific sources
+  ---
+  duration_ms: 6.2072
+  ...
+# Subtest: kai lan from Singapore is sourced independently of the selected country
+ok 28 - kai lan from Singapore is sourced independently of the selected country
+  ---
+  duration_ms: 8.8242
+  ...
+# Subtest: topic buttons and typed follow-ups retrieve one part of crop knowledge at a time
+ok 29 - topic buttons and typed follow-ups retrieve one part of crop knowledge at a time
+  ---
+  duration_ms: 4.2959
+  ...
+# Subtest: common crop-country pairs resolve to their actual national records
+ok 30 - common crop-country pairs resolve to their actual national records
+  ---
+  duration_ms: 13.6821
+  ...
+# Subtest: a country-only follow-up keeps the crop while a named new crop changes it
+ok 31 - a country-only follow-up keeps the crop while a named new crop changes it
+  ---
+  duration_ms: 2.8049
+  ...
+# Subtest: national production and source-region references do not become local cultivation proof
+ok 32 - national production and source-region references do not become local cultivation proof
+  ---
+  duration_ms: 2.5333
+  ...
+# Subtest: named-country weather never reuses observations for a different map country
+ok 33 - named-country weather never reuses observations for a different map country
+  ---
+  duration_ms: 1.8977
+  ...
+# Subtest: country names use complete matches and ask for a focus when two are named
+ok 34 - country names use complete matches and ask for a focus when two are named
+  ---
+  duration_ms: 2.8839
+  ...
+# Subtest: answers stay bounded and every visible source ID resolves once
+ok 35 - answers stay bounded and every visible source ID resolves once
+  ---
+  duration_ms: 4.1617
+  ...
+# Subtest: country choices are sourced production records, never a global fallback
+ok 36 - country choices are sourced production records, never a global fallback
+  ---
+  duration_ms: 24.4693
+  ...
+# Subtest: country constraints reject foreign alternatives and preserve named unassessed baselines
+ok 37 - country constraints reject foreign alternatives and preserve named unassessed baselines
+  ---
+  duration_ms: 43.3006
+  ...
+# Built static browser app in dist/client. No server functions or /api network calls.
+# Subtest: Vercel build is static and includes browser workers, crop data and local map assets
+ok 38 - Vercel build is static and includes browser workers, crop data and local map assets
+  ---
+  duration_ms: 623.8481
+  ...
+# Subtest: sourced expansion covers 166 countries without a radish or variant mapping
+ok 39 - sourced expansion covers 166 countries without a radish or variant mapping
+  ---
+  duration_ms: 18.4274
+  ...
+# Subtest: cabbage heat checks name the crop and onion calendar limits remain visible
+ok 40 - cabbage heat checks name the crop and onion calendar limits remain visible
+  ---
+  duration_ms: 48.1937
+  ...
+# Subtest: tomato knowledge uses the sourced harvest range and no obsolete screening exclusion
+ok 41 - tomato knowledge uses the sourced harvest range and no obsolete screening exclusion
+  ---
+  duration_ms: 2.6922
+  ...
+# Subtest: GIBS retains exact date gaps, native resolution, source and palette units
+ok 42 - GIBS retains exact date gaps, native resolution, source and palette units
+  ---
+  duration_ms: 5.5243
+  ...
+# Subtest: GIBS rejects external resource URLs, entities and unsupported intervals
+ok 43 - GIBS rejects external resource URLs, entities and unsupported intervals
+  ---
+  duration_ms: 1.2164
+  ...
+# Subtest: GIBS client deduplicates real-host metadata requests and preserves retrieval dates
+ok 44 - GIBS client deduplicates real-host metadata requests and preserves retrieval dates
+  ---
+  duration_ms: 2.171
+  ...
+# Subtest: HTTP conversational crop-country answers bypass NASA and planning validation
+ok 45 - HTTP conversational crop-country answers bypass NASA and planning validation
+  ---
+  duration_ms: 82.9058
+  ...
+# Subtest: HTTP end to end: static modules, local map assets, NASA contract, comparison, sourced assistant
+ok 46 - HTTP end to end: static modules, local map assets, NASA contract, comparison, sourced assistant
+  ---
+  duration_ms: 3155.6792
+  ...
+# Subtest: invalid HTTP inputs are rejected before NASA retrieval
+ok 47 - invalid HTTP inputs are rejected before NASA retrieval
+  ---
+  duration_ms: 12.1364
+  ...
+# Subtest: upstream failure surfaces honest error; server remains usable
+ok 48 - upstream failure surfaces honest error; server remains usable
+  ---
+  duration_ms: 5.3206
+  ...
+# Subtest: static file routing cannot expose project files, dependencies outside Leaflet, or directories
+ok 49 - static file routing cannot expose project files, dependencies outside Leaflet, or directories
+  ---
+  duration_ms: 8.5372
+  ...
+# Subtest: typed-judgment data keeps acceptance prompts out of every split and the held-out set separate
+ok 50 - typed-judgment data keeps acceptance prompts out of every split and the held-out set separate
+  ---
+  duration_ms: 16.4994
+  ...
+# Subtest: typed-judgment report matches the saved weights, uses only schema options and makes no agronomic claim
+ok 51 - typed-judgment report matches the saved weights, uses only schema options and makes no agronomic claim
+  ---
+  duration_ms: 4.4477
+  ...
+# Subtest: read aloud only ever selects an on-device English voice
+ok 52 - read aloud only ever selects an on-device English voice
+  ---
+  duration_ms: 0.7189
+  ...
+# Subtest: country-sized location files match their source manifest, hashes and coordinate contract
+ok 53 - country-sized location files match their source manifest, hashes and coordinate contract
+  ---
+  duration_ms: 244.1969
+  ...
+# Subtest: country lists expose real source towns and regions; missing coverage never uses another country
+ok 54 - country lists expose real source towns and regions; missing coverage never uses another country
+  ---
+  duration_ms: 10.591
+  ...
+# Subtest: place-list failures are visible and a retry can succeed with the original source metadata
+ok 55 - place-list failures are visible and a retry can succeed with the original source metadata
+  ---
+  duration_ms: 7.609
+  ...
+# Subtest: malformed or cross-country place data cannot become selectable locations
+ok 56 - malformed or cross-country place data cannot become selectable locations
+  ---
+  duration_ms: 0.6288
+  ...
+# Subtest: compact artifact is a trained word-level sequence LM with traceable weights and candid evaluation
+ok 57 - compact artifact is a trained word-level sequence LM with traceable weights and candid evaluation
+  ---
+  duration_ms: 38.2259
+  ...
+# Subtest: WASM embedding gradient sums repeated IDs correctly and ignores negative segment IDs
+ok 58 - WASM embedding gradient sums repeated IDs correctly and ignores negative segment IDs
+  ---
+  duration_ms: 0.7598
+  ...
+# Subtest: validates global coordinates and historical complete-year bounds
+ok 59 - validates global coordinates and historical complete-year bounds
+  ---
+  duration_ms: 3.7084
+  ...
+# Subtest: normalises fill and absent dates without turning missing rainfall into zero
+ok 60 - normalises fill and absent dates without turning missing rainfall into zero
+  ---
+  duration_ms: 9.3984
+  ...
+# Subtest: all-missing parameters have no observed date, mean or total
+ok 61 - all-missing parameters have no observed date, mean or total
+  ---
+  duration_ms: 5.1179
+  ...
+# Subtest: rejects schema and unit changes instead of applying incorrect rules
+ok 62 - rejects schema and unit changes instead of applying incorrect rules
+  ---
+  duration_ms: 8.8548
+  ...
+# Subtest: coalesces concurrent requests, caches original retrieval time, separates coordinates and expires
+ok 63 - coalesces concurrent requests, caches original retrieval time, separates coordinates and expires
+  ---
+  duration_ms: 44.15
+  ...
+# Subtest: upstream HTTP, JSON and network failures return errors and never cache substitutes
+ok 64 - upstream HTTP, JSON and network failures return errors and never cache substitutes
+  ---
+  duration_ms: 1.4207
+  ...
+# Subtest: MERRA output centre bounds wrap at the date line and clip at poles
+ok 65 - MERRA output centre bounds wrap at the date line and clip at poles
+  ---
+  duration_ms: 3.8464
+  ...
+# Subtest: regional rain keeps zero, missing days, partial sums and exact returned geometry
+ok 66 - regional rain keeps zero, missing days, partial sums and exact returned geometry
+  ---
+  duration_ms: 27.6957
+  ...
+# Subtest: regional adapter validates inputs and uses one bounded fixed-host parameter request
+ok 67 - regional adapter validates inputs and uses one bounded fixed-host parameter request
+  ---
+  duration_ms: 37.8307
+  ...
+# Subtest: column display preserves missing versus true zero and keeps a fixed annual scale
+ok 68 - column display preserves missing versus true zero and keeps a fixed annual scale
+  ---
+  duration_ms: 18.3833
+  ...
+# Subtest: date-line fallback requests one actual native centre and never copies neighbours
+ok 69 - date-line fallback requests one actual native centre and never copies neighbours
+  ---
+  duration_ms: 3.7889
+  ...
+# Subtest: QA F01/R2: Australia produces three distinct comparable scenarios from its recorded screened subset
+ok 70 - QA F01/R2: Australia produces three distinct comparable scenarios from its recorded screened subset
+  ---
+  duration_ms: 189.0261
+  ...
+# Subtest: QA F02: India rice and wheat retain unknown scientific fields while its screened alternatives stay constrained
+ok 71 - QA F02: India rice and wheat retain unknown scientific fields while its screened alternatives stay constrained
+  ---
+  duration_ms: 69.518
+  ...
+# Subtest: QA F03/R2: Countries without sufficient rules cannot bypass missing screening coverage through the API
+ok 72 - QA F03/R2: Countries without sufficient rules cannot bypass missing screening coverage through the API
+  ---
+  duration_ms: 2.1587
+  ...
+# Subtest: QA M03: impossible coordinates and the incomplete current year are rejected before provider access
+ok 73 - QA M03: impossible coordinates and the incomplete current year are rejected before provider access
+  ---
+  duration_ms: 0.5128
+  ...
+# Subtest: QA M06: changing pH/drainage changes sourced soil warnings without changing weather or baseline
+ok 74 - QA M06: changing pH/drainage changes sourced soil warnings without changing weather or baseline
+  ---
+  duration_ms: 212.9344
+  ...
+# Subtest: QA M10: all priorities retain the same hard warnings and disclose their actual ordering
+ok 75 - QA M10: all priorities retain the same hard warnings and disclose their actual ordering
+  ---
+  duration_ms: 397.1556
+  ...
+# Subtest: QA M11: irrigation availability alone cannot become sufficiency or calculated water savings
+ok 76 - QA M11: irrigation availability alone cannot become sufficiency or calculated water savings
+  ---
+  duration_ms: 195.2438
+  ...
+# Subtest: rankings repeat exactly; baseline and two distinct alternatives share one 12-month horizon
+ok 77 - rankings repeat exactly; baseline and two distinct alternatives share one 12-month horizon
+  ---
+  duration_ms: 419.3541
+  ...
+# Subtest: family repetition includes bean/pea, nonadjacent crops and supplied previous crop
+ok 78 - family repetition includes bean/pea, nonadjacent crops and supplied previous crop
+  ---
+  duration_ms: 155.6224
+  ...
+# Subtest: unsupported baseline is preserved and is never assigned crop facts
+ok 79 - unsupported baseline is preserved and is never assigned crop facts
+  ---
+  duration_ms: 149.8356
+  ...
+# Subtest: unspecified corn and maize remain unassessed instead of inheriting sweet-corn maturity rules
+ok 80 - unspecified corn and maize remain unassessed instead of inheriting sweet-corn maturity rules
+  ---
+  duration_ms: 149.2396
+  ...
+# Subtest: alternatives respect crop restrictions while baseline remains intact
+ok 81 - alternatives respect crop restrictions while baseline remains intact
+  ---
+  duration_ms: 5.7817
+  ...
+# Subtest: missing weather prevents an apparently clean screening and produces null totals
+ok 82 - missing weather prevents an apparently clean screening and produces null totals
+  ---
+  duration_ms: 140.9131
+  ...
+# Subtest: frost-tender historical exposure is counted; it is not called a safe candidate
+ok 83 - frost-tender historical exposure is counted; it is not called a safe candidate
+  ---
+  duration_ms: 146.4679
+  ...
+# Subtest: calendar screening catches maturity overruns and handles year-wrap and leap-day mapping
+ok 84 - calendar screening catches maturity overruns and handles year-wrap and leap-day mapping
+  ---
+  duration_ms: 297.7083
+  ...
+# Subtest: input validation rejects missing constraints, oversized text and impossible alternatives
+ok 85 - input validation rejects missing constraints, oversized text and impossible alternatives
+  ---
+  duration_ms: 0.9062
+  ...
+# Subtest: priority changes the documented tie-break ordering, not safety checks
+ok 86 - priority changes the documented tie-break ordering, not safety checks
+  ---
+  duration_ms: 0.4732
+  ...
+# Subtest: sourced soil pH and drainage checks use farmer inputs while unassessed crops remain explicit
+ok 87 - sourced soil pH and drainage checks use farmer inputs while unassessed crops remain explicit
+  ---
+  duration_ms: 145.4869
+  ...
+# Subtest: rain-free exposure counts exact zeros, never missing values or water savings
+ok 88 - rain-free exposure counts exact zeros, never missing values or water savings
+  ---
+  duration_ms: 144.3065
+  ...
+# Subtest: crop and water questions use traceable facts and deterministic limitations
+ok 89 - crop and water questions use traceable facts and deterministic limitations
+  ---
+  duration_ms: 140.4281
+  ...
+# Subtest: starting twice reuses the project preview and opens the same browser URL
+ok 90 - starting twice reuses the project preview and opens the same browser URL
+  ---
+  duration_ms: 84.8249
+  ...
+# Subtest: an unrelated app keeps its port and FieldShift opens the next free one
+ok 91 - an unrelated app keeps its port and FieldShift opens the next free one
+  ---
+  duration_ms: 15.4388
+  ...
+# Subtest: a preview of a different directory is never reused as this project
+ok 92 - a preview of a different directory is never reused as this project
+  ---
+  duration_ms: 17.4481
+  ...
+# Subtest: Node testing and static showcase previews keep separate identities and can run together
+ok 93 - Node testing and static showcase previews keep separate identities and can run together
+  ---
+  duration_ms: 22.0789
+  ...
+# Subtest: Terrarium PNG decoding matches independently checked recorded RGB pixels and rejects corruption
+ok 94 - Terrarium PNG decoding matches independently checked recorded RGB pixels and rejects corruption
+  ---
+  duration_ms: 49.52
+  ...
+# Subtest: minimal synthetic PNG preserves fractional heights and missing pixels
+ok 95 - minimal synthetic PNG preserves fractional heights and missing pixels
+  ---
+  duration_ms: 4.3009
+  ...
+# Subtest: finite differences recover plane slope, downhill aspect and flat/unknown cases
+ok 96 - finite differences recover plane slope, downhill aspect and flat/unknown cases
+  ---
+  duration_ms: 0.5219
+  ...
+# Subtest: polygon masking excludes holes and never invents a small-field slope
+ok 97 - polygon masking excludes holes and never invents a small-field slope
+  ---
+  duration_ms: 7.2982
+  ...
+# Subtest: terrain point client uses bounded fixed-host tiles and retains cached provenance
+ok 98 - terrain point client uses bounded fixed-host tiles and retains cached provenance
+  ---
+  duration_ms: 27.2682
+  ...
+# Subtest: shared historical window preserves leap substitution, year wrap and missing rain
+ok 99 - shared historical window preserves leap substitution, year wrap and missing rain
+  ---
+  duration_ms: 18.3593
+  ...
+# Subtest: 3D crop-window columns equal strategy daily calculations and reject stale or unsupported slots
+ok 100 - 3D crop-window columns equal strategy daily calculations and reject stale or unsupported slots
+  ---
+  duration_ms: 39.4082
+  ...
+# Subtest: workflow parser distinguishes actions from read-only crop questions
+ok 101 - workflow parser distinguishes actions from read-only crop questions
+  ---
+  duration_ms: 11.3671
+  ...
+# Subtest: explicit country, coordinates and farmer crops execute through step 4 in order
+ok 102 - explicit country, coordinates and farmer crops execute through step 4 in order
+  ---
+  duration_ms: 5.2292
+  ...
+# Subtest: country without a field asks for a point and retains supplied crops across messages
+ok 103 - country without a field asks for a point and retains supplied crops across messages
+  ---
+  duration_ms: 1.7344
+  ...
+# Subtest: whole-country replies use national evidence without loading point weather or comparing
+ok 104 - whole-country replies use national evidence without loading point weather or comparing
+  ---
+  duration_ms: 10.9233
+  ...
+# Subtest: combined place/coordinate sentences resolve a coherent point and reject region/town conflicts
+ok 105 - combined place/coordinate sentences resolve a coherent point and reject region/town conflicts
+  ---
+  duration_ms: 5.4224
+  ...
+# Subtest: national scope clears an existing field point and keeps the farmer sequence
+ok 106 - national scope clears an existing field point and keeps the farmer sequence
+  ---
+  duration_ms: 0.8061
+  ...
+# Subtest: specific-area mode accepts a sourced region and preserves crops through the local comparison
+ok 107 - specific-area mode accepts a sourced region and preserves crops through the local comparison
+  ---
+  duration_ms: 1.896
+  ...
+# Subtest: whole-country mode can narrow directly to a named region without repeating the crops
+ok 108 - whole-country mode can narrow directly to a named region without repeating the crops
+  ---
+  duration_ms: 1.3927
+  ...
+# Subtest: scope choices apply to other countries and empty national coverage stays honest
+ok 109 - scope choices apply to other countries and empty national coverage stays honest
+  ---
+  duration_ms: 1.6381
+  ...
+# Subtest: a selected point still needs three farmer crops and never fills missing slots
+ok 110 - a selected point still needs three farmer crops and never fills missing slots
+  ---
+  duration_ms: 0.9381
+  ...
+# Subtest: coordinate-country disagreement stops before location and NASA actions
+ok 111 - coordinate-country disagreement stops before location and NASA actions
+  ---
+  duration_ms: 0.7591
+  ...
+# Subtest: field actions require a currently returned source ID
+ok 112 - field actions require a currently returned source ID
+  ---
+  duration_ms: 0.5221
+  ...
+# Subtest: an explicitly numbered returned field is selected without guessing another outline
+ok 113 - an explicitly numbered returned field is selected without guessing another outline
+  ---
+  duration_ms: 0.5123
+  ...
+# Subtest: provider failure is not reported as a successful comparison
+ok 114 - provider failure is not reported as a successful comparison
+  ---
+  duration_ms: 0.614
+  ...
+# Subtest: manual edits cancel a pending continuation before comparison runs
+ok 115 - manual edits cancel a pending continuation before comparison runs
+  ---
+  duration_ms: 10.6093
+  ...
+# Subtest: restricting alternatives to unsupported crops never silently substitutes other crops
+ok 116 - restricting alternatives to unsupported crops never silently substitutes other crops
+  ---
+  duration_ms: 1.0261
+  ...
+# Subtest: crop resolution preserves unknown varieties and existing FAO selections
+ok 117 - crop resolution preserves unknown varieties and existing FAO selections
+  ---
+  duration_ms: 0.8173
+  ...
+1..117
+# tests 117
+# suites 0
+# pass 117
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3541.9806

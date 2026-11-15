@@ -592,3 +592,18 @@ claim now says sourced instead of validated; npm test again passed 117/117.
 See docs/final-quality-review.md. User-reported Aland crop selection/chat failure
 was reproduced on this branch and is not fixed yet; sourced regional context and
 new prompt regressions are next. The classifier remains unwired. No dependency added.
+
+
+## P0.4 completed - new crop source and exclusion checks
+
+Live primary-source numbers match the stored tomato, head-cabbage and bulb-onion
+entries; no numeric crop rules changed. Added duration-basis/pH/temperature checks
+and an actual comparison contract proving Chinese cabbage, bok choy and spring
+onion remain unassessed. An initial added wording assertion omitted the existing
+qualifier head-cabbage; corrected that test defect to require head-cabbage
+transplants. Final npm test: 119/119 pass. Source and both test-run reports are
+under docs/evidence/final-quality-crop-source-probes-* and final-quality-p04-*.
+The user also requested sourced local crop-type suggestions for empty areas,
+aligned Back/Next controls that open chat cannot cover, and three clickable chat
+starter examples. These are included in the remaining P0.6/P1 work. All three field
+services are retained by explicit user decision. No new dependency or deployment.
