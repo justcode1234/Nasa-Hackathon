@@ -865,3 +865,63 @@ every dependency is an exact pinned version and `index.html` loads no third-part
 Still unverified after this change: real phones, Safari/WebKit, microphone and read-aloud audio
 quality, and independent agronomic review. Shared public Overpass services remain outside our
 control; their failures are reported with their cause.
+
+## 18 November 2026 - region-name loop, duplicate town buttons
+
+**Branch:** `fix/chat-flow-and-answers`. **Files:** `public/js/modules/workflow-assistant.js`,
+`tests/matrix-coverage.test.js`.
+
+### Defect 8 — repeating the chosen region’s name re-asked the same question
+
+Eleven saved lists hold a town spelled exactly like a *different* region’s name: AR “Buenos Aires”
+(town row in region `07 Buenos Aires F.D.`, province row `01`), TW “Taipei”, GB “Wales”, ZA
+“Mpumalanga”, CO “Córdoba”, CN “Jiangxi”, MN “Sühbaatar”, BM “Hamilton”, CI “Yamoussoukro”, WS
+“Palauli”, AF “Farah”. Driving the flow with each spelling produced:
+
+```text
+r3  “Buenos Aires is selected. Now choose a town in the Town list in step 1 …”   region 01  loc null
+r4  “Buenos Aires is selected. Now choose a town in the Town list in step 1 …”   region 01  loc null
+```
+
+The second reply was the region answer again: actions `…+region+region`, and no point was ever set.
+`exactPlaceRow` filtered candidate towns by the already-selected region, so the only exact match left
+in the list was the region the farmer had just chosen, and `respond` treated that as a new region
+choice.
+
+**Fix (interaction layer, no data change):** `exactPlaceRow` no longer returns the already-selected
+region for a bare reply — it falls through to the town rows, inside the region first and then anywhere
+in that country’s saved list, and returns nothing when the spelling is only a region so the
+pending-question handler answers honestly. The typed-path guard now only claims “no town by that name
+here” when no town carries the name at all. After the fix, the same drive gives:
+
+```text
+r4  “Buenos Aires is selected as a town point. Choose the specific field; t…”
+    lat -34.61315  lon -58.37723   actions …+region+location+fields+step:location
+```
+
+Those coordinates are the saved GeoNames row, not a computed or invented point.
+
+### Defect 9 — two identically worded buttons for two different points
+
+Where a list holds two towns sharing a name *and* a region (PH “Quezon · Cagayan Valley”), the
+disambiguation reply rendered both with the same label, and it silently showed three rows of a larger
+set. Labels now append the saved latitude/longitude only when the wording collides, and the reply
+states “showing 3 of N”.
+
+### Executed
+
+- `npm test` — **169 tests, 169 passed, 0 failed** (`tests/matrix-coverage.test.js` 13/13).
+  Diagnostics from that file: *region-and-town name collisions followed in 147 countries, 10 of them
+  answered with a town outside the chosen region and 0 with “not a town here”* (AR, BM, CI, CN, CO, GB,
+  MN, TW, WS, ZA; US “California” resolves inside California) and *duplicate town names exercised in 49
+  countries (2 of them showing 3 of a larger set)*.
+- `npm audit` — **found 0 vulnerabilities**.
+- The collision test now fails if the town question repeats “is selected. Now choose a town”, and it
+  asserts that the outside-region case is still exercised, so the fix cannot silently become vacuous.
+- Not re-run as part of this change: `node scripts/audit-matrix.js --deep` and the full
+  `npm run test:e2e`. The Playwright run that overlapped these edits tested a mixed source state and is
+  not counted as a gate.
+
+Still unverified: real phones, Safari/WebKit, microphone and read-aloud audio quality, independent
+agronomic review, and a clean full-browser gate on this committed code.
+

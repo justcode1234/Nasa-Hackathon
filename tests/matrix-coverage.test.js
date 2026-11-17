@@ -158,8 +158,125 @@ test('town names stay selectable and every unmatchable name has a stated reason'
   assert.deepEqual(unexplained.slice(0, 12), [], `${unexplained.length} listed towns cannot be selected from the chat`);
 });
 
-test(`all ${listCountries.length} countries end in an honest outcome with no dead end or cycle`, async () => {
+test('towns that share a name and a region never produce two identical buttons', async t => {
+  // “Quezon · Cagayan Valley” is two different saved points, and two identically worded buttons cannot be
+  // chosen between. The reply also has to admit when it shows three of a larger set.
+  const driven = [], failures = [];
+  let capped = 0;
+  for (const country of listCountries) {
+    const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
+    const regionNames = new Set(list.regions.filter(region => region.name).map(region => normalizeName(region.name)));
+    const groups = new Map();
+    for (const place of list.places) {
+      const region = list.regions.find(row => row.id === place.regionCode);
+      // A name that is also a region name resolves to the region first, which is the other test’s job.
+      if (!region?.name || regionNames.has(normalizeName(place.name))) continue;
+      const key = `${normalizeName(place.name)}|${place.regionCode}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(place);
+    }
+    const duplicate = [...groups.entries()].filter(([, rows]) => rows.length > 1)
+      .sort((a, b) => b[1].length - a[1].length)[0];
+    if (!duplicate) continue;
+    const rows = duplicate[1], region = list.regions.find(row => row.id === duplicate[0].split('|')[1]);
+    const { assistant, calls } = makeAssistant();
+    await assistant.respond(`Help me plan a rotation in ${countryName}`);
+    await assistant.respond('A specific area');
+    await assistant.respond(`in ${region.name}`);
+    const typed = normalizeName(rows[0].name).split(' ').length > 4 ? `in ${rows[0].name}` : rows[0].name;
+    const answer = await assistant.respond(typed);
+    const text = answer ? textOf(answer) : '';
+    if (!/Several listed towns match/.test(text)) { failures.push(`${country}: “${typed}” -> ${text.slice(0, 70) || '(no reply)'}`); continue; }
+    const labels = answer.followUps.map(choice => choice.label);
+    if (new Set(labels).size !== labels.length) failures.push(`${country}: identical buttons ${JSON.stringify(labels)}`);
+    if (labels.length < 2) failures.push(`${country}: the disambiguation reply offered ${labels.length} buttons`);
+    if (rows.length > 3) {
+      capped++;
+      // The reply counts the places it matched, which can be more than the exact-name group because a
+      // longer row may also contain the typed name; it must never claim fewer than it hides.
+      const stated = Number(text.match(/showing 3 of (\d+)/)?.[1] ?? 0);
+      if (stated < rows.length) failures.push(`${country}: ${rows.length} matches but the reply said “${text.slice(0, 60)}”`);
+    }
+    const town = answer.followUps.find(choice => choice.workflowChoice?.type === 'town');
+    if (!town) { failures.push(`${country}: no town button to tap`); continue; }
+    await assistant.respond(town.question, town.workflowChoice);
+    if (!calls.includes('location')) failures.push(`${country}: tapping a named town chose no point`);
+    driven.push(`${country}/${rows[0].name}x${rows.length}`);
+  }
+  t.diagnostic(`duplicate town names exercised in ${driven.length} countries (${capped} of them showing 3 of a larger set): ${driven.slice(0, 10).join(', ')}`);
+  assert.ok(driven.length > 20, `expected the real duplicate-name cases to be exercised, drove ${driven.length}`);
+  assert.deepEqual(failures.slice(0, 12), [], `${failures.length} duplicate-name replies cannot be chosen between`);
+});
+
+test('one spelling that is both a region and a town follows the question that is pending', async t => {
+  // Funafuti, Salzburg, Dubai, Burgas and most other capitals are saved as a region row and a town row.
+  // The answer must depend on which question the farmer is replying to, not on which row comes first.
+  const checked = [], recovery = [], elsewhere = [], failures = [];
+  for (const country of listCountries) {
+    const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
+    const townNames = new Set(list.places.map(place => normalizeName(place.name)));
+    const region = list.regions.find(row => row.name && townNames.has(normalizeName(row.name)) &&
+      normalizeName(row.name) !== normalizeName(countryName));
+    if (!region) continue;
+    const typed = normalizeName(region.name).split(' ').length > 4 ? `in ${region.name}` : region.name;
+    const atRegion = makeAssistant();
+    await atRegion.assistant.respond(`Help me plan a rotation in ${countryName}`);
+    await atRegion.assistant.respond('A specific area');
+    const regionAnswer = await atRegion.assistant.respond(typed);
+    const regionText = regionAnswer ? textOf(regionAnswer) : '';
+    if (atRegion.state.regionCode !== region.id || atRegion.state.location) {
+      failures.push(`${country}: “${typed}” at the region question -> region ${atRegion.state.regionCode}, location ${JSON.stringify(atRegion.state.location)}`);
+    }
+    if (!/is selected\. Now choose a town/.test(regionText)) failures.push(`${country}: region answer -> ${regionText.slice(0, 70) || '(no reply)'}`);
+    const atTown = makeAssistant();
+    await atTown.assistant.respond(`Help me plan a rotation in ${countryName}`);
+    await atTown.assistant.respond('A specific area');
+    await atTown.assistant.respond(typed);
+    const townAnswer = await atTown.assistant.respond(typed);
+    const townText = townAnswer ? textOf(townAnswer) : '';
+    // The defect this pins: repeating the chosen region’s own name must never answer the town
+    // question with “region is selected” a second time, which asked the farmer the same question twice.
+    if (/is selected\. Now choose a town/.test(townText)) {
+      failures.push(`${country}: “${typed}” at the town question re-selected the region instead of a town`);
+      continue;
+    }
+    if (/No town by that name is in the saved place list/.test(townText)) {
+      // Where no town carries the spelling at all, the honest answer is “not a town here” plus real towns.
+      recovery.push(`${country}/${region.name}`);
+      if (!townAnswer.followUps.length) failures.push(`${country}: the region-name reply offered no way forward`);
+      if (!townAnswer.followUps.some(choice => choice.workflowChoice?.type === 'town')) {
+        failures.push(`${country}: “${typed}” at the town question recovered with no real town: ${JSON.stringify(townAnswer.followUps.map(c => c.label))}`);
+      }
+      continue;
+    }
+    // Several rows in one region can share the name, and then asking which one is the correct answer.
+    if (/Which one do you mean/.test(townText)) {
+      const town = townAnswer.followUps.find(choice => choice.workflowChoice?.type === 'town');
+      assert.ok(town, `${country}: the collision disambiguation offered no town button`);
+      await atTown.assistant.respond(town.question, town.workflowChoice);
+    }
+    if (!atTown.calls.includes('location') || !atTown.state.location) {
+      failures.push(`${country}: “${typed}” at the town question chose no point -> ${townText.slice(0, 70) || '(no reply)'}`);
+      continue;
+    }
+    // In eleven lists the shared spelling is a town in a DIFFERENT region (the city of Buenos Aires is
+    // not inside the province), so the town question is answered with that saved point.
+    const row = list.places.find(place => place.latitude === atTown.state.location.latitude &&
+      place.longitude === atTown.state.location.longitude);
+    if (row && row.regionCode !== region.id) elsewhere.push(`${country}/${region.name}`);
+    checked.push(`${country}/${region.name}`);
+  }
+  t.diagnostic(`region-and-town name collisions followed in ${checked.length} countries, ${elsewhere.length} of them ` +
+    `answered with a town outside the chosen region and ${recovery.length} with “not a town here”: ` +
+    `${checked.slice(0, 8).join(', ')} | ${elsewhere.slice(0, 12).join(', ')}`);
+  assert.ok(checked.length > 100, `expected the collision family to be exercised, checked ${checked.length}`);
+  assert.ok(elsewhere.length > 0, 'the shared-spelling-in-another-region case stopped being exercised');
+  assert.deepEqual(failures.slice(0, 12), [], `${failures.length} region/town collisions answered the wrong question`);
+});
+
+test(`all ${listCountries.length} countries end in an honest outcome with no dead end or cycle`, async t => {
   const outcomes = { terminal: 0, handoff: 0 };
+  const branches = { none: 0, single: 0, comparable: 0 };
   const defects = [];
   for (const country of listCountries) {
     const countryName = COUNTRY_NAMES.of(country);
@@ -174,6 +291,7 @@ test(`all ${listCountries.length} countries end in an honest outcome with no dea
     // Every reply on the way must give the farmer a way to continue.
     for (const reply of result.replies.slice(0, -1)) if (!reply.followUps.length) defects.push(`${country}: a mid-plan reply offered no choice`);
     const screened = getCountryCrops({ country }).screeningCropIds.length;
+    if (screened === 0) branches.none++; else if (screened === 1) branches.single++; else branches.comparable++;
     if (screened >= 2) {
       if (!/Step 4 is ready/.test(text) || !calls.includes('compare')) defects.push(`${country}: ${screened} screened crops but no comparison: ${text.slice(0, 90)}`);
     } else {
@@ -185,6 +303,12 @@ test(`all ${listCountries.length} countries end in an honest outcome with no dea
       if (calls.includes('compare')) defects.push(`${country}: compared rotations without two screened crops`);
     }
   }
+  t.diagnostic(`screened-crop branches driven: ${branches.none} countries with none, ${branches.single} with exactly one, ` +
+    `${branches.comparable} with two or more; outcomes ${JSON.stringify(outcomes)}`);
+  // Each of the three outcomes has to be exercised by real data, or the honest-decline wording could stop
+  // being tested without any test failing.
+  assert.ok(branches.none > 0 && branches.single > 0 && branches.comparable > 100,
+    `expected all three screened-crop branches, drove ${JSON.stringify(branches)}`);
   assert.deepEqual(defects.slice(0, 12), [], `${defects.length} countries dead-end or misreport through the chat`);
   assert.equal(outcomes.terminal + outcomes.handoff, listCountries.length);
 });

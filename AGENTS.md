@@ -301,6 +301,26 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   button back and the click timed out; the click and its two assertions now run first, nothing removed. A
   clean full `npm run test:e2e` on the committed code is running
   (artifacts/playwright/full-suite-clean.log) — not a passed gate until its own number is recorded here.
+- **18 Nov, same branch: the region-name loop and identical town buttons.** Two more real defects came out
+  of driving every collision in the saved lists. (a) Eleven lists hold a town spelled exactly like a
+  *different* region's name (the city of Buenos Aires is not inside the province row, Chinese Taipei's
+  "Taipei" town row sits in another region, "Wales" is a town in England, "Mpumalanga", "Córdoba",
+  "Hamilton", "Yamoussoukro", "Sühbaatar", "Palauli", "Jiangxi", "Farah" likewise). Retyping the chosen
+  region's own name at the "now choose a town" question answered it by selecting that region **again** —
+  the same question twice, with no point ever set. Cause was `exactPlaceRow`: an already-selected region
+  filtered the town rows out, so the only exact match left was the region the farmer had chosen. It now
+  falls through to the town rows (in the region first, then anywhere in the country list) and, when the
+  spelling is a region and nothing else, the pending-question handler answers honestly instead. 10 of the
+  147 collision countries now set a real saved point from the town row outside the chosen region; US
+  "California" resolves to its own row inside California. (b) Two towns that share a name **and** a region
+  ("Quezon · Cagayan Valley" twice) produced two identically worded buttons, and the reply hid rows by
+  claiming no count. Labels now carry the saved coordinates when the wording collides, and the reply says
+  "showing 3 of N" when it truncates. **Executed:** `npm test` 169/169 (matrix-coverage 13/13, including
+  the two new collision tests over 147 and 49 countries), `npm audit` 0 vulnerabilities. The full
+  `npm run test:e2e` that was still running overlapped these edits, so it is **not** counted as a gate and
+  needs a clean re-run on the committed code. The tiny word LM is unchanged and not retrained: no place
+  name vocabulary or reply label in `public/models/fieldshift-mini` was altered, and a rebuild would break
+  the sha256 pin in tests/model.test.js for no behaviour gain.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

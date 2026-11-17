@@ -321,7 +321,13 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       }
       const regionMatches = choice?.type === 'town' || wholeTown.length === 1 ? [] : regionMentions.length === 1 ? regionMentions :
         namedRegions.filter(region => mentionsPlace(region.name));
-      if (regionMatches.length === 1) return selectRegion(regionMatches[0]);
+      // Repeating the already-chosen region’s own name is not a new choice. In eleven saved lists that
+      // name is also a town somewhere else (the city of Buenos Aires is not a town inside the province of
+      // Buenos Aires), so the pending question is still “which town” and re-selecting the region would
+      // answer the same question twice. Say what is missing and give the real towns instead.
+      if (regionMatches.length === 1 && selectedRegion && regionMatches[0].id === selectedRegion && !state.location) {
+        if (!townMentions.length) return placeRecovery();
+      } else if (regionMatches.length === 1) return selectRegion(regionMatches[0]);
       const matches = choice?.type === 'town' ? places.places.filter(place => place.id === choice.id) :
         townMentions.length ? townMentions : places.places.filter(place => {
         const name = normalizeName(place.name);
@@ -334,7 +340,17 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
         await run('loadFarms'); await keepInputs(); state = getState();
         return fieldPrompt(state, `${matches[0].name} is selected as a town point. Choose the specific field; the town itself is not farmland.`);
       }
-      if (matches.length > 1) return reply('Several listed towns match. Which one do you mean?', matches.slice(0, 3).map(place => ({ label: placeLabel(places, place), question: `Use ${place.name}`, workflowChoice: { type: 'town', id: place.id } })));
+      if (matches.length > 1) {
+        // Only three rows are offered at a time, so say so when the list holds more, and separate two
+        // rows that share both a name and a region (“Quezon · Cagayan Valley” twice) with the saved
+        // coordinates: two identically worded buttons for two different points cannot be chosen between.
+        const shown = matches.slice(0, 3);
+        const labels = shown.map(place => placeLabel(places, place));
+        return reply(`Several listed towns match${matches.length > shown.length ? `, showing ${shown.length} of ${matches.length}` : ''}. Which one do you mean?`,
+          shown.map((place, index) => ({
+            label: labels.filter(label => label === labels[index]).length > 1 ? `${labels[index]} · ${place.latitude}, ${place.longitude}` : labels[index],
+            question: `Use ${place.name}`, workflowChoice: { type: 'town', id: place.id } })));
+      }
       if(!hasInput&&!placeMention)return phrase&&!state.location&&(scope==='area'||areaRegion)?placeRecovery():null;
       await keepInputs();
       actions.showStep('location');
@@ -397,6 +413,14 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     const regions = (list?.regions ?? []).filter(row => row.name && foldName(row.name) === folded);
     if (preferRegion && regions.length === 1) return { type: 'region', id: regions[0].id };
     if (towns.length === 1) return { type: 'town', id: towns[0].id };
+    // A region row equal to the region already selected answers no pending question. The saved list
+    // puts the city of Buenos Aires in a different region row than the province, and California the
+    // town in Maryland, so repeating the chosen region’s name has to fall through to the town rows
+    // (or the honest “no town by that name here”) instead of selecting the same region twice.
+    if (regionCode && regions.length === 1 && regions[0].id === regionCode) {
+      const anywhere = (list?.places ?? []).filter(row => row.name && foldName(row.name) === folded);
+      return anywhere.length === 1 ? { type: 'town', id: anywhere[0].id } : null;
+    }
     return regions.length === 1 ? { type: 'region', id: regions[0].id } : null;
   }
   function areaPrompt(countryName, regionName, places, options = {}) {
