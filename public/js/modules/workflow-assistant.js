@@ -232,7 +232,16 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     await run('applyPlanning', { baseline, constraints, allowed });
     baseline = null; allowed = null; constraints = {}; state = getState();
     const count = state.planning.allowedCrops.length;
-    if (count < 2) return reply('Your baseline is retained. Alternatives currently include fewer than two allowed crops with screening rules. In step 3, choose “Let me choose different crops below” and explicitly allow at least two crops, or tell me “allowed crops: …”. I will not add sweet corn or any other crop without your choice. Missing crop rules cannot be invented.');
+    if (count < 2) {
+      // The plan is blocked on allowed crops, so the reply must offer a way out inside the chat
+      // instead of only naming a step 3 control. The list is the crops this app has screening
+      // rules for — data coverage, not an agronomic recommendation.
+      const screened = state.countryCrops.screeningCropIds.slice(0, 3)
+        .map(id => state.countryCrops.choices.find(choice => choice.id === id)?.name ?? id);
+      const options = screened.length >= 2
+        ? [next(`Allow ${screened.join(', ')}`, `allowed crops: ${screened.join(', ')}`)] : [];
+      return reply(`Your baseline is retained. Alternatives currently include fewer than two allowed crops with screening rules.${options.length ? ` Tap “${options[0].label}” to allow the crops this app has screening rules for, or name your own. That list reflects available crop rules, not a recommendation.` : ''} In step 3, choose “Let me choose different crops below” and explicitly allow at least two crops, or tell me “allowed crops: …”. I will not add sweet corn or any other crop without your choice. Missing crop rules cannot be invented.`, options);
+    }
     progress('Step 2: loading historical NASA evidence for the selected point…');
     if (!state.observations && !await run('loadEvidence')) return reply('NASA evidence could not be loaded. The app has not generated a comparison. Check the error in step 2 and retry.', [next('Retry', 'Continue planning')]);
     progress('Step 4: comparing the baseline and two alternatives…');
@@ -284,7 +293,9 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
   function fieldPrompt(state, message) {
     actions.showStep('location');
     const choices = state.farms.slice(0, 3).map((farm, i) => ({ label: `Field ${i + 1}: ${farm.name.slice(0, 30)}`, question: `Use mapped field ${farm.id}`, workflowChoice: { type: 'farm', id: farm.id } }));
-    if (choices.length < 3) choices.push(next('Use selected point', 'Use the selected point'));
+    // The town point stays offered even when fields came back, so a chat-only plan never
+    // depends on discovering the typed command.
+    choices.push(next('Use selected point', 'Use the selected point'));
     return reply(`${message} ${state.farms.length} mapped fields were returned. You can also choose from the full field dropdown or use explicit farm coordinates.`, choices,
       [{ id: 'osm', title: 'OpenStreetMap contributors; community mapped land use, not verified ownership', url: 'https://www.openstreetmap.org/copyright' }]);
   }

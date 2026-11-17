@@ -160,7 +160,12 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
   regionCode: $('#place-region').value === '__all__' ? null : $('#place-region').value || null }), {
   chooseCountry: code => context.chooseCountry(code, { fromAssistant: true }),
   chooseRegion: code => context.chooseRegion(code, { fromAssistant: true }),
-  chooseLocation: (point, countryCode) => {if(!point.id)setLocationMethod('coordinates');return selectLocation(point.latitude, point.longitude, { pan: true, countryCode, fromAssistant: true });},
+  // The assistant's town choice must show in step 1 without inventing a region filter:
+  // the list keeps whatever region the farmer or the assistant already selected, which for a
+  // country with unnamed regions stays "All regions" so a partial town name lists every match.
+  chooseLocation: (point, countryCode) => {if(!point.id)setLocationMethod('coordinates');
+    const filter = $('#place-region').value;
+    return selectLocation(point.latitude, point.longitude, { pan: true, countryCode, regionCode: !filter || filter === '__all__' ? null : filter, placeId: point.id ?? '', fromAssistant: true });},
   chooseFarm: id => context.selectFarm(id, { fromAssistant: true }),
   loadFarms: () => context.loadFarms(),
   showStep: activateTab, loadEvidence: () => loadEvidence({ fromAssistant: true }),

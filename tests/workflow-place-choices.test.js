@@ -136,6 +136,19 @@ test('a region name selects that region and its town buttons stay inside it', as
   assert.ok(!calls.includes('NASA'));
 });
 
+test('a field prompt keeps the town-point button beside the mapped fields', async () => {
+  const { assistant, calls } = setup({ farms: 3 });
+  await assistant.respond('Help me plan a rotation in Singapore. Crops: tomato, cabbage, onion.');
+  const area = await assistant.respond('A specific area');
+  const answer = await click(assistant, area, area.followUps.findIndex(choice => choice.workflowChoice?.type === 'town'));
+  assert.match(text(answer), /is selected as a town point/);
+  assert.deepEqual(answer.followUps.map(choice => choice.label),
+    ['Field 1: TEST FIELD 1', 'Field 2: TEST FIELD 2', 'Field 3: TEST FIELD 3', 'Use selected point']);
+  const ready = await click(assistant, answer, answer.followUps.length - 1);
+  assert.match(text(ready), /Step 4 is ready/);
+  assert.ok(calls.includes('NASA') && calls.includes('compare'), 'the town point must finish the plan without the form');
+});
+
 test('unmatched short replies never execute a place action', async () => {
   const { assistant, calls } = setup();
   await assistant.respond('Help me plan a rotation in Singapore');

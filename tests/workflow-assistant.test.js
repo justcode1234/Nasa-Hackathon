@@ -5,11 +5,11 @@ import { catalog } from '../server/agronomy/catalog.js';
 import { getCountryCrops } from '../server/context/crops.js';
 
 // These doubles test action sequencing, never stand in for observed NASA readings.
-function setup({ failEvidence = false, country = 'GB', point = true, waitEvidence, locations = { places: [], regions: [] }, reverseRegion='Maharashtra' } = {}) {
+function setup({ failEvidence = false, country = 'GB', point = true, waitEvidence, locations = { places: [], regions: [] }, reverseRegion='Maharashtra', allowedCrops = null } = {}) {
   const calls = [];
   const state = { country, catalog, countryCrops: getCountryCrops({ country }), farm: null, farms: [],
     location: point ? { latitude: 52.19, longitude: 0.09 } : null, observations: null,
-    planning: { baseline: ['', '', ''], allowedCrops: getCountryCrops({ country }).screeningCropIds, irrigation: 'unknown', soil: 'unknown' } };
+    planning: { baseline: ['', '', ''], allowedCrops: allowedCrops ?? getCountryCrops({ country }).screeningCropIds, irrigation: 'unknown', soil: 'unknown' } };
   const actions = {
     chooseCountry(code) { calls.push('country'); state.country = code; state.countryCrops = getCountryCrops({ country: code }); state.location = null; state.farm = null; state.regionCode = null; state.observations = null; state.planning.allowedCrops = state.countryCrops.screeningCropIds; },
     chooseLocation(location) { calls.push('location'); state.location = location; state.observations = null; },
@@ -238,6 +238,22 @@ test('restricting alternatives to unsupported crops never silently substitutes o
   assert.match(answer.blocks[0].text, /fewer than two allowed/);
   assert.ok(!calls.includes('NASA'));
   assert.ok(!calls.includes('compare'));
+});
+
+test('a plan blocked on allowed crops offers the screened list as a tappable chat choice', async () => {
+  const { assistant, calls, state } = setup({ allowedCrops: ['cabbage'] });
+  await assistant.respond('Use the selected point');
+  const answer = await assistant.respond('crops: rice, cabbage, tomato');
+  assert.match(answer.blocks[0].text, /fewer than two allowed/);
+  assert.match(answer.blocks[0].text, /not a recommendation/);
+  assert.equal(answer.followUps.length, 1, 'the blocked reply must offer exactly one way forward');
+  assert.equal(answer.followUps[0].label, 'Allow Bush snap bean, Cabbage, Bulb onion');
+  assert.match(answer.followUps[0].question, /^allowed crops: /);
+  assert.ok(!calls.includes('compare'), 'a one-crop alternative set must not be compared');
+  const ready = await assistant.respond(answer.followUps[0].question);
+  assert.match(ready.blocks[0].text, /Step 4 is ready/);
+  assert.deepEqual(state.planning.allowedCrops, ['bush-bean', 'cabbage', 'onion']);
+  assert.ok(calls.includes('compare'));
 });
 
 test('crop resolution preserves unknown varieties and existing FAO selections', () => {
