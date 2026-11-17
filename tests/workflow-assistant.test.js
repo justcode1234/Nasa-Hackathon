@@ -273,6 +273,11 @@ test('Singapore with unnamed region codes goes directly to places and never need
   await assistant.respond('Help me plan a rotation in Singapore. Crops: tomato, cabbage, onion');
   const overview=await assistant.respond('Whole Singapore');
   assert.equal(overview.followUps[0].label,'Choose a town or field');
-  const area=await assistant.respond('A specific area');assert.match(area.blocks[0].text,/No named regions.*choose a town|No named regions.*Choose a town/s);
-  assert.ok(!calls.includes('region')&&!calls.includes('NASA'));assert.equal(state.location,null);
+  const area=await assistant.respond('A specific area');
+  assert.match(area.blocks[0].text,/no named regions.*first three towns/s);
+  // The prompt is only honest if it carries a button that can actually finish the step.
+  assert.deepEqual(area.followUps.filter(choice=>choice.workflowChoice?.type==='town').map(choice=>choice.label),['Singapore']);
+  const picked=await assistant.respond(area.followUps[0].question,area.followUps[0].workflowChoice);
+  assert.match(picked.blocks[0].text,/Singapore is selected as a town point/);
+  assert.ok(!calls.includes('region')&&!calls.includes('NASA'));assert.equal(state.location.latitude,1.29);
 });

@@ -41,7 +41,17 @@ test('three visible starter buttons teach facts, guided India planning and crop-
 test('Singapore skips unnamed regions and national scope never invents farm coordinates',async({page,context})=>{
   await context.route(fieldTransport,r=>r.abort('failed'));await open(page);await country(page,'SG');await expect(page.locator('#place-region').locator('..')).toBeHidden();await expect(page.locator('#place-town')).toBeEnabled();
   await page.locator('#chat-toggle').click();await ask(page,'Help me plan a rotation in Singapore. Crops: tomato, cabbage, onion');await page.getByRole('button',{name:'Whole Singapore',exact:true}).last().click();await expect(page.locator('#answer-status')).toContainText('Answer ready');
-  await page.getByRole('button',{name:'Choose a town or field',exact:true}).click();await expect(page.locator('#answer-status')).toContainText('Answer ready');await expect(page.locator('#chat-history article').last()).toContainText('No named regions');expect((await state(page)).latitude).toBe('');expect((await state(page)).scenarios).toBe(0);
+  await page.getByRole('button',{name:'Choose a town or field',exact:true}).click();await expect(page.locator('#answer-status')).toContainText('Answer ready');
+  const reply=page.locator('#chat-history article').last();
+  await expect(reply).toContainText(/no named regions/i);
+  // The honest sentence is only useful if the same reply can finish step 1: real town buttons,
+  // and no invented coordinates before the farmer picks one.
+  const choices=reply.locator('button[data-chat-choice]');
+  expect(await choices.count()).toBeGreaterThanOrEqual(3);
+  expect((await choices.allTextContents()).map(label=>label.trim()).slice(0,3),`towns, not another region prompt`).toEqual(['Admiralty','Alexandra Estate','Anak Bukit']);
+  expect((await state(page)).latitude).toBe('');expect((await state(page)).scenarios).toBe(0);
+  await choices.first().click();await expect(page.locator('#answer-status')).toContainText('Answer ready');
+  expect(await page.locator('#latitude').inputValue()).not.toBe('');
 });
 
 test('Åland official crop records enable baseline choices without inventing alternative screening rules',async({page},info)=>{

@@ -674,3 +674,33 @@ A first gate was interrupted to fix screenshot-discovered closed-launcher overla
 A second exposed mobile test-harness clicks beneath open chat; the helper now
 closes chat before manual selection and reopens it. No assertion was weakened.
 The fresh full gate is required before main changes or production publication.
+
+## 17 November 2026 - region-less countries, chat choice buttons, place-name matching
+
+User report: with Singapore selected, "Whole Singapore" led to a region prompt and the region
+prompt led back to Singapore, and no chat button could finish step 1. Diagnosis on the real
+data: the saved GeoNames extract lists 18 areas (SG, AW, MF, TC, VA, EH and others) whose
+administrative rows have **no name**, so `regions[].name === null` is faithful source data, not
+a loading bug. The fix therefore belongs in the interaction layer, and the dataset is unchanged.
+
+Decisions taken:
+- A country with no named regions is never asked for a region. Its area prompt offers the first
+  three towns of the visible step 1 Town list, in list order, states that order as the rule and
+  says "not a recommendation", and adds the whole-country escape.
+- No prompt may offer a button that returns the farmer to that same prompt: the escape to
+  "Whole <country>" is only added when the previous scope was not already the national view.
+- The chat renders every offered choice. `followUps.slice(0, 3)` had been silently discarding the
+  fourth button, which is exactly why the only way out of the Singapore prompt was invisible.
+- A short reply is now matched against the real saved place list: diacritics and punctuation are
+  folded, "use/in/at/near/town of" lead-ins are stripped, a prefix matches ("Jurong" offers the
+  three Jurong towns), an exact name wins over a longer one, and a bare town name re-targets an
+  already selected point. Unmatched text still runs no action.
+- Source administrative codes without names are not printed as if they were labels; ambiguous town
+  buttons show "Town · Region" only when the region has a name.
+- `sourceLinks` now turns a source into an `<a>` only for an absolute http(s) URL; any other value
+  stays visible as plain text. Chat text continues to reach the page only through `el()`, which
+  assigns `textContent`.
+- The user restricted this work to one branch (`fix/chat-flow-and-answers`); main is not pushed
+  and production is not changed. No dependency was added, and the typed-judgment classifier and
+  the generative-claim boundary are unchanged: the local model may only reorder retrieved
+  paragraphs after an integer check.

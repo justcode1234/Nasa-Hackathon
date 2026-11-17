@@ -16,7 +16,11 @@ export function sourceLinks(ids, sources) {
     const source = sources.find(s => s.id === id);
     if (!source) return;
     if (i) p.append(' · ');
-    p.append(el('a', source.title, { href: source.url, target: '_blank', rel: 'noreferrer' }));
+    // Only an absolute http(s) URL becomes a link; anything else stays readable as text
+    // so a source label can never turn into a javascript: or data: target.
+    p.append(/^https?:\/\/\S+$/i.test(source.url ?? '')
+      ? el('a', source.title, { href: source.url, target: '_blank', rel: 'noreferrer' })
+      : el('span', source.title));
   });
   return p;
 }

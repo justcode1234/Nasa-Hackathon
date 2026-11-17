@@ -149,9 +149,11 @@ export function initChat(getState, actions) {
         /soil|ph\b|sand|clay/i.test(question) ? ['Tell me about soil pH', 'Tell me about soil sand', 'Tell me about soil clay'] : []);
       if (followUps.length) {
         const choices = el('div', null, { role: 'group', 'aria-label': 'Explore another topic' });
-        followUps.slice(0, 3).forEach(followUp => {
+        // Every offered choice is rendered; silently dropping the last one left farmers
+        // with a reply whose only way out was invisible.
+        followUps.slice(0, 6).forEach(followUp => {
           const text = typeof followUp === 'string' ? followUp : followUp.question;
-          const button = el('button', typeof followUp === 'string' ? followUp : followUp.label, { type: 'button' });
+          const button = el('button', typeof followUp === 'string' ? followUp : followUp.label, { type: 'button', 'data-chat-choice': 'true' });
           button.addEventListener('click', () => { pendingChoice = followUp.workflowChoice ?? null; $('question').value = text; $('question-form').requestSubmit(); }); choices.append(button);
         });
         response.append(choices);
@@ -186,7 +188,7 @@ export function initChat(getState, actions) {
     // A guided plan can continue after the user picks a town or field in step 1 themselves.
     if (guided && getState().location) {
       const group = el('div', null, { role: 'group', 'aria-label': 'Continue the guided plan' });
-      const button = el('button', 'Continue planning with this location', { type: 'button' });
+      const button = el('button', 'Continue planning with this location', { type: 'button', 'data-chat-choice': 'true' });
       button.addEventListener('click', () => { $('question').value = 'Use the selected point'; $('question-form').requestSubmit(); });
       group.append(button);
       log.append(el('p', 'You picked a location in step 1. Continue to load NASA evidence for it and compare the crops in step 3.'), group);

@@ -707,3 +707,55 @@ the run found all three public Overpass services unavailable (overpass-api.de co
 maps.mail.ru 504, overpass.private.coffee timeout). Classified as **environment**, not a product
 defect; the field code was not changed. Those two cases must be re-run when the services recover.
 Evidence: docs/evidence/whole-country-fix-release.raw.json.gz and .log.gz.
+
+## 17 November 2026 - Singapore flow, chat buttons, place matching, security boundaries
+
+All commands were run on `fix/chat-flow-and-answers` (Windows, Node v24.22.1). Main was not
+pushed and nothing was deployed.
+
+Executed:
+- `npm test` → **143/143 pass, 0 fail** (129 before this work; +8 in
+  tests/workflow-place-choices.test.js, +6 in tests/security-boundaries.test.js).
+- `npm audit` → **found 0 vulnerabilities**.
+- `npx playwright test tests/e2e/city-state-chat-flow.spec.js` → **8/8** (static-desktop,
+  static-mobile, node-desktop, node-mobile). New spec; it clicks only what a farmer sees.
+- `npx playwright test tests/e2e/assistant.spec.js tests/e2e/whole-country-flow.spec.js
+  tests/e2e/workflow.spec.js tests/e2e/help-and-explanations.spec.js` → first run **56/60**;
+  the four failures were one assertion in help-and-explanations.spec.js pinned to the superseded
+  sentence "No named regions". That case was rewritten to the new wording **and strengthened**
+  (three named town buttons, then tapping one must fill `#latitude`); re-run → **36/36**.
+
+What the browser actually rendered in the Singapore flow (real place list, Overpass transport
+deliberately aborted so field failures stay honest):
+- "Help me plan a rotation in Singapore" → buttons `[Whole Singapore, A specific area]`.
+- "A specific area" → "Singapore has no named regions in this place list, so no region is needed…"
+  with buttons `[Admiralty, Alexandra Estate, Anak Bukit, Whole Singapore]` — the fourth button
+  only exists because the chat now renders every offered choice.
+- "Alexandra Estate" → "…is selected as a town point", `#latitude` filled, the Region control
+  hidden, and "0 mapped fields were returned" for the aborted lookup (reported as a service
+  failure, no fields invented).
+- Typed "Jurong" → "Several listed towns match" with `[Jurong East, Jurong Town, Jurong West]`;
+  tapping Jurong East moved the point to a different latitude.
+- "Use selected point" → asks for three crops; "crops: cabbage, tomato, spinach" → "Step 4 is
+  ready" with three `.scenario` cards and real NASA evidence.
+- Seven messages produced seven distinct assistant replies (no repeat = no ping-pong) and zero
+  `pageerror` events.
+
+- Full `npm run test:e2e` (build + every Playwright project) → **168/168 passed in 24.9 min,
+  0 failed, 0 skipped** (log: artifacts/tmp/full-e2e.log, not committed). After removing one
+  unused helper constant the bundle was rebuilt and the two Singapore/chat specs were re-run:
+  **22/22**, with `npm test` re-confirmed at **143/143**.
+
+Security pass (tests/security-boundaries.test.js, 6 cases): vercel.json headers equal
+`SECURITY_HEADERS` and both servers emit them byte-for-byte; the CSP keeps `script-src` free of
+`unsafe-eval`/`unsafe-inline` and keeps `object-src`/`base-uri`/`frame-ancestors` closed; no HTML
+sink or runtime code compilation in app-authored browser modules; rejected coordinates, oversized
+place text (2–120 characters), an unsupported `detail` value and a non-two-letter country code
+never open a request or read a path, and the one accepted Overpass query is exactly the quantised
+numeric bounding box; the Node preview returns 404 for four traversal spellings, 413 for an
+oversized body, 415 for a non-JSON post, 405 for DELETE, and keeps the security headers on errors;
+every dependency is an exact pinned version and `index.html` loads no third-party script tag.
+
+Still unverified after this change: real phones, Safari/WebKit, microphone and read-aloud audio
+quality, and independent agronomic review. Shared public Overpass services remain outside our
+control; their failures are reported with their cause.

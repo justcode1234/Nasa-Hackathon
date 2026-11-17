@@ -240,6 +240,27 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   remove only fully merged local/remote branches, record actual results here.
   Real phones, Safari/WebKit, microphone/noise quality, audible voice quality and
   independent agronomic validation remain unverified. Never infer them from emulation.
+- **17 Nov branch work (user: "only to 1 branch", never main) — region-less countries,
+  chat buttons, assistant place matching, security pass.** User report: choosing Singapore
+  ping-ponged between "Whole Singapore" and "A specific area" with no button that could finish
+  step 1. Cause is source-faithful data (the saved GeoNames extract has 18 areas, incl. SG, AW,
+  MF, TC, VA, EH, whose region rows carry `name: null`), so the fix is in the interaction layer:
+  unnamed regions are never asked for, the area prompt offers the first three real towns of the
+  visible step 1 list ("not a recommendation"), and no prompt can offer a button back to itself.
+  `chat.js` had been truncating offered choices at three, which is why the only escape button was
+  invisible; it now renders every choice. Short place replies match the real list (diacritic/
+  punctuation folding, lead-in stripping, prefix match with exact-name precedence, bare town name
+  re-targets a chosen point); unmatched text still runs no action. `sourceLinks` links only
+  absolute http(s) URLs. **Executed:** `npm test` 143/143 (new tests/workflow-place-choices.test.js
+  8, new tests/security-boundaries.test.js 6), `npm audit` 0 vulnerabilities, new
+  tests/e2e/city-state-chat-flow.spec.js 8/8 in four projects, chat-adjacent browser batch
+  56/60 → 36/36 after rewriting the one Singapore assertion that pinned the superseded wording
+  (strengthened: it now requires three named town buttons and that tapping one fills `#latitude`).
+  Full `npm run test:e2e` on this branch: **168/168 passed, 0 skipped (24.9 min)**; after one
+  dead-constant removal the bundle was rebuilt and the two chat specs re-run green (22/22) with
+  `npm test` re-confirmed at 143/143. Work is committed on `fix/chat-flow-and-answers` only;
+  main is untouched and nothing was deployed; no NASA portal edit. Real
+  phones/Safari/audio and independent agronomic review remain unverified.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
