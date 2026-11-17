@@ -1,0 +1,18 @@
+{
+ "command": "node scripts/audit-matrix.js --deep",
+ "commit": "15b76d1",
+ "result": {
+  "mode": "deep",
+  "countries": 245,
+  "totalPlaces": 70036,
+  "matched": 66546,
+  "eponymousSkipped": 7,
+  "tooLongForShortReply": 79,
+  "defects": 0,
+  "ambiguousCountryNames": 0,
+  "flowStatuses": {
+   "terminal": 245
+  },
+  "elapsedMs": 13330
+ }
+}

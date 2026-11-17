@@ -316,9 +316,14 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   ("Quezon · Cagayan Valley" twice) produced two identically worded buttons, and the reply hid rows by
   claiming no count. Labels now carry the saved coordinates when the wording collides, and the reply says
   "showing 3 of N" when it truncates. **Executed:** `npm test` 169/169 (matrix-coverage 13/13, including
-  the two new collision tests over 147 and 49 countries), `npm audit` 0 vulnerabilities. The full
-  `npm run test:e2e` that was still running overlapped these edits, so it is **not** counted as a gate and
-  needs a clean re-run on the committed code. The tiny word LM is unchanged and not retrained: no place
+  the two new collision tests over 147 and 49 countries), `npm audit` 0 vulnerabilities, and
+  `node scripts/audit-matrix.js --deep` on the committed tree: **0 defects, 0 ambiguous names, 245/245
+  flows terminal** over 70,036 places (`docs/evidence/deep-matrix-2026-11-18-postfix.json`). Two browser
+  items are **not** recorded as passing: an earlier queued suite printed 180 passed but was built before
+  this fix, and a fresh `npm run test:e2e` on `15b76d1` was still running (case 56/180 in
+  `artifacts/playwright/full-suite-15b76d1.log`) when the user asked this session to stop; a dedicated
+  chat-only collision probe was stopped unfinished. Read that log's own summary before claiming the gate.
+  The tiny word LM is unchanged and not retrained: no place
   name vocabulary or reply label in `public/models/fieldshift-mini` was altered, and a rebuild would break
   the sha256 pin in tests/model.test.js for no behaviour gain.
 

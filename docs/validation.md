@@ -918,9 +918,18 @@ states “showing 3 of N”.
 - `npm audit` — **found 0 vulnerabilities**.
 - The collision test now fails if the town question repeats “is selected. Now choose a town”, and it
   asserts that the outside-region case is still exercised, so the fix cannot silently become vacuous.
-- Not re-run as part of this change: `node scripts/audit-matrix.js --deep` and the full
-  `npm run test:e2e`. The Playwright run that overlapped these edits tested a mixed source state and is
-  not counted as a gate.
+- `node scripts/audit-matrix.js --deep` on the committed tree — **0 defects, 0 ambiguous country
+  names, 245/245 flows terminal** over 70,036 places (66,546 short-reply matches, 7 eponymous skips,
+  79 names too long for a bare reply), 13.3 s
+  (`docs/evidence/deep-matrix-2026-11-18-postfix.json`; log `artifacts/final-quality/deep-matrix-2026-11-18-postfix.log`).
+- Browser runs: an earlier queued full suite reported **180 passed (26.7 m)**, but its bundle was built
+  before this fix, so it is **not** the gate for `15b76d1`. A fresh `npm run test:e2e` on the committed
+  tree was started and was still running when the user asked this session to stop (log
+  `artifacts/playwright/full-suite-15b76d1.log`, 56 of 180 cases reported at that moment); no gate
+  number is recorded for it until its own summary line is read. A dedicated chat-only browser probe of
+  the 13 collision spellings was started too, but it prints only at the end and did not finish inside the
+  requested window, so it was stopped without a result. The fix is therefore verified offline across all
+  147 collision countries plus the whole suite’s chat specs, **not** yet by that dedicated probe.
 
 Still unverified: real phones, Safari/WebKit, microphone and read-aloud audio quality, independent
 agronomic review, and a clean full-browser gate on this committed code.
