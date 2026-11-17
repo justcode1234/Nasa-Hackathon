@@ -262,6 +262,23 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `npm test` re-confirmed. Work is committed on `fix/chat-flow-and-answers` only;
   main is untouched and nothing was deployed; no NASA portal edit. Real
   phones/Safari/audio and independent agronomic review remain unverified.
+- **18 Nov whole-matrix chat audit (same branch, never main).** Driving every saved list found two more
+  chat defects: a nonsense town typed after a town point could answer with **no buttons at all** (6 of 10
+  probe countries), and a sentence naming only the country auto-picked a region whose spelling sits
+  **inside** the country name (São Tomé and Príncipe → Príncipe; nine lists: AG, CD, CG, GW, HK, PM, SJ,
+  ST, TT). Both are fixed in the matching rules, not the data: the whole-sentence place scan is compared in
+  `regionPhrase` shape and rejects a hit contained inside the country-name span (while a town whose own
+  name contains the country, e.g. the real Philippines "Pamayanang University of Philippines Employment
+  Housing Cooperative Subdivision", still selects that town — the first attempt deleted country words and
+  the deep scan caught that regression), and an unmatched short reply inside a chosen region now returns
+  the town-recovery prompt with real buttons. **Executed:** `npm test` 166/166, `npm audit` 0
+  vulnerabilities, `node scripts/audit-matrix.js --deep` 0 defects (70,036 places, 66,546 matched, 79 long
+  names verified through the engine, 245/245 flows terminal) plus the new 245-country national-scope check,
+  and a Chrome probe of ST/PH/TV/PF with 0 button-less replies and 0 page errors
+  (artifacts/final-quality/fix-probe.log). The Playwright suite that overlapped these edits tested a mixed
+  source state and is not counted as a gate; a clean `npm run test:e2e` on the committed code is recorded
+  in docs/validation.md once it finishes. The tiny word LM was **not** retrained — no vocabulary or reply
+  label changed, and a rebuild would break tests/model.test.js integrity pinning for no behaviour gain.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

@@ -708,6 +708,60 @@ maps.mail.ru 504, overpass.private.coffee timeout). Classified as **environment*
 defect; the field code was not changed. Those two cases must be re-run when the services recover.
 Evidence: docs/evidence/whole-country-fix-release.raw.json.gz and .log.gz.
 
+## 18 November 2026 - whole-matrix chat audit, country-name collisions, nonsense-town recovery
+
+Scope: the chat-only guided flow, driven for every saved country list, every region and town name, and
+every crop the app can offer, under the goal "no dead ends, no invented data, every claim backed by an
+executed test".
+
+### Executed
+
+- `npm test` — **166 tests, 166 passed, 0 failed, 0 skipped** (7.7 s), including the new cases listed below.
+- `npm audit` — **0 vulnerabilities**.
+- `node scripts/audit-matrix.js --deep` — 245 countries, **70,036 town rows**, **66,546** names selected by
+  the short-reply matcher, **7** eponymous skips, **79** names too long for a short reply and therefore
+  re-verified through the production engine, **0 defects**, **0 ambiguous country names**, flow statuses
+  `{ terminal: 245 }`, 19.6 s. The bounded scan gives the same zero defects with 25 names per list.
+  Artifacts: `artifacts/matrix/deep-scan.json`, `artifacts/matrix/deep-scan-run3.log`,
+  `artifacts/matrix/bounded-scan.json`.
+- Ten-country browser chat probe (`artifacts/final-quality/chat-matrix-probe.log`, TV, TO, VC, NR, GD, DJ,
+  LC, DM, ST, PF, Chrome channel, Overpass aborted): found two defects, recorded below.
+- Focused browser probe after the fixes (`artifacts/final-quality/fix-probe.log`, ST, PH, TV, PF):
+  **0 replies without a button, 0 country-only sentences that picked a place, 0 page errors.** Every
+  nonsense-town reply inside a chosen region returned the town-recovery prompt with 2–4 buttons.
+
+### Defects found and fixed
+
+1. **A nonsense town could end the plan with no button.** In 6 of the 10 probe countries the reply after
+   a town point had already been chosen was "I could not match that request…" with zero choices. Fixed in
+   `public/js/modules/workflow-assistant.js`: inside a chosen region an unmatched short reply is answered
+   with the town-recovery prompt (real town buttons + `Whole <country>`) even after a point exists. The
+   invariant "nonsense text runs no workflow action" is kept: the recovery performs only `showStep`, and
+   outside a chosen region the reply is still handed to the read-only assistant.
+   Pinned by `an unmatched town typed after a town point still leaves a tappable way forward`
+   (`tests/workflow-place-choices.test.js`) and by the unchanged
+   `nonsense and full-width read-only questions cannot advance a pending point workflow`.
+2. **A country name that contains its own region picked that region.** "Help me plan a rotation in
+   São Tomé and Príncipe. Crops: rice, maize, beans. Rainfed" jumped straight to the Príncipe region and
+   then to a town, skipping the country question. Nine saved lists carry this collision (AG, CD, CG, GW,
+   HK, PM, SJ, ST, TT). Fixed by matching the sentence and the row names in `regionPhrase` shape and
+   rejecting a place hit that falls **inside** the country-name span, instead of deleting country words.
+   Pinned by `a region named inside its own country name is picked only when the farmer names the region`.
+3. **A regression from the first attempt at fix 2, caught by the deep scan.** Deleting country words made
+   the real Philippines row "Pamayanang University of Philippines Employment Housing Cooperative
+   Subdivision" unselectable, because its own name contains "Philippines". The span rule fixes both
+   directions; pinned by `a town whose own name contains the country name is still selectable`.
+4. The audit itself now refuses to pass in this class again: every country is asked once with a sentence
+   that names only the country, and a `region`/`location` action or a button-less reply is a defect.
+
+### Not claimed
+
+The Playwright release suite that was running while these edits were made tested a mixed source state and
+is **not** recorded as a gate; a clean full `npm run test:e2e` on the committed code is reported in the
+entry above it only once it has finished. Real phones, Safari/WebKit, microphone and noise quality,
+audible read-aloud quality and independent agronomic review remain unverified. No production deployment,
+no NASA portal edit, no new dependency.
+
 ## 17 November 2026 - Singapore flow, chat buttons, place matching, security boundaries
 
 All commands were run on `fix/chat-flow-and-answers` (Windows, Node v24.22.1). Main was not

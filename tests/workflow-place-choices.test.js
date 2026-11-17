@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createWorkflowAssistant, resolveCropInput } from '../public/js/modules/workflow-assistant.js';
+import { isEvidenceQuestion } from '../public/js/lib/chat-intent.js';
+import { COUNTRY_NAMES } from '../public/js/lib/countries.js';
 import { catalog } from '../server/agronomy/catalog.js';
 import { getCountryCrops } from '../server/context/crops.js';
 
@@ -156,4 +158,173 @@ test('unmatched short replies never execute a place action', async () => {
   assert.equal(await assistant.respond('blorple flarn'), null);
   assert.equal(await assistant.respond('zzz qqq'), null);
   assert.deepEqual(calls, []);
+});
+
+// Andorra, Tuvalu, Jordan and Japan save the same wording for a region row and a town row.
+const parishes = { regions: [{ id: '02', name: 'La Massana' }, { id: '04', name: 'Andorra la Vella' }],
+  places: [{ id: 'a1', name: 'la Massana', regionCode: '02', latitude: 42.5452, longitude: 1.5387 },
+    { id: 'a2', name: 'El Bosc', regionCode: '02', latitude: 42.5612, longitude: 1.5203 },
+    { id: 'a3', name: 'Andorra la Vella', regionCode: '04', latitude: 42.5078, longitude: 1.5211 }] };
+
+test('a wording shared by a region row and a town row follows the question that was asked', async () => {
+  const { assistant, state, calls } = setup({ country: 'AD', locations: parishes });
+  await assistant.respond('Help me plan a rotation in Andorra');
+  await assistant.respond('A specific area');
+  const region = await assistant.respond('La Massana');
+  assert.match(text(region), /^La Massana is selected/);
+  assert.equal(state.regionCode, '02');
+  assert.ok(towns(region).length > 0, 'the region reply must offer its towns');
+  const town = await assistant.respond('la Massana');
+  assert.match(text(town), /la Massana is selected as a town point/);
+  assert.equal(state.location.placeId, 'a1', 'once the region is chosen, the same wording picks its town');
+  assert.ok(calls.includes('region') && calls.includes('location'));
+});
+
+// São Francisco de Assis do Piauí is one town whose name contains the region Piauí.
+const brazil = { regions: [{ id: '22', name: 'Piauí' }],
+  places: [{ id: 'b1', name: 'São Francisco de Assis do Piauí', regionCode: '22', latitude: -7.25, longitude: -41.0 },
+    { id: 'b2', name: 'Teresina', regionCode: '22', latitude: -5.089, longitude: -42.81 }] };
+
+test('a town whose name contains a region name is the town when no region was asked for', async () => {
+  const { assistant, state, calls } = setup({ country: 'BR', locations: brazil });
+  await assistant.respond('Help me plan a rotation in Brazil');
+  const answer = await assistant.respond('São Francisco de Assis do Piauí');
+  assert.match(text(answer), /São Francisco de Assis do Piauí is selected as a town point/);
+  assert.equal(state.location.placeId, 'b1');
+  assert.ok(!calls.includes('region'), 'a town name must not be read as the region inside it');
+});
+
+const longName = 'United Townships of Dysart, Dudley, Harcourt, Guilford, Harburn, Bruton, Havelock, Eyre and Clyde';
+const canada = { regions: [{ id: '35', name: 'Ontario' }],
+  places: [{ id: 'c1', name: 'Ottawa', regionCode: '35', latitude: 45.4112, longitude: -75.6982 },
+    { id: 'c2', name: longName, regionCode: '35', latitude: 44.4, longitude: -78.6 }] };
+
+test('a town name that reads as a crop list is the row the farmer copied, and re-targets a chosen point', async () => {
+  const { assistant, state, calls } = setup({ country: 'CA', locations: canada });
+  await assistant.respond('Help me plan a rotation in Canada');
+  await assistant.respond('Ottawa');
+  assert.equal(state.location.placeId, 'c1');
+  const answer = await assistant.respond(longName);
+  assert.match(text(answer), /is selected as a town point/);
+  assert.equal(state.location.placeId, 'c2', 'a copied row name moves the point instead of falling silent');
+  assert.doesNotMatch(text(answer), /exactly three baseline crops/, 'a place name is not a crop list');
+  assert.equal(calls.filter(call => call === 'location').length, 2);
+  assert.ok(!calls.includes('NASA'), 'moving the point clears the old evidence');
+});
+
+const vietnam = { regions: [{ id: 'CT', name: 'Can Tho' }],
+  places: [{ id: 'v1', name: 'Can Tho City', regionCode: 'CT', latitude: 10.0458, longitude: 105.747 },
+    { id: 'v2', name: 'Ninh Kieu', regionCode: 'CT', latitude: 10.03, longitude: 105.78 }] };
+const macedonia = { regions: [{ id: '34', name: 'Петровец' }],
+  places: [{ id: 'm1', name: 'Петровец', regionCode: '34', latitude: 42.05, longitude: 21.4 }] };
+
+test('a town name that opens like a question, and one saved in another script, are still selectable', async () => {
+  const { assistant, state } = setup({ country: 'VN', locations: vietnam });
+  await assistant.respond('Help me plan a rotation in Vietnam');
+  const answer = await assistant.respond('Can Tho City');
+  assert.match(text(answer), /Can Tho City is selected as a town point/);
+  assert.equal(state.location.placeId, 'v1');
+
+  // Folding keeps the script: no transliteration is invented for a name the source stores in Cyrillic.
+  const cyrillic = setup({ country: 'MK', locations: macedonia });
+  await cyrillic.assistant.respond('Help me plan a rotation in North Macedonia');
+  const named = await cyrillic.assistant.respond('Петровец');
+  assert.match(text(named), /Петровец is selected/);
+  assert.ok(cyrillic.state.location?.placeId === 'm1' || cyrillic.state.regionCode === '34',
+    'the row that was chosen must come from the saved list, in its own script');
+});
+
+test('a tapped region works from its row id when the saved spelling has no accent', async () => {
+  const reunion = { regions: [{ id: '01', name: 'Reunion' }],
+    places: [{ id: 'r1', name: 'Saint-Denis', regionCode: '01', latitude: -20.878, longitude: 55.45 }] };
+  const { assistant, state } = setup({ country: 'RE', locations: reunion });
+  await assistant.respond('Help me plan a rotation in Réunion');
+  const area = await assistant.respond('A specific area');
+  assert.match(text(area), new RegExp(`Which state or region of ${COUNTRY_NAMES.of('RE')}`));
+  const tap = area.followUps.findIndex(choice => choice.workflowChoice?.type === 'region');
+  assert.equal(area.followUps[tap].label, 'Reunion');
+  const answer = await click(assistant, area, tap);
+  assert.match(text(answer), /Reunion is selected/);
+  assert.equal(state.regionCode, '01', 'the tap must resolve by row id, not by accented spelling');
+  assert.ok(towns(answer).length > 0, 'the region tap must hand over its towns');
+});
+
+test('a local place name that contains another country name does not move the plan', async () => {
+  const grenada = { regions: [{ id: '01', name: 'Saint George' }],
+    places: [{ id: 'g1', name: 'Carriacou and Petite Martinique', regionCode: '02', latitude: 12.4728, longitude: -61.4583 },
+      { id: 'g2', name: "St. George's", regionCode: '01', latitude: 12.0561, longitude: -61.6963 }] };
+  const { assistant, state, calls } = setup({ country: 'GD', locations: grenada });
+  await assistant.respond('Help me plan a rotation in Grenada');
+  const answer = await assistant.respond('Carriacou and Petite Martinique');
+  assert.match(text(answer), /Carriacou and Petite Martinique is selected as a town point/);
+  assert.equal(state.location.placeId, 'g1');
+  assert.equal(calls.filter(call => call === 'country').length, 0, 'a parish name is not a country request');
+});
+
+test('a place name is never read as a question, but a real question stays read-only', () => {
+  // These names only look like questions through their first letters; the keyword has to stand as a
+  // word of its own. “Can Tho City” genuinely does match the pattern, and the assistant still claims
+  // it from the saved list while a place question is pending, which the test above proves.
+  for (const name of ['Is-Swieqi', 'Is-Siġġiewi', 'Canóvanas']) {
+    assert.equal(isEvidenceQuestion(name), false, `“${name}” must stay a place reply`);
+  }
+  assert.equal(isEvidenceQuestion('Is the rainfall low this month?'), true);
+  assert.equal(isEvidenceQuestion('Can I plant rice here'), true);
+  assert.equal(isEvidenceQuestion('What does the NASA evidence show'), true);
+});
+
+// “Príncipe” is a saved region and also the second half of the country name the farmer typed, and
+// “São Tomé” is a town inside that same wording. The country name must not read as a place choice.
+const stLocations = { regions: [{ id: '01', name: 'São Tomé Island' }, { id: '02', name: 'Príncipe' }],
+  places: [{ id: 's1', name: 'Santo António', regionCode: '01', latitude: 0.336, longitude: 6.737 },
+    { id: 's2', name: 'São Tomé', regionCode: '01', latitude: 0.333, longitude: 6.733 },
+    { id: 'p1', name: 'Santo António', regionCode: '02', latitude: 1.594, longitude: 7.414 }] };
+
+test('a region named inside its own country name is picked only when the farmer names the region', async () => {
+  const { assistant, calls, state } = setup({ country: 'ST', locations: stLocations });
+  const prompt = await assistant.respond('Help me plan a rotation in São Tomé and Príncipe. Crops: rice, maize, beans. Rainfed');
+  assert.match(text(prompt), /Which part of .* should we focus on/s);
+  assert.ok(!calls.includes('region') && !calls.includes('location'), 'the country spelling is not a place choice');
+  assert.equal(state.regionCode, null);
+  // The region stays reachable from the chat, because the saved list holds it as its own row.
+  calls.length = 0;
+  const chosen = await assistant.respond('Príncipe');
+  assert.match(text(chosen), /Príncipe is selected/s);
+  assert.ok(calls.includes('region') && !calls.includes('location'));
+  assert.equal(state.regionCode, '02');
+});
+
+// The reverse case: a saved town whose own name contains the country name is still that town, so the
+// wording may not be discarded as “just the country”. The row is the real Philippines place name the
+// coverage audit found.
+const phLocations = { regions: [{ id: '03', name: 'Central Luzon' }],
+  places: [{ id: 'h1', name: 'Pamayanang University of Philippines Employment Housing Cooperative Subdivision', regionCode: '03', latitude: 14.9, longitude: 120.6 },
+    { id: 'h2', name: 'Angeles', regionCode: '03', latitude: 15.15, longitude: 120.58 }] };
+
+test('a town whose own name contains the country name is still selectable', async () => {
+  const { assistant, calls, state } = setup({ country: 'PH', locations: phLocations });
+  const prompt = await assistant.respond('Help me plan a rotation in the Philippines. Crops: rice, maize, beans');
+  assert.match(text(prompt), /Which part of/s);
+  assert.ok(!calls.includes('region') && !calls.includes('location'), `naming the country picked a place: ${calls.join(', ')}`);
+  const picked = await assistant.respond(phLocations.places[0].name);
+  assert.match(text(picked), /is selected as a town point/s);
+  assert.equal(state.location.placeId, 'h1');
+});
+
+test('an unmatched town typed after a town point still leaves a tappable way forward', async () => {
+  const { assistant, calls, state } = setup({ country: 'ST', locations: stLocations });
+  await assistant.respond('Help me plan a rotation in São Tomé and Príncipe. Crops: rice, maize, beans. Rainfed');
+  await assistant.respond('A specific area');
+  await assistant.respond('Príncipe');
+  const pointed = await assistant.respond('Santo António');
+  assert.match(text(pointed), /Santo António is selected as a town point/s);
+  assert.equal(state.location.placeId, 'p1');
+  calls.length = 0;
+  const recovered = await assistant.respond('Zzyvxilletown');
+  assert.ok(recovered, 'a place reply inside a chosen region is never met with silence');
+  assert.match(text(recovered), /No town by that name is in the saved place list .* in Príncipe/s);
+  assert.ok(recovered.followUps.length >= 1, 'the recovery reply must carry a button');
+  assert.ok(!calls.includes('NASA') && !calls.includes('compare') && !calls.includes('location'),
+    `recovery runs no data action: ${calls.join(', ')}`);
+  assert.equal(state.location.placeId, 'p1', 'the point already chosen stays as it was');
 });

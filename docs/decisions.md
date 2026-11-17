@@ -704,3 +704,35 @@ Decisions taken:
   and production is not changed. No dependency was added, and the typed-judgment classifier and
   the generative-claim boundary are unchanged: the local model may only reorder retrieved
   paragraphs after an integer check.
+
+## 18 November 2026 - country-name collisions, nonsense-town recovery, whole-matrix audit
+
+Driving the guided chat for all 245 saved place lists and a ten-country browser probe produced two
+interaction defects and one regression from the first attempt at fixing them. The dataset is unchanged;
+every fix is in the matching rules.
+
+Decisions taken:
+- A sentence that names only the country is never a place choice. The saved lists for AG, CD, CG, GW, HK,
+  PM, SJ, ST and TT contain a region or town spelling that sits **inside** the country name (Príncipe in
+  São Tomé and Príncipe, Barbuda in Antigua and Barbuda, Bissau in Guinea-Bissau), so the whole-sentence
+  region/town scan now rejects a hit that falls inside the country-name span.
+- The rule is span containment, not word deletion. Deleting country words was the first attempt and it
+  broke the opposite case: "Pamayanang University of Philippines Employment Housing Cooperative
+  Subdivision" is a real Philippines town whose own name contains the country, and it stopped being
+  selectable. The deep audit found this immediately, which is why the scan, not only the matcher, is the
+  place where the rule is proved.
+- Sentence and row names are compared in `regionPhrase` shape for this scan, so accents, "&", and the
+  filler words "and/of/the" are one spelling on both sides. Short-reply matching keeps its own folding.
+- An unmatched short reply typed while a **region** is chosen gets the town-recovery prompt even after a
+  town point already exists, because the pending question is "which town" and the alternative was a reply
+  with no button. Outside a chosen region, unmatched text still executes no workflow action, so the
+  standing invariant "nonsense and full-width read-only questions cannot advance a pending point
+  workflow" is deliberately kept and its test unchanged.
+- `scripts/audit-matrix.js` now also asks every country a sentence naming only the country and fails the
+  scan if a region/location action runs or the reply carries no button, so this class cannot regress
+  silently.
+- The tiny word model was **not** retrained: no vocabulary or reply label changed (guided replies still
+  carry `useSelectedLocation: false`), and retraining would break the weight-integrity check in
+  `tests/model.test.js` without changing behaviour.
+- Work stays on `fix/chat-flow-and-answers` only; main is untouched, nothing is deployed, and no
+  dependency was added.
