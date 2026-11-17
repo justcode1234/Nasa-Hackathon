@@ -251,14 +251,15 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   invisible; it now renders every choice. Short place replies match the real list (diacritic/
   punctuation folding, lead-in stripping, prefix match with exact-name precedence, bare town name
   re-targets a chosen point); unmatched text still runs no action. `sourceLinks` links only
-  absolute http(s) URLs. **Executed:** `npm test` 143/143 (new tests/workflow-place-choices.test.js
-  8, new tests/security-boundaries.test.js 6), `npm audit` 0 vulnerabilities, new
+  absolute http(s) URLs. **Executed:** `npm test` 144/144 (137 with the new
+  tests/workflow-place-choices.test.js 8, plus new tests/security-boundaries.test.js 6 and one
+  data invariant for the 18 region-less lists), `npm audit` 0 vulnerabilities, new
   tests/e2e/city-state-chat-flow.spec.js 8/8 in four projects, chat-adjacent browser batch
   56/60 → 36/36 after rewriting the one Singapore assertion that pinned the superseded wording
   (strengthened: it now requires three named town buttons and that tapping one fills `#latitude`).
   Full `npm run test:e2e` on this branch: **168/168 passed, 0 skipped (24.9 min)**; after one
   dead-constant removal the bundle was rebuilt and the two chat specs re-run green (22/22) with
-  `npm test` re-confirmed at 143/143. Work is committed on `fix/chat-flow-and-answers` only;
+  `npm test` re-confirmed. Work is committed on `fix/chat-flow-and-answers` only;
   main is untouched and nothing was deployed; no NASA portal edit. Real
   phones/Safari/audio and independent agronomic review remain unverified.
 

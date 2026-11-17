@@ -26,6 +26,23 @@ test('country-sized location files match their source manifest, hashes and coord
   assert.equal(total, 70036);
 });
 
+test('a list without named region labels still offers selectable towns', async () => {
+  // These are the areas where step 1 and the guided chat must never ask for a region: the
+  // source carries administrative codes without names (SG, AW, TC, VA and 14 others).
+  const manifest = await readJson('manifest.json');
+  const regionless = [];
+  for (const country of Object.keys(manifest.countries)) {
+    const data = await readJson(`${country}.json`);
+    if (data.regions.some(region => region.name)) continue;
+    regionless.push(country);
+    assert.ok(data.places.length >= 1, `${country} has neither region names nor towns: no place could be offered`);
+    assert.ok(data.places.every(place => typeof place[1] === 'string' && place[1].trim().length >= 2),
+      `${country} needs town names a farmer can read on a button`);
+  }
+  assert.ok(regionless.includes('SG'));
+  assert.equal(regionless.length, 18, `region-less areas changed to ${regionless.length}; the prompts and tests need reviewing`);
+});
+
 test('country lists expose real source towns and regions; missing coverage never uses another country', async () => {
   const getLocations = createLocationClient({ readJson });
   const au = await getLocations({ country: 'AU' }), gb = await getLocations({ country: 'GB' });

@@ -714,8 +714,9 @@ All commands were run on `fix/chat-flow-and-answers` (Windows, Node v24.22.1). M
 pushed and nothing was deployed.
 
 Executed:
-- `npm test` → **143/143 pass, 0 fail** (129 before this work; +8 in
-  tests/workflow-place-choices.test.js, +6 in tests/security-boundaries.test.js).
+- `npm test` → **144/144 pass, 0 fail** (129 before this work: +8 place-choice click paths in
+  tests/workflow-place-choices.test.js, +6 boundaries in tests/security-boundaries.test.js, +1
+  data invariant in tests/locations.test.js).
 - `npm audit` → **found 0 vulnerabilities**.
 - `npx playwright test tests/e2e/city-state-chat-flow.spec.js` → **8/8** (static-desktop,
   static-mobile, node-desktop, node-mobile). New spec; it clicks only what a farmer sees.
@@ -744,7 +745,12 @@ deliberately aborted so field failures stay honest):
 - Full `npm run test:e2e` (build + every Playwright project) → **168/168 passed in 24.9 min,
   0 failed, 0 skipped** (log: artifacts/tmp/full-e2e.log, not committed). After removing one
   unused helper constant the bundle was rebuilt and the two Singapore/chat specs were re-run:
-  **22/22**, with `npm test` re-confirmed at **143/143**.
+  **22/22**, with `npm test` re-confirmed (now 144/144 after the data invariant was added).
+- Read audit of the shipped place data (245 lists): exactly **18** carry no region names —
+  AW BL CC CW CX EH FK GI GS MF NF NU PN SG SX TC VA VG — and every one of them still lists at
+  least one named town (SG 95, AW 12, EH 7, CW 6, SX 5, GI 3, MF/TC 2, and 1 for BL CC CX FK GS
+  NF NU PN VA VG), so the region-less prompt always has a real place to offer. A new
+  tests/locations.test.js case asserts this and pins the count at 18.
 
 Security pass (tests/security-boundaries.test.js, 6 cases): vercel.json headers equal
 `SECURITY_HEADERS` and both servers emit them byte-for-byte; the CSP keeps `script-src` free of
