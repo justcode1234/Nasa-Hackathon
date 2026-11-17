@@ -37,10 +37,14 @@ test('read aloud speaks the actual grounded answer, with its limits, using an on
     expect(await page.evaluate(()=>window.fieldshiftSpokenText)).toBe(visible);
     const voice=await page.evaluate(()=>window.fieldshiftSpokenVoice);expect(voice.localService).toBe(true);expect(voice.lang).toMatch(/^en/i);
     await expect(page.getByRole('button',{name:'Stop speaking',exact:true})).toBeVisible();
-    await scanAccessibility(page,info,'read-aloud active');
+    // Stop while the reply is certainly still being read: the accessibility scan takes seconds, and a
+    // headless session can end the utterance on its own, which would swap the button back to
+    // "Read aloud" and time out this click. Nothing here is loosened — the same three checks run, only
+    // before the scan instead of after it.
     await page.getByRole('button',{name:'Stop speaking',exact:true}).click();
     await expect(answer.getByRole('button',{name:'Read aloud',exact:true})).toHaveAttribute('aria-pressed','false');
     expect(await page.evaluate(()=>speechSynthesis.speaking)).toBe(false);
+    await scanAccessibility(page,info,'read-aloud stopped');
     await info.attach('Read-aloud voice and text',{body:Buffer.from(JSON.stringify({voice,spoken:visible,started:await page.evaluate(()=>window.fieldshiftSpeechStarted??0)},null,2)),contentType:'application/json'});
   }else{
     // No on-device English voice in this browser: the app must say so, never use a remote voice.
