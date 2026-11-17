@@ -1,0 +1,169 @@
+[
+ {
+  "code": "AQ",
+  "name": "Antarctica",
+  "first": {
+   "text": "Which part of Antarctica should we focus on, or would you like an overview of the whole country?",
+   "buttons": [
+    "Whole Antarctica",
+    "A specific area"
+   ]
+  },
+  "area": {
+   "text": "No towns are listed for Antarctica in this saved place list, so the assistant cannot choose a point for you. Search a place by name, select a field on",
+   "buttons": [
+    "Whole Antarctica"
+   ]
+  },
+  "tapped": "Whole Antarctica",
+  "overview": {
+   "text": "Whole-country overview for Antarctica. Your crops are entered in step 3: rice → wheat → beans. FAOSTAT national production records: rice: no matching production category; wheat: no matching ",
+   "buttons": [
+    "Use the map or coordinates"
+   ]
+  },
+  "claimsTownControl": false,
+  "deadEndReplies": [],
+  "errors": "none"
+ },
+ {
+  "code": "BV",
+  "name": "Bouvet Island",
+  "first": {
+   "text": "Which part of Bouvet Island should we focus on, or would you like an overview of the whole country?",
+   "buttons": [
+    "Whole Bouvet Island",
+    "A specific area"
+   ]
+  },
+  "area": {
+   "text": "No towns are listed for Bouvet Island in this saved place list, so the assistant cannot choose a point for you. Search a place by name, select a field",
+   "buttons": [
+    "Whole Bouvet Island"
+   ]
+  },
+  "tapped": "Whole Bouvet Island",
+  "overview": {
+   "text": "Whole-country overview for Bouvet Island. Your crops are entered in step 3: rice → wheat → beans. FAOSTAT national production records: rice: no matching production category; wheat: no matchi",
+   "buttons": [
+    "Use the map or coordinates"
+   ]
+  },
+  "claimsTownControl": false,
+  "deadEndReplies": [],
+  "errors": "none"
+ },
+ {
+  "code": "HM",
+  "name": "Heard & McDonald Islands",
+  "first": {
+   "text": "Which part of Heard & McDonald Islands should we focus on, or would you like an overview of the whole country?",
+   "buttons": [
+    "Whole Heard & McDonald Islands",
+    "A specific area"
+   ]
+  },
+  "area": {
+   "text": "No towns are listed for Heard & McDonald Islands in this saved place list, so the assistant cannot choose a point for you. Search a place by name, sel",
+   "buttons": [
+    "Whole Heard & McDonald Islands"
+   ]
+  },
+  "tapped": "Whole Heard & McDonald Islands",
+  "overview": {
+   "text": "Whole-country overview for Heard & McDonald Islands. Your crops are entered in step 3: rice → wheat → beans. FAOSTAT national production records: rice: no matching production category; wheat",
+   "buttons": [
+    "Use the map or coordinates"
+   ]
+  },
+  "claimsTownControl": false,
+  "deadEndReplies": [],
+  "errors": "none"
+ },
+ {
+  "code": "IO",
+  "name": "British Indian Ocean Territory",
+  "first": {
+   "text": "Which part of British Indian Ocean Territory should we focus on, or would you like an overview of the whole country?",
+   "buttons": [
+    "Whole British Indian Ocean Territory",
+    "A specific area"
+   ]
+  },
+  "area": {
+   "text": "No towns are listed for British Indian Ocean Territory in this saved place list, so the assistant cannot choose a point for you. Search a place by nam",
+   "buttons": [
+    "Whole British Indian Ocean Territory"
+   ]
+  },
+  "tapped": "Whole British Indian Ocean Territory",
+  "overview": {
+   "text": "Whole-country overview for British Indian Ocean Territory. Your crops are entered in step 3: rice → wheat → beans. FAOSTAT national production records: rice: no matching production category;",
+   "buttons": [
+    "Use the map or coordinates"
+   ]
+  },
+  "claimsTownControl": false,
+  "deadEndReplies": [],
+  "errors": "none"
+ },
+ {
+  "code": "UM",
+  "name": "U.S. Outlying Islands",
+  "first": {
+   "text": "Which part of U.S. Outlying Islands should we focus on, or would you like an overview of the whole country?",
+   "buttons": [
+    "Whole U.S. Outlying Islands",
+    "A specific area"
+   ]
+  },
+  "area": {
+   "text": "No towns are listed for U.S. Outlying Islands in this saved place list, so the assistant cannot choose a point for you. Search a place by name, select",
+   "buttons": [
+    "Whole U.S. Outlying Islands"
+   ]
+  },
+  "tapped": "Whole U.S. Outlying Islands",
+  "overview": {
+   "text": "Whole-country overview for U.S. Outlying Islands. Your crops are entered in step 3: rice → wheat → beans. FAOSTAT national production records: rice: no matching production category; wheat: n",
+   "buttons": [
+    "Use the map or coordinates"
+   ]
+  },
+  "claimsTownControl": false,
+  "deadEndReplies": [],
+  "errors": "none"
+ },
+ {
+  "code": "ST",
+  "name": "São Tomé & Príncipe",
+  "first": {
+   "text": "Which part of São Tomé & Príncipe should we focus on, or would you like an overview of the whole country?",
+   "buttons": [
+    "Whole São Tomé & Príncipe",
+    "A specific area"
+   ]
+  },
+  "area": {
+   "text": "Which state or region of São Tomé & Príncipe? Tap one below, choose any region in the Region list in step 1, or type its name. The buttons are the thr",
+   "buttons": [
+    "São Tomé Island",
+    "Príncipe"
+   ]
+  },
+  "tapped": "São Tomé Island",
+  "overview": {
+   "text": "São Tomé Island is selected. Now choose a town in the Town list in step 1, or type its name here. After you pick a town, press “Continue planning with this location”.",
+   "buttons": [
+    "Folha Fede",
+    "Neves",
+    "São Tomé",
+    "Whole São Tomé & Príncipe"
+   ]
+  },
+  "claimsTownControl": false,
+  "deadEndReplies": [],
+  "errors": "none"
+ }
+]
+SUMMARY {"codes":6,"buttonless":0,"townControlClaimed":[],"pageErrors":[]}

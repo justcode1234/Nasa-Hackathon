@@ -1,0 +1,19 @@
+{
+ "generatedAt": "2026-11-17T19:05:27.052Z",
+ "mode": "deep",
+ "elapsedMs": 15846,
+ "countries": 245,
+ "totalPlaces": 70036,
+ "matched": 66546,
+ "eponymousSkipped": 7,
+ "tooLongForShortReply": 79,
+ "countryOnlyChecked": 250,
+ "defects": [],
+ "ambiguousCountryNames": [],
+ "flowStatuses": {
+  "terminal": 245
+ },
+ "engineVerifiedLongNames": {
+  "reachable": 79
+ }
+}

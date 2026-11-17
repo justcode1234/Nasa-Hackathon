@@ -279,6 +279,28 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   source state and is not counted as a gate; a clean `npm run test:e2e` on the committed code is recorded
   in docs/validation.md once it finishes. The tiny word LM was **not** retrained — no vocabulary or reply
   label changed, and a rebuild would break tests/model.test.js integrity pinning for no behaviour gain.
+- **18 Nov, same branch: the five supported codes with no saved place list (AQ BV HM IO UM).** The country
+  picker offers 251 options and the chat recognises all 250 codes, but only 245 have a place list, and the
+  new tests exposed a real dead end: for Antarctica "A specific area" explained the gap and gave **zero
+  buttons**, and the whole-country overview told the farmer to "Choose a town" from a list that has none.
+  Fixed in the interaction layer only — `areaPrompt` always keeps `Whole <country>` when there is no town to
+  tap, and `countryOverview` now separates "has regions" / "has towns, no regions" / "has no towns" and
+  points the last case at the map or step-1 coordinates. The neutral "Which part of X …" question
+  deliberately stays for an empty list, because an empty list can also mean a place list that failed to
+  load, and only that path can tell the two apart. Country coverage now follows the recognition boundary:
+  the durable phrasing test and `scripts/audit-matrix.js` iterate all 250 codes (`countryOnlyChecked: 250`)
+  and assert the 16 compound `Saint …`/`… & …` spellings by name while "South Georgia" stays out of GE.
+  **Executed:** `npm test` 167/167, `npm audit` 0 vulnerabilities, `node scripts/audit-matrix.js --deep`
+  0 defects / 0 ambiguous names / 245-of-245 flows terminal over 70,036 places (66,546 short-reply matches,
+  7 eponymous skips, 79 long names re-verified through the production engine, 79/79 reachable), and a
+  chat-only Chrome probe of AQ BV HM IO UM plus ST as the control: 6 codes, 0 button-less replies, 0 replies
+  naming a town control the list lacks, 0 page errors
+  (artifacts/final-quality/listless-country-probe.log, listless-diagnose.log). One e2e failure was fixed
+  test-side rather than app-side: tests/e2e/speech.spec.js ran the multi-second axe scan between the
+  "Stop speaking" visibility check and its click, so a headless utterance ending inside that gap flipped the
+  button back and the click timed out; the click and its two assertions now run first, nothing removed. A
+  clean full `npm run test:e2e` on the committed code is running
+  (artifacts/playwright/full-suite-clean.log) — not a passed gate until its own number is recorded here.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

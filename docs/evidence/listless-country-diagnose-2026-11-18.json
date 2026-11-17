@@ -1,0 +1,24 @@
+{
+ "options": {
+  "count": 251,
+  "hasAQ": true,
+  "hasHM": true,
+  "sample": [
+   "",
+   "AF",
+   "AX",
+   "AL"
+  ]
+ },
+ "state": {
+  "articles": 2,
+  "status": "Answer ready. Sources and limits are included.",
+  "text": "Which part of Antarctica should we focus on, or would you like an overview of the whole country?",
+  "buttons": [
+   "Whole Antarctica",
+   "A specific area"
+  ],
+  "countrySelectValue": "AQ"
+ },
+ "errors": "none"
+}

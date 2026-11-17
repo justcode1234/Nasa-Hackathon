@@ -736,3 +736,27 @@ Decisions taken:
   `tests/model.test.js` without changing behaviour.
 - Work stays on `fix/chat-flow-and-answers` only; main is untouched, nothing is deployed, and no
   dependency was added.
+
+## 18 November 2026 - supported countries with no saved place list, and the coverage boundary
+
+- The supported-country list and the saved place lists are different sets: `#pest-country` offers **251**
+  options (250 codes plus the empty entry) and the chat recognises all **250** `COUNTRY_CODES`, but
+  `public/data/locations/manifest.json` holds **245** place lists. AQ BV HM IO UM — Antarctica, Bouvet
+  Island, Heard & McDonald Islands, British Indian Ocean Territory, U.S. Outlying Islands — are genuinely
+  selectable and have no towns. They are now treated as a supported case with its own durable test, not as
+  data to invent.
+- The whole-country overview stopped naming a control the country does not have: it distinguishes "has
+  named regions", "has towns but no regions" and "has no towns at all", and the last branch says so and
+  points at the map / step-1 coordinates instead of an empty Town dropdown.
+- `areaPrompt` always keeps `Whole <country>` when it has no town to offer. The previous reply explained the
+  gap and then gave nothing to press, which for AQ ended the plan inside the chat. Keeping one honest
+  button was preferred over a reply that reads well and cannot be continued.
+- The neutral "Which part of X …" question is deliberately **not** routed to the area prompt when the list
+  is empty. An empty list has two causes — an uninhabited code, or a place list that failed to load — and
+  only the load path can tell them apart; both `Whole X` and `A specific area` stay offered because each
+  states the truth for its own branch.
+- Coverage now follows the recognition boundary, not the data boundary: the durable phrasing test and
+  `scripts/audit-matrix.js` iterate every supported code (`countryOnlyChecked: 250`), and the 16 compound
+  spellings are asserted by name so a regression names the country.
+- Work stays on `fix/chat-flow-and-answers` only. main untouched, nothing deployed, no NASA portal edit, no
+  new dependency.

@@ -716,19 +716,40 @@ executed test".
 
 ### Executed
 
-- `npm test` — **166 tests, 166 passed, 0 failed, 0 skipped** (7.7 s), including the new cases listed below.
+- `npm test` — **167 tests, 167 passed, 0 failed, 0 skipped**, including the new cases listed below. An
+  earlier run in this same work passed **166/166** before the place-list-less country case was added. The
+  committed deep-scan summary is `docs/evidence/deep-matrix-scan-2026-11-18.json`
+  (`artifacts/` is gitignored, so the raw logs live only on the working machine).
 - `npm audit` — **0 vulnerabilities**.
 - `node scripts/audit-matrix.js --deep` — 245 countries, **70,036 town rows**, **66,546** names selected by
   the short-reply matcher, **7** eponymous skips, **79** names too long for a short reply and therefore
-  re-verified through the production engine, **0 defects**, **0 ambiguous country names**, flow statuses
+  re-verified through the production engine (79 of 79 reached a point or an explicit "Which one do you
+  mean?"), **0 defects**, **0 ambiguous country names**, flow statuses
   `{ terminal: 245 }`, 19.6 s. The bounded scan gives the same zero defects with 25 names per list.
   Artifacts: `artifacts/matrix/deep-scan.json`, `artifacts/matrix/deep-scan-run3.log`,
   `artifacts/matrix/bounded-scan.json`.
+- Re-run of the same deep audit after widening country recognition to every supported code:
+  `countryOnlyChecked: 250` (the 245 saved lists plus AQ BV HM IO UM), `defects: []`,
+  `ambiguousCountryNames: []`, `flowStatuses: { terminal: 245 }` — `artifacts/matrix/deep-scan.json`,
+  generated 2026-11-17T18:55:47Z.
 - Ten-country browser chat probe (`artifacts/final-quality/chat-matrix-probe.log`, TV, TO, VC, NR, GD, DJ,
   LC, DM, ST, PF, Chrome channel, Overpass aborted): found two defects, recorded below.
 - Focused browser probe after the fixes (`artifacts/final-quality/fix-probe.log`, ST, PH, TV, PF):
   **0 replies without a button, 0 country-only sentences that picked a place, 0 page errors.** Every
   nonsense-town reply inside a chosen region returned the town-recovery prompt with 2–4 buttons.
+- Chat-only browser probe of the five supported codes that have no saved place list, plus ST as the
+  control that does (`artifacts/final-quality/listless-country-probe.log`, committed as
+  `docs/evidence/listless-country-probe-2026-11-18.json`; AQ BV HM IO UM ST, Chrome
+  channel, Overpass aborted, no step-1 control touched):
+  **6 codes, 0 button-less replies, 0 replies naming a town control the list does not have, 0 page
+  errors.** Each listless country answers "Which part of X …" with `Whole X` + `A specific area`;
+  "A specific area" states "No towns are listed for X in this saved place list …" and keeps
+  `Whole X`; the overview then offers `Use the map or coordinates`. ST keeps its real region and town
+  buttons ("São Tomé Island" → Folha Fede / Neves / São Tomé).
+- Supporting diagnostic (`artifacts/final-quality/listless-diagnose.log`, committed as
+  `docs/evidence/listless-country-diagnose-2026-11-18.json`): the shipped country picker
+  really does offer those codes — `#pest-country` has **251 options** including AQ and HM — which is why
+  the chat must stay honest about a place list it does not have.
 
 ### Defects found and fixed
 
@@ -753,6 +774,31 @@ executed test".
    directions; pinned by `a town whose own name contains the country name is still selectable`.
 4. The audit itself now refuses to pass in this class again: every country is asked once with a sentence
    that names only the country, and a `region`/`location` action or a button-less reply is a defect.
+5. **The five supported codes with no saved place list dead-ended in the chat.** `#pest-country` offers
+   251 countries but the manifest holds 245 place lists, so AQ BV HM IO UM are selectable in step 1 and
+   reachable by typing their names. Two real defects were behind that: the whole-country overview said
+   "Choose a town … this place list has no named regions", naming a control with nothing in it, and for
+   AQ the answer to "A specific area" came back with **zero buttons** — the plan could not continue from
+   the chat at all. Fixed in `public/js/modules/workflow-assistant.js`: the overview now distinguishes
+   "has regions" / "has towns" / "has neither" and states the map-or-coordinates route for the last one,
+   and `areaPrompt` always keeps `Whole <country>` when there is no town to tap. Pinned durably by
+   `a country with no saved town list keeps both routes honest and tappable` (`tests/matrix-coverage.test.js`),
+   which loops every code without a list and asserts both replies keep a button and nothing is compared.
+6. **Country recognition was only proven for the codes that have a place list.** The durable test and
+   `scripts/audit-matrix.js` covered 245; they now cover all **250** supported codes (`countryOnlyChecked`
+   in the deep scan proves the wider sweep ran), and the 16 compound `Saint …` / `… & …` spellings are
+   asserted by name — `AG BA BL GS HM KN LC MF PM SH SJ ST TC TT VC WF` — so a regression reports the
+   country that broke instead of failing a count. The dependency direction is pinned too: "Georgia"
+   resolves to GE while "South Georgia" resolves to GS alone.
+7. **A test-only flake in the read-aloud spec.** `tests/e2e/speech.spec.js` checked that "Stop speaking"
+   was visible, then ran the axe scan (several seconds) before clicking it; a headless utterance can end
+   inside that gap, the button flips back to "Read aloud" and the click times out. The click and its two
+   assertions now run before the scan; no assertion was removed or loosened.
+
+The tiny word model was **not** retrained: this work changed no crop/town/step vocabulary and no reply
+label the model is trained on (guided replies still carry `useSelectedLocation:false`, and
+`tests/model.test.js` pins the shipped 157,096-byte weight hash, which still matches). Retraining would
+have invalidated that integrity pin for no behavioural change.
 
 ### Not claimed
 
