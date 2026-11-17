@@ -340,6 +340,8 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       actions.showStep('location');
       if (scope === 'country' && !explicitPoint && !placeMention) return countryOverview(getState(), inputsInForm);
       if (scope === 'area' || selectedRegion) return areaPrompt(countryName, places.regions.find(region => region.id === selectedRegion)?.name, places, { regionCode: selectedRegion, wholeEscape: scope !== 'country' });
+      // Neutral on purpose: an empty list can be an uninhabited code or a list that did not load, and
+      // only the second path can tell them apart. Both buttons work — “A specific area” states the gap.
       return reply(`Which part of ${countryName} should we focus on, or would you like an overview of the whole country?`,
         [next(`Whole ${countryName}`, `Whole ${countryName}`), next('A specific area', 'A specific area')]);
     }
@@ -415,13 +417,18 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       return reply(regionName ? `Which town in ${regionName}, ${countryName}? The buttons are the first three towns of that region in the step 1 Town list, in list order — not a recommendation. You can also choose any town in step 1, search a place, pick the map or enter coordinates. After a town is chosen, press “Continue planning with this location”.` :
         `${countryName} has no named regions in this place list, so no region is needed. The buttons below are the first three towns in the step 1 Town list, in list order — not a recommendation. You can also type a town name, search a place, pick the map or enter your farm coordinates.`, towns);
     }
+    // With no towns to tap, the national overview is the only continuation the chat still has, so it
+    // stays offered even when the caller came from it. The alternative is a reply with nothing to press.
     return reply(`No towns are listed for ${regionName ? `${regionName}, ` : ''}${countryName} in this saved place list, so the assistant cannot choose a point for you. Search a place by name, select a field on the map or enter your farm coordinates in step 1. A whole-country overview needs none of these.`,
-      wholeEscape ? [next(`Whole ${countryName}`, `Whole ${countryName}`)] : []);
+      [next(`Whole ${countryName}`, `Whole ${countryName}`)]);
   }
   async function countryOverview(state, inputsInForm = false) {
     actions.showStep('location');
     const name = COUNTRY_NAMES.of(state.country), data = state.countryCrops;
     const places=await getLocationList(state.country),namedRegions=places.regions.some(region=>region.name&&normalizeName(region.name)!==normalizeName(name));
+    // A saved list can also hold no towns at all (Antarctica, Heard & McDonald Islands and the other
+    // uninhabited codes), and then naming a town control would point at an empty dropdown.
+    const townsListed = places.places.length > 0;
     const sequence = baseline ?? state.planning.baseline.filter(Boolean);
     const cropNames = [], records = sequence.map(cropName => {
       const crop = resolveCropInput(cropName, state.catalog, data);
@@ -433,8 +440,8 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     return reply([`Whole-country overview for ${name}.${sequence.length ? (inputsInForm ? ` Your crops are entered in step 3: ${cropNames.join(' → ')}.` : ` Your crops are remembered for this plan: ${cropNames.join(' → ')}.`) : ''}`,
       records.length ? `FAOSTAT national production records: ${records.join('; ')}. Snapshot retrieved ${data.source.retrievedAt.slice(0, 10)}; these are country records, not local suitability evidence.` :
         `${data.records.length} crop categories have saved national production records for 2020–2024. Missing categories remain unknown.`,
-      `A rotation comparison needs NASA weather for one place, and a whole country has no single weather reading. ${namedRegions ? 'Choose a state or region next, then a town.' : 'Choose a town, a mapped field or farm coordinates next; this place list has no named regions.'} Your crops stay in step 3.`],
-    [next(namedRegions ? 'Choose a state or region' : 'Choose a town or field', 'A specific area')], [data.source]);
+      `A rotation comparison needs NASA weather for one place, and a whole country has no single weather reading. ${namedRegions ? 'Choose a state or region next, then a town.' : townsListed ? 'Choose a town, a mapped field or farm coordinates next; this place list has no named regions.' : 'This saved place list has no towns to choose from, so pick a spot on the map or enter your farm coordinates in step 1.'} Your crops stay in step 3.`],
+    [next(namedRegions ? 'Choose a state or region' : townsListed ? 'Choose a town or field' : 'Use the map or coordinates', 'A specific area')], [data.source]);
   }
   function fieldPrompt(state, message) {
     actions.showStep('location');

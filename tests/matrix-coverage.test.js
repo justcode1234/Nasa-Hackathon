@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { catalog } from '../server/agronomy/catalog.js';
 import { getCountryCrops } from '../server/context/crops.js';
-import { COUNTRY_NAMES, findCountries, normalizeName, regionPhrase } from '../public/js/lib/countries.js';
+import { COUNTRY_CODES, COUNTRY_NAMES, findCountries, normalizeName, regionPhrase } from '../public/js/lib/countries.js';
 import { parseWorkflowMessage, resolveCropInput, typedPlace } from '../public/js/modules/workflow-assistant.js';
 import { countryPhrasings, driveAssistant, listCountries, locations, makeAssistant, textOf } from './helpers/matrix-harness.js';
 
@@ -15,6 +15,12 @@ const listFor = async country => {
   return data;
 };
 const namedRegions = (list, countryName) => list.regions.filter(region => region.name && normalizeName(region.name) !== normalizeName(countryName));
+// The compound “Saint …” / “… & …” spellings that used to resolve to the wrong code or to two codes,
+// listed by name so a regression reports the country that broke.
+const compoundNames = ['AG', 'BA', 'BL', 'GS', 'HM', 'KN', 'LC', 'MF', 'PM', 'SH', 'SJ', 'ST', 'TC', 'TT', 'VC', 'WF'];
+// Supported codes with no saved place list at all (the uninhabited territories): the chat has to stay
+// honest about a town list it does not have.
+const noPlaceList = COUNTRY_CODES.filter(code => !listCountries.includes(code));
 
 test(`all ${listCountries.length} saved country lists can complete step 1 from the chat`, async () => {
   assert.ok(listCountries.length > 200, 'the saved place data must not silently shrink');
@@ -25,15 +31,41 @@ test(`all ${listCountries.length} saved country lists can complete step 1 from t
   assert.ok(Array.isArray(withoutTowns));
 });
 
-test('every country is recognised from the long official spelling a farmer types', () => {
+test(`all ${COUNTRY_CODES.length} supported country codes resolve from every spelling a farmer types`, () => {
   const failures = [];
-  for (const country of listCountries) {
+  for (const country of COUNTRY_CODES) {
     for (const phrase of countryPhrasings(country)) {
       const found = findCountries(`Help me plan a rotation in ${phrase}. Crops: rice, wheat, beans`);
       if (found.length !== 1 || found[0] !== country) failures.push(`${country}: “${phrase}” -> ${JSON.stringify(found)}`);
     }
   }
   assert.deepEqual(failures, []);
+  // The compound “Saint …” / “… & …” dependencies are the family that used to resolve to the wrong
+  // code or to two codes at once. Heard Island sits outside the saved place lists, so the phrasing
+  // loop above is the only place it is checked.
+  assert.deepEqual(compoundNames.map(country => findCountries(`Help me plan a rotation in ${COUNTRY_NAMES.of(country)}`)),
+    compoundNames.map(country => [country]), 'a compound country name must resolve to that one country');
+});
+
+test('a country with no saved town list keeps both routes honest and tappable', async () => {
+  for (const code of noPlaceList) {
+    const countryName = COUNTRY_NAMES.of(code);
+    const { assistant, calls, state } = makeAssistant();
+    const answer = await assistant.respond(`Help me plan a rotation in ${countryName}. Crops: rice, wheat, beans. Rainfed`);
+    assert.equal(state.country, code, `${code}: the typed country must be the one selected`);
+    assert.deepEqual(answer.followUps.map(choice => choice.label), [`Whole ${countryName}`, 'A specific area'],
+      `${code}: both routes must stay offered: ${textOf(answer)}`);
+    const overview = await assistant.respond(answer.followUps[0].question);
+    const text = textOf(overview);
+    // The overview must not name a town control this place list does not have.
+    assert.doesNotMatch(text, /Choose a town|no named regions/, `${code}: ${text}`);
+    assert.match(text, /no towns to choose from/, `${code}: ${text}`);
+    assert.ok(overview.followUps.length >= 1, `${code}: the overview must keep a button`);
+    const area = await assistant.respond(answer.followUps[1].question);
+    assert.match(textOf(area), /No towns are listed/, `${code}: ${textOf(area)}`);
+    assert.ok(area.followUps.length >= 1, `${code}: an empty town list must still keep a button`);
+    assert.ok(!calls.includes('compare'), `${code}: nothing may be compared without weather for one place`);
+  }
 });
 
 test('compound region names resolve to one country and never to a name inside them', () => {

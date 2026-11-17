@@ -3,11 +3,14 @@
 //   node scripts/audit-matrix.js            bounded per-country view
 //   node scripts/audit-matrix.js --deep     all 70k town names (minutes, single process)
 import { mkdir, writeFile } from 'node:fs/promises';
-import { COUNTRY_NAMES, normalizeName, regionPhrase } from '../public/js/lib/countries.js';
+import { COUNTRY_CODES, COUNTRY_NAMES, normalizeName, regionPhrase } from '../public/js/lib/countries.js';
 import { typedPlace } from '../public/js/modules/workflow-assistant.js';
 import { countryPhrasings, driveAssistant, listCountries, locations, makeAssistant, textOf } from '../tests/helpers/matrix-harness.js';
 
 const deep = process.argv.includes('--deep');
+// Country recognition is checked for every supported code, not only the 245 with a saved place list:
+// the uninhabited codes (AQ, BV, HM, IO, UM) are reachable by typing their names and must resolve too.
+const allCodes = [...new Set([...listCountries, ...COUNTRY_CODES])].sort();
 const started = Date.now();
 const rows = [], sentenceChecks = [];
 let totalPlaces = 0, matched = 0, eponymous = 0, tooLong = 0, defects = [], unboundedNames = 0;
@@ -55,7 +58,7 @@ for (const country of listCountries) {
 // inside the country name itself (“Príncipe” in “São Tomé and Príncipe”). The reply also has to keep
 // a button, or the farmer cannot continue from the chat.
 const nationalScope = [];
-for (const country of listCountries) {
+for (const country of allCodes) {
   const { assistant, calls } = makeAssistant();
   const answer = await assistant.respond(`Help me plan a rotation in ${COUNTRY_NAMES.of(country)}. Crops: rice, wheat, beans. Rainfed`);
   const picked = calls.filter(call => call === 'region' || call === 'location');
@@ -67,13 +70,13 @@ for (const country of listCountries) {
   }
 }
 const countryNames = [];
-for (const country of listCountries) for (const phrase of countryPhrasings(country)) {
+for (const country of allCodes) for (const phrase of countryPhrasings(country)) {
   const found = (await import('../public/js/lib/countries.js')).findCountries(`Help me plan a rotation in ${phrase}`);
   if (found.length !== 1 || found[0] !== country) countryNames.push({ country, phrase, found });
 }
 const summary = { generatedAt: new Date().toISOString(), mode: deep ? 'deep' : 'bounded', elapsedMs: Date.now() - started,
   countries: listCountries.length, totalPlaces, matched, eponymousSkipped: eponymous, tooLongForShortReply: tooLong,
-  countryOnlyChecked: listCountries.length,
+  countryOnlyChecked: allCodes.length,
   defects, flowStatuses: flows.reduce((all, row) => ({ ...all, [row.status]: (all[row.status] ?? 0) + 1 }), {}),
   ambiguousCountryNames: countryNames, exampleRows: rows.slice(0, 12) };
 await mkdir(new URL('../artifacts/matrix/', import.meta.url), { recursive: true });
