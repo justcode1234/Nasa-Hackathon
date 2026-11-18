@@ -1132,6 +1132,9 @@ Two more assertions turned out to be narrower than the goal requires, and both a
   to the pre-move result.
 
 * `node --test tests/matrix-coverage.test.js` → **19/19 passed, 0 failed** (70.3 s).
+* The region sweep prints its own bound now: **3,736** named region rows typed into the assistant, with
+  the **7** rows spelled exactly like their own country (DJ, GP, GT, LU, MQ, SM, TW) covered by the
+  collision and own-name tests instead — 3,736 + 7 equals the 3,743 the deep census counts.
 * `npm test` → **185/185 passed, 0 failed, 0 skipped** in 78.3 s
   ([evidence/unit-exhaustive-2026-11-18.log](evidence/unit-exhaustive-2026-11-18.log)); the earlier
   184/184 run of the region-less test alone is kept at

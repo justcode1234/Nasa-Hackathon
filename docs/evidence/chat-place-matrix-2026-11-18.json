@@ -16,6 +16,21 @@
     "duration_ms": "24814.2936"
   },
   "npmAudit": "found 0 vulnerabilities",
+  "durableCoverage": {
+    "note": "The same matrix is now asserted inside npm test, so the script numbers above are reproducible from the suite. Recorded on the commit that carries the tests.",
+    "commit": "4eeafb4",
+    "npmTest": { "tests": 185, "pass": 185, "fail": 0, "skipped": 0, "duration_ms": 78266.4104, "log": "unit-exhaustive-2026-11-18.log" },
+    "uniqueTownNamesTyped": 66632,
+    "townsNeedingExactRowPath": 79,
+    "eponymousTownsAssertedSelectable": 7,
+    "unexplainableTownNames": 0,
+    "namedRegionsTypedThroughChat": 3736,
+    "namedRegionsCoveredByTheCollisionTestInstead": 7,
+    "regionlessListsDriven": ["AW", "BL", "CC", "CW", "CX", "EH", "FK", "GI", "GS", "MF", "NF", "NU", "PN", "SG", "SX", "TC", "VA", "VG"],
+    "unknownTownCensus": { "cases": 2151, "countries": 245, "failures": 0, "deferredToEvidenceAnswer": 54, "nowAlsoInNpmTest": true },
+    "screenedCropBranches": { "none": 67, "single": 12, "comparable": 166 },
+    "guidedFlowOutcomes": { "terminal": 245, "handoff": 0 }
+  },
   "nonsenseTownCensus": {
     "cases": 2151,
     "countries": 245,

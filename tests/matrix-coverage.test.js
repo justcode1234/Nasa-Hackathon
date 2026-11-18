@@ -91,7 +91,7 @@ test('whole-country phrasing works for shortened and spelled-out names', () => {
   assert.equal(parseWorkflowMessage('Whole Tuvalu').wholeCountry, true);
 });
 
-test('every named region in every saved list can be selected by typing its name', async () => {
+test('every named region in every saved list can be selected by typing its name', async t => {
   const failures = [];
   let checked = 0;
   for (const country of listCountries) {
@@ -113,6 +113,8 @@ test('every named region in every saved list can be selected by typing its name'
     }
   }
   assert.ok(checked > 3000, `expected every named region to be exercised, checked ${checked}`);
+  t.diagnostic(`${checked} named region rows typed into the assistant; the ${listCountries.length} lists hold ` +
+    'their other rows (the country-spelled ones) through the dedicated collision test');
   assert.deepEqual(failures.slice(0, 12), [], `${failures.length} of ${checked} region names are not selectable from the chat`);
 });
 
