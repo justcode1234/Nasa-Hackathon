@@ -1473,18 +1473,83 @@ Executed: `node --test tests/deployment.test.js` **1/1**. Copying the archived `
 experiment and must not be restored into the shipped frontend"; deleting that copy returned it to
 **1/1**, and `git status --porcelain -- public/js/modules` printed nothing.
 
+### 12. The documentation guard failed on the tip's own quoted error text
+
+The previous subsection added the archived harness's measured error to this file, including its path:
+
+```sh
+node --input-type=module -e "import('./notebooks/legacy-workers/benchmark-candidate.js')"
+# ERR_MODULE_NOT_FOUND: Cannot find module '…/notebooks/server/index.js' (specifier ../server/index.js)
+```
+
+That text is evidence: the path must *not* exist in the repository, because its absence is what the
+archived harness demonstrates. But the guard added in subsection 10 scanned every line inside a fenced
+block and required each `scripts|tests|server|notebooks/…js|py|ipynb` path on it to exist, so on the
+committed tip **the offline suite failed on the repository's own evidence**. Measured before any edit,
+on Node v22.23.5: `npm test` **191 tests, 190 pass, 1 fail, 0 skipped (234.8 s)**; the subtest was
+`every documented verification file exists` (tests/documentation-commands.test.js:46) and its only
+entry was `docs/validation.md -> notebooks/server/index.js`
+(`docs/evidence/unit-doc-guard-before-2026-11-18.log.gz`). No application module was involved: the
+failure was iteration 12's guard misreading iteration 12's prose, which is exactly why the loop reruns
+the whole suite instead of the two edited files.
+
+The fix is in the scanner, not in the evidence: `fencedLines()` now drops lines whose first non-space
+character is `#`. A shell comment is prose nobody can run, and the quoted error is the **only** comment
+line in the tree that contains such a path (measured: 1 match across 33 markdown files); command lines
+are still scanned exactly as before, and the two scanners now share one `DOCUMENTED_FILE` pattern so
+the halves cannot drift apart. Scan counts on the fixed tree: **39 documented npm commands** (minimum
+30), **9 documented file references** (minimum 5), **66 cited evidence files** (minimum 20).
+
+A new subtest pins the distinction with a synthetic block that holds the real error text beside two
+real command lines: the comment is absent from the scanned lines, both commands are present and still
+match the file pattern. Non-vacuity, twice: the tip itself failed before the change (above), and after
+it an injected `node scripts/iteration13-missing-probe.js` in docs/development.md failed check 2 with
+exactly that path while an injected comment naming `notebooks/server/index.js` was ignored; restoring
+the file printed **5/5** again (`docs/evidence/doc-guard-injection-2026-11-18.log.gz`,
+`docs/evidence/doc-guard-focused-2026-11-18.log.gz`).
+
+Executed on the fixed tree, Node v22.23.5: `node --test tests/documentation-commands.test.js` **5/5**;
+`npm test` **192 tests, 192 pass, 0 fail, 0 skipped (24.8 s)**
+(`docs/evidence/unit-doc-guard-after-2026-11-18.log.gz`); re-run after this section's own edits, the
+focused guard was **5/5** and `npm test` **192/192, 0 failed, 0 skipped (25.7 s)**
+(`docs/evidence/unit-doc-guard-final-2026-11-18.log.gz`); `npm audit` **0 vulnerabilities**;
+`node scripts/check-documentation.js` **117 local links, 0 broken**;
+`npx playwright test --list` **Total: 184 tests in 17 files**. The 24.8 s is a warm-cache run on this
+device; the same command took **234.8 s** on the cold tree before the change, so the two durations are
+not comparable.
+
+Environment note, recorded rather than worked around: this device's only system Node is **v26.13.1**,
+so the numbers above were produced with **Node v22.23.5** from the official tarball, unpacked under the
+gitignored `artifacts/` (no system change). On v26.13.1 this repository's esbuild 0.28.2 binary runs
+(`--version` prints 0.28.2) and `transformSync` answers, but the JS `build()`/`buildSync()` API never
+returns: the service process sits idle reading stdin while the parent waits on a semaphore at 0 % CPU
+(sampled). `npm test` therefore cannot complete its `dist/client` build step there. Nothing in the
+repository was changed for this; it is a local toolchain finding a second device should know before
+concluding the suite is hung.
+
+Measured here and **not fixed** (iteration 14 candidate): at the region question the saved list still
+answers a nonsense reply at the wrong level. Driving the real India list offline, "Which state or
+region of India?" answered with `Zqxwv` — or with a plausible absent name, `Maisonette District` —
+returns "No town by that name is in the saved place list for India…" and offers the country-wide town
+buttons Pune/Nagpur/Ratnagiri plus Whole India, dropping the two real region buttons (Maharashtra,
+Maharashtra Coast) that the same prompt had just offered. The buttons are real, so it is not a dead
+end, but the reply answers a question that was never asked and silently skips the region level. No fix
+was attempted in this iteration; the reproduction is offline and deterministic
+(`docs/evidence/region-nonsense-repro-2026-11-18.log.gz`).
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
   changed since (`chat.js`, `farms.js`, `client.js`, `workflow-assistant.js`), so 180/180 must not be
-  quoted for the current commit until it is re-run. That re-run is in progress **inside the clean clone
-  of the pushed branch** (`npm run test:e2e`, 184 tests, 1 worker) and only its own summary line will be
-  recorded here; until then it is not a passed gate. The chat-heavy slice that does cover the
-  `data-choice-type` contract ran separately: **80 passed, 0 failed (6.0 min)** across all four projects
-  (`docs/evidence/e2e-chat-slice-choice-type-2026-11-18.log.gz`).
+  quoted for the current commit until it is re-run. No Playwright run was launched on the device that
+  wrote subsection 12, so the suite remains owed; only its own summary line will be recorded here. The
+  chat-heavy slice that does cover the `data-choice-type` contract ran separately: **80 passed, 0 failed
+  (6.0 min)** across all four projects (`docs/evidence/e2e-chat-slice-choice-type-2026-11-18.log.gz`).
 * The offline suite total on the tip that adds `tests/documentation-commands.test.js` and the
-  `tests/deployment.test.js` assertions has not been run as a whole yet; both files were executed on
-  their own (4/4 and 1/1). The **187/187** figures above are the tip before them.
+  `tests/deployment.test.js` assertions is now measured in subsection 12: **190/191 with one failure**
+  before the fix (the guard read its own quoted error as a documented file) and **192/192, 0 failed,
+  0 skipped** after it. The **187/187** figures earlier in this section describe the tip before those
+  two files were added.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

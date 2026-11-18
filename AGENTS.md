@@ -576,6 +576,28 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged: real phones/touch, Safari/WebKit, microphones and noise, audible read-aloud, independent
   agronomic review, live Overpass availability. Nothing was deployed, main is untouched, no NASA portal edit.
 
+- **18 Nov, same branch: iteration 13 — the documentation guard failed on the tip's own quoted error.**
+  Running the whole offline suite on the committed tip (iteration 12 had executed the two changed files
+  separately, not as a suite) printed **191 tests, 190 pass, 1 fail, 0 skipped (234.8 s)**:
+  `tests/documentation-commands.test.js` read the fenced block that iteration 12 added to validation.md
+  and required the quoted `ERR_MODULE_NOT_FOUND … notebooks/server/index.js` path to exist as a
+  documented file — the path's absence is the evidence. Fix in the scanner only: `fencedLines()` now
+  skips shell-comment lines (a comment is prose; the quoted error is the only such line in 33 markdown
+  files), command lines are still scanned, and both scanners share one `DOCUMENTED_FILE` pattern. A new
+  subtest pins comment-vs-command with the real error text beside two commands. **Executed on Node
+  v22.23.5:** focused guard **5/5**, dropped to **4/5** when `node scripts/iteration13-missing-probe.js`
+  was injected into docs/development.md (the injected comment naming notebooks/server/index.js was
+  ignored) and back to **5/5** after the revert; `npm test` **192/192, 0 failed, 0 skipped (24.8 s)**
+  (docs/evidence/unit-doc-guard-after-2026-11-18.log.gz), `npm audit` **0 vulnerabilities**,
+  `node scripts/check-documentation.js` **117 local links / 0 broken**, `npx playwright test --list`
+  **184 tests in 17 files**. Environment note: this device's system Node v26.13.1 runs esbuild's binary
+  but hangs its JS build API (service idle on stdin, 0 % CPU), so the suite was run on Node v22.23.5
+  from the official tarball under gitignored `artifacts/`; no repository change for that. Measured and
+  left for iteration 14: at the region question a nonsense reply gets the town-level recovery and drops
+  the region buttons (reproduced offline, docs/evidence/region-nonsense-repro-2026-11-18.log.gz). No app
+  module, place data or model vocabulary changed, so the tiny word LM is not retrained. Nothing was
+  deployed, main is untouched, no NASA portal edit.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

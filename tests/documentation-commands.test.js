@@ -21,8 +21,13 @@ async function markdownFiles(dir, collected = []) {
   return collected;
 }
 function fencedLines(markdown) {
-  return [...markdown.matchAll(/```[a-z]*\n([\s\S]*?)```/g)].flatMap(block => block[1].split('\n'));
+  // A shell comment inside a block is prose, not something a device can run: validation.md quotes
+  // the archived harness's own error ("# ERR_MODULE_NOT_FOUND: … notebooks/server/index.js"), and
+  // that path must exist in the *error*, not in the repository. Commands stay on their own lines.
+  return [...markdown.matchAll(/```[a-z]*\n([\s\S]*?)```/g)].flatMap(block => block[1].split('\n'))
+    .filter(line => !/^\s*#/.test(line));
 }
+const DOCUMENTED_FILE = /(?:scripts|tests|server|notebooks)\/[A-Za-z0-9_./-]+\.(?:m?js|js|py|ipynb)/g;
 // npm's own verbs and the lifecycle hooks a person never types are not project scripts.
 const NPM_VERBS = new Set(['ci', 'install', 'i', 'audit', 'ls', 'exec', 'doctor', 'login', 'logout', 'config', 'update', 'view', 'why', 'fund']);
 
@@ -48,7 +53,7 @@ test('every documented verification file exists', async () => {
   const missing = [], seen = [];
   for (const file of files) {
     for (const line of fencedLines(await readFile(path.join(ROOT, file), 'utf8'))) {
-      for (const match of line.matchAll(/(?:scripts|tests|server|notebooks)\/[A-Za-z0-9_./-]+\.(?:m?js|js|py|ipynb)/g)) {
+      for (const match of line.matchAll(DOCUMENTED_FILE)) {
         seen.push(match[0]);
         try { await readFile(path.join(ROOT, match[0]), 'utf8'); } catch { missing.push(`${file} -> ${match[0]}`); }
       }
@@ -66,6 +71,23 @@ test('every run-by-hand npm script is discoverable in the docs', async () => {
   // pre* hooks run automatically before start/showcase, so nobody can be told to type them.
   const hidden = Object.keys(scripts).filter(name => !name.startsWith('pre') && !joined.includes(name));
   assert.deepEqual(hidden, [], `these npm scripts exist but no current doc names them:\n${hidden.join('\n')}`);
+});
+
+test('a quoted error message is not a documented file, a command line still is', () => {
+  const sample = [
+    '```sh',
+    `node --input-type=module -e "import('./notebooks/legacy-workers/benchmark-candidate.js')"`,
+    `# ERR_MODULE_NOT_FOUND: Cannot find module '…/notebooks/server/index.js' (specifier ../server/index.js)`,
+    'node scripts/check-documentation.js',
+    '```'
+  ].join('\n');
+  const lines = fencedLines(sample).map(line => line.trim()).filter(Boolean);
+  assert.deepEqual(lines, [
+    `node --input-type=module -e "import('./notebooks/legacy-workers/benchmark-candidate.js')"`,
+    'node scripts/check-documentation.js'
+  ], 'a comment inside a block is not a command, and the commands around it are still scanned');
+  const scanned = lines.flatMap(line => [...line.matchAll(DOCUMENTED_FILE)].map(match => match[0]));
+  assert.deepEqual(scanned, ['notebooks/legacy-workers/benchmark-candidate.js', 'scripts/check-documentation.js']);
 });
 
 test('every archived evidence file a doc points at exists', async () => {
