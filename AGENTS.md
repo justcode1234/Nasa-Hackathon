@@ -670,6 +670,26 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   viewports in headless Chrome only — no claim about real phones, touch or Safari/WebKit. Nothing
   was deployed, main is untouched, no NASA portal edit.
 
+- **18 Nov, same branch: iteration 18 — chat context triggers matched inside longer words and could
+  change the answer's topic.** The context builder in `chat.js` tested substrings over the whole
+  question: `farm` matched a farmer, `australia` alone added the ABS irrigation benchmark, `ph` in
+  "graph" added soil, `water` in "waterlogging" and `field` in "fieldwork" also fired. Context blocks
+  are prepended and only a limitation survives from the API's own blocks, so a wrong trigger changed
+  what the reply was about. The builder is now the pure `public/js/lib/chat-context.js` with
+  whole-word topic patterns, imported by `chat.js`; `tests/chat-context.test.js` pins both leaks, the
+  triggers that must still fire and the greeting/location guard. **Executed:** the new file **3 pass,
+  0 fail**; reverting only the water/farm patterns to the old substrings made it **2 pass, 1 fail**
+  ("field record leaked into limitation,mapped field record") and restoring returned **3 pass, 0
+  fail**; a 40-question scratch diff of old versus new triggers showed **7 differences, all
+  intended**, and caught that a first word-boundary draft had dropped plural "temperatures" and
+  "rainfalls", now fixed; `chat-only-flow`, `assistant` and `small-screen-chat` passed **24/24 (1.0
+  m)** in four projects; `npm test` **196/196, 0 failed, 0 skipped (36,520 ms)**, `npm audit` **0
+  vulnerabilities**, `node scripts/check-documentation.js` **`failures: []`**. The farmer test was
+  rewritten after it passed against the old patterns (loading soil too hid the leak behind the
+  two-block budget) — the assertion now pins the required behaviour. Unit-level only; no real
+  phone, microphone, Safari/WebKit or agronomic review. Nothing was deployed, main is untouched, no
+  NASA portal edit.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

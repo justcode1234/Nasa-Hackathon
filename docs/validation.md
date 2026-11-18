@@ -1711,6 +1711,46 @@ deployed, `main` is untouched, and no NASA portal edit was made. The scrolling f
 headless Chrome at emulated viewport sizes only; it is not evidence about real phones, real touch,
 or Safari/WebKit.
 
+### 17. Chat context triggers matched inside longer words and changed the answer's topic
+
+`chat.js` decided which loaded evidence to add to a chat answer with substring tests over the whole
+question. `farm` also matched "farmer", `australia` on its own admitted the ABS irrigation
+benchmark, `ph\b` matched "graph", `water` matched "waterlogging" and `field` matched "fieldwork".
+The context blocks are prepended to the answer and the reply keeps at most three blocks with only a
+limitation surviving from the API's own blocks, so a wrong trigger changed what the reply was about:
+"Our farmer reported a soil pH of 6.5" added a mapped field record, and any question naming
+Australia added the national irrigation ratio. A scratch comparison of the old triggers with the new
+rules over 40 realistic questions found **7 differences, all intended**
+(`docs/evidence/chat-topic-routing-diff-2026-11-18.log.gz`): the two farmer questions, "wheat in
+Australia" and "pests in Australia", "Waterlogging in the lower paddock", "Graph my temperatures"
+(soil no longer fires on `graph`, weather still fires on `temperatures`) and "Fieldwork timing".
+The same comparison caught a regression in the first word-boundary version — `\btemperature\b` and
+`\brainfall\b` had stopped matching the plural "temperatures" and "rainfalls" — so the patterns now
+carry optional plurals.
+
+Fix: the builder moved unchanged to [public/js/lib/chat-context.js](../public/js/lib/chat-context.js)
+with whole-word topic patterns, and `chat.js` imports it. The new `tests/chat-context.test.js` runs
+the pure builder against fixed evidence fixtures and pins both leaks, the triggers that must still
+fire, and the greeting/location guard.
+
+Executed: with the module in place the file reported **3 pass, 0 fail**. Reverting only the water
+and farm patterns to the old substrings made it **2 pass, 1 fail** with "field record leaked into
+limitation,mapped field record"
+(`docs/evidence/chat-topic-routing-broken-2026-11-18.log.gz`); restoring them returned **3 pass, 0
+fail** (`docs/evidence/chat-topic-routing-restored-2026-11-18.log.gz`). The chat browser specs
+(`chat-only-flow`, `assistant`, `small-screen-chat`) passed **24/24 (1.0 m)** in four projects
+(`docs/evidence/chat-topic-routing-e2e-2026-11-18.log.gz`). `npm test` reported **196 tests, 196
+pass, 0 fail, 0 skipped (36,520 ms)**
+(`docs/evidence/chat-topic-routing-npm-test-2026-11-18.log.gz`), `npm audit` **0
+vulnerabilities**, and `node scripts/check-documentation.js` **`failures: []`**.
+
+One bug in the first test draft was found and fixed rather than papered over: the farmer case also
+loaded soil context, whose limitation filled the two-block budget and hid the leaked field record, so
+it passed against the old patterns; that case now supplies only the field record. No crop data or
+model vocabulary changed, so the tiny word LM is not retrained. Nothing was deployed, `main` is
+untouched, and no NASA portal edit was made. This is a unit-level check of a pure function; no real
+phone, touch, microphone, Safari/WebKit or agronomic review was performed.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
