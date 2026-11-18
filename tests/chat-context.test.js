@@ -10,6 +10,7 @@ const observations = {
   source: { id: 'nasa-power', title: 'NASA POWER exact data request', url: 'https://example.invalid/power' },
   parameters: {
     T2M: { label: 'Mean air temperature', units: '°C', latestAvailableDate: '2024-06-02', values: [12.1, 12.9] },
+    T2M_MIN: { label: 'Minimum air temperature', units: '°C', latestAvailableDate: '2024-06-02', values: [-1.4, -0.6] },
     PRECTOTCORR: { label: 'Rainfall', units: 'mm/day', latestAvailableDate: '2024-06-02', values: [0, 3.4] },
     ALLSKY_SFC_SW_DWN: { label: 'Solar irradiance', units: 'MJ/m^2/day', latestAvailableDate: '2024-06-02', values: [9.8, 10.2] }
   }
@@ -86,4 +87,17 @@ test('weather and soil evidence still stand in for the generic answer', () => {
   assert.deepEqual(composeAnswerBlocks(soilAnswer, [block('regional soil model', 'pH: mean 6.1.'), block('limitation', 'ISRIC advises…')]).map(b => b.kind),
     ['regional soil model', 'limitation']);
   assert.deepEqual(composeAnswerBlocks(cropAnswer, []).map(b => b.kind), ['sourced crop facts', 'limitation']);
+});
+
+test('a frost question quotes the minimum air temperature, not the mean', () => {
+  const { blocks } = contextBlocks('Show me frost evidence', { observations }, { topic: 'weather' });
+  assert.equal(blocks.length, 1);
+  assert.match(blocks[0].text, /^Minimum air temperature/);
+  assert.match(blocks[0].text, /-0\.6 °C on 2024-06-02/);
+
+  // A frost question must not steal the mean from an ordinary temperature question, and a frost
+  // question must still answer when the minimum series was never retrieved.
+  assert.match(contextBlocks('Show me temperature evidence', { observations }, { topic: 'weather' }).blocks[0].text, /^Mean air temperature/);
+  const withoutMinimums = { ...observations, parameters: { T2M: observations.parameters.T2M } };
+  assert.match(contextBlocks('Was there a frost?', { observations: withoutMinimums }, { topic: 'weather' }).blocks[0].text, /^Mean air temperature/);
 });

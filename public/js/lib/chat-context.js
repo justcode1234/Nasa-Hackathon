@@ -16,7 +16,12 @@ export function contextBlocks(question, state, answer) {
   if (answer.topic === 'greeting' || answer.useSelectedLocation === false) return { blocks, sources };
   if (TOPIC.weather.test(question) && state.observations) {
     const data = state.observations;
-    const parameterId = /solar/i.test(question) ? 'ALLSKY_SFC_SW_DWN' : /rain|precipitation/i.test(question) ? 'PRECTOTCORR' : 'T2M';
+    // Frost is defined by the coldest air, not the average: server/agronomy/rotation.js counts
+    // T2M_MIN ≤ 0 as frost-tender exposure and the evidence table labels that series "Lowest air",
+    // so a frost question that quotes T2M would answer with a different quantity than the plan does.
+    const frost = /frost|freeze|cold snaps?|coldest|lowest|minimum/i.test(question);
+    const parameterId = /solar/i.test(question) ? 'ALLSKY_SFC_SW_DWN' : /rain|precipitation/i.test(question) ? 'PRECTOTCORR'
+      : frost && data.parameters.T2M_MIN ? 'T2M_MIN' : 'T2M';
     const parameter = data.parameters[parameterId], date = parameter.latestAvailableDate;
     const value = date ? parameter.values[data.dates.indexOf(date)] : null;
     blocks.push({ kind: 'historical weather evidence', text: `${parameter.label}: latest non-missing value inside ${data.period.start} to ${data.period.end} is ${value ?? 'missing'} ${parameter.units} on ${date ?? 'unknown date'}. Regional estimated gridded observation at ${data.location.latitude}°, ${data.location.longitude}°; retrieved ${data.retrievedAt}. It is not current weather, a forecast or a field measurement.`, sourceIds: ['nasa-power'] });

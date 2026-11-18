@@ -709,6 +709,25 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `review-phase-a` case, which confirms the earlier failure there was network availability; the
   composition tip still owes its own gate. No assertion was weakened; the QA fixtures have no
   forbidden-text cases. Nothing was deployed, main is untouched, no NASA portal edit.
+- **18 Nov, same branch: iteration 20 — a frost question quoted the mean air temperature.** The chat
+  weather paragraph chooses its POWER series from the question words and fell through to `T2M` for
+  anything that was not solar or rain, so "Show me frost evidence" answered with the mean while
+  `server/agronomy/rotation.js:103` counts frost-tender exposure as `T2M_MIN <= 0` and the evidence
+  table labels that series "Lowest air"; the fixture shows the gap as 12.9 °C against a −0.6 °C night.
+  `T2M_MIN` was already fetched for every location. The selection now uses the minimum series for frost
+  wording and falls back to the mean when the series is absent. **Executed:** the guard was recorded
+  failing first (**5 pass, 1 fail**, and again **5 pass, 1 fail** after extending it, the extra
+  assertions being anti-over-sweeping guards rather than defect proof), then **6 pass, 0 fail**;
+  `npm test` **199/199, 0 failed, 0 skipped (26,006 ms)**, `npm audit` **0 vulnerabilities**, and
+  `chat-only-flow` + `assistant` **16/16 (1.3 m)** in four projects. The wider eight-spec chat slice did
+  not go green on this device and is recorded as-is: **74 passed / 6 failed (12.4 m)** and **71 passed /
+  9 failed (14.5 m)**, with all fifteen failures being actionability timeouts (twelve click, one check,
+  one `toBeVisible`) plus the live terrain fetch, the failing set moving between projects, the same
+  specs passing individually (**8.6 s**, **1.9 m**) and a 90-frame probe measuring one constant
+  `#chat-toggle` position on two projects under that same load — an unrelated local model server held
+  the load average at 8–10 on 12 cores. No timeout, retry or assertion was changed to hide it; an idle
+  re-run of that slice and the 196-case gate on this tip are both owed. Nothing was deployed, main is
+  untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

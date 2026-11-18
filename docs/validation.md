@@ -1789,8 +1789,63 @@ default ports and a dedicated output directory: **196 passed (22.2 m)**, exit co
 (`docs/evidence/e2e-gate-b87a6da-2026-11-18.log.gz`). It included
 `review-phase-a.spec.js:34` reaching live public Overpass and passing this time, so the earlier
 "fields unavailable after two retries" was network availability, not app behaviour. No test was
-changed for this run. A gate for the composition change itself is still owed and will be recorded
-with its own summary line.
+changed for this run. The gate for the composition change itself ran on `c659a59` and reported
+**195 passed, 1 failed (22.2 m)**, exit code 1
+(`docs/evidence/e2e-gate-c659a59-2026-11-18.log.gz`). The single failure is
+`field-terrain.spec.js:4` on `node-desktop`: the page reported
+"Terrain data is unavailable (fetch failed)", so the AWS terrain-tile request that test makes for real did
+not answer while 196 cases were running back to back. The same test on the same commit passed in isolation
+**1 passed (1.9 m)**, and it passed again in the four-project slice recorded in subsection 19, so the gate
+line is recorded as one external-fetch failure rather than a clean suite.
+
+### 19. A frost question quoted the mean air temperature while the plan counts the minimum
+
+The chat's weather paragraph picks which NASA POWER series to quote from the words in the question:
+solar asks get `ALLSKY_SFC_SW_DWN`, rain asks get `PRECTOTCORR`, and everything else fell through to
+`T2M` — the *mean* air temperature. "Show me frost evidence" therefore answered with the mean, while
+this app's own frost rule is the minimum: `server/agronomy/rotation.js:103` counts a day as
+frost-tender exposure when `T2M_MIN <= 0`, and the evidence table labels that series "Lowest air"
+(`public/js/modules/data-flow.js:47`). In the fixture the two differ by more than a season: the mean
+reads 12.9 °C on a night the minimum puts at −0.6 °C, so the reply described a mild day beside a plan
+that had just reported frost exposure. `T2M_MIN` is requested for every location
+(`server/nasa/power.js:4`), so the correct number was already in the payload the chat received.
+
+The selection now takes the minimum series for frost wording and falls back to the mean when that
+series is absent, which keeps an older cached observation answering instead of throwing.
+
+**Executed.** The guard was written first and recorded failing against the shipped code: **5 pass,
+1 fail** (`docs/evidence/chat-frost-parameter-before-2026-11-18.log.gz`). After extending it with the
+two companion assertions the pre-fix module still reports **5 pass, 1 fail**
+(`docs/evidence/chat-frost-parameter-broken-2026-11-18.log.gz`) — the only failure is the frost
+assertion; "an ordinary temperature question still quotes the mean" and "a missing minimum series
+falls back" pass against the old code on purpose, because they guard against the fix over-sweeping
+rather than proving the defect. With the fix the file reports **6 pass, 0 fail**
+(`docs/evidence/chat-frost-parameter-restored-2026-11-18.log.gz`), `npm test` reports **199 tests,
+199 pass, 0 fail, 0 skipped (26,006 ms)**
+(`docs/evidence/chat-frost-npm-test-2026-11-18.log.gz`), `npm audit` **0 vulnerabilities**, and the
+two chat specs that read replies — `chat-only-flow` and `assistant` (the sixteen graded QA cases) —
+passed **16/16 (1.3 m)** across all four projects
+(`docs/evidence/chat-frost-e2e-2026-11-18.log.gz`).
+
+The wider eight-spec chat slice did **not** go green on this device while the work was done, and the
+number is recorded rather than quietly dropped: attempt 1 reported **74 passed, 6 failed (12.4 m)**
+(`docs/evidence/chat-frost-slice-load-a-2026-11-18.log.gz`) and attempt 2, on the same tree,
+**71 passed, 9 failed (14.5 m)** (`docs/evidence/chat-frost-slice-load-b-2026-11-18.log.gz`). Fifteen of the fifteen failures are
+infrastructure-shaped rather than answer-shaped: twelve `locator.click` timeouts, one `locator.check`
+timeout and one `toBeVisible` failure — Playwright reporting "waiting for element to be visible,
+enabled and stable" for the whole 15 s action window — plus one `toContainText` in
+`field-terrain.spec.js:4` where the live terrain request answered "Terrain data is unavailable (fetch
+failed)", and the failing set moved between projects and between runs, which is not how a code
+regression behaves. The cause is host load: an unrelated local model server (`ollama llama-server`,
+~54 % of one core) held the load average at 8–10 on 12 cores while the suite wanted frames. Two
+checks separate that from app behaviour: the specs pass individually
+(`assistant` alone **1 passed (8.6 s)**, `field-terrain` alone **1 passed (1.9 m)**), and a probe that
+sampled `#chat-toggle`'s position over 90 consecutive animation frames on `static-desktop` and
+`node-desktop` at that same load measured **one distinct position** in all four traces — the launcher
+is not oscillating, the renderer is just starved
+(`docs/evidence/chat-frost-launcher-probe-2026-11-18.log.gz`). No timeout was raised, no retry was
+configured and no assertion was weakened for these runs; a re-run of that slice on an idle device is
+recorded below as owed, as is the full gate on this tip.
 
 Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
@@ -1812,10 +1867,14 @@ review remain unverified.
   skipped (30,013 ms)** on its own fixed tree.
 * A full `npm run test:e2e` summary for the current tip. Iterations 16 and 17 raised `--list` to
   **196 tests in 19 files**, and that suite passed **196/196 (22.2 m)** on `b87a6da`
-  (`docs/evidence/e2e-gate-b87a6da-2026-11-18.log.gz`, subsection 18). The composition change in
-  subsection 18 has not been through a full gate yet, so the 180/180 figures above still describe
-  `35a11b7`; a gate on the tip that carries it is owed and only its own summary line will be added
-  here.
+  (`docs/evidence/e2e-gate-b87a6da-2026-11-18.log.gz`, subsection 18). The gate on the tip that carries
+  the composition change ran on `c659a59` and is recorded there: **195 passed, 1 failed (22.2 m)**, the
+  failure being the live AWS terrain fetch in `field-terrain.spec.js:4`, which passes in isolation. The
+  frost change in subsection 19 has not been through a full gate, so a 196-case run on the tip that
+  carries it is still owed; only its own summary line will be added here. The wider eight-spec chat
+  slice used while measuring it also owes one clean run on an idle device - the two recorded attempts
+  were load-degraded (subsection 19), and only the 16-case `chat-only-flow` + `assistant` slice on
+  that tree is green so far.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the
