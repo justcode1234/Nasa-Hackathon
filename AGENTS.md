@@ -352,6 +352,48 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   250 countries; it names the step-1 dropdown instead. A clean `npm run test:e2e` on this committed code
   is restarted below; until its own number is recorded it is not a passed gate.
 
+- **18 Nov, same branch: three more chat place defects, from driving every saved list and then the
+  browser.** (a) Seven lists hold a town spelled exactly like the country — "Colombia" in Huila (CO),
+  "Djibouti" (DJ), "Luxembourg" (LU), "Monaco" in the Municipality of Monaco (MC), "Mozambique" in
+  Nampula (MZ), "San Marino" (SM) and "Türkmenistan" in Ahal (TM) — and `allowEponymousTown` was
+  `namedRegions.length === 0`, so once the pending question was "which town" that town could be tapped
+  but never typed; it is now typeable while a region filter is set. The exclusion deliberately stays
+  spelling-exact: ASCII-folding it would drop the real "México", "Panamá" and "Türkmenistan" region rows
+  out of the suggestions. (b) Answering a pending place question with the country's own spelling
+  re-asked the identical question, for short names and for long official spellings past the short-reply
+  cap ("South Georgia & South Sandwich Islands"). The reply is now compared in `regionPhrase` shape and
+  answers honestly instead — names the level still missing, offers that level's real rows plus
+  `Whole <country>`, and ends "Nothing was selected" — while a saved row whose own spelling *is* that
+  reply (GP, MQ, the seven towns) still selects itself. (c) The real-browser probe of (b) then caught a
+  third case the offline assertions had tolerated: at the region question, "São Tomé & Príncipe"
+  selected the town **São Tomé**, a strict piece of the country name, narrowing the plan's scope without
+  saying so. A reply equal to the country's whole spelling may now only select a row whose own whole
+  spelling equals it. **Executed:** `npm test` 183/183 (matrix-coverage 17 tests, workflow-place-choices
+  25, including the new 245-list × every-phrasing checks and the São Tomé test), `npm audit` 0
+  vulnerabilities, `node scripts/audit-nonsense-town.js` 2151 cases / 0 failures,
+  `node scripts/audit-matrix.js --deep` **0 defects / 0 ambiguous names** over 70,036 place rows
+  (66,546 short-reply matches, 79 long names re-verified through the production engine, 3,743/3,743
+  regions, 245/245 flows terminal) with the census now *verifying* the seven same-named towns
+  (`eponymousSelected: 7`) instead of skipping them —
+  [docs/evidence/chat-place-matrix-2026-11-18.json](docs/evidence/chat-place-matrix-2026-11-18.json).
+  Chrome, chat only, 16 sessions on 5b4cf29: 7/7 same-named towns became real town points with the
+  latitude field matching the saved row, 0 page errors, and 1 flagged reply that became defect (c)
+  (artifacts/final-quality/eponymous-and-country-name-probe-2026-11-18.log). Re-run on the final tip
+  cbeff6b: 16 cases, **0 failures, 0 page errors**, 7/7 towns still selectable and **9/9** country-name
+  replies honest, São Tomé now answering "is the country, not one of its regions" — raw rows
+  docs/evidence/eponymous-and-country-name-probe-2026-11-18-final.log, extracted summaries in
+  docs/evidence/chat-place-matrix-2026-11-18.json under `browserProbe`. A clean full
+  `npm run test:e2e` on 5b4cf29 printed **180 passed (28.4 min)**
+  (artifacts/playwright/full-suite-country-name-loop-2026-11-18.log); the suite for the final tip
+  `cbeff6b` is running into artifacts/playwright/full-suite-prefix-rule-2026-11-18.log and only its own
+  summary counts as that gate. An unrelated background Playwright run from another workspace (its
+  `tests/e2e/chat-basic.spec.js` does not exist in this repository) is not evidence either way. The
+  tiny word LM was **not** retrained: `scripts/build-mini-corpus.js` reads
+  `models/mini-development-questions.json` and `tests/qa/prompts.json` only — no country table and no
+  assistant reply strings — and `tests/model.test.js` still passes its sha256 pin. Real phones,
+  Safari/WebKit, microphone and read-aloud audio quality and independent agronomic review remain
+  unverified.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

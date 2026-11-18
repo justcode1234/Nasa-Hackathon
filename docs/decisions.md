@@ -760,3 +760,45 @@ Decisions taken:
   spellings are asserted by name so a regression names the country.
 - Work stays on `fix/chat-flow-and-answers` only. main untouched, nothing deployed, no NASA portal edit, no
   new dependency.
+
+## 18 November 2026 - a country name answered honestly, and the same-named towns made typeable
+
+**Decision 1 - a place question answered with the country's own name gets a new, truthful reply.**
+The old behaviour repeated the pending question ("Which state or region of France?" -> the same
+question), which let the chat ask itself twice with nothing new to tap. Options considered: treat the
+reply as the whole-country scope, treat it as a fuzzy place match, or answer plainly. The first would
+quietly change the farmer's stated scope, the second would select a row the farmer never named; both
+would misreport which place the plan is using. Chosen: name the level still missing ("one of its
+regions", "a town in Nampula"), offer that level's real saved rows plus `Whole <country>`, and say
+"Nothing was selected." The comparison is made in the same `regionPhrase` canonical shape as the place
+matching, and the whole reply is compared when it is too long for the short-reply rule, so the long
+official spellings ("South Georgia & South Sandwich Islands") reach the same answer.
+
+**Decision 2 - a saved row that really carries the country's spelling always wins.** Guadeloupe and
+Martinique have region rows, and seven lists have town rows, spelled exactly like the country. Those
+rows are matched before the new rule, so typing them selects them and says which point was chosen. A
+town spelled like its country is typeable once a region is chosen, because the pending question then is
+"which town" and the country overview stays reachable through the `Whole <country>` button.
+
+**Decision 3 - the eponymous exclusion stays spelling-exact, not ASCII-folded.** Folding diacritics
+would look symmetric but removes the real saved rows "Mexico" for MX, "Panama" for PA and "Turkmenistan"
+for TM from the suggestions and makes them untypeable - measured before choosing, and the deep census
+keeps an exact-name assertion for each affected list.
+
+**Decision 4 - the tiny word LM is not retrained for routing fixes.** The corpus builder reads
+`models/mini-development-questions.json` and `tests/qa/prompts.json`; it imports neither the country
+table nor any assistant reply string, so place-routing wording changes cannot alter its vocabulary or
+labels. Retraining would only churn the sha256 pin in `tests/model.test.js`.
+
+**Decision 5 - a place reply may only select a row it names in full.** The first honest-country-reply
+rule compared the reply with the country spelling but still let the ordinary place matcher run first, so
+"São Tomé & Príncipe" matched the saved town "São Tomé" as a *prefix* and moved the plan's scope to that
+town point without telling the farmer. The narrowing now happens the other way round: a reply whose
+canonical spelling equals the country's own spelling may select something only when a saved row's *whole*
+canonical spelling equals that reply. Anything else is refused and answered honestly. The alternative -
+deleting the country's own words from the reply before matching - was the first attempt and the deep
+matrix scan caught that it destroyed the real Philippines town whose own name contains "Philippines"
+("Pamayanang University of Philippines …"), because stripping those words left no name to match at all.
+`tests/matrix-coverage.test.js` keeps this as a `quietNarrow`
+assertion over all 245 lists x every generated phrasing, so a future matcher change that starts selecting
+un-named places fails the suite rather than the probe.

@@ -992,3 +992,88 @@ committed code, real phones, Safari/WebKit, microphone and read-aloud audio qual
 agronomic review. The "Which country should we look at?" reply for a name no engine and no source
 spells still has no chat button, because every chat button sends text and the app cannot list 250
 countries; it names the step-1 dropdown, which the assistant scrolls to.
+
+## 18 November 2026 - the seven same-named towns and the country-name reply loop
+
+### Defect 10 — a town spelled like its country could not be typed once a region was chosen
+
+Seven saved lists hold a town whose whole name equals the country's own spelling: **Colombia** in Huila
+Department (CO), **Djibouti** in Djibouti (DJ), **Luxembourg** in Luxembourg (LU), **Monaco** in the
+Municipality of Monaco (MC), **Mozambique** in Nampula (MZ), **San Marino** in its own
+region row San Marino (SM) and **Türkmenistan** in Ahal (TM). `allowEponymousTown` was computed as
+`namedRegions.length === 0`, so in every list that *has* regions the country spelling stayed excluded
+from the town matches even after the plan was asking "which town". The farmer could see the town in
+step 1's list, tap it if a button offered it, but could not type it. The rule now also allows it while a
+region is selected ([public/js/modules/workflow-assistant.js:222-228](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L222)),
+because the pending question at that point is a town question and the country overview is already
+reachable through the `Whole <country>` button.
+
+Deliberately *not* changed: the exclusion is still spelling-exact, not ASCII-folded. Folding it would
+drop the real saved region rows "México", "Panamá" and "Türkmenistan" out of the suggestions and make
+them untypeable - a regression for MX, PA and TM, measured before choosing.
+
+### Defect 11 — answering a place question with the country's own name re-asked the same question
+
+At "Which state or region of France?", typing "France" matched nothing: the reply fell through to the
+same area prompt, so the chat asked itself the same thing with nothing new to tap. The long official
+spellings reached it too ("South Georgia & South Sandwich Islands" is past the short-reply limit, so the
+first attempt only fixed the short ones). The rule now compares the whole reply in the same canonical
+shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:386-397](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L386)):
+it names the level still missing ("a town in Nampula", "one of its regions"), offers that level's real
+rows plus `Whole <country>`, and ends with "Nothing was selected." A saved row that really does carry
+the country's spelling is matched earlier and still selects itself, so Guadeloupe and Martinique keep
+answering their own region row rather than being refused.
+
+### Defect 12 — the country's official spelling quietly selected the town inside it
+
+The browser probe caught a case the offline matcher tests missed. At *"Which state or region of São Tomé
+& Príncipe?"* the reply `"São Tomé & Príncipe"` answered **"São Tomé is selected as a town point. Choose
+the specific field; the town itself is not farmland."** - the chat picked a place the farmer never named,
+because the country's own spelling *contains* the town's spelling and `typedPlace` matched that prefix.
+Defect 11's honest reply could not fire: it only ran when nothing matched at all. The narrowing rule now
+requires the reply to equal a saved row's whole canonical spelling before a country-name reply may select
+anything ([public/js/modules/workflow-assistant.js:250-257](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L250));
+otherwise the mentions are dropped and the honest reply answers instead. A town genuinely called "São
+Tomé" stays typeable by that name, and the two lists whose rows really do carry the country spelling
+(Guadeloupe, Martinique) still select themselves.
+
+### Executed on this tree
+
+* `npm test` **183/183 passed, 0 failed** -
+  [artifacts/final-quality/unit-prefix-fix-2026-11-18.log](../artifacts/final-quality/unit-prefix-fix-2026-11-18.log)
+  (182/182 before the Defect 12 fix:
+  [artifacts/final-quality/unit-country-name-loop-2026-11-18.log](../artifacts/final-quality/unit-country-name-loop-2026-11-18.log)) -
+  including the new durable test *'the country's own name never re-asks the pending place question and
+  its same-named town stays typeable'* over all 245 lists x every `countryPhrasings()` spelling, plus
+  three targeted tests in [tests/workflow-place-choices.test.js](../tests/workflow-place-choices.test.js)
+  (LU town row selected from a Luxembourg region reply; FR region question answered with "France" then
+  resolved by tapping the first region button; ST region question answered with "São Tomé & Príncipe" and
+  required to select nothing). The matrix test now also fails on a *quiet narrow*: any country spelling
+  that ends up reported as "is selected" without a saved row carrying that exact spelling is collected in
+  `quietNarrow` and asserted empty.
+* `npm audit` **0 vulnerabilities**.
+* `node scripts/audit-nonsense-town.js` - `{"cases":2151,"countries":245,"failures":0,"deferredToEvidenceAnswer":54}`.
+* `node scripts/audit-matrix.js --deep` - **0 defects, 0 ambiguous country names** over 70,036 place
+  rows: 66,546 matched by the short-reply rules, 79 names too long for them and re-verified through the
+  production engine, 3,743/3,743 named region rows selectable, and **245/245 guided flows terminal**.
+  The census no longer *skips* the seven eponymous towns: `verifyEponymousTown` drives each one through
+  the assistant after its own region and reports
+  `eponymousNames: 7, eponymousSelected: 7`
+  ([docs/evidence/chat-place-matrix-2026-11-18.json](evidence/chat-place-matrix-2026-11-18.json)).
+* Real-browser chat probe (Chrome, chat only, field lookups blocked; reproducible with
+  `PROBE_PORT=<served port> node scripts/chat-place-probe.mjs`, run this session from the identical
+  scratch copy), 16 sessions, run twice: on
+  5b4cf29 it printed `{cases:16, failures:1, pageErrors:0, townsSelectedAsTownPoints:7, honestReplies:8}`
+  — the single failure was the São Tomé narrow that became Defect 12 — and on the fixed tip cbeff6b it
+  printed `{cases:16, failures:0, pageErrors:0, townsSelectedAsTownPoints:7, honestReplies:9}`, with each
+  of the seven same-named towns setting `#latitude` to its saved row and all nine country-name replies
+  (FR, JP, BR, DE, KE, GS, ST, AQ, GP) answering differently from the pending question and keeping a
+  tappable button ([docs/evidence/eponymous-and-country-name-probe-2026-11-18-final.log](evidence/eponymous-and-country-name-probe-2026-11-18-final.log),
+  both summaries in [docs/evidence/chat-place-matrix-2026-11-18.json](evidence/chat-place-matrix-2026-11-18.json)
+  under `browserProbe`).
+* `npm run test:e2e` on the committed tree, **180 passed / 0 failed / 0 skipped (28.4 min)** across
+  static-desktop, static-mobile, node-desktop and node-mobile on ports 4573/4574 -
+  [artifacts/playwright/full-suite-country-name-loop-2026-11-18.log](../artifacts/playwright/full-suite-country-name-loop-2026-11-18.log).
+  An unrelated background run from another workspace (`tests/e2e/chat-basic.spec.js`, which does not
+  exist in this repository) is **not** counted as evidence for this project either way.
+

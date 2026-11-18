@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-11-18T07:03:10.430Z",
   "branch": "fix/chat-flow-and-answers",
-  "commit": "prefix-rule",
+  "commit": "cbeff6b",
   "commands": [
     "npm test",
     "npm audit",
@@ -1312,5 +1312,77 @@
       "status": "terminal",
       "replies": 6
     }
-  ]
+  ],
+  "browserProbe": {
+    "tool": "scripts/chat-place-probe.mjs (Chrome, chat only, field lookups blocked; PROBE_PORT points at the served build)",
+    "beforeFix": {
+      "commit": "5b4cf29",
+      "summary": {
+        "cases": 16,
+        "eponymousTownCases": 7,
+        "countryNameCases": 9,
+        "failures": 1,
+        "pageErrors": 0,
+        "townsSelectedAsTownPoints": 7,
+        "honestReplies": 8
+      },
+      "log": "docs/evidence/eponymous-and-country-name-probe-2026-11-18.log (original: artifacts/final-quality/eponymous-and-country-name-probe-2026-11-18.log)",
+      "failedCase": {
+        "code": "ST",
+        "reply": "São Tomé is selected as a town point. Choose the specific field; the town itself is not fa"
+      }
+    },
+    "afterFix": {
+      "commit": "cbeff6b",
+      "summary": {
+        "cases": 16,
+        "eponymousTownCases": 7,
+        "countryNameCases": 9,
+        "failures": 0,
+        "pageErrors": 0,
+        "townsSelectedAsTownPoints": 7,
+        "honestReplies": 9
+      },
+      "log": "docs/evidence/eponymous-and-country-name-probe-2026-11-18-final.log",
+      "countryNameReplies": [
+        {
+          "code": "FR",
+          "reply": "\"France\" is the country, not one of its regions. Tap a region below, type its name here, o"
+        },
+        {
+          "code": "JP",
+          "reply": "\"Japan\" is the country, not one of its regions. Tap a region below, type its name here, or"
+        },
+        {
+          "code": "BR",
+          "reply": "\"Brazil\" is the country, not one of its regions. Tap a region below, type its name here, o"
+        },
+        {
+          "code": "DE",
+          "reply": "\"Germany\" is the country, not one of its regions. Tap a region below, type its name here, "
+        },
+        {
+          "code": "KE",
+          "reply": "\"Kenya\" is the country, not one of its regions. Tap a region below, type its name here, or"
+        },
+        {
+          "code": "GS",
+          "reply": "\"South Georgia & South Sandwich Islands\" is the country, not one of its towns. Tap a town "
+        },
+        {
+          "code": "ST",
+          "reply": "\"São Tomé & Príncipe\" is the country, not one of its regions. Tap a region below, type its"
+        },
+        {
+          "code": "AQ",
+          "reply": "\"Antarctica\" is the country, and its saved place list holds no towns or regions to choose "
+        },
+        {
+          "code": "GP",
+          "reply": "Guadeloupe is selected. Now choose a town in the Town list in step 1, or type its name her"
+        }
+      ]
+    },
+    "executedFrom": "the identical code as artifacts/tmp/eponymous-and-country-name-probe.mjs, which is the path these two runs were executed from"
+  }
 }
