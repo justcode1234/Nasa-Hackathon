@@ -1934,6 +1934,57 @@ Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit 
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
 review remain unverified.
 
+### 22. The reply budget cut the sentence saying a SoilGrids number is not a farm measurement
+
+**Found by reading the composition rule against the panel, not by a failing case.** `contextBlocks()`
+returned `blocks.slice(0, 2)` and one of those two slots was open to a limitation block, so an advisory
+competed for space with the evidence the farmer asked for. The SoilGrids branch is the only one that emits
+a separate caveat (`ISRIC advises against local/farm-level use of SoilGrids … This is not a farm
+measurement`) — the weather, irrigation and field blocks carry their own scope sentence inside the
+paragraph — so the advisory was the block that got cut. Measured on `acb6c96` with the module loaded
+directly (`docs/evidence/chat-caveat-probe-before-2026-11-18.log.gz`):
+
+| Question | context kinds kept | limitation actually shown |
+| --- | --- | --- |
+| "Does the rainfall pattern affect the soil pH here?" | `historical weather evidence`, `regional soil model` | `Crop-specific retrieval covers…` (the API's, not ISRIC's) |
+| "Tell me about the soil pH here" | `regional soil model`, `limitation` | `ISRIC advises against local/farm-level use…` |
+| "Does the soil pH change how much irrigation water I apply?" | `regional soil model`, `limitation` | ISRIC kept, but the irrigation ratio the question asked for was dropped |
+
+So the same mapped pH of 6.1 was presented with its scope warning in one reply and without it in the
+other, purely because the farmer also mentioned rain — the exact class of thing invariant 7 (no estimate
+reads as a measurement) exists to prevent. The third row shows the second half of the same budget problem:
+the requested number was cut to keep a caveat.
+
+**Fixed by separating the two budgets.** A caveat now travels with the estimate it qualifies instead of
+competing with the other topics: `contextBlocks()` keeps at most two measured blocks *and* one limitation,
+and `composeAnswerBlocks()` gives all three paragraphs to context only when a measured estimate is on
+screen (`replaces`); descriptive context — a field record, an occurrence, a national ratio — still keeps
+two and leaves the third for the answer's own crop paragraph, which is the rule subsection 18 pinned. No
+reply can exceed three paragraphs: the final `slice(0, 3)` is unchanged and the new guard asserts it for
+five question shapes.
+
+**Executed.** The guard was written first and measured failing on the committed tip —
+`tests/chat-context.test.js` **8 pass, 1 fail**, the failure message quoting the composed kinds
+(`the advisory vanished next to a mapped pH: historical weather evidence,regional soil model,limitation`,
+`docs/evidence/chat-caveat-guard-before-2026-11-18.log.gz`) — then **9 pass, 0 fail** with the fix
+(`docs/evidence/chat-caveat-guard-after-2026-11-18.log.gz`). The same probe re-run against the fixed module
+shows the advisory present in both soil replies *and* the irrigation ratio back in the third
+(`docs/evidence/chat-caveat-probe-after-2026-11-18.log.gz`). `npm test` **202 tests, 202 pass, 0 fail,
+0 skipped (25,519 ms)** (`docs/evidence/chat-caveat-npm-test-2026-11-18.log.gz`), `npm audit` **0
+vulnerabilities**, `node scripts/check-documentation.js` **`localLinks: 117, localBroken: 0,
+failures: []`**, and the three chat-rendering specs — `chat-only-flow`, `assistant`,
+`help-and-explanations` — passed **52/52 (2.3 m)** in all four projects on a device back at load average
+3.1 (`docs/evidence/chat-caveat-e2e-2026-11-18.log.gz`).
+
+**Not covered by that run, and recorded as a gap rather than as verified:** no browser case reaches a
+reply where both NASA POWER and SoilGrids are loaded, so the mixed weather + soil panel is pinned by the
+unit guard and the direct-module probe only; a stubbed-evidence chat case is in the queue below. The
+196-case gate also belongs to `acb6c96`, not to this tip.
+
+Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
+phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
+review remain unverified.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -1960,6 +2011,13 @@ review remain unverified.
   (`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). The same run covers the eight specs whose
   slice attempts were load-degraded in subsection 19, so those two degraded tallies stand as recorded
   but are no longer the best evidence for that tree.
+* The full gate belongs to `acb6c96`. Subsection 22 changed `public/js/lib/chat-context.js` afterwards, so
+  the clean **196/196 (19.1 m)** line above must not be quoted for the tip that carries the caveat budget
+  until the suite is re-run there; only the 52-case chat slice and `npm test` 202/202 are measured on it.
+* No browser case loads NASA POWER and SoilGrids into one session, so the weather + soil reply that
+  subsection 22 fixes is pinned only by `tests/chat-context.test.js` and a direct-module probe. A chat spec
+  that answers a mixed question against stubbed POWER/SoilGrids responses — stubs clearly labelled as such,
+  the same way `chat-only-flow.spec.js` stubs the field service — would move it into the rendered panel.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

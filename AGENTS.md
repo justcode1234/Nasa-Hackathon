@@ -769,6 +769,24 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   raised and no assertion was changed for the run; the live-service cases held — `field-terrain.spec.js`
   took 48.4 s, 32.8 s, 35.4 s and 2.5 s in the four projects, i.e. the same AWS terrain fetch that failed
   on `c659a59` passed everywhere here. Nothing was deployed, main is untouched, no NASA portal edit.
+- **18 Nov, same branch: iteration 23 — the reply budget deleted the sentence saying soil data is not a
+  farm measurement.** `contextBlocks()` capped everything at two blocks, and because the SoilGrids branch
+  is the only one emitting a separate caveat block, that cap cut the ISRIC advisory whenever the question
+  also named the weather: measured on `acb6c96`, "Does the rainfall pattern affect the soil pH here?"
+  printed the mapped pH with the API's crop caveat and no advisory, while a soil-only question printed the
+  advisory — the same number read either as an estimate or, silently, as a measurement. The same cap also
+  dropped the irrigation ratio a soil-plus-water question asked for. Caveats now get their own slot: two
+  measured blocks *plus* one limitation, and `composeAnswerBlocks()` spends all three paragraphs on context
+  only when a measured estimate is on screen, keeping iteration 19's rule that descriptive context leaves a
+  paragraph for the crop facts. **Executed:** guard written first — `tests/chat-context.test.js`
+  **8 pass, 1 fail** quoting the composed kinds, then **9 pass, 0 fail**; the direct-module probe flips the
+  advisory from absent to present in both soil replies and brings the irrigation ratio back; `npm test`
+  **202/202, 0 failed, 0 skipped (25,519 ms)**, `npm audit` **0 vulnerabilities**,
+  `node scripts/check-documentation.js` **117 local links, 0 broken, `failures: []`**, and
+  `chat-only-flow` + `assistant` + `help-and-explanations` **52/52 (2.3 m)** in four projects at load
+  average 3.1. Still owed on this tip: the 196-case gate (the clean run belongs to `acb6c96`) and a browser
+  case that loads NASA and SoilGrids into one session — until then the mixed reply is pinned by the unit
+  guard and the probe, not by the rendered panel. Nothing was deployed, main is untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

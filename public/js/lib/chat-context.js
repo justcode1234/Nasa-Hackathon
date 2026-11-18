@@ -66,7 +66,14 @@ export function contextBlocks(question, state, answer) {
       sources.push({ id: pest.id, title: `GBIF ${pest.name} country query`, url: pest.sourceUrl }, { id: `${pest.id}-host`, ...pest.hostSource });
     } else blocks.push({ kind: 'limitation', text: 'Country pest context is not loaded. Use Plan crops → Country pest context. There are no pest observations for this farm in the app.', sourceIds: [] });
   }
-  return { blocks: blocks.slice(0, 2), sources };
+  // Two measured blocks are what a reply can carry, but the old shared budget of two counted caveats too,
+  // so the first thing a busy reply lost was the ISRIC advisory: a question naming both the rain and the
+  // soil showed the mapped pH with no statement that SoilGrids is not a farm measurement, while the same
+  // pH in a soil-only reply carried it. A caveat now travels with the estimate it qualifies instead of
+  // competing with the other topics for a slot.
+  let measured = 0, caveats = 0;
+  const kept = blocks.filter(block => block.kind === 'limitation' ? caveats++ < 1 : measured++ < 2);
+  return { blocks: kept, sources };
 }
 
 // How a reply is assembled once local evidence is added. The panel shows at most three paragraphs.
@@ -76,8 +83,11 @@ export function contextBlocks(question, state, answer) {
 // limitation is kept unless the context already carries one.
 export function composeAnswerBlocks(answerBlocks, extraBlocks) {
   if (!extraBlocks.length) return answerBlocks.slice(0, 3);
-  const context = extraBlocks.slice(0, 2);
-  const replaces = context.some(block => block.kind === 'historical weather evidence' || block.kind === 'regional soil model');
+  // A mapped estimate answers the question itself, so all three paragraphs may be context and advisory.
+  // Descriptive context (a field record, an occurrence, a national ratio) only surrounds the answer, so it
+  // keeps two paragraphs and leaves the third for the crop facts.
+  const replaces = extraBlocks.some(block => block.kind === 'historical weather evidence' || block.kind === 'regional soil model');
+  const context = extraBlocks.slice(0, replaces ? 3 : 2);
   const facts = replaces ? [] : answerBlocks.filter(block => block.kind !== 'limitation').slice(0, 1);
   const caveat = context.some(block => block.kind === 'limitation') ? [] : answerBlocks.filter(block => block.kind === 'limitation').slice(0, 1);
   return [...context, ...facts, ...caveat].slice(0, 3);

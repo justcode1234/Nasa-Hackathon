@@ -135,3 +135,38 @@ test('naming a pest the app has a record for opens the pest evidence', () => {
   assert.deepEqual(asked('Tell me about the Australian grains industry'), []);
   assert.deepEqual(asked('What is the soil pH here?'), []);
 });
+
+// The two-block context budget counted limitations, so the sentence saying a SoilGrids number is not a
+// farm measurement was the first thing the budget cut: a question naming both the rain and the soil
+// printed the mapped pH with only the API's crop caveat, while the identical pH in a soil-only reply
+// carried the ISRIC advisory. A caveat qualifies the estimate beside it, so it does not compete with the
+// other topics for the same slot; the panel still receives at most three paragraphs.
+test('a mapped soil estimate keeps its advisory beside another topic', () => {
+  const reply = (question, state) => composeAnswerBlocks(cropAnswer, contextBlocks(question, state, { topic: 'crop' }).blocks);
+  const kindsOf = blocks => blocks.map(block => block.kind);
+
+  const mixed = reply('Does the rainfall pattern affect the soil pH here?', { observations, soil });
+  assert.ok(mixed.some(block => /ISRIC advises against local\/farm-level use/.test(block.text)),
+    `the advisory vanished next to a mapped pH: ${kindsOf(mixed)}`);
+  assert.ok(mixed.some(block => block.kind === 'regional soil model') && mixed.some(block => block.kind === 'historical weather evidence'),
+    `both asked-for estimates must stay: ${kindsOf(mixed)}`);
+
+  // The advisory must not be bought by silencing the question's own subject: a mapped estimate still
+  // stands in for the generic answer, descriptive context still leaves a paragraph for the crop facts,
+  // and no combination exceeds the three paragraphs the panel renders.
+  for (const [question, state] of [
+    ['Tell me about the soil pH here', { soil }],
+    ['Show me rainfall evidence', { observations }],
+    ['What does this field record say about pests?', fullState()],
+    ['Does the soil pH change how much irrigation water I apply?', { soil, water }],
+    ['Does the soil pH change how much water I apply on this farm?', { farm, pests }]
+  ]) {
+    const blocks = reply(question, state);
+    assert.ok(blocks.length <= 3, `${question} rendered ${blocks.length} paragraphs: ${kindsOf(blocks)}`);
+  }
+  const descriptive = reply('What does this field record say about pests?', fullState());
+  assert.ok(descriptive.some(block => block.kind === 'sourced crop facts'),
+    `the crop answer was pushed out by context: ${kindsOf(descriptive)}`);
+  assert.ok(reply('Tell me about the soil pH here', { soil }).some(block => /ISRIC advises/.test(block.text)),
+    'the soil-only reply lost its advisory');
+});
