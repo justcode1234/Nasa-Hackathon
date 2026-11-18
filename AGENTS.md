@@ -326,6 +326,31 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   The tiny word LM is unchanged and not retrained: no place
   name vocabulary or reply label in `public/models/fieldshift-mini` was altered, and a rebuild would break
   the sha256 pin in tests/model.test.js for no behaviour gain.
+- **18 Nov, same branch: country-name recognition parity.** The collision probe's only unanswered case
+  was TW, and the cause is `public/js/lib/countries.js`, which built the whole 250-code name table from
+  one `Intl.DisplayNames(['en'])` call. Measured that day: Chrome says PS "Palestine", HK "Hong Kong",
+  MO "Macao", GS "South Georgia & South Sandwich Islands" where Node says the longer forms, so a farmer
+  could type the exact wording their own picker shows and be asked "Which country should we look at?";
+  a parenthetical name matched only its whole phrase, so "Myanmar", "Burma", "Cocos Islands" and
+  "Falkland Islands" matched nothing; and the labels in our own `server/context/country-crops.json`
+  ("China, Hong Kong SAR", "China, Macao SAR", "Palestine", "Viet Nam", "North Macedonia") plus the
+  FAO/IOC "Chinese Taipei" were in no table at all. Recognition now merges `en-001`, splits each
+  parenthetical name into whole/without-parenthesis/parenthesis-alone, adds the sourced spellings, and
+  only applies the `in|from <abbr>` shortcut when no full name already claimed that span (so "in US
+  Virgin Islands" is VI, not VI + US). `countryNameForms()` is exported for the tests; 297 spellings
+  resolve on Node v22. **Executed:** `npm test` 173/173 (new tests/country-name-recognition.test.js 4/4),
+  `npm audit` 0 vulnerabilities, `node scripts/audit-matrix.js --deep` 0 defects / 0 ambiguous names /
+  245-of-245 flows terminal over 70,036 places
+  (docs/evidence/deep-matrix-2026-11-18-recognition.json), and a real-Chrome chat probe of the 19
+  formerly failing spellings plus 3 controls: 0 wrong country, 0 button-less replies, 0 page errors
+  (artifacts/final-quality/recognition-chat-probe-2026-11-18.log; its first run's 15 button-less lines
+  were the probe reading the user bubble too early, fixed in the probe and re-run). The word LM is again
+  not retrained: `scripts/build-mini-corpus.js` imports no country table and no reply label changed.
+  Typing a country whose name is also a saved town ("Macau", "Chinese Taipei") still selects that town
+  point and says so — the pre-existing eponymous-capital rule the deep audit skips 7 of — and the
+  no-name-matches reply keeps no chat button because a button sends text and the app will not enumerate
+  250 countries; it names the step-1 dropdown instead. A clean `npm run test:e2e` on this committed code
+  is restarted below; until its own number is recorded it is not a passed gate.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

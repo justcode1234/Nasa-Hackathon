@@ -934,3 +934,61 @@ states “showing 3 of N”.
 Still unverified: real phones, Safari/WebKit, microphone and read-aloud audio quality, independent
 agronomic review, and a clean full-browser gate on this committed code.
 
+
+## 18 November 2026 - country-name recognition parity across engines
+
+Found by driving the real browser after the region-name fix: the collision probe's only
+`noPointChosen` case was TW, and its reply was the button-less "Which country should we look at?".
+The cause is not the place data but the country-name table in
+[public/js/lib/countries.js](../public/js/lib/countries.js), which is built from one
+`Intl.DisplayNames(['en'])` call. Two measured consequences:
+
+* **The same wording resolves on one engine and not on another.** Measured in Chrome and in Node on
+  18 November: PS "Palestine" vs "Palestinian Territories", HK "Hong Kong" vs "Hong Kong SAR China",
+  MO "Macao" vs "Macao SAR China", GS "South Georgia & South Sandwich Islands" vs the spelled-out
+  form. The step-1 picker label and the chat read the same table, so a farmer typing what their own
+  browser shows could still be told the app has no idea which country they mean.
+* **A parenthetical name only matches its whole phrase.** Node's "Myanmar (Burma)" and Chrome's
+  "Cocos (Keeling) Islands" / "Falkland Islands (Islas Malvinas)" meant typing "Myanmar", "Cocos
+  Islands" or "Burma" matched nothing at all.
+* **Names our own sources use are in no table at all.** `server/context/country-crops.json` labels
+  records "China, Hong Kong SAR", "China, Macao SAR", "Palestine", "Viet Nam" and "North Macedonia",
+  and the FAO/IOC name for TW is "Chinese Taipei"; none of those spellings resolved.
+
+Fix, all inside the recognition layer: merge the `en-001` table, split each parenthetical display
+name into its whole phrase, its phrase without the parenthesis and the parenthesis alone, and add the
+curated spellings above (ISO 3166-1 short names and the spellings this project already ships). A bare
+abbreviation such as "in US Virgin Islands" no longer adds the United States as a second country: the
+`in|from <abbr>` rule now only fires when no full display name already claimed that span. The 250-code
+table now holds 297 recognised spellings on Node v22 (more on engines whose tables keep the
+parenthetical halves), and `countryNameForms()` is exported so the tests walk the real table instead of
+a hand-picked list.
+
+**Executed**
+
+* `npm test` **173/173** (169 before, plus the new
+  [tests/country-name-recognition.test.js](../tests/country-name-recognition.test.js) 4/4: every form
+  resolves to its own country and no other; the alternate-spelling table; the no-absorption and
+  no-invented-country probes; the guided flow finishing step 1 from "Chinese Taipei").
+* `npm audit` 0 vulnerabilities.
+* `node scripts/audit-matrix.js --deep` on this tree: **0 defects, 0 ambiguous country names,
+  245/245 flows terminal** over 70,036 places (66,546 short-reply matches, 7 eponymous skips, 79 names
+  too long for a short reply) - [docs/evidence/deep-matrix-2026-11-18-recognition.json](evidence/deep-matrix-2026-11-18-recognition.json).
+* Real Chrome, chat only, live modules on 127.0.0.1:4175: 23 typed spellings (the 19 that used to fail
+  plus Georgia / China / Netherlands controls) - **0 wrong country, 0 button-less replies, 0 page
+  errors** (artifacts/final-quality/recognition-chat-probe-2026-11-18.log, whose stdout also records
+  Chrome's own `en` and `en-001` strings for every case). The first run of this probe printed 15
+  button-less replies; that was the probe reading the user's own bubble before the assistant article
+  appeared, so the wait was fixed and the whole probe re-run.
+* The tiny word LM was **not** retrained: `scripts/build-mini-corpus.js` imports no country table
+  (grep for `countries`/`COUNTRY` returns nothing), no reply label or place-name vocabulary changed, and
+  `tests/model.test.js` still passes its sha256 pin on the shipped 157,096-byte weights.
+
+Behaviour kept deliberately, and now recorded rather than assumed: typing the country's own name where
+a saved town shares it ("Macau", "Chinese Taipei") selects that town point and says so - the same
+eponymous-capital rule the audit already skips 7 of - because the reply names the point it chose and
+still offers the field/whole-country buttons. What remains unverified: the full Playwright gate on this
+committed code, real phones, Safari/WebKit, microphone and read-aloud audio quality, and independent
+agronomic review. The "Which country should we look at?" reply for a name no engine and no source
+spells still has no chat button, because every chat button sends text and the app cannot list 250
+countries; it names the step-1 dropdown, which the assistant scrolls to.

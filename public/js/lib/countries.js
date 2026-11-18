@@ -14,17 +14,51 @@ const aliases = { SG: ['singapore'], US: ['united states', 'united states of ame
   GB: ['united kingdom', 'uk', 'britain', 'great britain'], AE: ['uae', 'united arab emirates'],
   KR: ['south korea'], KP: ['north korea'], CI: ['ivory coast'], CZ: ['czech republic'],
   // "South Georgia" is not the country Georgia; the shorter dependent name must win the span.
-  GS: ['south georgia'] };
-const names = COUNTRY_CODES.flatMap(country => [...new Set([COUNTRY_NAMES.of(country), ...(aliases[country] ?? [])])]
-  .map(name => ({ country, name: regionPhrase(name) }))).sort((a, b) => b.name.length - a.name.length);
+  GS: ['south georgia'],
+  // The other runtime's spelling and the names our own sources use. Intl differs between engines
+  // (measured 18 Nov: Chrome "en" says "Palestine"/"Hong Kong"/"Falkland Islands (Islas Malvinas)",
+  // Node says "Palestinian Territories"/"Hong Kong SAR China"/"Falkland Islands"), the FAO labels in
+  // server/context/country-crops.json read "China, Hong Kong SAR", "China, Macao SAR", "Palestine",
+  // "Viet Nam" and "North Macedonia", and "Chinese Taipei" is the FAO/IOC name for TW that no Intl
+  // table returns. Cabo Verde, Holy See, Turkey, Burma, East Timor and Swaziland are official or
+  // recently-replaced ISO 3166 short names where the table prints another form.
+  TW: ['chinese taipei'], HK: ['hong kong', 'china, hong kong sar'], MO: ['macao', 'macau', 'china, macao sar'],
+  PS: ['palestine'], VN: ['viet nam'], MK: ['macedonia'], CV: ['cabo verde'], VA: ['holy see'],
+  TR: ['turkey'], MM: ['burma'], TL: ['east timor'], SZ: ['swaziland'],
+  // The dependent territories whose ISO spelling puts the qualifier first or last, so no table's phrase
+  // order matches what a farmer actually types ("Virgin Islands, U.S." is the ISO 3166-1 short name).
+  VI: ['united states virgin islands', 'virgin islands, u.s.'], VG: ['british virgin islands', 'virgin islands, british'],
+  UM: ['united states outlying islands'] };
+// A parenthetical display name ("Myanmar (Burma)", "Cocos (Keeling) Islands") only matches its whole
+// contiguous phrase, so either half typed alone resolved to no country at all. Each name therefore
+// contributes the full phrase, the phrase without the parenthesis, and the parenthesis on its own.
+const nameForms = name => {
+  const parts = /^(.*)\((.*)\)(.*)$/.exec(name.trim());
+  if (!parts) return [name];
+  const [before, inside, after] = [parts[1], parts[2], parts[3]].map(part => part.trim().replace(/\s+/g, ' '));
+  return [`${before} ${inside} ${after}`.trim(), `${before} ${after}`.trim(), inside].filter(Boolean);
+};
+// Intl's spelling is a property of the runtime, not of the country, and world-English adds the forms
+// some engines omit. Merging the tables means one typed wording resolves in every browser.
+const otherTables = ['en-001'].map(locale => new Intl.DisplayNames([locale], { type: 'region', fallback: 'code' }));
+const displayNames = country => [...new Set([COUNTRY_NAMES, ...otherTables]
+  .map(table => table.of(country)).filter(name => name && !/^[A-Z]{2}$/.test(name)))];
+// Every wording that resolves to one country code, exported so the tests can prove the whole table
+// rather than a hand-picked list.
+export const countryNameForms = country => [...new Set([...displayNames(country).flatMap(nameForms), ...(aliases[country] ?? [])])];
+const names = COUNTRY_CODES.flatMap(country => countryNameForms(country).map(name => ({ country, name: regionPhrase(name) })))
+  .filter(entry => entry.name).sort((a, b) => b.name.length - a.name.length);
 export function findCountries(value) {
   const text = regionPhrase(value), spans = [], countries = new Set();
-  for (const entry of names) {
-    const start = (` ${text} `).indexOf(` ${entry.name} `), end = start + entry.name.length + 1;
-    if (start < 0 || spans.some(span => start < span.end && end > span.start)) continue;
-    spans.push({ start, end }); countries.add(entry.country);
-  }
-  const code = /\b(?:in|from)\s+(sg|us|usa|uk|uae)\b/.exec(text)?.[1];
-  if (code) countries.add({ sg: 'SG', us: 'US', usa: 'US', uk: 'GB', uae: 'AE' }[code]);
+  const claim = word => {
+    const start = (` ${text} `).indexOf(` ${word} `), end = start + word.length + 1;
+    if (start < 0 || spans.some(span => start < span.end && end > span.start)) return false;
+    spans.push({ start, end }); return true;
+  };
+  for (const entry of names) if (claim(entry.name)) countries.add(entry.country);
+  // "in US Virgin Islands" is one country, not the United States plus a fragment of a longer name:
+  // a bare abbreviation only counts when no full display name already claimed that span.
+  const abbreviation = /\b(?:in|from)\s+(sg|us|usa|uk|uae)\b/.exec(text);
+  if (abbreviation && claim(abbreviation[1])) countries.add({ sg: 'SG', us: 'US', usa: 'US', uk: 'GB', uae: 'AE' }[abbreviation[1]]);
   return [...countries];
 }
