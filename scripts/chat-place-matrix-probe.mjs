@@ -92,7 +92,7 @@ async function walk(code) {
   return outcome;
 }
 
-const queue = (process.env.PROBE_CODES ? process.env.PROBE_CODES.split(/[,\s]+/).filter(Boolean) : listCountries), outcomes = [];
+const queue = (process.env.PROBE_CODES ? process.env.PROBE_CODES.split(/[,\s]+/).filter(Boolean) : [...listCountries]), outcomes = [];
 async function run() {
   for (;;) {
     const next = queue.shift();

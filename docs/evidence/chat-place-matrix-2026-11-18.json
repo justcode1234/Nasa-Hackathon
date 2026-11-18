@@ -1,1403 +1,1543 @@
 {
-  "generatedAt": "2026-11-18T07:03:10.430Z",
-  "branch": "fix/chat-flow-and-answers",
-  "commit": "cbeff6b",
-  "commands": [
-    "npm test",
-    "npm audit",
-    "node scripts/audit-nonsense-town.js",
-    "node scripts/audit-matrix.js --deep"
-  ],
+ "generatedAt": "2026-11-18T07:03:10.430Z",
+ "branch": "fix/chat-flow-and-answers",
+ "commit": "cbeff6b",
+ "commands": [
+  "npm test",
+  "npm audit",
+  "node scripts/audit-nonsense-town.js",
+  "node scripts/audit-matrix.js --deep"
+ ],
+ "npmTest": {
+  "tests": "183",
+  "pass": "183",
+  "fail": "0",
+  "skipped": "0",
+  "duration_ms": "24814.2936"
+ },
+ "npmAudit": "found 0 vulnerabilities",
+ "durableCoverage": {
+  "note": "The same matrix is now asserted inside npm test, so the script numbers above are reproducible from the suite. Recorded on the commit that carries the tests.",
+  "commit": "4eeafb4",
   "npmTest": {
-    "tests": "183",
-    "pass": "183",
-    "fail": "0",
-    "skipped": "0",
-    "duration_ms": "24814.2936"
+   "tests": 185,
+   "pass": 185,
+   "fail": 0,
+   "skipped": 0,
+   "duration_ms": 78266.4104,
+   "log": "unit-exhaustive-2026-11-18.log"
   },
-  "npmAudit": "found 0 vulnerabilities",
-  "durableCoverage": {
-    "note": "The same matrix is now asserted inside npm test, so the script numbers above are reproducible from the suite. Recorded on the commit that carries the tests.",
-    "commit": "4eeafb4",
-    "npmTest": { "tests": 185, "pass": 185, "fail": 0, "skipped": 0, "duration_ms": 78266.4104, "log": "unit-exhaustive-2026-11-18.log" },
-    "uniqueTownNamesTyped": 66632,
-    "townsNeedingExactRowPath": 79,
-    "eponymousTownsAssertedSelectable": 7,
-    "unexplainableTownNames": 0,
-    "namedRegionsTypedThroughChat": 3736,
-    "namedRegionsCoveredByTheCollisionTestInstead": 7,
-    "regionlessListsDriven": ["AW", "BL", "CC", "CW", "CX", "EH", "FK", "GI", "GS", "MF", "NF", "NU", "PN", "SG", "SX", "TC", "VA", "VG"],
-    "unknownTownCensus": { "cases": 2151, "countries": 245, "failures": 0, "deferredToEvidenceAnswer": 54, "nowAlsoInNpmTest": true },
-    "screenedCropBranches": { "none": 67, "single": 12, "comparable": 166 },
-    "guidedFlowOutcomes": { "terminal": 245, "handoff": 0 }
-  },
-  "nonsenseTownCensus": {
-    "cases": 2151,
-    "countries": 245,
-    "failures": 0,
-    "deferredToEvidenceAnswer": 54
-  },
-  "deepMatrixCensus": {
-    "mode": "deep",
-    "generatedAt": "2026-11-18T07:02:55.818Z",
-    "elapsedMs": 43588,
-    "countries": 245,
-    "totalPlaces": 70036,
-    "matchedByShortReply": 66546,
-    "eponymousNames": 7,
-    "eponymousSelected": 7,
-    "tooLongForShortReply": 79,
-    "totalRegions": 3743,
-    "regionsSelected": 3743,
-    "countryOnlyChecked": 250,
-    "defects": [],
-    "ambiguousCountryNames": [],
-    "flowStatuses": {
-      "terminal": 245
-    }
-  },
-  "eponymousTownChecks": [
-    {
-      "country": "CO",
-      "name": "Colombia",
-      "selected": true,
-      "reply": "Colombia is selected as a town point. Choose the specific field; the t"
-    },
-    {
-      "country": "DJ",
-      "name": "Djibouti",
-      "selected": true,
-      "reply": "Djibouti is selected as a town point. Choose the specific field; the t"
-    },
-    {
-      "country": "LU",
-      "name": "Luxembourg",
-      "selected": true,
-      "reply": "Luxembourg is selected as a town point. Choose the specific field; the"
-    },
-    {
-      "country": "MC",
-      "name": "Monaco",
-      "selected": true,
-      "reply": "Monaco is selected as a town point. Choose the specific field; the tow"
-    },
-    {
-      "country": "MZ",
-      "name": "Mozambique",
-      "selected": true,
-      "reply": "Mozambique is selected as a town point. Choose the specific field; the"
-    },
-    {
-      "country": "SM",
-      "name": "San Marino",
-      "selected": true,
-      "reply": "San Marino is selected as a town point. Choose the specific field; the"
-    },
-    {
-      "country": "TM",
-      "name": "Türkmenistan",
-      "selected": true,
-      "reply": "Türkmenistan is selected as a town point. Choose the specific field; t"
-    }
+  "uniqueTownNamesTyped": 66632,
+  "townsNeedingExactRowPath": 79,
+  "eponymousTownsAssertedSelectable": 7,
+  "unexplainableTownNames": 0,
+  "namedRegionsTypedThroughChat": 3736,
+  "namedRegionsCoveredByTheCollisionTestInstead": 7,
+  "regionlessListsDriven": [
+   "AW",
+   "BL",
+   "CC",
+   "CW",
+   "CX",
+   "EH",
+   "FK",
+   "GI",
+   "GS",
+   "MF",
+   "NF",
+   "NU",
+   "PN",
+   "SG",
+   "SX",
+   "TC",
+   "VA",
+   "VG"
   ],
-  "longNameVerifiedThroughEngine": "79/79",
-  "flows": [
-    {
-      "country": "AD",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "AE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "AF",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "AG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "AI",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "AL",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "AM",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "AO",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "AR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "AS",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "AT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "AU",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "AW",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "AX",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "AZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BB",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BD",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BF",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BH",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BI",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "BJ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BL",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "BM",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "BN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BO",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BQ",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "BR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BS",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BW",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BY",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "BZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CC",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "CD",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CF",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "CG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CH",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CI",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CK",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "CL",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CM",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CO",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CU",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CV",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CW",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "CX",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "CY",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "CZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "DE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "DJ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "DK",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "DM",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "DO",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "DZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "EC",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "EE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "EG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "EH",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "ER",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "ES",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "ET",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "FI",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "FJ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "FK",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "FM",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "FO",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "FR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "GA",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GB",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "GD",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "GE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "GF",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GG",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GH",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "GI",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "GL",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GM",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "GP",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GQ",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "GS",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "GT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "GU",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GW",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "GY",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "HK",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "HN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "HR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "HT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "HU",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "ID",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "IE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "IL",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "IM",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "IN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "IQ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "IR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "IS",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "IT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "JE",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "JM",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "JO",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "JP",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "KE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "KG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "KH",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "KI",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "KM",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "KN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "KP",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "KR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "KW",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "KY",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "KZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "LA",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "LB",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "LC",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "LI",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "LK",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "LR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "LS",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "LT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "LU",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "LV",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "LY",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MC",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "MD",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "ME",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MF",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "MG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MH",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "MK",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "ML",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MM",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "MN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MO",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "MP",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "MQ",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "MR",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "MS",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "MT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MU",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MV",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MW",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MX",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MY",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "MZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NC",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "NE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NF",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "NG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NI",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NL",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NO",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NP",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "NU",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "NZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "OM",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PF",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PH",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PK",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PL",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PM",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "PN",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "PR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PS",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "PW",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "PY",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "QA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "RE",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "RO",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "RS",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "RU",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "RW",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SB",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "SC",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "SD",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SG",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "SH",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "SI",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SJ",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "SK",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SL",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SM",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "SN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SO",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SS",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "ST",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SV",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SX",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "SY",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "SZ",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "TC",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "TD",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "TF",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "TG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "TH",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "TJ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "TK",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "TL",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "TM",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "TN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "TO",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "TR",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "TT",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "TV",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "TW",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "TZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "UA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "UG",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "US",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "UY",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "UZ",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "VA",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "VC",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "VE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "VG",
-      "status": "terminal",
-      "replies": 4
-    },
-    {
-      "country": "VI",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "VN",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "VU",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "WF",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "WS",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "XK",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "YE",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "YT",
-      "status": "terminal",
-      "replies": 5
-    },
-    {
-      "country": "ZA",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "ZM",
-      "status": "terminal",
-      "replies": 6
-    },
-    {
-      "country": "ZW",
-      "status": "terminal",
-      "replies": 6
-    }
-  ],
-  "browserProbe": {
-    "tool": "scripts/chat-place-probe.mjs (Chrome, chat only, field lookups blocked; PROBE_PORT points at the served build)",
-    "beforeFix": {
-      "commit": "5b4cf29",
-      "summary": {
-        "cases": 16,
-        "eponymousTownCases": 7,
-        "countryNameCases": 9,
-        "failures": 1,
-        "pageErrors": 0,
-        "townsSelectedAsTownPoints": 7,
-        "honestReplies": 8
-      },
-      "log": "docs/evidence/eponymous-and-country-name-probe-2026-11-18.log (original: artifacts/final-quality/eponymous-and-country-name-probe-2026-11-18.log)",
-      "failedCase": {
-        "code": "ST",
-        "reply": "São Tomé is selected as a town point. Choose the specific field; the town itself is not fa"
-      }
-    },
-    "afterFix": {
-      "commit": "cbeff6b",
-      "summary": {
-        "cases": 16,
-        "eponymousTownCases": 7,
-        "countryNameCases": 9,
-        "failures": 0,
-        "pageErrors": 0,
-        "townsSelectedAsTownPoints": 7,
-        "honestReplies": 9
-      },
-      "log": "docs/evidence/eponymous-and-country-name-probe-2026-11-18-final.log",
-      "countryNameReplies": [
-        {
-          "code": "FR",
-          "reply": "\"France\" is the country, not one of its regions. Tap a region below, type its name here, o"
-        },
-        {
-          "code": "JP",
-          "reply": "\"Japan\" is the country, not one of its regions. Tap a region below, type its name here, or"
-        },
-        {
-          "code": "BR",
-          "reply": "\"Brazil\" is the country, not one of its regions. Tap a region below, type its name here, o"
-        },
-        {
-          "code": "DE",
-          "reply": "\"Germany\" is the country, not one of its regions. Tap a region below, type its name here, "
-        },
-        {
-          "code": "KE",
-          "reply": "\"Kenya\" is the country, not one of its regions. Tap a region below, type its name here, or"
-        },
-        {
-          "code": "GS",
-          "reply": "\"South Georgia & South Sandwich Islands\" is the country, not one of its towns. Tap a town "
-        },
-        {
-          "code": "ST",
-          "reply": "\"São Tomé & Príncipe\" is the country, not one of its regions. Tap a region below, type its"
-        },
-        {
-          "code": "AQ",
-          "reply": "\"Antarctica\" is the country, and its saved place list holds no towns or regions to choose "
-        },
-        {
-          "code": "GP",
-          "reply": "Guadeloupe is selected. Now choose a town in the Town list in step 1, or type its name her"
-        }
-      ]
-    },
-    "executedFrom": "the identical code as artifacts/tmp/eponymous-and-country-name-probe.mjs, which is the path these two runs were executed from"
+  "unknownTownCensus": {
+   "cases": 2151,
+   "countries": 245,
+   "failures": 0,
+   "deferredToEvidenceAnswer": 54,
+   "nowAlsoInNpmTest": true
+  },
+  "screenedCropBranches": {
+   "none": 67,
+   "single": 12,
+   "comparable": 166
+  },
+  "guidedFlowOutcomes": {
+   "terminal": 245,
+   "handoff": 0
   }
+ },
+ "nonsenseTownCensus": {
+  "cases": 2151,
+  "countries": 245,
+  "failures": 0,
+  "deferredToEvidenceAnswer": 54
+ },
+ "deepMatrixCensus": {
+  "mode": "deep",
+  "generatedAt": "2026-11-18T07:02:55.818Z",
+  "elapsedMs": 43588,
+  "countries": 245,
+  "totalPlaces": 70036,
+  "matchedByShortReply": 66546,
+  "eponymousNames": 7,
+  "eponymousSelected": 7,
+  "tooLongForShortReply": 79,
+  "totalRegions": 3743,
+  "regionsSelected": 3743,
+  "countryOnlyChecked": 250,
+  "defects": [],
+  "ambiguousCountryNames": [],
+  "flowStatuses": {
+   "terminal": 245
+  }
+ },
+ "eponymousTownChecks": [
+  {
+   "country": "CO",
+   "name": "Colombia",
+   "selected": true,
+   "reply": "Colombia is selected as a town point. Choose the specific field; the t"
+  },
+  {
+   "country": "DJ",
+   "name": "Djibouti",
+   "selected": true,
+   "reply": "Djibouti is selected as a town point. Choose the specific field; the t"
+  },
+  {
+   "country": "LU",
+   "name": "Luxembourg",
+   "selected": true,
+   "reply": "Luxembourg is selected as a town point. Choose the specific field; the"
+  },
+  {
+   "country": "MC",
+   "name": "Monaco",
+   "selected": true,
+   "reply": "Monaco is selected as a town point. Choose the specific field; the tow"
+  },
+  {
+   "country": "MZ",
+   "name": "Mozambique",
+   "selected": true,
+   "reply": "Mozambique is selected as a town point. Choose the specific field; the"
+  },
+  {
+   "country": "SM",
+   "name": "San Marino",
+   "selected": true,
+   "reply": "San Marino is selected as a town point. Choose the specific field; the"
+  },
+  {
+   "country": "TM",
+   "name": "Türkmenistan",
+   "selected": true,
+   "reply": "Türkmenistan is selected as a town point. Choose the specific field; t"
+  }
+ ],
+ "longNameVerifiedThroughEngine": "79/79",
+ "flows": [
+  {
+   "country": "AD",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "AE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "AF",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "AG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "AI",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "AL",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "AM",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "AO",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "AR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "AS",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "AT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "AU",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "AW",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "AX",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "AZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BB",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BD",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BF",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BH",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BI",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "BJ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BL",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "BM",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "BN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BO",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BQ",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "BR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BS",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BW",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BY",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "BZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CC",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "CD",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CF",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "CG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CH",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CI",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CK",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "CL",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CM",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CO",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CU",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CV",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CW",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "CX",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "CY",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "CZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "DE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "DJ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "DK",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "DM",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "DO",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "DZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "EC",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "EE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "EG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "EH",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "ER",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "ES",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "ET",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "FI",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "FJ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "FK",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "FM",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "FO",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "FR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "GA",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GB",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "GD",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "GE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "GF",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GG",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GH",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "GI",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "GL",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GM",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "GP",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GQ",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "GS",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "GT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "GU",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GW",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "GY",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "HK",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "HN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "HR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "HT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "HU",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "ID",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "IE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "IL",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "IM",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "IN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "IQ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "IR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "IS",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "IT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "JE",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "JM",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "JO",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "JP",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "KE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "KG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "KH",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "KI",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "KM",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "KN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "KP",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "KR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "KW",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "KY",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "KZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "LA",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "LB",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "LC",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "LI",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "LK",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "LR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "LS",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "LT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "LU",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "LV",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "LY",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MC",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "MD",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "ME",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MF",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "MG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MH",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "MK",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "ML",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MM",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "MN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MO",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "MP",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "MQ",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "MR",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "MS",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "MT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MU",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MV",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MW",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MX",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MY",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "MZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NC",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "NE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NF",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "NG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NI",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NL",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NO",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NP",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "NU",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "NZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "OM",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PF",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PH",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PK",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PL",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PM",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "PN",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "PR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PS",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "PW",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "PY",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "QA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "RE",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "RO",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "RS",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "RU",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "RW",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SB",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "SC",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "SD",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SG",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "SH",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "SI",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SJ",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "SK",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SL",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SM",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "SN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SO",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SS",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "ST",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SV",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SX",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "SY",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "SZ",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "TC",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "TD",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "TF",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "TG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "TH",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "TJ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "TK",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "TL",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "TM",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "TN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "TO",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "TR",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "TT",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "TV",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "TW",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "TZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "UA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "UG",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "US",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "UY",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "UZ",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "VA",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "VC",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "VE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "VG",
+   "status": "terminal",
+   "replies": 4
+  },
+  {
+   "country": "VI",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "VN",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "VU",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "WF",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "WS",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "XK",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "YE",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "YT",
+   "status": "terminal",
+   "replies": 5
+  },
+  {
+   "country": "ZA",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "ZM",
+   "status": "terminal",
+   "replies": 6
+  },
+  {
+   "country": "ZW",
+   "status": "terminal",
+   "replies": 6
+  }
+ ],
+ "browserProbe": {
+  "tool": "scripts/chat-place-probe.mjs (Chrome, chat only, field lookups blocked; PROBE_PORT points at the served build)",
+  "beforeFix": {
+   "commit": "5b4cf29",
+   "summary": {
+    "cases": 16,
+    "eponymousTownCases": 7,
+    "countryNameCases": 9,
+    "failures": 1,
+    "pageErrors": 0,
+    "townsSelectedAsTownPoints": 7,
+    "honestReplies": 8
+   },
+   "log": "docs/evidence/eponymous-and-country-name-probe-2026-11-18.log (original: artifacts/final-quality/eponymous-and-country-name-probe-2026-11-18.log)",
+   "failedCase": {
+    "code": "ST",
+    "reply": "São Tomé is selected as a town point. Choose the specific field; the town itself is not fa"
+   }
+  },
+  "afterFix": {
+   "commit": "cbeff6b",
+   "summary": {
+    "cases": 16,
+    "eponymousTownCases": 7,
+    "countryNameCases": 9,
+    "failures": 0,
+    "pageErrors": 0,
+    "townsSelectedAsTownPoints": 7,
+    "honestReplies": 9
+   },
+   "log": "docs/evidence/eponymous-and-country-name-probe-2026-11-18-final.log",
+   "countryNameReplies": [
+    {
+     "code": "FR",
+     "reply": "\"France\" is the country, not one of its regions. Tap a region below, type its name here, o"
+    },
+    {
+     "code": "JP",
+     "reply": "\"Japan\" is the country, not one of its regions. Tap a region below, type its name here, or"
+    },
+    {
+     "code": "BR",
+     "reply": "\"Brazil\" is the country, not one of its regions. Tap a region below, type its name here, o"
+    },
+    {
+     "code": "DE",
+     "reply": "\"Germany\" is the country, not one of its regions. Tap a region below, type its name here, "
+    },
+    {
+     "code": "KE",
+     "reply": "\"Kenya\" is the country, not one of its regions. Tap a region below, type its name here, or"
+    },
+    {
+     "code": "GS",
+     "reply": "\"South Georgia & South Sandwich Islands\" is the country, not one of its towns. Tap a town "
+    },
+    {
+     "code": "ST",
+     "reply": "\"São Tomé & Príncipe\" is the country, not one of its regions. Tap a region below, type its"
+    },
+    {
+     "code": "AQ",
+     "reply": "\"Antarctica\" is the country, and its saved place list holds no towns or regions to choose "
+    },
+    {
+     "code": "GP",
+     "reply": "Guadeloupe is selected. Now choose a town in the Town list in step 1, or type its name her"
+    }
+   ]
+  },
+  "executedFrom": "the identical code as artifacts/tmp/eponymous-and-country-name-probe.mjs, which is the path these two runs were executed from"
+ },
+ "browserMatrixWalk": {
+  "commit": "9d6e9db",
+  "appBuild": "cbeff6b (pre-alias-fix)",
+  "runtime": "headless Chrome, static-preview 4575, Overpass aborted",
+  "cases": 245,
+  "pointsSet": 242,
+  "pageErrors": 0,
+  "defects": 3,
+  "statuses": {
+   "point": 242,
+   "buttonless": 3
+  },
+  "defectCodes": [
+   "HK",
+   "MO",
+   "PS"
+  ],
+  "defectCause": "the other runtime's Intl spelling of the country name resolved to no country and the reply offered no button",
+  "log": "docs/evidence/chat-place-matrix-walk-2026-11-18.log"
+ },
+ "crossEngineSpellingProbe": {
+  "commit": "after alias fix",
+  "codes": 250,
+  "spellingsFromNode": 773,
+  "unrecognisedInChrome": 0,
+  "chromeOwnSpellingNotInNodeList": 4,
+  "log": "docs/evidence/country-spelling-cross-engine-2026-11-18.log"
+ },
+ "matrixWalkAfterFix": {
+  "codes": [
+   "HK",
+   "MO",
+   "PS"
+  ],
+  "cases": 3,
+  "pointsSet": 3,
+  "defects": 0,
+  "pageErrors": 0
+ },
+ "focusedPlaceProbeOnFixedTip": {
+  "log": [
+   "docs/evidence/place-probe-after-alias-fix-2026-11-18.log.gz",
+   "docs/evidence/place-probe-fkfix-2026-11-18.log.gz"
+  ],
+  "firstRun": {
+   "cases": 34,
+   "eponymousTownCases": 7,
+   "countryNameCases": 9,
+   "regionLessCases": 18,
+   "failures": 1,
+   "pageErrors": 0,
+   "townsSelectedAsTownPoints": 25,
+   "honestReplies": 9,
+   "failingRow": {
+    "code": "FK",
+    "assertion": "offersWholeCountry",
+    "expectedFromNodeIntl": "Whole Falkland Islands",
+    "renderedInChrome": "Whole Falkland Islands (Islas Malvinas)",
+    "verdict": "probe-side runtime-dependent assertion, not an app defect"
+   }
+  },
+  "rerunAfterProbeFix": {
+   "cases": 34,
+   "failures": 0,
+   "pageErrors": 0,
+   "townsSelectedAsTownPoints": 25,
+   "honestReplies": 9,
+   "all18RegionLessListsDrivenInChrome": true
+  }
+ },
+ "playwrightChatSliceOnFixedTip": {
+  "specs": [
+   "chat-only-flow",
+   "city-state-chat-flow",
+   "help-and-explanations",
+   "workflow"
+  ],
+  "staticDesktop": {
+   "passed": 17,
+   "failed": 0,
+   "minutes": 1.8
+  },
+  "allFourProjects": {
+   "passed": 68,
+   "failed": 0,
+   "minutes": 6.1
+  },
+  "log": "docs/evidence/e2e-chat-all-projects-fixed-tip-2026-11-18.log.gz",
+  "full180CaseGateReRunAfterAliasFix": false,
+  "offlineSuite": {
+   "tests": 186,
+   "pass": 186,
+   "fail": 0,
+   "skipped": 0,
+   "durationMs": 74467,
+   "log": "docs/evidence/unit-after-alias-fix-2026-11-18.log.gz"
+  },
+  "npmAudit": {
+   "vulnerabilities": 0
+  }
+ }
 }

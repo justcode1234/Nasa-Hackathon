@@ -425,10 +425,41 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   the country, tap "A specific area", then tap only buttons the assistant itself offers (region first,
   then a town, coordinate-suffixed duplicate labels included) and require `#latitude` to equal a saved
   row within 1e-4, classifying each country as `point` or a named defect (`buttonless`,
-  `no-offered-name`, `town-tapped-without-a-point`, `point-from-another-row`, `no-point-in-four-taps`,
-  `crash`); Overpass is aborted because a shared field-service outage is not a chat defect. Its raw log
-  is `artifacts/final-quality/chat-place-matrix-probe-2026-11-18.log` and the executed counts are
-  recorded in the next entry, not here. Nothing was deployed, main is untouched, no NASA portal edit.
+  `no-offered-name`, `town-tapped-without-a-point`, `point-from-another-row`, `no-point-in-five-taps`,
+  `crash`); Overpass is aborted because a shared field-service outage is not a chat defect.
+- **18 Nov, same branch: the full-matrix walk found a real chat dead end in another engine's spelling.**
+  The walk over all 245 lists in Chrome printed **245 cases, 242 points, 0 page errors, 3 defects**
+  (`artifacts/final-quality/chat-place-matrix-probe-2026-11-18.log`, statuses `{"point":242,
+  "buttonless":3}`). The three were HK "Hong Kong SAR China", MO "Macao SAR China" and PS "Palestinian
+  Territories": the country never resolved, so the chat answered "Which country should we look at?" with
+  **no button**, and step 1 could not be finished from the chat. Root cause is that those spellings come
+  from *this* runtime's Intl table and not Chrome's, so the Node recognition test resolved them from the
+  table and could never see the gap. Fixed by naming them in the runtime-independent `aliases` list in
+  `public/js/lib/countries.js` (`hong kong sar china`, `macao sar china`, `palestinian territories`), and
+  `tests/country-name-recognition.test.js` now asserts the alias list itself, not only resolution, so a
+  move to the shorter table cannot hide it. Re-walked in Chrome: **3/3 real town points, 0 defects**.
+  The new `scripts/country-spelling-cross-engine-probe.mjs` then fed all **773** Node-generated spellings
+  for **250** codes into Chrome's own recognition module: **0 unrecognised**. Because this changed app
+  code, the 180-case gate above no longer describes the tip on its own; the browser evidence that does
+  is the next bullet. The tiny word LM is again **not** retrained — `scripts/build-mini-corpus.js` reads
+  `models/mini-development-questions.json` and `tests/qa/prompts.json` only, and no reply label or
+  vocabulary entry changed. Nothing was deployed, main is untouched, no NASA portal edit.
+- **18 Nov, same branch: re-running the checks on the alias-fixed build, and one probe-side bug.**
+  `npm test` **186/186, 0 skipped (74.5 s)** and `npm audit` **0 vulnerabilities** on the fixed tip. The
+  34-session focused browser walk (`scripts/chat-place-probe.mjs`) printed **1 failure, FK**: the page
+  offered `Whole Falkland Islands (Islas Malvinas)` — Chrome's Intl spelling — while the probe compared
+  against `` `Whole ${COUNTRY_NAMES.of('FK')}` `` built in Node, whose label is `Falkland Islands`. The
+  button existed and was tappable, so the defect was the assertion's runtime dependency, not the app; the
+  probe now checks the whole-country route by shape and records its label
+  (`docs/evidence/place-probe-after-alias-fix-2026-11-18.log.gz` before,
+  `place-probe-fkfix-2026-11-18.log.gz` after). Corrected run: **34 cases, 0 failures, 0 page errors,
+  25 towns selected as town points, 9 honest country-name replies, all 18 region-less lists driven in
+  Chrome** — which supersedes the earlier note that only Singapore had browser-level region-less proof.
+  Playwright chat/workflow specs on that build: **17 passed** static-desktop, then **68 passed (6.1 min)**
+  across all four projects (`docs/evidence/e2e-chat-all-projects-fixed-tip-2026-11-18.log.gz`). The
+  complete 180-case `npm run test:e2e` has **not** been re-run since the alias change, so 180/180 must
+  not be quoted for this tip; the unverified list is unchanged (real phones/touch, Safari/WebKit,
+  microphones and noise, audible read-aloud, independent agronomic review, live Overpass discovery).
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

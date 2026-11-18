@@ -1152,3 +1152,97 @@ assistant module offline; only Singapore's equivalent has a browser-level assert
 (`tests/e2e/help-and-explanations.spec.js`, "Singapore skips unnamed regions"), so a browser-specific
 rendering difference in those seventeen remains unverified.
 
+
+## 18 November 2026 - the clean browser gate on the current tip, and a chat walk of every saved list
+
+### Why this step
+
+The goal asks for real-browser chat probes over the full matrix, not only the 16-34 country sessions
+probed so far, and for the Playwright gate's own number on the code this branch now ships.
+
+### Executed
+
+* `npm run test:e2e` on the committed code → **180 passed, 0 failed, 0 skipped (35.8 min)**, kept at
+  [evidence/e2e-full-suite-2026-11-18.log.gz](evidence/e2e-full-suite-2026-11-18.log.gz). It was launched
+  on `cbeff6b`; the five commits since touch only tests, scripts and docs, because
+  `git diff --name-only cbeff6b..HEAD -- public server dist` returns **0 files**. The same 180 cases
+  therefore describe the app code at the current tip.
+* `npm audit` on the current tip → **0 vulnerabilities**, no `package.json` or lockfile change.
+* `scripts/chat-place-matrix-probe.mjs` was written for this: it opens a fresh Chrome page per saved
+  list, types the country, taps "A specific area", then taps only what the assistant offers, choosing the
+  row level the question actually asks for ("Which state or region of X?" → a region row; "Which town
+  in …/Now choose a town/first three towns" → a town row), and requires `#latitude` to equal a saved row
+  within 1e-4. The first draft preferred a town row by name and so misread **17 countries** as defects:
+  at a region question a label like "Andorra la Vella", "Abu Dhabi", "Yerevan" or "Plovdiv" *is* a region
+  row too, and the app answered correctly while the probe judged it wrongly. The classifier is the fix;
+  no app code changed for it. A six-country smoke run (AD, SG, JP, TV, ST, PH) then set a real point in
+  6/6 with 0 page errors, SG in one tap (region-less) and the others in two.
+* Full run over all **245** saved lists in real Chrome, 5 concurrent pages, Overpass aborted:
+  **245 cases, 242 points set, 0 page errors, 3 defects** — `statuses: {"point": 242, "buttonless": 3}`
+  (`artifacts/final-quality/chat-place-matrix-probe-2026-11-18.log`). Every defect was the same class and
+  it was a real one: HK "Hong Kong SAR China", MO "Macao SAR China" and PS "Palestinian Territories"
+  reached *"Which country should we look at?"* with **no button at all**, so the chat could not finish
+  step 1 for those spellings. The wording is what Node's Intl prints and Chrome's does not, so the
+  Node-only recognition test resolved it from its own table and never saw the gap.
+* Fix, in the runtime-independent alias list rather than the matching rules:
+  `hong kong sar china`, `macao sar china` and `palestinian territories` are now named spellings for
+  HK, MO and PS on every engine ([public/js/lib/countries.js](../public/js/lib/countries.js)). Re-run of
+  the same walk for those three codes: **3/3 points, 0 defects, 0 page errors** (PS → Al Burayj @
+  31.43944). Durable coverage: `tests/country-name-recognition.test.js` now asserts the **aliases
+  themselves** contain those spellings, which an Intl-only assertion cannot do on Node.
+* New cross-engine check `scripts/country-spelling-cross-engine-probe.mjs` loads the app's own
+  `/js/lib/countries.js` inside Chrome and feeds it all **773** spellings the Node harness generates for
+  the **250** codes: **0 unrecognised in Chrome**
+  (`artifacts/final-quality/country-spelling-cross-engine-2026-11-18.log`). It also reports the 4 codes
+  whose Chrome-only short label is absent from Node's generated list; that direction is harmless because
+  each engine's own label is always in its own table.
+### Not verified by these checks
+
+The browser gate above ran on `cbeff6b`; the alias fix changes app code, so a fresh full
+`npm run test:e2e` on the fixed tip is required before that 180-case number can be quoted for it.
+The checks that do cover the fixed tip are recorded in the next section.
+
+## 18 November 2026 - the offline suite, the region-less browser walk and one probe-side correction, all on the alias-fixed code
+
+### Why this step
+
+The three alias strings are app code, so the 180-case gate above no longer describes the tip by itself.
+This section records what was actually re-run after the change.
+
+### Executed on the fixed tip
+
+* `npm test` → **186 tests, 186 passed, 0 failed, 0 skipped (74.5 s)**, log
+  `artifacts/final-quality/unit-after-alias-fix-2026-11-18.log`. The count includes the new
+  `tests/country-name-recognition.test.js` case that asserts the alias list itself, which passes only
+  because of the fix.
+* `npm audit` → **0 vulnerabilities** (re-run on the current tip, no dependency change).
+* `scripts/chat-place-probe.mjs`, the 34-session focused browser walk → **34 cases, 7 eponymous towns,
+  9 country-name-at-a-place-question replies, 18 region-less lists, 0 page errors, 25 towns selected as
+  town points, 9 honest replies, 1 failure**.
+* That one failure is **FK**, and it was the probe's expectation, not the app: the page offered
+  `Whole Falkland Islands (Islas Malvinas)` — Chrome's Intl spelling of the country — while the probe
+  compared with `` `Whole ${COUNTRY_NAMES.of('FK')}` `` built in Node, whose label is
+  `Falkland Islands`. The button existed, was worded from the app's own runtime table, and was tappable;
+  the check was runtime-dependent in exactly the way the cross-engine probe above had just documented.
+  The probe now tests the route by shape (`/^Whole\s+\S/`) and records the actual label as evidence
+  ([scripts/chat-place-probe.mjs](../scripts/chat-place-probe.mjs)). No app code changed for it.
+* Re-run of the same 34 sessions with the corrected assertion → **34 cases, 0 failures, 0 page errors,
+  25 towns selected as town points, 9 honest replies**
+  (`artifacts/final-quality/place-probe-fkfix-2026-11-18.log`), served from the bundle that contains the
+  alias fix (`grep -c "hong kong sar china" dist/client/js/lib/countries.js` → 1).
+* The Playwright chat/workflow specs (`chat-only-flow`, `city-state-chat-flow`,
+  `help-and-explanations`, `workflow`) on that build: static-desktop → **17 passed, 0 failed (1.8 min)**,
+  and the same four specs across all four projects (static-desktop, static-mobile, node-desktop,
+  node-mobile) → **68 passed, 0 failed (6.1 min)**, `docs/evidence/e2e-chat-all-projects-fixed-tip-2026-11-18.log`.
+  This is the chat slice of the release gate on the fixed tip; the complete 180-case gate has **not** been
+  re-run since the three alias strings changed, so the 180 figure above must not be quoted as if it had.
+
+### One earlier sentence is now superseded
+
+The 18-Nov section on the region-less lists said that "only Singapore's equivalent has a browser-level
+assertion". That is no longer true: the 34-session walk above drives **all eighteen** region-less lists in
+real Chrome (AW BL CC CW CX EH FK GI GS MF NU PN SG SX TC VA VG plus the whole-country route), and the
+245-list matrix walk drives every saved list end to end. The offline-only claim at
+`docs/validation.md` "Not verified here either" of that earlier section should be read with this
+correction.
+

@@ -1,0 +1,257 @@
+ok AF: 2 taps → Gereshk @ 31.82089
+ok AI: 2 taps → Blowing Point Village @ 18.17648
+ok AD: 2 taps → Canillo @ 42.5676
+ok AG: 2 taps → Piggotts @ 17.11667
+ok AE: 2 taps → Abu Dhabi @ 24.45118
+ok AL: 2 taps → Berat @ 40.70583
+ok AO: 2 taps → Balombo @ -12.35426
+ok AM: 2 taps → Chambarak @ 40.59655
+ok AR: 2 taps → Adrogué @ -34.80041
+ok AS: 2 taps → Pago Pago @ -14.27806
+ok AT: 2 taps → Amstetten @ 48.1229
+ok AU: 2 taps → Abbotsford @ -33.84889
+ok AW: 1 taps → Alto Vista @ 12.5705
+ok AX: 2 taps → Mariehamn @ 60.09726
+ok AZ: 2 taps → 28 May @ 40.45761
+ok BA: 2 taps → Banovići @ 44.40596
+ok BB: 2 taps → Oistins @ 13.07067
+ok BD: 2 taps → Aich Noadda Shahibag @ 23.85
+ok BE: 2 taps → Anderlecht @ 50.83619
+ok BF: 2 taps → Bama @ 12.03946
+ok BG: 2 taps → Asenovgrad @ 42.01667
+ok BH: 2 taps → Al Muharraq @ 26.25722
+ok BI: 2 taps → Gitega @ -3.42708
+ok BL: 1 taps → Gustavia @ 17.89618
+ok BJ: 2 taps → Boukoumbé @ 10.17711
+ok BM: 2 taps → Devonshire Parish @ 32.30582
+ok BN: 2 taps → Kampung Panaga @ 4.6082
+ok BO: 2 taps → Aiquile @ -18.20408
+ok BQ: 2 taps → Kralendijk @ 12.15
+ok BR: 2 taps → Abaré @ -8.72028
+ok BS: 2 taps → Killarney @ 25.05
+ok BW: 2 taps → Bobonong @ -21.96554
+ok BT: 2 taps → Phuntsholing @ 26.85164
+ok BY: 2 taps → Astraviec @ 54.61378
+ok BZ: 2 taps → Belize City @ 17.49952
+ok CA: 2 taps → Abbotsford @ 49.05798
+ok CC: 1 taps → West Island @ -12.15681
+ok CD: 2 taps → Boma @ -5.85098
+ok CF: 2 taps → Bobangui @ 4.05
+ok CG: 2 taps → Bouansa @ -4.21861
+ok CH: 2 taps → Aarau @ 47.39254
+ok CI: 2 taps → Adjaméné @ 4.76645
+ok CK: 2 taps → Avarua @ -21.2075
+ok CL: 2 taps → Algarrobo @ -33.36952
+ok CM: 2 taps → Babanki @ 6.11667
+ok CN: 2 taps → Amuquhu @ 34.81145
+ok CO: 2 taps → Abejorral @ 5.78928
+ok CR: 2 taps → Alajuela @ 10.01723
+ok CU: 2 taps → Alamar @ 23.15794
+ok CV: 2 taps → Espargos @ 16.75524
+ok CW: 1 taps → Bandabou @ 12.27177
+ok CX: 1 taps → Flying Fish Cove @ -10.42172
+ok CY: 2 taps → Derýneia @ 35.06484
+ok CZ: 2 taps → Bohnice @ 50.13333
+ok DE: 2 taps → Aalen @ 48.83777
+ok DJ: 2 taps → Ali Sabih @ 11.15583
+ok DK: 2 taps → Albertslund @ 55.65691
+ok DM: 2 taps → Marigot @ 15.53743
+ok DO: 2 taps → Azua @ 18.45319
+ok DZ: 2 taps → Algiers @ 36.73225
+ok EC: 2 taps → Arenillas @ -3.55399
+ok EE: 2 taps → Haabersti @ 59.42334
+ok EG: 2 taps → Aga @ 30.94162
+ok ER: 2 taps → Adi Keyh @ 14.84444
+ok EH: 1 taps → Boujdour @ 26.13073
+ok ES: 2 taps → Abrantes @ 40.37898
+ok ET: 2 taps → Abomsa @ 9.98333
+ok FJ: 2 taps → Lami @ -18.11094
+ok FK: 1 taps → Stanley @ -51.69382
+ok FI: 2 taps → Ala-Malmi @ 60.24818
+ok FM: 2 taps → Tofol @ 5.32479
+ok FO: 2 taps → Klaksvík @ 62.22655
+ok FR: 2 taps → Ablon-sur-Seine @ 48.72732
+ok GA: 2 taps → Akanda @ 0.60732
+ok GB: 2 taps → Abbey Road @ 51.5349
+ok GD: 2 taps → Grenville @ 12.12278
+ok GE: 2 taps → Gagra @ 43.27858
+ok GG: 2 taps → Forest Parish @ 49.42983
+ok GF: 2 taps → Apatou @ 5.15526
+ok GH: 2 taps → Accra @ 5.55602
+ok GI: 1 taps → Gibraltar @ 36.14474
+ok GL: 2 taps → Qaqortoq @ 60.71839
+ok GM: 2 taps → Bakau @ 13.47806
+ok GN: 2 taps → Boffa @ 10.16667
+ok GP: 2 taps → Anse-Bertrand @ 16.47239
+ok GQ: 2 taps → Aual @ -1.44556
+ok GR: 2 taps → Alexándreia @ 40.62667
+ok GS: 1 taps → Grytviken @ -54.28111
+ok GT: 2 taps → Acatenango @ 14.55451
+ok GU: 2 taps → Agana Heights Village @ 13.46559
+DEFECT HK: {"code":"HK","countryName":"Hong Kong SAR China","steps":[{"ask":"A specific area","reply":"Which country should we look at? Then we can explore the whole country or a part","buttons":0}],"pageErrors":[],"status":"buttonless","lastReply":"Which country should we look at? Then we can explore the whole country or a particular are","taps":0}
+ok GW: 2 taps → Bissorã @ 12.22306
+ok GY: 2 taps → Corriverton @ 5.933
+ok HN: 2 taps → Baracoa @ 15.77581
+ok HR: 2 taps → Labin @ 45.095
+ok HT: 2 taps → Dessalines @ 19.26177
+ok HU: 2 taps → Battonya @ 46.28333
+ok ID: 2 taps → Adiwerna @ -6.9375
+ok IE: 2 taps → Ballina @ 54.11667
+ok IL: 2 taps → Bat H̱efer @ 32.33432
+ok IM: 2 taps → Andreas @ 54.36667
+ok IN: 2 taps → Abdu Rahiman Nagar @ 11.06983
+ok IQ: 2 taps → Batifa @ 37.17454
+ok IS: 2 taps → Garðabær @ 64.08865
+ok IR: 2 taps → Abadeh @ 31.1608
+ok IT: 2 taps → Acerra @ 40.94477
+ok JE: 2 taps → Le Hocq @ 49.16823
+ok JM: 2 taps → Constant Spring @ 18.05078
+ok JO: 2 taps → Al Khinzīrah @ 31.05056
+ok JP: 2 taps → Abashiri @ 44.02127
+ok KE: 2 taps → Il @ -2.09761
+ok KG: 2 taps → Belovodskoye @ 42.82944
+ok KH: 2 taps → Areaks Tnaot @ 12.36698
+ok KI: 2 taps → Betio Village @ 1.35797
+ok KM: 2 taps → Adda-Douéni @ -12.2925
+ok KN: 2 taps → Nicola Town @ 17.37956
+ok KP: 2 taps → Ayang-ni @ 38.24719
+ok KR: 2 taps → Ansan-si @ 37.32361
+ok KW: 2 taps → Ad Dasmah @ 29.365
+ok KY: 2 taps → George Town @ 19.2866
+ok KZ: 2 taps → Akkol’ @ 53.29617
+ok LA: 2 taps → Ban Bachiang @ 15.25312
+ok LB: 2 taps → Aajaltoûn @ 33.96528
+ok LC: 2 taps → Anse La Raye @ 13.94619
+ok LI: 2 taps → Balzers @ 47.06661
+ok LK: 2 taps → Ambalangoda @ 6.2355
+ok LR: 2 taps → Ganta @ 7.30222
+ok LS: 2 taps → Mabote @ -29.27861
+ok LT: 2 taps → Aleksotas @ 54.88037
+ok LU: 2 taps → Mamer @ 49.6275
+ok LV: 2 taps → Jēkabpils @ 56.49903
+ok LY: 2 taps → Al Abraq @ 32.78991
+ok MA: 2 taps → Agouraï @ 33.63
+ok MC: 2 taps → Jardin Exotique @ 43.73049
+ok MD: 2 taps → Ceadîr-Lunga @ 46.06169
+ok ME: 2 taps → Andrijevica @ 42.73389
+ok MF: 1 taps → Concordia @ 18.06489
+ok MG: 2 taps → Alarobia @ -18.96667
+ok MH: 2 taps → Airuk @ 7.27717
+DEFECT MO: {"code":"MO","countryName":"Macao SAR China","steps":[{"ask":"A specific area","reply":"Which country should we look at? Then we can explore the whole country or a part","buttons":0}],"pageErrors":[],"status":"buttonless","lastReply":"Which country should we look at? Then we can explore the whole country or a particular are","taps":0}
+ok MK: 2 taps → Cegrane @ 41.83889
+ok ML: 2 taps → Bla @ 12.95083
+ok MM: 2 taps → Bogale @ 16.29415
+ok MN: 2 taps → Jargalant @ 46.9267
+ok MP: 2 taps → Saipan @ 15.21233
+ok MQ: 2 taps → Ducos @ 14.57529
+ok MR: 2 taps → Amourj @ 16.10916
+ok MS: 2 taps → Plymouth @ 16.70555
+ok MT: 2 taps → Attard @ 35.88967
+ok MU: 2 taps → Bel Air Rivière Sèche @ -20.25777
+ok MV: 2 taps → Eydhafushi @ 5.10327
+ok MW: 2 taps → Chipeni @ -13.40237
+ok MX: 2 taps → Acolman de Netzahualcóyotl @ 19.63976
+ok MY: 2 taps → Ayer Hitam @ 1.915
+ok MZ: 2 taps → Bilene @ -25.27264
+ok NA: 2 taps → Arandis @ -22.41749
+ok NC: 2 taps → Koné @ -21.05951
+ok NE: 2 taps → Aguié @ 13.50601
+ok NF: 1 taps → Kingston @ -29.05459
+ok NG: 2 taps → Bama @ 11.52134
+ok NI: 2 taps → Chichigalpa @ 12.57039
+ok NL: 2 taps → 's-Hertogenbosch @ 51.69917
+ok NO: 2 taps → Ask @ 60.07131
+ok NP: 2 taps → Bhadrapur @ 26.54404
+ok NR: 2 taps → Yangor @ -0.53536
+ok NU: 1 taps → Alofi @ -19.05294
+ok NZ: 2 taps → Albany @ -36.71667
+ok OM: 2 taps → Adam @ 22.37934
+ok PA: 2 taps → Boquete @ 8.78024
+ok PE: 2 taps → Acolla @ -11.73193
+ok PF: 2 taps → Afaahiti @ -17.74395
+ok PG: 2 taps → Daru @ -9.07786
+ok PH: 2 taps → Abucay @ 14.73347
+ok PK: 2 taps → Abbottabad @ 34.1463
+DEFECT PS: {"code":"PS","countryName":"Palestinian Territories","steps":[{"ask":"A specific area","reply":"Which country should we look at? Then we can explore the whole country or a part","buttons":0}],"pageErrors":[],"status":"buttonless","lastReply":"Which country should we look at? Then we can explore the whole country or a particular are","taps":0}
+ok PL: 2 taps → Bielawa @ 50.69075
+ok PM: 2 taps → Miquelon @ 47.0975
+ok PN: 1 taps → Adamstown @ -25.06597
+ok PR: 2 taps → Cabo Rojo @ 18.08663
+ok PT: 2 taps → Albergaria-a-Velha @ 40.69318
+ok PW: 2 taps → Ngchemiangel @ 7.44613
+ok PY: 2 taps → Caaguazú @ -25.47104
+ok QA: 2 taps → Ad Dawḩah al Jadīdah @ 25.27707
+ok RE: 2 taps → Bras-Panon @ -20.99667
+ok RO: 2 taps → Aninoasa @ 44.96667
+ok RS: 2 taps → Aleksinac @ 43.54167
+ok RU: 2 taps → Abinsk @ 44.87058
+ok RW: 2 taps → Bugaragara @ -1.29289
+ok SA: 2 taps → Abqaiq @ 25.93402
+ok SB: 2 taps → Malango @ -9.69523
+ok SC: 2 taps → Anse Boileau @ -4.71667
+ok SD: 2 taps → Al Hasaheisa @ 14.75264
+ok SG: 1 taps → Admiralty @ 1.44069
+ok SE: 2 taps → Akalla @ 59.41465
+ok SH: 2 taps → Georgetown @ -7.92861
+ok SI: 2 taps → Destrnik @ 46.49254
+ok SJ: 2 taps → Longyearbyen @ 78.22334
+ok SK: 2 taps → Bernolákovo @ 48.20068
+ok SL: 2 taps → Barma @ 8.34959
+ok SM: 2 taps → Acquaviva @ 43.94593
+ok SN: 2 taps → Bargny @ 14.69707
+ok SO: 2 taps → Bandarbeyla @ 9.4942
+ok SR: 2 taps → Alkmaar @ 5.84905
+ok SS: 2 taps → Kapoeta @ 4.77222
+ok ST: 2 taps → Santo António @ 1.63943
+ok SV: 2 taps → Antiguo Cuscatlán @ 13.66492
+ok SX: 1 taps → Cul de Sac @ 18.04852
+ok SY: 2 taps → Al Musayfirah @ 32.63263
+ok SZ: 2 taps → Lobamba @ -26.46667
+ok TC: 1 taps → Cockburn Town @ 21.46122
+ok TD: 2 taps → Benoy @ 8.98327
+ok TF: 2 taps → Port-aux-Français @ -49.34916
+ok TG: 2 taps → Bafilo @ 9.35
+ok TH: 2 taps → Amphoe Sikhiu @ 14.89944
+ok TJ: 2 taps → 20-solagii Istiḳlolijati Toçikiston @ 37.54749
+ok TK: 2 taps → Atafu Village @ -8.54212
+ok TL: 2 taps → Ainaro @ -8.99241
+ok TM: 2 taps → Abadan @ 38.05415
+ok TN: 2 taps → Amiret El Fhoul @ 35.44446
+ok TO: 2 taps → Pangai @ -19.81468
+ok TR: 2 taps → Akseki @ 37.04861
+ok TT: 2 taps → Marabella @ 10.30618
+ok TV: 2 taps → Funafuti @ -8.52425
+ok TW: 2 taps → Jieshoucun @ 26.15485
+ok TZ: 2 taps → Dumila @ -6.38395
+ok UA: 2 taps → Abakumova @ 48.00222
+ok UZ: 2 taps → Andijon @ 40.78338
+ok UY: 2 taps → Atlántida @ -34.7719
+ok UG: 2 taps → Bombo @ 0.57387
+ok US: 2 taps → Acton @ 34.46999
+ok VA: 1 taps → Vatican City @ 41.90268
+ok VC: 2 taps → Georgetown @ 13.28054
+ok VG: 1 taps → Road Town @ 18.42693
+ok VE: 2 taps → Anaco @ 9.42958
+ok VI: 2 taps → Saint Croix @ 17.72751
+ok VN: 2 taps → Ba Dinh @ 21.03652
+ok VU: 2 taps → Luganville @ -15.51989
+ok WS: 2 taps → Leulumoega @ -13.82297
+ok WF: 2 taps → Alo @ -14.31096
+ok XK: 2 taps → Ferizaj @ 42.37056
+ok YE: 2 taps → CPF @ 15.59166
+ok YT: 2 taps → Bandraboua @ -12.7044
+ok ZA: 2 taps → Aberdeen @ -32.47588
+ok ZW: 2 taps → Bindura @ -17.30192
+ok ZM: 2 taps → Chavuma @ -13.06667
+{
+ "cases": 245,
+ "lists": 0,
+ "concurrency": 5,
+ "pointsSet": 242,
+ "pageErrors": 0,
+ "statuses": {
+  "point": 242,
+  "buttonless": 3
+ },
+ "defects": 3
+}

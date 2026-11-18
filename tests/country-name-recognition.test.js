@@ -5,7 +5,7 @@
 // a runtime change, and that the shorter name never swallows a longer one.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { COUNTRY_CODES, COUNTRY_NAMES, countryNameForms, findCountries } from '../public/js/lib/countries.js';
+import { COUNTRY_CODES, COUNTRY_NAMES, aliases, countryNameForms, findCountries } from '../public/js/lib/countries.js';
 import { makeAssistant, textOf } from './helpers/matrix-harness.js';
 
 test('every country spelling the app recognises resolves to that country and to no other', () => {
@@ -46,6 +46,20 @@ test('the spellings another engine or our own sources use still resolve', () => 
   }
   assert.equal(findCountries('Help me plan a rotation in Chinese Taipei').join(), 'TW',
     'the country step cannot be finished from the chat for the FAO/IOC name');
+});
+
+test('the other runtime spellings live in the runtime-independent list, not only in this Intl table', () => {
+  // Measured by the full-matrix Chrome probe on 18 Nov: typing "Hong Kong SAR China", "Macao SAR China"
+  // or "Palestinian Territories" — spellings Node's Intl prints and Chrome's does not — got "Which
+  // country should we look at?" with no button at all. On this runtime those names resolve through Intl
+  // alone, so checking resolution here would pass even if the alias entries were deleted; the aliases
+  // themselves are asserted so the fix survives a move to an engine with the shorter table.
+  const crossRuntime = { HK: 'hong kong sar china', MO: 'macao sar china', PS: 'palestinian territories' };
+  for (const [code, name] of Object.entries(crossRuntime)) {
+    assert.ok((aliases[code] ?? []).includes(name), `"${name}" is not in the alias list for ${code}`);
+    assert.equal(findCountries(`Help me plan a rotation in ${name.replace(/\b\w/g, letter => letter.toUpperCase())}`).join(),
+      code, `"${name}" does not resolve to ${code} alone`);
+  }
 });
 
 test('a shorter country name never absorbs a longer one, and no other wording invents a country', () => {

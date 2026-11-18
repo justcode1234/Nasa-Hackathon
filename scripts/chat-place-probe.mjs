@@ -141,7 +141,11 @@ for (const row of regionLess) {
     outcome.saysNoRegions = /no named regions/i.test(area.reply);
     outcome.saysNotAdvice = /not a recommendation/i.test(area.reply);
     outcome.offersSavedTown = row.towns.some(town => area.buttons.includes(town.name));
-    outcome.offersWholeCountry = area.buttons.includes(`Whole ${row.countryName}`);
+    // The app words the whole-country button with its own runtime's Intl spelling, which is not always the
+    // spelling this probe process prints (Chrome says "Falkland Islands (Islas Malvinas)", Node says
+    // "Falkland Islands"), so the route is checked by shape and its actual label is kept as evidence.
+    outcome.wholeCountryButton = area.buttons.find(label => /^Whole\s+\S/.test(label)) ?? null;
+    outcome.offersWholeCountry = Boolean(outcome.wholeCountryButton);
     const noise = await s.send('Zzyzxvale');
     outcome.noiseReply = noise.reply.slice(0, 90);
     outcome.noiseButtons = noise.buttons.length;
@@ -178,5 +182,6 @@ console.log(JSON.stringify({
   townsSelectedAsTownPoints: outcomes.filter(row => row.selectedAsTown).length,
   honestReplies: outcomes.filter(row => row.group === 'country name answered at a place question' && !fail(row)).length
 }, null, 1));
+if (failures.length) console.log(failures.map(row => JSON.stringify(row, null, 1)).join('\n'));
 for (const row of outcomes) console.log(`${row.group} ${row.code}: ${JSON.stringify(row).slice(0, 420)}`);
 if (failures.length) process.exitCode = 1;

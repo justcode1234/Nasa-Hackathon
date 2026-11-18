@@ -10,7 +10,10 @@ export const regionPhrase = value => normalizeName(value)
   .normalize('NFD').replace(/\p{M}/gu, '')
   .replace(/\b(?:st|ste|sint)\b/g, 'saint')
   .split(' ').filter(word => word !== 'and' && word !== 'of' && word !== 'the').join(' ');
-const aliases = { SG: ['singapore'], US: ['united states', 'united states of america', 'usa', 'u s a'],
+// Exported so a test can prove the other-runtime spellings are in the runtime-independent list itself:
+// on Node those names also happen to come from Intl, so resolving them alone would not catch their
+// removal here.
+export const aliases = { SG: ['singapore'], US: ['united states', 'united states of america', 'usa', 'u s a'],
   GB: ['united kingdom', 'uk', 'britain', 'great britain'], AE: ['uae', 'united arab emirates'],
   KR: ['south korea'], KP: ['north korea'], CI: ['ivory coast'], CZ: ['czech republic'],
   // "South Georgia" is not the country Georgia; the shorter dependent name must win the span.
@@ -22,8 +25,12 @@ const aliases = { SG: ['singapore'], US: ['united states', 'united states of ame
   // "Viet Nam" and "North Macedonia", and "Chinese Taipei" is the FAO/IOC name for TW that no Intl
   // table returns. Cabo Verde, Holy See, Turkey, Burma, East Timor and Swaziland are official or
   // recently-replaced ISO 3166 short names where the table prints another form.
-  TW: ['chinese taipei'], HK: ['hong kong', 'china, hong kong sar'], MO: ['macao', 'macau', 'china, macao sar'],
-  PS: ['palestine'], VN: ['viet nam'], MK: ['macedonia'], CV: ['cabo verde'], VA: ['holy see'],
+  TW: ['chinese taipei'], HK: ['hong kong', 'hong kong sar china', 'china, hong kong sar'],
+  MO: ['macao', 'macau', 'macao sar china', 'china, macao sar'],
+  // Measured in Chrome on the full-matrix probe: a farmer who types the spelling another runtime prints
+  // ("Hong Kong SAR China", "Macao SAR China", "Palestinian Territories") got a reply with no button,
+  // because only this runtime's short name is in the table and the long form was not in the alias list.
+  PS: ['palestine', 'palestinian territories'], VN: ['viet nam'], MK: ['macedonia'], CV: ['cabo verde'], VA: ['holy see'],
   TR: ['turkey'], MM: ['burma'], TL: ['east timor'], SZ: ['swaziland'],
   // The dependent territories whose ISO spelling puts the qualifier first or last, so no table's phrase
   // order matches what a farmer actually types ("Virgin Islands, U.S." is the ISO 3166-1 short name).
