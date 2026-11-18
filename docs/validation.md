@@ -1617,6 +1617,56 @@ untouched, and no NASA portal edit was made. The scan covers automated WCAG A/AA
 rules at one desktop viewport in headless Chrome; it is not a claim of accessibility for real phones,
 Safari/WebKit or assistive-technology users.
 
+### 15. The 320 px phone and landscape chat layout had been measured but never asserted
+
+The chat panel is `position: fixed` with `width: min(440px, calc(100vw - 2rem))` and a separate
+`@media` rule at `public/css/app.css:71,108`; its bottom offset is driven by a ResizeObserver. In
+iteration 15 the 320×568 and 568×320 layouts were measured (`panel 304/552 px wide, choices 44 px
+high`; `docs/evidence/small-screen-measure-2026-11-18.log.gz`), but the numbers lived only in a
+handoff note: any later CSS change could push a choice or the
+panel off a small screen and the gate would stay green. The geometry was not covered by an assertion
+anywhere — `review-phase-a.spec.js:16` checks the navigation bar's usable height at 683×384 and
+similar sizes, not the chat panel's width, its right edge, its clearance from `.workflow-navigation`,
+or where its buttons land.
+
+The new `tests/e2e/small-screen-chat.spec.js` walks the Singapore flow the chat-only spec uses
+(send, "A specific area", tap the first town) and, after two animation frames so the ResizeObserver
+has re-run, asserts at each state: the document does not scroll sideways (`scrollWidth <= width`),
+the panel's left/right edges are inside the viewport, the panel's bottom stays above the workflow
+navigation whenever that bar is on screen, and every `button[data-chat-choice]` in the last reply is
+fully inside the viewport and at least 24 px high. It covers the scope prompt and the town prompt at
+320×568, the town prompt at 568×320, and the field prompt (which carries "Use selected point") at
+both 568×320 and 320×568. `npx playwright test --list` now reports **192 tests in 19 files** (188
+before).
+
+Executed: all four projects passed **4/4 (4.3 s)** on ports 4180/4181 with
+`--output=artifacts/playwright/small-screen-run`; after adding the portrait field-prompt check the
+same four passed **4/4 (7.0 s)**
+(`docs/evidence/small-screen-geometry-final-2026-11-18.log.gz`). Non-vacuity: injecting
+`#chat-panel{right:-2rem!important}` with `page.addStyleTag` before the first measurement made
+`static-desktop` fail at the `panel right edge` assertion (`docs/evidence/small-screen-geometry-broken-2026-11-18.log.gz`);
+removing the injection returned **4/4 (4.4 s)**
+(`docs/evidence/small-screen-geometry-restored-2026-11-18.log.gz`). On the same tree `npm test`
+reported **193 tests, 193 pass, 0 fail, 0 skipped (38,133 ms)**
+(`docs/evidence/small-screen-npm-test-2026-11-18.log.gz`), `npm audit` **0 vulnerabilities**, and
+`node scripts/check-documentation.js` **`failures: []`** (0 external flags).
+
+Two failures were seen in a full-gate attempt on the superseded commit `022569e` and are recorded
+here so they are not mistaken for app assertions that iteration 16 loosened: at 30 of 184 cases,
+`map3d.spec.js:61` failed in `browserContext.close` with
+`ENOENT …/.playwright-artifacts-0/traces/…-recording….network` — the same trace-teardown signature
+documented in subsection 14, at a moment when a second Playwright run was active on the machine and
+with the test body itself complete — and `review-phase-a.spec.js:34` failed after 4.9 min with
+"real fields were still unavailable after two user retries", the live public-Overpass dependency
+listed under "Not yet executed" below (from this network `overpass.private.coffee` did not answer
+within 15 s). That run was stopped once the tip moved past it; a full gate on this tip is the next
+item, and only its own summary line will be recorded.
+
+This is a test-only change: no app module, CSS, place data or model vocabulary changed, so the tiny
+word LM is not retrained. Nothing was deployed, `main` is untouched, and no NASA portal edit was
+made. The assertions run in headless Chrome with touch emulation at emulated viewport sizes; they are
+not evidence about real phones, real touch, or Safari/WebKit.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -1631,6 +1681,11 @@ Safari/WebKit or assistive-technology users.
   0 skipped** after it. The **187/187** figures earlier in this section describe the tip before those
   two files were added. Subsection 13 adds one census test and measures **193/193, 0 failed, 0
   skipped (30,013 ms)** on its own fixed tree.
+* A full `npm run test:e2e` summary for the current tip. Iteration 16 raised `--list` to **192 tests
+  in 19 files**; the one full-gate attempt since then ran on the superseded `022569e` and was stopped
+  at 30/184 after the two non-assertion failures described in subsection 15, so the 180/180 figures
+  above still describe `35a11b7` only. The gate on this tip is owed and only its own summary line
+  will be added here.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

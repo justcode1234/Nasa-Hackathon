@@ -630,6 +630,26 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   the shared directory failed with a trace `ENOENT`, not an app assertion. Nothing was deployed, main
   is untouched, no NASA portal edit.
 
+- **18 Nov, same branch: iteration 16 — the 320 px phone and landscape chat layout were measured but
+  never asserted.** Iteration 15 recorded 320×568 and 568×320 geometry in a handoff note only; the
+  fixed panel derives its width from `100vw` and its bottom from a ResizeObserver, so a later CSS
+  change could push a choice off-screen with the gate still green. The new
+  `tests/e2e/small-screen-chat.spec.js` walks the Singapore flow and, after two animation frames,
+  asserts at the scope, town and field prompts (320×568 and 568×320) that the page does not scroll
+  sideways, the panel's edges are inside the viewport and its bottom stays above
+  `.workflow-navigation` when that bar is on screen, and every choice is fully visible and at least
+  24 px high. **Executed:** four projects **4/4 (4.3 s)**, then **4/4 (7.0 s)** with the added
+  portrait field-prompt check, on isolated ports/output; injecting `#chat-panel{right:-2rem!important}`
+  failed `static-desktop` at `panel right edge` and removing it passed **4/4 (4.4 s)**;
+  `npx playwright test --list` is now **192 tests in 19 files**; `npm test` **193/193, 0 failed, 0
+  skipped (38,133 ms)**, `npm audit` **0 vulnerabilities**, `node scripts/check-documentation.js`
+  **`failures: []`**. A full-gate attempt on the superseded `022569e` was stopped at 30/184: one
+  `browserContext.close` trace `ENOENT` (same infrastructure signature as iteration 15) and one
+  live public-Overpass failure after two user retries; neither was an app assertion and neither was
+  loosened. The gate on this tip is owed and will be recorded with its own summary line. Test-only
+  change; no app module, CSS or model vocabulary changed, so the tiny word LM is not retrained.
+  Nothing was deployed, main is untouched, no NASA portal edit.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry
