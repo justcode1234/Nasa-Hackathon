@@ -23,7 +23,7 @@ const indiaLocations = { regions: [{ id: '16', name: 'Maharashtra' }, { id: '27'
     { id: 'p2', name: 'Nagpur', regionCode: '16', latitude: 21.1458, longitude: 79.0082 },
     { id: 'p3', name: 'Ratnagiri', regionCode: '27', latitude: 16.9905, longitude: 73.3003 }] };
 
-function setup({ country = 'SG', locations = sgLocations, farms = 2 } = {}) {
+function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGraceMs, fieldsNeverAnswer = false } = {}) {
   const calls = [];
   const state = { country, catalog, countryCrops: getCountryCrops({ country }), farm: null, farms: [],
     regionCode: null, location: null, observations: null,
@@ -34,7 +34,12 @@ function setup({ country = 'SG', locations = sgLocations, farms = 2 } = {}) {
     chooseLocation(place) { calls.push('location'); state.location = { latitude: place.latitude, longitude: place.longitude, placeId: place.id }; state.observations = null; },
     chooseRegion(id) { calls.push('region'); state.regionCode = id; state.location = null; state.farm = null; },
     chooseFarm(id) { calls.push('farm'); state.farm = state.farms.find(farm => farm.id === id); state.location = state.farm.representativePoint; },
-    loadFarms() { calls.push('fields'); state.farms = Array.from({ length: farms }, (_, index) => ({ id: `way/${index + 1}`, name: `TEST FIELD ${index + 1}`, representativePoint: { latitude: 1.3 + index / 100, longitude: 103.8 } })); },
+    loadFarms() {
+      calls.push('fields');
+      // A shared community service that accepts the connection and never answers: the request stays open.
+      if (fieldsNeverAnswer) return new Promise(() => {});
+      state.farms = Array.from({ length: farms }, (_, index) => ({ id: `way/${index + 1}`, name: `TEST FIELD ${index + 1}`, representativePoint: { latitude: 1.3 + index / 100, longitude: 103.8 } }));
+    },
     showStep(step) { calls.push(`step:${step}`); },
     applyPlanning({ baseline, allowed }) {
       calls.push('inputs');
@@ -44,7 +49,7 @@ function setup({ country = 'SG', locations = sgLocations, farms = 2 } = {}) {
     async loadEvidence() { calls.push('NASA'); state.observations = { kind: 'TEST action completion only' }; return true; },
     compare() { calls.push('compare'); scenarios[0].timeline = state.planning.baseline.map(name => ({ cropName: name })); return { scenarios }; }
   };
-  const assistant = createWorkflowAssistant({ getState: () => state, actions,
+  const assistant = createWorkflowAssistant({ getState: () => state, actions, fieldsGraceMs,
     request: async path => { const url = new URL(path, 'https://test.invalid');
       if (url.pathname === '/api/locations') return locations;
       throw new Error('unexpected test request ' + path); } });
@@ -443,4 +448,31 @@ test('naming the whole country at the region question does not select the town i
   const chosen = await click(assistant, answer, 0);
   assert.ok(chosen);
   assert.ok(state.regionCode, 'tapping one of the offered regions advances the plan');
+});
+
+// Measured 18 Nov: a community field service that accepts the connection and never answers holds the
+// lookup open for its full 75 s server deadline, and the chat awaited it before confirming the tap.
+test('a town tap confirms the point instead of waiting out a field service that never answers', async () => {
+  const { assistant, calls, state } = setup({ farms: 0, fieldsNeverAnswer: true, fieldsGraceMs: 25 });
+  await assistant.respond('Help me plan a rotation in Singapore. Crops: tomato, cabbage, bulb onion.');
+  const answer = await assistant.respond('A specific area');
+  const townIndex = answer.followUps.findIndex(choice => choice.workflowChoice?.type === 'town');
+  assert.ok(townIndex >= 0, 'a town button was offered');
+  const started = Date.now();
+  const waited = await click(assistant, answer, townIndex);
+  const waitedMs = Date.now() - started;
+  assert.ok(state.location, 'the saved town point is not lost while the lookup is open');
+  assert.ok(waitedMs < 2_000, `the town tap waited ${waitedMs} ms for a service that never answered`);
+  assert.match(text(waited), /is selected as a town point/);
+  assert.match(text(waited), /have not answered yet/, 'the reply says which part has not arrived');
+  assert.match(text(waited), /nothing was invented/);
+  assert.doesNotMatch(text(waited), /mapped fields were returned/, 'no field count is claimed before the data arrives');
+  const labels = waited.followUps.map(choice => choice.label);
+  assert.ok(labels.some(label => /Use selected point/.test(label)) && labels.some(label => /Show mapped fields/.test(label)),
+    `the waiting reply leaves nothing to tap: ${labels.join(' | ')}`);
+  // Asking again must join the request already in flight, not open a second one against the same service.
+  const asked = calls.filter(call => call === 'fields').length;
+  const again = await assistant.respond('Show mapped fields around this point');
+  assert.equal(calls.filter(call => call === 'fields').length, asked, 'a second field request was opened while the first was still in flight');
+  assert.match(text(again), /have not answered yet/);
 });

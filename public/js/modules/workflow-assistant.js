@@ -155,10 +155,10 @@ function placeMentions(question, codes) {
 // Unnamed source administrative codes are not shown to the farmer as if they were labels.
 const placeLabel = (places, place) => { const name = places?.regions?.find(region => region.id === place.regionCode)?.name; return name ? `${place.name} · ${name}` : place.name; };
 
-export function createWorkflowAssistant({ getState, actions, request = api, progress = () => {} }) {
-  let active = false, generation = 0, baseline = null, allowed = null, constraints = {}, pointAccepted = false, scope = null, areaRegion = null;
+export function createWorkflowAssistant({ getState, actions, request = api, progress = () => {}, fieldsGraceMs = 10_000 }) {
+  let active = false, generation = 0, baseline = null, allowed = null, constraints = {}, pointAccepted = false, scope = null, areaRegion = null, fieldsTask = null;
   const locationLists = new Map();
-  function invalidate() { generation++; baseline = null; allowed = null; constraints = {}; pointAccepted = false; scope = null; areaRegion = null; }
+  function invalidate() { generation++; baseline = null; allowed = null; constraints = {}; pointAccepted = false; scope = null; areaRegion = null; fieldsTask = null; }
   async function respond(question, choice = null) {
     let parsed = choice ? { countries: [], constraints: {} } : parseWorkflowMessage(question, active);
     // The short-reply cap keeps sentences out of place matching; a reply the saved list itself
@@ -177,13 +177,39 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     }
     if (!parsed) { generation++; return null; }
     if (parsed.cancel) { active = false; invalidate(); return reply('Guided planning stopped. Your current form values remain available.'); }
-    const hasInput=choice||parsed.intent||parsed.countries.length||parsed.location||parsed.baseline||parsed.allowed||parsed.wholeCountry||parsed.specificArea||Object.keys(parsed.constraints).length;
+    // Asking for the mapped fields is an action in its own right: without this the sentence carries no
+    // intent verb, falls out of the workflow at the place-reply check, and the retry button below does
+    // nothing the farmer asked for.
+    const hasInput=choice||parsed.intent||parsed.findFarms||parsed.countries.length||parsed.location||parsed.baseline||parsed.allowed||parsed.wholeCountry||parsed.specificArea||Object.keys(parsed.constraints).length;
     if(!hasInput&&!getState().country)return null;
     if (!active) { scope = null; areaRegion = null; pointAccepted = false; }
     active = true;
     const version = ++generation;
     const guard = () => { if (version !== generation) throw new DOMException('Planning context changed', 'AbortError'); };
     const run = async (name, ...args) => { const result = await actions[name](...args); guard(); return result; };
+    // One mapped-field request in flight per guided session: asking again while a shared community
+    // service is still holding the connection must not open a second identical request against it.
+    const findFields = () => {
+      if (!fieldsTask) {
+        const task = Promise.resolve().then(() => actions.loadFarms())
+          .finally(() => { if (fieldsTask === task) fieldsTask = null; });
+        fieldsTask = task;
+      }
+      return fieldsTask;
+    };
+    // Measured 18 Nov: a service that accepts the connection and never answers keeps the lookup open for
+    // its whole 75 s server deadline, and the chat was awaiting that before confirming the farmer's tap.
+    // The reply therefore waits this long at most, then says which part of the answer has not arrived.
+    const fieldsOutcome = async () => {
+      const outcome = await Promise.race([findFields().then(() => 'done', error => ({ error })),
+        new Promise(resolve => setTimeout(resolve, fieldsGraceMs, 'waiting'))]);
+      guard();
+      if (typeof outcome === 'object') throw outcome.error;
+      return outcome;
+    };
+    const fieldsWaiting = message => reply(`${message} The shared OpenStreetMap field services have not answered yet, so no field list is shown and nothing was invented. You can continue with the selected point, or ask me to show the fields again in a moment.`,
+      [next('Use selected point', 'Use the selected point'), next('Show mapped fields', 'Show mapped fields around this point')],
+      [{ id: 'osm', title: 'OpenStreetMap contributors; community mapped land use, not verified ownership', url: 'https://www.openstreetmap.org/copyright' }]);
     if (parsed.countries.length > 1) return reply('Which country should I work in first?', parsed.countries.slice(0, 3).map(country => next(COUNTRY_NAMES.of(country), `Help me plan a rotation in ${COUNTRY_NAMES.of(country)}`)));
     if (parsed.baseline) baseline = parsed.baseline;
     if (parsed.allowed) allowed = parsed.allowed;
@@ -316,7 +342,11 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     }
     if (parsed.usePoint && state.location && !placeMention) { pointAccepted = true; scope = 'area'; }
     if (state.farm && (parsed.useFarm || !requestedCountry) && !placeMention) { pointAccepted = true; scope = 'area'; }
-    if (parsed.findFarms && state.location) { await run('loadFarms'); return fieldPrompt(getState(), 'Choose the specific mapped field. Map coverage and crop tags may be incomplete.'); }
+    if (parsed.findFarms && state.location) {
+      progress('Step 1: finding community-mapped fields near the selected point…');
+      if (await fieldsOutcome() === 'waiting') return fieldsWaiting('Your selected point is still in place.');
+      return fieldPrompt(getState(), 'Choose the specific mapped field. Map coverage and crop tags may be incomplete.');
+    }
     if (placeMention || !state.location || !pointAccepted) {
       progress('Step 1: looking for the named town…');
       const q = normalizeName(question);
@@ -362,7 +392,9 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       if (matches.length === 1) {
         await run('chooseLocation', matches[0], state.country); scope = 'area';
         progress('Step 1: finding community-mapped fields near the town…');
-        await run('loadFarms'); await keepInputs(); state = getState();
+        const fields = await fieldsOutcome();
+        await keepInputs(); state = getState();
+        if (fields === 'waiting') return fieldsWaiting(`${matches[0].name} is selected as a town point. The town itself is not farmland.`);
         return fieldPrompt(state, `${matches[0].name} is selected as a town point. Choose the specific field; the town itself is not farmland.`);
       }
       if (matches.length > 1) {
