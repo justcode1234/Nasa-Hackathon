@@ -646,7 +646,8 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   **`failures: []`**. A full-gate attempt on the superseded `022569e` was stopped at 30/184: one
   `browserContext.close` trace `ENOENT` (same infrastructure signature as iteration 15) and one
   live public-Overpass failure after two user retries; neither was an app assertion and neither was
-  loosened. The gate on this tip is owed and will be recorded with its own summary line. Test-only
+  loosened. The gate on this tip was owed when this was written and has since been paid on later tips
+  that include these specs: **196/196 (22.2 m)** on `b87a6da` and **196/196 (19.1 m)** on `acb6c96`. Test-only
   change; no app module, CSS or model vocabulary changed, so the tiny word LM is not retrained.
   Nothing was deployed, main is untouched, no NASA portal edit.
 
@@ -726,7 +727,9 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   specs passing individually (**8.6 s**, **1.9 m**) and a 90-frame probe measuring one constant
   `#chat-toggle` position on two projects under that same load — an unrelated local model server held
   the load average at 8–10 on 12 cores. No timeout, retry or assertion was changed to hide it; an idle
-  re-run of that slice and the 196-case gate on this tip are both owed. Nothing was deployed, main is
+  re-run of that slice and the 196-case gate on this tip were both owed when this was written — the gate
+  has since run clean on `acb6c96` (**196 passed, 0 failed, 19.1 m**), which covers these specs, and the
+  two degraded tallies above stand as recorded. Nothing was deployed, main is
   untouched, no NASA portal edit.
 - **18 Nov, same branch: iteration 21 — the weather series was chosen by letters inside other words.**
   The topic triggers were given whole-word matching in iteration 18, but the series selector one level
@@ -759,6 +762,13 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   vulnerabilities**, `chat-only-flow` + `assistant` + `help-and-explanations` + `workflow` **64/64
   (2.6 m)** in four projects at load average 4.2. Nothing was deployed, main is untouched, no NASA portal
   edit.
+- **18 Nov, same branch: the owed 196-case gate was run on `acb6c96`.** `npx playwright test` with the
+  four projects, the built `dist/client` and the live `public/` node server on ports 4202/4203 reported
+  **196 passed, 0 failed (19.1 m)** with exit code 0
+  (`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). No case was deselected, no timeout or retry was
+  raised and no assertion was changed for the run; the live-service cases held — `field-terrain.spec.js`
+  took 48.4 s, 32.8 s, 35.4 s and 2.5 s in the four projects, i.e. the same AWS terrain fetch that failed
+  on `c659a59` passed everywhere here. Nothing was deployed, main is untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

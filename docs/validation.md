@@ -1924,6 +1924,12 @@ name pests — passed **64/64 (2.6 m)** across all four projects
 4.2. No assertion was weakened, and the earlier species-first behaviour is kept for questions that name
 no record: "Which pests affect wheat?" still returns the first country record.
 
+The full gate on this tip was then run rather than deferred: **196 passed, 0 failed (19.1 m)**, exit 0
+(`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). No case was deselected and no timeout, retry or
+assertion was changed for the run. The live AWS terrain fetch that failed on `c659a59` passed in all
+four projects here (48.4 s, 32.8 s, 35.4 s, 2.5 s), which makes `acb6c96` the first tip since `b87a6da`
+with a clean 196-case record.
+
 Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
 review remain unverified.
@@ -1932,9 +1938,10 @@ review remain unverified.
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
   changed since (`chat.js`, `farms.js`, `client.js`, `workflow-assistant.js`), so 180/180 must not be
-  quoted for the current commit until it is re-run. No Playwright run was launched on the device that
-  wrote subsection 12, so the suite remains owed; only its own summary line will be recorded here. The
-  chat-heavy slice that does cover the `data-choice-type` contract ran separately: **80 passed, 0 failed
+  quoted for the current commit. No Playwright run had been launched on the device that wrote subsection
+  12, so at that time the suite was owed; it has since been run repeatedly on later tips, most recently
+  **196 passed, 0 failed (19.1 m)** on `acb6c96` (see subsection 21).
+  The chat-heavy slice that does cover the `data-choice-type` contract ran separately: **80 passed, 0 failed
   (6.0 min)** across all four projects (`docs/evidence/e2e-chat-slice-choice-type-2026-11-18.log.gz`).
 * The offline suite total on the tip that adds `tests/documentation-commands.test.js` and the
   `tests/deployment.test.js` assertions is now measured in subsection 12: **190/191 with one failure**
@@ -1946,13 +1953,13 @@ review remain unverified.
   **196 tests in 19 files**, and that suite passed **196/196 (22.2 m)** on `b87a6da`
   (`docs/evidence/e2e-gate-b87a6da-2026-11-18.log.gz`, subsection 18). The gate on the tip that carries
   the composition change ran on `c659a59` and is recorded there: **195 passed, 1 failed (22.2 m)**, the
-  failure being the live AWS terrain fetch in `field-terrain.spec.js:4`, which passes in isolation. The
-  frost change in subsection 19, the series change in subsection 20 and the pest-name change in
-  subsection 21 have not been through a full gate, so a 196-case run on the tip that carries them is
-  still owed; only its own summary line will be added here. The wider eight-spec chat
-  slice used while measuring it also owes one clean run on an idle device - the two recorded attempts
-  were load-degraded (subsection 19), and only the 16-case `chat-only-flow` + `assistant` slice on
-  that tree is green so far.
+  failure being the live AWS terrain fetch in `field-terrain.spec.js:4`, which passes in isolation. That
+  debt is now paid: the frost change in subsection 19, the series change in subsection 20 and the
+  pest-name change in subsection 21 went through a full four-project gate on `acb6c96` and reported
+  **196 passed, 0 failed (19.1 m)** with exit code 0
+  (`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). The same run covers the eight specs whose
+  slice attempts were load-degraded in subsection 19, so those two degraded tallies stand as recorded
+  but are no longer the best evidence for that tree.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the
