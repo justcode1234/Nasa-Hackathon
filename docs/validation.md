@@ -1537,6 +1537,50 @@ end, but the reply answers a question that was never asked and silently skips th
 was attempted in this iteration; the reproduction is offline and deterministic
 (`docs/evidence/region-nonsense-repro-2026-11-18.log.gz`).
 
+### 13. An unknown region at the area question kept the town-level recovery
+
+Subsection 12 measured this defect and left it unfixed. This iteration fixed it. Driving the real
+India list offline, "Which state or region of India?" answered with `Zqxwv` — or with a plausible
+absent name, `Maisonette District` — returned "No town by that name is in the saved place list for
+India…" and replaced the two region buttons (Maharashtra, Maharashtra Coast) with the country-wide
+town buttons Pune/Nagpur/Ratnagiri plus Whole India. The buttons were real, but the reply answered a
+question that was never asked and skipped the level the farmer was standing on. The before output is
+archived from iteration 13 (`docs/evidence/region-nonsense-repro-2026-11-18.log.gz`).
+
+Cause: `respond()` reached one fallthrough for both pending place questions
+(`workflow-assistant.js:424`). A short reply that matched no saved row was answered by
+`placeRecovery()`, whose wording, caveat and buttons all assume the plan is asking for a town. At the
+area question the plan is asking for a region.
+
+The fix adds `regionRecovery()` beside `placeRecovery()` (`workflow-assistant.js:297`). It reuses
+`areaPrompt()`'s own region rows and honesty caveat, prefixed with a sentence that names the level
+and says nothing was selected: "No region by that name is in the saved place list for India, and no
+listed town carries that spelling either. Nothing was selected; I will not guess a similar name."
+It always keeps `Whole <country>` tappable, and it runs no data action. The fallthrough now chooses
+by the pending question: region-level only while the plan is at the area question, no region is
+selected, and the list holds a named region row; otherwise it stays town-level, so the town recovery
+inside a chosen region and the region-less lists behave exactly as before.
+
+After, the same India run returns the region sentence followed by the prompt's own caveat, with
+Maharashtra, Maharashtra Coast and Whole India as buttons, and no call beyond `step:location`
+(`docs/evidence/region-recovery-after-2026-11-18.log.gz`). A new census test
+(`tests/matrix-coverage.test.js:502`) walks **every saved list with a named region row — 227 lists**
+through the same three steps and pins the wording (`No region by that name`, not `No town by that
+name`), at least one real region button, and that no region or point was selected and no evidence or
+comparison ran. Non-vacuity: with the new branch disabled, that test reported **227 of 227 replies
+at the town level** and exited 1 (`docs/evidence/region-recovery-injection-2026-11-18.log.gz`);
+restored, it was **1/1 (474 ms)**. The two neighbouring workflow suites were **49/49**.
+
+Executed on the fixed tree, Node v22.23.5: `npm test` **193 tests, 193 pass, 0 fail, 0 skipped
+(30,013 ms)** (`docs/evidence/region-recovery-suite-2026-11-18.log.gz`); re-run after this section's
+own edits, **193/193, 0 failed, 0 skipped (40,012 ms)**
+(`docs/evidence/region-recovery-suite-final-2026-11-18.log.gz`); `npm audit` **0
+vulnerabilities**; `node scripts/check-documentation.js` **117 local links, 0 broken**. Playwright
+was not re-run in this iteration, so **`npx playwright test --list` remains 184 tests in 17 files**
+and no browser result is claimed here. Only `workflow-assistant.js` changed in the app; no place
+data and no model vocabulary changed, so the tiny word LM is not retrained. Nothing was deployed,
+`main` is untouched, and no NASA portal edit was made.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -1549,7 +1593,8 @@ was attempted in this iteration; the reproduction is offline and deterministic
   `tests/deployment.test.js` assertions is now measured in subsection 12: **190/191 with one failure**
   before the fix (the guard read its own quoted error as a documented file) and **192/192, 0 failed,
   0 skipped** after it. The **187/187** figures earlier in this section describe the tip before those
-  two files were added.
+  two files were added. Subsection 13 adds one census test and measures **193/193, 0 failed, 0
+  skipped (30,013 ms)** on its own fixed tree.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

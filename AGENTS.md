@@ -598,6 +598,23 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   module, place data or model vocabulary changed, so the tiny word LM is not retrained. Nothing was
   deployed, main is untouched, no NASA portal edit.
 
+- **18 Nov, same branch: iteration 14 — an unknown region at the area question kept the town-level
+  recovery.** Iteration 13 measured this and left it open; driving the real India list, the region
+  question answered with `Zqxwv` returned "No town by that name…" with country-wide town buttons and
+  dropped the real region rows. `respond()` reached one fallthrough for both pending place questions;
+  a new `regionRecovery()` (workflow-assistant.js:297) reuses `areaPrompt()`'s region rows and caveat,
+  says the level that is missing and that nothing was selected, and always keeps `Whole <country>`
+  tappable. The fallthrough (workflow-assistant.js:424) now chooses by the pending question and leaves
+  the town recovery unchanged inside a chosen region and in region-less lists. A new census
+  (tests/matrix-coverage.test.js:502) walks **every saved list with a named region row — 227 lists**
+  and pins the wording, a real region button, and no selection or data action; with the branch
+  disabled it failed **227/227**, restored it was **1/1 (474 ms)**. **Executed on Node v22.23.5:**
+  neighbours **49/49**, `npm test` **193/193, 0 failed, 0 skipped (30,013 ms)**, `npm audit` **0
+  vulnerabilities**, `node scripts/check-documentation.js` **117 local links / 0 broken**; Playwright
+  was not re-run, so **184 tests in 17 files** still describes `--list`, not a fresh browser result.
+  Only `workflow-assistant.js` changed in the app; no place data or model vocabulary changed, so the
+  tiny word LM is not retrained. Nothing was deployed, main is untouched, no NASA portal edit.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

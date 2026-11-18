@@ -290,6 +290,17 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       return reply(`No town by that name is in the saved place list for ${countryName}${regionName ? ` in ${regionName}` : ''}. Tap one of the towns below, choose any town in the step 1 Town list, search a place or enter your farm coordinates. I will not guess a similar name.`,
         [...townButtons(places, areaRegion ?? state.regionCode ?? null), next(`Whole ${countryName}`, `Whole ${countryName}`)]);
     };
+    // The area question asks for a region, so a short reply that names no saved region or town is
+    // answered at that level. Measured 18 Nov: this path used the town recovery instead, which
+    // claimed a town question was pending, dropped every region row and offered towns from a region
+    // the farmer had never chosen.
+    const regionRecovery = () => {
+      actions.showStep('location');
+      const prompt = areaPrompt(countryName, null, places);
+      const whole = next(`Whole ${countryName}`, `Whole ${countryName}`);
+      const followUps = prompt.followUps.some(choice => choice.label === whole.label) ? prompt.followUps : [...prompt.followUps, whole];
+      return reply(`No region by that name is in the saved place list for ${countryName}, and no listed town carries that spelling either. Nothing was selected; I will not guess a similar name. ${prompt.blocks[0].text}`, followUps);
+    };
     // Inside a chosen region the pending question is “which town”, so a short reply the list cannot
     // match is still an attempted town name — even after a town point exists. This message has already
     // been ruled out as a read-only question, and silence would leave the farmer nothing to tap.
@@ -408,7 +419,11 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
             label: labels.filter(label => label === labels[index]).length > 1 ? `${labels[index]} · ${place.latitude}, ${place.longitude}` : labels[index],
             question: `Use ${place.name}`, workflowChoice: { type: 'town', id: place.id } })));
       }
-      if(!hasInput&&!placeMention)return phrase&&!state.location&&(scope==='area'||areaRegion)?placeRecovery():null;
+      if(!hasInput&&!placeMention) {
+        if (!phrase || state.location) return null;
+        if (scope === 'area' && !regionFilter && places.regions.some(region => region.name)) return regionRecovery();
+        return scope === 'area' || areaRegion ? placeRecovery() : null;
+      }
       // The country’s own name is neither a region nor a town, so a place question answered with it
       // cannot select anything — but answering with the very question the farmer is replying to leaves
       // the chat asking itself the same thing. Name the level that is still missing, offer its real

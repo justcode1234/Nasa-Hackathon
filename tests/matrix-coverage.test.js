@@ -494,6 +494,37 @@ test('the region question always leaves a tappable choice, even when only the co
   assert.deepEqual(mistapped, [], `${mistapped.length} offered region buttons did not select their own row`);
 });
 
+// The area question asks for a region. Measured 18 Nov: a short reply that named no saved region or
+// town was answered as if a town question were pending — “No town by that name…”, every region row
+// gone, and three towns from a region the farmer had never chosen. The same five sampled countries
+// the unknown-town test uses cannot see the other lists, so this walks every saved list with a region
+// row and pins the level of the wording, the region rows it must keep tappable, and that nothing runs.
+test('an unknown region at the area question recovers at the region level in every saved list', async t => {
+  const wrongLevel = [], buttonless = [], sideEffects = [], lists = [];
+  for (const country of listCountries) {
+    const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
+    if (!list.regions.some(region => region.name)) continue;
+    lists.push(country);
+    const { assistant, state, calls } = makeAssistant();
+    await assistant.respond(`Help me plan a rotation in ${countryName}`);
+    await assistant.respond('A specific area');
+    calls.length = 0;
+    const answer = await assistant.respond('Zqxwv');
+    if (!answer) { wrongLevel.push(`${country}: silence`); continue; }
+    const text = textOf(answer);
+    if (!/No region by that name/.test(text) || /No town by that name/.test(text)) wrongLevel.push(`${country}: ${text.slice(0, 90)}`);
+    if (!(answer.followUps ?? []).some(choice => choice.workflowChoice?.type === 'region'))
+      buttonless.push(`${country}: ${JSON.stringify((answer.followUps ?? []).map(choice => choice.label))}`);
+    if (calls.includes('region') || calls.includes('location') || calls.includes('NASA') || calls.includes('compare') || state.regionCode || state.location)
+      sideEffects.push(`${country}: ${calls.join(',')} region ${state.regionCode} location ${JSON.stringify(state.location)}`);
+  }
+  t.diagnostic(`${lists.length} saved lists with a named region row answered a nonsense region at the region level`);
+  assert.ok(lists.length >= 200, `only ${lists.length} lists with named regions were found; the saved lists changed shape`);
+  assert.deepEqual(wrongLevel, [], `${wrongLevel.length} nonsense region replies did not name the region question:\n${wrongLevel.slice(0, 10).join('\n')}`);
+  assert.deepEqual(buttonless, [], `${buttonless.length} nonsense region replies kept no real region row to tap:\n${buttonless.slice(0, 10).join('\n')}`);
+  assert.deepEqual(sideEffects, [], `${sideEffects.length} nonsense region replies selected something or ran data actions:\n${sideEffects.slice(0, 10).join('\n')}`);
+});
+
 // Replying to a place question with the country’s own name used to bring back the very same question,
 // so the chat could ask itself the same thing twice with nothing new to tap. The reply must change, must
 // leave something to tap, and must not claim a place it did not select. A saved row spelled like the
