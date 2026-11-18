@@ -20,7 +20,7 @@ export function createCachedJson({ fetchImpl = fetch, ttlMs = 86_400_000, maxEnt
       try {
         const identityHeaders = globalThis.process?.versions?.node ? { 'User-Agent': USER_AGENT } : {};
         response = await fetchImpl(url, { headers: { Accept: 'application/json', ...identityHeaders, ...headers }, signal: AbortSignal.timeout(timeoutMs) });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) throw Object.assign(new Error(`HTTP ${response.status}`), { answered: true });
         const data = await response.json();
         const retrievedAt = new Date().toISOString();
         if (data && typeof data === 'object') Object.defineProperty(data, '_fieldshiftRetrievedAt', { value: retrievedAt });
@@ -29,7 +29,14 @@ export function createCachedJson({ fetchImpl = fetch, ttlMs = 86_400_000, maxEnt
         while (cache.size > maxEntries) cache.delete(cache.keys().next().value);
         return data;
       } catch (error) {
-        throw new AppError(`The external context service could not respond (${error.message}). No records were invented. Try again later.`, 502, 'CONTEXT_UNAVAILABLE');
+        // Whether the service answered at all is a fact callers can act on: the farmland hedge stops
+        // re-trying an endpoint this client cannot reach, but keeps its backoff ladder for one that is
+        // busy (an HTTP error) or slow (the request deadline). Both cases may recover; a broken pipe
+        // inside one farmer action does not.
+        const wrapped = new AppError(`The external context service could not respond (${error.message}). No records were invented. Try again later.`, 502, 'CONTEXT_UNAVAILABLE');
+        wrapped.answered = Boolean(error?.answered);
+        wrapped.slow = /abort|timed?\s?out/i.test(`${error?.name ?? ''} ${error?.message ?? ''}`);
+        throw wrapped;
       }
     })();
     pending.set(key, task);

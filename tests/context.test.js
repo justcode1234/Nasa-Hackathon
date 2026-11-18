@@ -45,10 +45,27 @@ test('field lookup falls back once and rejects partial Overpass responses',async
   const result=await client({latitude:42,longitude:-93.69});
   assert.deepEqual(calls,['overpass-api.de','overpass.private.coffee']);assert.equal(result.farms.length,2);
   assert.equal(new URL(result.sourceUrl).hostname,'overpass.private.coffee');
-  let failures=0;
-  const unavailable=createFarmClient({deadlineMs:1500,staggerMs:50,backoffMs:100,fetchImpl:async()=>{failures++;throw Error('TEST transport failure');}});
+  let failures=0;const hostsAsked=[];
+  const unavailableStarted=Date.now();
+  const unavailable=createFarmClient({deadlineMs:1500,staggerMs:50,backoffMs:100,fetchImpl:async url=>{failures++;hostsAsked.push(new URL(url).hostname);throw Error('TEST transport failure');}});
   await assert.rejects(unavailable({latitude:1,longitude:2}),/field lookup services are busy or unavailable.*No fields were invented/);
-  assert.equal(failures,9,'each of three services gets three attempts with backoff before giving up');
+  const unreachableMs=Date.now()-unavailableStarted;
+  // Every service is tried, and the reported attempt count names them: a town tap in an offline or
+  // blocked network must say so at once instead of after a retry ladder. Measured 18 Nov, the browser
+  // stalled 9.05 s on “finding community-mapped fields” for three services that had all failed in 60 ms.
+  assert.equal(failures,3,'each service is attempted once when none of them can be reached');
+  assert.deepEqual(new Set(hostsAsked),new Set(['overpass-api.de','overpass.private.coffee','maps.mail.ru']),'every service is given a chance');
+  assert.ok(unreachableMs<100,`an unreachable field service is reported without a backoff wait (${unreachableMs} ms)`);
+  // A service that answers but is busy still gets its retries: that is the outage backoff was designed for,
+  // and one unreachable host must not switch the ladder off for the others.
+  let busy=0,unreachableTried=0;
+  const mixed=createFarmClient({staggerMs:20,backoffMs:20,hosts:['overpass-api.de','overpass.private.coffee'],
+    fetchImpl:async url=>{const host=new URL(url).hostname;
+      if(host==='overpass.private.coffee'){unreachableTried++;throw Error('TEST transport failure');}
+      busy++;return busy<3?{ok:false,status:502}:{ok:true,json:async()=>osm()};}});
+  assert.equal(new URL((await mixed({latitude:7,longitude:8})).sourceUrl).hostname,'overpass-api.de');
+  assert.equal(busy,3,'a busy service that answers is retried with backoff');
+  assert.equal(unreachableTried,1,'the unreachable service is not retried inside the same lookup');
   // A slow preferred service must not block a later service that answers first.
   const order=[];
   const hedged=createFarmClient({staggerMs:30,fetchImpl:async url=>{const host=new URL(url).hostname;order.push(host);
@@ -56,9 +73,9 @@ test('field lookup falls back once and rejects partial Overpass responses',async
   const fast=await hedged({latitude:3,longitude:4});
   assert.equal(new URL(fast.sourceUrl).hostname,'overpass.private.coffee');assert.deepEqual(order,['overpass-api.de','overpass.private.coffee']);
   // A busy service that recovers on retry is used; no second service is needed.
-  let busy=0;
-  const recovered=createFarmClient({staggerMs:5000,backoffMs:20,hosts:['overpass-api.de'],fetchImpl:async()=>{busy++;return busy<3?{ok:false,status:502}:{ok:true,json:async()=>osm()};}});
-  assert.equal((await recovered({latitude:5,longitude:6})).farms.length,2);assert.equal(busy,3);
+  let busyOnly=0;
+  const recovered=createFarmClient({staggerMs:5000,backoffMs:20,hosts:['overpass-api.de'],fetchImpl:async()=>{busyOnly++;return busyOnly<3?{ok:false,status:502}:{ok:true,json:async()=>osm()};}});
+  assert.equal((await recovered({latitude:5,longitude:6})).farms.length,2);assert.equal(busyOnly,3);
   assert.throws(()=>normalizeFarms({elements:[],remark:'partial data'}, {}, 'TEST'),/incomplete query/);
 });
 test('context errors do not become empty success records', async () => {

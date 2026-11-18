@@ -50,9 +50,10 @@ export function createFarmClient({ deadlineMs = 75_000, staggerMs = 6_000, backo
     const bbox = [bounds.south, bounds.west, bounds.north, bounds.east].map(v => v.toFixed(4)).join(',');
     const query = `[out:json][timeout:25];way["landuse"~"^(farmland|orchard|vineyard|plant_nursery)$"](${bbox});out meta geom;`;
     // Hedged lookup: the preferred service starts first; the next one joins when the
-    // previous has failed or after a stagger. Failed services retry with exponential
-    // backoff (as the services request) until one shared deadline. The first complete
-    // real response wins. Nothing is substituted when every service fails.
+    // previous has failed or after a stagger. A service that answered but is busy or slow retries with
+    // exponential backoff until one shared deadline; one this client cannot reach at all is dropped after
+    // its first attempt, so an outage is reported instead of waited out. The first complete real response
+    // wins. Nothing is substituted when every service fails.
     const startedAt = Date.now(), remaining = () => deadlineMs - (Date.now() - startedAt);
     let settled = false, wakeAll = [];
     const pause = ms => new Promise(resolve => { const timer = setTimeout(done, ms); function done() { clearTimeout(timer); resolve(); } wakeAll.push(done); });
@@ -62,13 +63,20 @@ export function createFarmClient({ deadlineMs = 75_000, staggerMs = 6_000, backo
       for (let wait = backoffMs, attempt = 1; !settled && remaining() > 1_000; wait *= 2, attempt++) {
         const url = `https://${host}/api/interpreter?data=${encodeURIComponent(query)}`;
         attempts.push(host);
+        let serviceAnswered = false;
         try {
           const raw = await request(url, { timeoutMs: Math.max(1_000, Math.min(45_000, remaining())) });
+          serviceAnswered = true;
           const result = normalizeFarms(raw, { latitude, longitude }, new Date().toISOString());
           return { ...result, sourceUrl: url, retrievedAt: raw._fieldshiftRetrievedAt ?? result.retrievedAt, bounds };
         } catch (error) {
           failed[index]?.();
-          if (settled || attempt >= maxAttempts || remaining() <= wait) break;
+          // Backoff is for a service that is busy or slow: it may answer on the next attempt. A request
+          // that never reached the service will not reach it 3 or 9 seconds later inside the same farmer
+          // action, and measured 18 Nov that ladder cost a town tap 9.05 s before saying the services are
+          // unavailable. The other services are tried in parallel, and the reply invites a retry.
+          const mayRecover = serviceAnswered || Boolean(error?.answered) || Boolean(error?.slow);
+          if (settled || !mayRecover || attempt >= maxAttempts || remaining() <= wait) break;
           await pause(wait);
         }
       }
