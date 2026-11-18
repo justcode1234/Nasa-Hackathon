@@ -930,6 +930,20 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **18 Nov, same branch: iteration 32 staged, not shipped — the loop paused with the work half-done on purpose.** The
+  pair pattern at `public/js/modules/workflow-assistant.js:31` accepts a comma with no space around it, so a
+  measurement written in a comma-decimal locale becomes a farm location: `salinity 3,7 dS/m` → 3, 7 · `organic matter
+  3,5 %` → 3, 5 · `the soil is 62,5 % sand` → **62, 5, inside ±90 so nothing warns** · and because the pattern reports
+  only its first match, `salinity 3,7 dS/m at 18.52, 73.85` keeps the invention and loses the real pin. The fix, a
+  29th guard test (red by design at **29 tests, 28 pass, 1 fail**), and a 25-spelling rehearsal against a scratch copy
+  of the module (**0 differences**) are archived as
+  `docs/evidence/workflow-tight-comma-module-patch-2026-11-18.patch.gz`,
+  `docs/evidence/workflow-tight-comma-guard-tests-patch-2026-11-18.patch.gz` and
+  `docs/evidence/workflow-tight-comma-rehearsal-copy-2026-11-18.log.gz`; the rehearsal is what caught that
+  `!candidate[2].trim()` can never fire, since `.trim()` strips whitespace and not the comma. It was deliberately **not**
+  applied while the 196-case gate held `public/`: editing it mid-run would make the static and node projects test
+  different code and invalidate the number the queue has owed since `acb6c96`. The pushed tip therefore still contains
+  the defect, and validation.md subsection 31 says so.
 - **18 Nov, same branch: iteration 31 — a comma-decimal soil test lost its fraction and invented a pin.** The pH
   pattern (`public/js/modules/workflow-assistant.js:78` pre-fix) allowed only a dot, so `soil pH 6,2` was read as
   pH **6** — a legal value the 0-14 check can never question — and the same comma then read as a coordinate

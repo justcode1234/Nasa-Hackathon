@@ -2390,6 +2390,55 @@ that very run. The same tree plus this iteration re-ran it: the 64-case chat/wor
 `help-and-explanations.spec.js:66` finished there in 2.8 s - so that gate failure was the host, not the code, though
 195/196 remains the honest number for `bb69aee` and the clean 196/196 line still belongs to `acb6c96`.
 
+### 31. Any measurement written with a decimal comma became a pin
+
+The pair pattern at `public/js/modules/workflow-assistant.js:31` separates its two numbers with `\s*,\s*` - the comma
+may sit in a tight number or in a spaced one. A tight comma with nothing else decimal-looking about it is what half
+the world uses to write *one* number, so every measurement a farmer typed with a decimal comma also read as a place.
+Measured on `6db7742` before touching the module
+(`docs/evidence/workflow-tight-comma-baseline-2026-11-18.log.gz`):
+
+| Message tail | What the app inferred | What it means on the ground |
+| --- | --- | --- |
+| `salinity 3,7 dS/m` | latitude 3, longitude 7 | off the coast of Ghana |
+| `organic matter 3,5 % and a bit of gravel` | latitude 3, longitude 5 | a different country |
+| `the soil is 62,5 % sand` | latitude 62, longitude 5 | Norway - and inside ±90, so nothing warns |
+| `rainfall 850,5 mm last season` | latitude 850, longitude 5 | refused by the range check at `:375` |
+| `salinity 3,7 dS/m at 18.52, 73.85` | latitude 3, longitude 7 | keeps the invented point, throws away the real one |
+| `my field is at 18,52` | latitude 18, longitude 52 | a single number read as two |
+
+Only the absurd one announces itself. `62, 5` is a plausible latitude and `3, 7` a plausible pair of tropical ones,
+which is the same substituted-not-dropped class as subsections 28, 29 and 30, arriving through the pattern those
+fixes left in place: the `commaDecimal` pattern of subsection 28 handles two comma decimals, and the `phMatch`
+guard of subsection 30 handles only the word "pH" - a salt, organic-matter, sand-percent or rainfall reading has no
+defence, and the pattern reports its first match, so an early measurement also hides the real coordinates that
+follow it.
+
+The rule is structural rather than a list of unit words, because the module has no unit vocabulary to consult:
+`parseWorkflowMessage` reads only irrigation, soil, soilPh, priority, the planning/reference years and the start
+month (`:73-96`) and never ingests salinity or percent at all. A tight `d,d` where neither side carries a decimal
+point or a sign is one number, so it is refused - and the refusal now continues to the next candidate pair instead
+of returning nothing, which also closes the limit subsection 30 left open. Checked against every spelling the app
+and its tests use before editing: `18.52, 73.85`, `18, 52`, `-31.89,116.77` (the format the app's own region list
+uses, `tests/e2e/map3d.spec.js:7`), `42,-93.69`, `52.19,0.09`, `18.520,73.856`, `18,52, 73,85`,
+`coordinates 18,52 and 73,85` and `18.52N 73.85E` all still resolve.
+
+**This subsection describes work that is staged, not shipped.** Nothing in `public/` has been changed for it, so the
+behaviour in the table above is still what the app does on `6db7742`. What has been measured, honestly labelled by how
+it was measured: the guard for it, appended to `tests/workflow-assistant.test.js` and red by design at
+**29 tests, 28 pass, 1 fail** (`docs/evidence/workflow-tight-comma-guard-before-2026-11-18.log.gz`); the 25-spelling
+corpus run against a **rehearsal copy** of the module at `artifacts/wa-patched.js` rather than `public/`, because a
+full-suite Playwright gate holds that directory while this is written - that copy returns **0 differences of 25**, and
+the rehearsal earned its keep by catching that the first predicate never fired at all (`.trim()` strips whitespace but
+not the comma, so the separator test had to become `!/\s/.test(...)`)
+(`docs/evidence/workflow-tight-comma-rehearsal-copy-2026-11-18.log.gz`); and the change itself as a patch that
+`git apply --check` accepts against the current tree, together with the guard patch and the before-behaviour baseline
+(`docs/evidence/workflow-tight-comma-module-patch-2026-11-18.patch.gz`,
+`docs/evidence/workflow-tight-comma-guard-tests-patch-2026-11-18.patch.gz`,
+`docs/evidence/workflow-tight-comma-baseline-2026-11-18.log.gz`). No build, no offline suite total and no browser run
+belongs to this subsection yet; until they are recorded here it is a design with a rehearsal, not a verified fix.
+
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
