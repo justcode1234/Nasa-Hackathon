@@ -728,6 +728,21 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   the load average at 8–10 on 12 cores. No timeout, retry or assertion was changed to hide it; an idle
   re-run of that slice and the 196-case gate on this tip are both owed. Nothing was deployed, main is
   untouched, no NASA portal edit.
+- **18 Nov, same branch: iteration 21 — the weather series was chosen by letters inside other words.**
+  The topic triggers were given whole-word matching in iteration 18, but the series selector one level
+  below them (added to in iteration 20) still sorted by bare substrings, so reaching the weather branch
+  at all — "NASA" is enough — let any word fragment choose the quoted series. Measured with a six-question
+  probe against the committed module: "Does NASA mention farmer training for wheat?" quoted Rainfall
+  (`training` contains `rain`), "our minimum wages for staff" quoted Minimum air temperature, and
+  "is a defrost cycle relevant to my pipes?" did the same through `defrost`. The server's own weather
+  topic already matches with `\b…\b` (`server/agronomy/conversation.js:20`). The three selectors now
+  match whole words, frost only on phrases that mean cold air, and rainfall keeps the plural and
+  adjectival forms the app's own suggestion buttons use. **Executed:** failing-first
+  `tests/chat-context.test.js` **6 pass, 1 fail** (`+ 'Rainfall' / - 'Mean air temperature'`), then
+  **7 pass, 0 fail**; the probe re-run against both modules flips exactly the three questions;
+  `npm test` **200/200, 0 failed, 0 skipped (25,927 ms)**, `npm audit` **0 vulnerabilities**, and
+  `chat-only-flow` + `assistant` + `help-and-explanations` **52/52 (3.9 m)** in four projects at load
+  average above 10. Nothing was deployed, main is untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

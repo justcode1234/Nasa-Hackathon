@@ -1847,6 +1847,43 @@ is not oscillating, the renderer is just starved
 configured and no assertion was weakened for these runs; a re-run of that slice on an idle device is
 recorded below as owed, as is the full gate on this tip.
 
+### 20. The weather series was chosen by letters inside other words
+
+Subsection 17 put whole-word discipline into the chat's topic triggers, and subsection 19 added a
+fourth series selector one level below them. That lower layer inherited the old habit: inside the
+weather branch the question is tested for `solar`, for `rain|precipitation` and for the frost wording
+with bare substrings, so any question that reached the branch at all — "NASA" is enough — was sorted by
+fragments of words. A probe over six realistic questions, run against the committed module and against the fixed one
+(the script and both outputs are in `docs/evidence/chat-series-probe-2026-11-18.log.gz`), measured the
+consequence:
+
+* "Does NASA mention farmer training for wheat?" quoted **Rainfall**, because `training` contains `rain`;
+* "What does the NASA series say about our minimum wages for staff?" quoted **Minimum air temperature**,
+  because the frost selector accepted the bare word `minimum`;
+* "NASA: is a defrost cycle relevant to my pipes?" quoted **Minimum air temperature** for the same
+  reason through `defrost`.
+
+The server side already had this right — `server/agronomy/conversation.js:20` matches its weather
+topic with `\b…\b` — so the client was the outlier in both directions. The three selectors now match
+whole words, the frost selector takes only phrases that mean cold air (`frost`, `frosty`, `freeze`,
+`freezing`, `cold snap`, or `minimum`/`lowest`/`coldest` followed by a temperature/reading/night/day
+word), and `rain` keeps its plural, adjectival and `rainfall`/`precipitation` forms so the app's own
+suggested buttons ("Show me rainfall evidence") still select their series.
+
+**Executed.** Written as a failing test first: against the shipped selector
+`tests/chat-context.test.js` reports **6 pass, 1 fail**, the failure being
+`+ actual 'Rainfall' / - expected 'Mean air temperature'` for the farmer-training question
+(`docs/evidence/chat-series-before-2026-11-18.log.gz`); after the change the file reports
+**7 pass, 0 fail** (`docs/evidence/chat-series-after-2026-11-18.log.gz`), and the same probe answers
+Mean air temperature, Rainfall, Solar irradiance, Mean air temperature, Minimum air temperature and
+Mean air temperature for the six questions above. `npm test` reports **200 tests, 200 pass, 0 fail,
+0 skipped (25,927 ms)** (`docs/evidence/chat-series-npm-test-2026-11-18.log.gz`), `npm audit` **0
+vulnerabilities**, and `chat-only-flow`, `assistant` and `help-and-explanations` — the specs that read
+reply text and the sixteen graded QA cases — passed **52/52 (3.9 m)** across all four projects
+(`docs/evidence/chat-series-e2e-2026-11-18.log.gz`) while the same unrelated local model server kept
+the load average above 10, which is the condition subsection 19 records as degrading the wider slice.
+No assertion was weakened and no timeout or retry was configured.
+
 Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
 review remain unverified.
@@ -1870,8 +1907,8 @@ review remain unverified.
   (`docs/evidence/e2e-gate-b87a6da-2026-11-18.log.gz`, subsection 18). The gate on the tip that carries
   the composition change ran on `c659a59` and is recorded there: **195 passed, 1 failed (22.2 m)**, the
   failure being the live AWS terrain fetch in `field-terrain.spec.js:4`, which passes in isolation. The
-  frost change in subsection 19 has not been through a full gate, so a 196-case run on the tip that
-  carries it is still owed; only its own summary line will be added here. The wider eight-spec chat
+  frost change in subsection 19 and the series change in subsection 20 have not been through a full
+  gate, so a 196-case run on the tip that carries them is still owed; only its own summary line will be added here. The wider eight-spec chat
   slice used while measuring it also owes one clean run on an idle device - the two recorded attempts
   were load-degraded (subsection 19), and only the 16-case `chat-only-flow` + `assistant` slice on
   that tree is green so far.

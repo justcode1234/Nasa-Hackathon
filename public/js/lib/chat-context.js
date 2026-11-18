@@ -19,8 +19,12 @@ export function contextBlocks(question, state, answer) {
     // Frost is defined by the coldest air, not the average: server/agronomy/rotation.js counts
     // T2M_MIN ≤ 0 as frost-tender exposure and the evidence table labels that series "Lowest air",
     // so a frost question that quotes T2M would answer with a different quantity than the plan does.
-    const frost = /frost|freeze|cold snaps?|coldest|lowest|minimum/i.test(question);
-    const parameterId = /solar/i.test(question) ? 'ALLSKY_SFC_SW_DWN' : /rain|precipitation/i.test(question) ? 'PRECTOTCORR'
+    // The three selectors match whole words for the reason recorded in subsection 17: "farmer
+    // training" is not rainfall, "minimum wages" is not a cold night and a "defrost cycle" is not frost.
+    const solar = /\bsolar\b/i.test(question);
+    const rain = /\b(?:rain|rains|rainy|rainfall|precipitation)\b/i.test(question);
+    const frost = /\b(?:frost|frosty|freeze|freezing)\b|\bcold snaps?\b|\b(?:minimum|lowest|coldest) (?:temperature|temperatures|reading|readings|night|nights|day|days)\b/i.test(question);
+    const parameterId = solar ? 'ALLSKY_SFC_SW_DWN' : rain ? 'PRECTOTCORR'
       : frost && data.parameters.T2M_MIN ? 'T2M_MIN' : 'T2M';
     const parameter = data.parameters[parameterId], date = parameter.latestAvailableDate;
     const value = date ? parameter.values[data.dates.indexOf(date)] : null;

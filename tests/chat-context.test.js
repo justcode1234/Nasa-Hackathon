@@ -89,8 +89,7 @@ test('weather and soil evidence still stand in for the generic answer', () => {
   assert.deepEqual(composeAnswerBlocks(cropAnswer, []).map(b => b.kind), ['sourced crop facts', 'limitation']);
 });
 
-test('a frost question quotes the minimum air temperature, not the mean', () => {
-  const { blocks } = contextBlocks('Show me frost evidence', { observations }, { topic: 'weather' });
+test('a frost question quotes the minimum air temperature, not the mean', () => {  const { blocks } = contextBlocks('Show me frost evidence', { observations }, { topic: 'weather' });
   assert.equal(blocks.length, 1);
   assert.match(blocks[0].text, /^Minimum air temperature/);
   assert.match(blocks[0].text, /-0\.6 °C on 2024-06-02/);
@@ -100,4 +99,20 @@ test('a frost question quotes the minimum air temperature, not the mean', () => 
   assert.match(contextBlocks('Show me temperature evidence', { observations }, { topic: 'weather' }).blocks[0].text, /^Mean air temperature/);
   const withoutMinimums = { ...observations, parameters: { T2M: observations.parameters.T2M } };
   assert.match(contextBlocks('Was there a frost?', { observations: withoutMinimums }, { topic: 'weather' }).blocks[0].text, /^Mean air temperature/);
+});
+
+// The series selector inside the weather branch used the same substring habit the topic triggers had
+// before subsection 17: "farmer training" asked for rainfall, and "minimum wages" and a "defrost
+// cycle" asked for the coldest series. All three questions reach the branch through "NASA", so the
+// reply quoted a series the farmer never asked about.
+test('the weather series is chosen by whole words, not by letters inside other words', () => {
+  const series = question => contextBlocks(question, { observations }, { topic: 'weather' }).blocks[0].text.split(':')[0];
+  assert.equal(series('Does NASA mention farmer training for wheat?'), 'Mean air temperature');
+  assert.equal(series('What does the NASA series say about our minimum wages for staff?'), 'Mean air temperature');
+  assert.equal(series('NASA: is a defrost cycle relevant to my pipes?'), 'Mean air temperature');
+  assert.equal(series('Show me rainfall evidence'), 'Rainfall');
+  assert.equal(series('How much rain fell last spring? NASA figures please'), 'Rainfall');
+  assert.equal(series('How strong is the solar evidence here?'), 'Solar irradiance');
+  assert.equal(series('What was the lowest temperature the NASA series recorded?'), 'Minimum air temperature');
+  assert.equal(series('Show me frost evidence'), 'Minimum air temperature');
 });
