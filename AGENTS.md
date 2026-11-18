@@ -414,6 +414,21 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `{"cases":2151,"countries":245,"failures":0,"deferredToEvidenceAnswer":54}`. Test and script files
   only — no app module, no place data, no model vocabulary changed, so the tiny word LM is again
   not retrained and the `cbeff6b` browser gate above still describes this app code.
+- **18 Nov, same branch: the clean full-suite browser gate on the current tip, plus the full-matrix
+  button walk.** `npm run test:e2e` run on the committed code finished **180 passed, 0 failed, 0 skipped
+  (35.8 min)** in `artifacts/playwright/full-suite-prefix-rule-2026-11-18.log`, kept at
+  `docs/evidence/e2e-full-suite-2026-11-18.log.gz`. That run was launched on `cbeff6b`, and the five
+  commits since then touch only tests, scripts and docs — `git diff --name-only cbeff6b..HEAD -- public
+  server dist` lists **0 files** — so the same app code is what this branch now ships. `npm audit` on
+  `fcdd765`: 0 vulnerabilities. To get browser evidence for *every* saved list rather than the 16–34
+  sessions probed so far, `scripts/chat-place-matrix-probe.mjs` walks all 245 lists in real Chrome: type
+  the country, tap "A specific area", then tap only buttons the assistant itself offers (region first,
+  then a town, coordinate-suffixed duplicate labels included) and require `#latitude` to equal a saved
+  row within 1e-4, classifying each country as `point` or a named defect (`buttonless`,
+  `no-offered-name`, `town-tapped-without-a-point`, `point-from-another-row`, `no-point-in-four-taps`,
+  `crash`); Overpass is aborted because a shared field-service outage is not a chat defect. Its raw log
+  is `artifacts/final-quality/chat-place-matrix-probe-2026-11-18.log` and the executed counts are
+  recorded in the next entry, not here. Nothing was deployed, main is untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
