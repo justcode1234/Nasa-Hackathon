@@ -615,6 +615,21 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   Only `workflow-assistant.js` changed in the app; no place data or model vocabulary changed, so the
   tiny word LM is not retrained. Nothing was deployed, main is untouched, no NASA portal edit.
 
+- **18 Nov, same branch: iteration 15 — no axe scan covered a guided chat state.** The only two axe
+  call sites scanned read-aloud-stopped and microphone-recording; every guided reply and its
+  `role="group"` choice list is rendered dynamically, so a contrast or name regression there passed
+  the gate. A measurement at the scope, town and field prompts reported **0 violations / 51 passes**
+  each (contrast stayed in axe's `incomplete` set, which the helper does not count as a pass), and the
+  new `tests/e2e/guided-chat-accessibility.spec.js` now walks one Singapore flow and scans all three
+  states. **Executed:** the four projects passed **4/4 (9.4 s)** on isolated ports/output; injecting a
+  low-contrast rule failed `static-desktop` on `color-contrast` and reverting it passed **1/1 (2.6
+  s)**; `npx playwright test --list` is now **188 tests in 18 files**; `npm test` **193/193, 0 failed,
+  0 skipped (40,561 ms)**. Test-only change; no app module or model vocabulary changed, so the tiny
+  word LM is not retrained. A concurrent full-gate run owns the default artifact directory, so the
+  focused runs used ports 4180/4181 and `--output=artifacts/playwright/axe-run`; one first attempt in
+  the shared directory failed with a trace `ENOENT`, not an app assertion. Nothing was deployed, main
+  is untouched, no NASA portal edit.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

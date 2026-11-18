@@ -1581,6 +1581,42 @@ and no browser result is claimed here. Only `workflow-assistant.js` changed in t
 data and no model vocabulary changed, so the tiny word LM is not retrained. Nothing was deployed,
 `main` is untouched, and no NASA portal edit was made.
 
+### 14. No axe scan had covered a chat state the assistant's own buttons reach
+
+The repository's only two axe call sites scanned the read-aloud-stopped state and the microphone
+recording state. Every reply and its `role="group"` choice list is rendered dynamically into
+`#chat-history`, so a contrast or accessible-name regression inside a guided reply would have passed
+the whole gate. Measured before writing the test, against the built bundle on this device at
+1280×1000: scans at the guided scope, town and field prompts each reported **0 violations and 51
+passes**; `color-contrast` stayed in axe's `incomplete` set in every state, which the shared helper
+already excludes from its assertion and which is not counted as a pass
+(`docs/evidence/axe-guided-chat-measure-axe-taps-2026-11-18.log.gz`).
+
+The new test `tests/e2e/guided-chat-accessibility.spec.js` walks one real Singapore flow — send,
+"A specific area", tap the first saved town — asserts the reply text that makes each state real
+(`Which part of Singapore`, `no named regions`, `<town> is selected as a town point`, `0 mapped
+fields were returned`), and scans all three states with the existing `scanAccessibility` helper. It
+adds one test, so `npx playwright test --list` now reports **188 tests in 18 files** (184 before).
+
+Executed: the four projects passed **4/4 (9.4 s)** on ports 4180/4181 with an isolated `--output`
+directory, because a concurrent full-gate run owns 4173/4174 and the default artifact directory. A
+first attempt in that shared directory reported one `static-desktop` error — `browserContext.close:
+ENOENT …/artifacts/playwright/test-results/.playwright-artifacts-…/trace` — caused by the two runs
+sharing one output directory; the isolated rerun passed all four projects, and no app assertion
+changed (`docs/evidence/axe-guided-chat-axe-spec-pass-2-2026-11-18.log.gz`).
+
+Non-vacuity: injecting `#chat-history button[data-chat-choice]{background:#cfcfcf;color:#c4c4c4;
+border-color:#cfcfcf}` with `page.addStyleTag` before the first scan made `static-desktop` fail at
+`guided scope prompt` on `color-contrast` (the assertion in `axe-helper.js:8`), and removing the
+injection returned **1/1 (2.6 s)**
+(`docs/evidence/axe-guided-chat-axe-spec-broken-2026-11-18.log.gz`,
+`docs/evidence/axe-guided-chat-axe-spec-restored-2026-11-18.log.gz`). Executed on the same tree:
+`npm test` **193 tests, 193 pass, 0 fail, 0 skipped (40,561 ms)**. No app module changed; this
+iteration adds a test only, so the tiny word LM is not retrained. Nothing was deployed, `main` is
+untouched, and no NASA portal edit was made. The scan covers automated WCAG A/AA and best-practice
+rules at one desktop viewport in headless Chrome; it is not a claim of accessibility for real phones,
+Safari/WebKit or assistive-technology users.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
