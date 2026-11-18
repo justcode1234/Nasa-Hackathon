@@ -2134,7 +2134,16 @@ declares`, `+ ['helicoverpa-host'] / - []`,
 (`docs/evidence/chat-citation-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**.
 
 **The 64-case chat slice for subsections 24 and 25, run together on this tip** (the matcher change and the
-pairing change sit in the same tree): *recorded here when the run lands.*
+pairing change sit in the same tree): **61 passed, 3 failed (4.3 min)**, started at load 5.47
+(`docs/evidence/chat-name-citation-slice-load-2026-11-18.log.gz`). All three failures are in
+`[static-desktop]` and all three are the same message — `TimeoutError: locator.click: Timeout 15000ms
+exceeded … waiting for element to be visible, enabled and stable` on `#chat-toggle`, which is the host
+starvation pattern already documented in subsection 19. The three cases were then re-run alone on the same
+commit and all passed: **3 passed (17.2 s)**
+(`docs/evidence/chat-name-citation-slice-retry-2026-11-18.log.gz`), each in 2–7 s against the 24–30 s the
+degraded run took. So the failures are attributed to load, not to either change — but this run does not
+certify the tip, and the full 196-case gate remains owed (subsection 24 and 25 changed chat selection and
+the citation contract, both of which only a clean whole-suite run covers).
 
 ### Not yet executed at the time of writing
 
@@ -2162,13 +2171,15 @@ pairing change sit in the same tree): *recorded here when the run lands.*
   (`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). The same run covers the eight specs whose
   slice attempts were load-degraded in subsection 19, so those two degraded tallies stand as recorded
   but are no longer the best evidence for that tree.
-* The full gate belongs to `acb6c96`. Subsections 22 and 23 changed `public/js/lib/chat-context.js`
+* The full gate belongs to `acb6c96`. Subsections 22 to 25 changed `public/js/lib/chat-context.js`
   afterwards, so the clean **196/196 (19.1 m)** line above must not be quoted for the tip that carries the
-  caveat budget and the crop-matched pest record until the suite is re-run there; on the subsection-22 tip
-  only the 52-case chat slice and `npm test` 202/202 are measured, and on the subsection-23 tip
-  `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice recorded above are measured. The
-  remaining 132 cases - the map, farm, terrain, evidence, print and accessibility specs - have not run on
-  either of those two tips.
+  caveat budget, the crop-matched pest record, the species-name matcher and the citation-id pairing until the
+  suite is re-run there. On the subsection-22 tip only the 52-case chat slice and `npm test` 202/202 are
+  measured; on the subsection-23 tip `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice
+  recorded above are measured; on the subsection-24/25 tip the offline suite (**205/205**) and the 64-case
+  slice are measured, and that slice came out **61 passed, 3 failed** with all three failures proven to be
+  click-timeout load effects by an isolated 3/3 re-run. The remaining 132 cases - the map, farm, terrain,
+  evidence, print and accessibility specs - have not run on any of those four tips.
 * The rendered panel for the two new selection rules. No browser case loads NASA POWER and SoilGrids into
   one session, and none has a pest context loaded beside a radish plan, so the weather-plus-soil advisory
   and the crop-matched pest record are pinned by `tests/chat-context.test.js` and direct-module probes only.

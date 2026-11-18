@@ -841,8 +841,11 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   side *and* render identical titles, while a host entry with its own id, a soil source with no id, a renamed
   soil source and a renamed irrigation source all go from orphaned to clean
   (`docs/evidence/chat-citation-probe-before-after-2026-11-18.log.gz`); `npm run build` exit 0, `npm test`
-  **205/205, 0 failed, 0 skipped (31,575 ms)**, `npm audit` **0 vulnerabilities**. The 64-case chat slice covers
-  iterations 25 and 26 together on this tip. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal
+  **205/205, 0 failed, 0 skipped (31,575 ms)**, `npm audit` **0 vulnerabilities**. The 64-case chat slice covering
+  iterations 25 and 26 together on this tip came out **61 passed, 3 failed (4.3 m)** at load 5.47; all three were
+  `#chat-toggle` click-stability timeouts in `static-desktop` and all three passed when re-run alone (3/3, 17.2 s),
+  so they are host starvation, not a code regression — but the slice therefore does not certify the tip and the
+  full 196-case gate is still owed. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal
   edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
