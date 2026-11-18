@@ -403,6 +403,34 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   There is no CI here: every figure in these documents is a locally executed command, and none of it
   was deployed.
 
+- **18 Nov, same branch: the pushed branch was run from a clean clone, and the docs are now checked
+  against the tree.** Iterations 10-12. `378c6b6` (with `8aadfcd`, `7819501`) is pushed to
+  `fix/chat-flow-and-answers`; `main` stays `4a54fa3`, nothing deployed, no NASA portal edit. To test
+  the reproducibility claim instead of asserting it, the branch was cloned from GitHub into an empty
+  directory with no copy of this workspace: `npm ci` **137 packages in 10 s**, `npm test` **187/187,
+  0 failed, 0 skipped (54.6 s)**, `node scripts/check-documentation.js` **117 local links / 0 broken**,
+  `npm audit` **0 vulnerabilities**. `npm test` builds `dist/client` by itself, no offline test imports
+  a third-party package, and the model assets are tracked (`git ls-files public/models` → 5 files), so
+  the clone needs nothing but the install. Scanning every markdown file for the commands and paths it
+  tells a reader to run found 39 commands and 7 script paths clean (the probe `test:*` scripts added
+  earlier in this loop are why) but **2 dangling evidence citations** — `docs/validation.md` named
+  `…fixed-tip-2026-11-18.log` where the committed archive is `.log.gz`, and the handoff used an
+  illustrative name that read like a real file. Both fixed, and
+  [tests/documentation-commands.test.js](tests/documentation-commands.test.js) (new, **4/4**) now
+  asserts that every documented npm command exists, every documented verification file exists, every
+  hand-run script is named in a current doc (only `prestart*` hooks exempt), and every non-glob
+  `docs/evidence/…` citation resolves — each with a minimum-found count so a scanner that matches
+  nothing cannot pass. Verified non-vacuous twice: injected bogus commands failed checks 1 and 2, and
+  restoring the missing `.gz` failed check 4; both reverted. Reviewing `notebooks/legacy-workers/`
+  measured that its archived benchmark cannot even load (`ERR_MODULE_NOT_FOUND` on
+  `../server/index.js`, which resolves to `notebooks/server/index.js` after the move), recorded in that
+  README with a warning not to re-point it at the live server; and because `scripts/build-browser.js:30`
+  deletes `llm-worker.js`/`candidate-worker.js` from `dist/client`, a build-output-only assertion can
+  never fail, so `tests/deployment.test.js` (**1/1**) now also rejects those names in
+  `public/js/modules` — demonstrated by copying one there (fails) and deleting it (passes again). The
+  clean full `npm run test:e2e` (184 cases) launched **from that clone** and the aggregate offline run
+  on this tip are recorded in docs/validation.md when their own summaries print.
+
 - **18 Nov, same branch: three more chat place defects, from driving every saved list and then the
   browser.** (a) Seven lists hold a town spelled exactly like the country — "Colombia" in Huila (CO),
   "Djibouti" (DJ), "Luxembourg" (LU), "Monaco" in the Municipality of Monaco (MC), "Mozambique" in

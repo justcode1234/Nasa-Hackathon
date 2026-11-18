@@ -1233,7 +1233,7 @@ This section records what was actually re-run after the change.
 * The Playwright chat/workflow specs (`chat-only-flow`, `city-state-chat-flow`,
   `help-and-explanations`, `workflow`) on that build: static-desktop → **17 passed, 0 failed (1.8 min)**,
   and the same four specs across all four projects (static-desktop, static-mobile, node-desktop,
-  node-mobile) → **68 passed, 0 failed (6.1 min)**, `docs/evidence/e2e-chat-all-projects-fixed-tip-2026-11-18.log`.
+  node-mobile) → **68 passed, 0 failed (6.1 min)**, `docs/evidence/e2e-chat-all-projects-fixed-tip-2026-11-18.log.gz`.
   This is the chat slice of the release gate on the fixed tip; the complete 180-case gate has **not** been
   re-run since the three alias strings changed, so the 180 figure above must not be quoted as if it had.
 
@@ -1416,13 +1416,75 @@ field-latency cases); `npm test` after the documentation edits **187/187, 0 fail
 skipped (55.7 s)**. There is no CI in this repository, so no number above is anything
 other than a locally executed command.
 
+### 10. Documented commands and cited evidence files, checked by a test
+
+Two things a second device hits first were unguarded: the commands the docs tell it to run, and the
+evidence paths the docs cite as proof. Scanning every markdown file at the root and under `docs/`
+(excluding the `evidence/` and `history/` dumps) found **39 commands in fenced blocks**, **7
+`scripts/`, `tests/`, `server/` and `notebooks/` file paths**, and **49 `docs/evidence/…`
+citations**. No command was missing from `package.json` (the four probe scripts were added earlier in
+this loop) and no path was missing, but **two citations were dangling**: this file named
+`e2e-chat-all-projects-fixed-tip-2026-11-18.log` where the committed archive is
+`…log.gz`, and the handoff used an illustrative name that read like a real file. Both are corrected —
+the citation now resolves to the archive whose own summary line is `68 passed (6.1m)`, and the example
+is written as `docs/evidence/<run>-2026-11-18.log.gz`.
+
+`tests/documentation-commands.test.js` (new) keeps them honest: every documented npm command exists
+in `package.json`, every documented verification file exists, every hand-run script is named in a
+current doc (only the two `prestart*` lifecycle hooks are exempt, and 18 of the 20 scripts pass), and
+every non-glob `docs/evidence/…` citation resolves. Each check asserts a minimum number of things
+found, so a scanner that matches nothing cannot pass silently.
+
+A clean clone of the pushed branch, with no copy of the source device involved, ran `npm ci` → **137
+packages in 10 s**, `npm test` → **187 passed, 0 failed, 0 skipped (54.6 s)**,
+`node scripts/check-documentation.js` → **117 local links, 0 broken**, `npm audit` → **found 0
+vulnerabilities**. `npm test` builds `dist/client` itself, so the only prerequisites are the cloned
+tree and the pinned install; no offline test imports a third-party package.
+
+Executed: `node --test tests/documentation-commands.test.js` **4/4**. Non-vacuity, twice: injecting
+`npm run test:does-not-exist` and `node scripts/no-such-probe.js` into `docs/development.md` failed
+checks 1 and 2; restoring the missing `.gz` in the validation citation failed check 4, and putting
+the correction back returned the file to **4/4**. The injected files were removed from the working
+tree after each demonstration.
+
+### 11. The archived experiment harness cannot load, and a guard that can fail
+
+`notebooks/legacy-workers/` holds the two rejected Hugging Face workers and their old benchmark
+harness. Its README said the harness is not a current validation command; measured, it is plainer
+than that — it cannot be loaded at all:
+
+```sh
+node --input-type=module -e "import('./notebooks/legacy-workers/benchmark-candidate.js')"
+# ERR_MODULE_NOT_FOUND: Cannot find module '…/notebooks/server/index.js' (specifier ../server/index.js)
+```
+
+The file was moved a directory deeper and its import depth was never updated, so a device following
+the README could waste time "repairing" an archived worker. The README now records the measured
+failure and warns against re-pointing it at the live server.
+
+The same review found a hole in the existing coverage: `scripts/build-browser.js:30` deletes
+`llm-worker.js` and `candidate-worker.js` from `dist/client`, so a build-output-only assertion can
+never fail — the builder strips whatever reappears. `tests/deployment.test.js` now rejects those two
+names in `public/js/modules` as well, which is where they would have to be restored, and that is the
+half that bites.
+
+Executed: `node --test tests/deployment.test.js` **1/1**. Copying the archived `llm-worker.js` into
+`public/js/modules` made it fail with "Missing expected rejection: llm-worker.js is a rejected
+experiment and must not be restored into the shipped frontend"; deleting that copy returned it to
+**1/1**, and `git status --porcelain -- public/js/modules` printed nothing.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
   changed since (`chat.js`, `farms.js`, `client.js`, `workflow-assistant.js`), so 180/180 must not be
-  quoted for the current commit until it is re-run. The chat-heavy slice that does cover the
+  quoted for the current commit until it is re-run. That re-run is in progress **inside the clean clone
+  of the pushed branch** (`npm run test:e2e`, 184 tests, 1 worker) and only its own summary line will be
+  recorded here; until then it is not a passed gate. The chat-heavy slice that does cover the
   `data-choice-type` contract ran separately: **80 passed, 0 failed (6.0 min)** across all four projects
   (`docs/evidence/e2e-chat-slice-choice-type-2026-11-18.log.gz`).
+* The offline suite total on the tip that adds `tests/documentation-commands.test.js` and the
+  `tests/deployment.test.js` assertions has not been run as a whole yet; both files were executed on
+  their own (4/4 and 1/1). The **187/187** figures above are the tip before them.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

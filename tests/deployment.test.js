@@ -14,6 +14,14 @@ test('Vercel build is static and includes browser workers, crop data and local m
   assert.equal(await readFile('dist/client/licenses/fieldshift-mit.txt','utf8'),await readFile('LICENSE','utf8'));
   // Speech runtime ships from this origin with its licences; no third-party script host is needed for it.
   for (const file of ['vendor/transformers/transformers.min.js', 'vendor/transformers/ort-wasm-simd-threaded.asyncify.mjs', 'vendor/transformers/ort-wasm-simd-threaded.asyncify.wasm', 'vendor/transformers/LICENSE.txt', 'licenses/onnxruntime-mit.txt', 'js/modules/stt-worker.js', 'js/modules/speech.js']) await access(`dist/client/${file}`);
+  // The two rejected Hugging Face workers are archived under notebooks/legacy-workers, whose loader
+  // has not resolved since the move (ERR_MODULE_NOT_FOUND on ../server/index.js). The builder deletes
+  // them from dist/client, so a dist-only check could never fail; this checks the source tree they
+  // would have to be copied back into, and the shipped tree that must not carry a second model runtime.
+  for (const name of ['llm-worker.js', 'candidate-worker.js']) {
+    await assert.rejects(access(`public/js/modules/${name}`), `${name} is a rejected experiment and must not be restored into the shipped frontend`);
+    await assert.rejects(access(`dist/client/js/modules/${name}`), `${name} must not reach the build output`);
+  }
   assert.doesNotMatch(await readFile('dist/client/js/modules/stt-worker.js','utf8'),/https?:\/\/(?!huggingface)/,'The speech worker must not import code from another origin');
   assert.match(await readFile('dist/client/credits.html','utf8'),/Not affiliated with or endorsed by NASA/);
   const browserCore = await readFile('dist/client/js/lib/core-worker.bundle.js', 'utf8');
