@@ -2,12 +2,14 @@
 // typeable once its region is chosen, (b) answering a place question with the country's own name gives an
 // honest, different reply with something to tap instead of re-asking itself, and (c) a saved list with no
 // region names offers real towns, keeps the whole-country route and stays recoverable after a nonsense
-// town. Run it against a served app: PROBE_PORT=4575 node scripts/chat-place-probe.mjs
+// town. Run it with: npm run test:chat-place (PROBE_PORT overrides the default 4575, and a stale build
+// is refused rather than reported on).
 import { chromium } from '@playwright/test';
 import { listCountries, locations } from '../tests/helpers/matrix-harness.js';
 import { COUNTRY_NAMES, regionPhrase } from '../public/js/lib/countries.js';
+import { startProbeApp } from './lib/probe-app.mjs';
 
-const base = `http://127.0.0.1:${process.env.PROBE_PORT ?? 4575}`;
+const { base, close: closeApp } = await startProbeApp();
 const fields = /overpass-api\.de|overpass\.private\.coffee|maps\.mail\.ru/;
 
 // Group A: every saved list that holds a town spelled like its own country and also lists regions.
@@ -19,7 +21,7 @@ for (const code of listCountries) {
   const namedRegions = list.regions.filter(region => region.name && regionPhrase(region.name) !== regionPhrase(countryName));
   if (!town || !namedRegions.length) continue;
   const region = list.regions.find(row => row.id === town.regionCode);
-  if (region?.name) eponymousTowns.push({ code, countryName, town: town.name, region: region.name, latitude: town.latitude });
+  if (region?.name) eponymousTowns.push({ code, countryName, town: town.name, region: region.name, latitude: town.latitude, longitude: town.longitude });
 }
 
 // Group B: the country-name reply, on ordinary lists, on the long official spelling that exceeds the
@@ -60,6 +62,7 @@ async function session(countryName) {
       .evaluate(node => [...node.querySelectorAll(':scope > p')].map(p => p.textContent).join(' '))).trim(),
     buttons: (await page.locator('#chat-history article').last().locator('button[data-chat-choice]').allTextContents()).map(b => b.trim()),
     latitude: await page.locator('#latitude').inputValue().catch(() => ''),
+    longitude: await page.locator('#longitude').inputValue().catch(() => ''),
   });
   const send = async text => { await page.locator('#question').fill(text); await page.getByRole('button', { name: 'Send', exact: true }).click(); await ready(); return read(); };
   // Scoped to the newest reply, so a tap never falls back onto a button from an earlier question.
@@ -93,8 +96,11 @@ for (const row of eponymousTowns) {
     const typed = chosenRegion.latitude !== '' ? chosenRegion : await s.send(row.town);
     outcome.townReply = typed.reply.slice(0, 90);
     outcome.selectedAsTown = /is selected as a town point/i.test(typed.reply);
-    outcome.latitudeFilled = typed.latitude !== '';
-    outcome.latitudeMatchesRow = Math.abs(Number(typed.latitude) - Number(row.latitude)) < 0.01;
+    // A plan's point is the pair, not one axis: duplicate town names can share a rounded latitude.
+    outcome.latitudeFilled = typed.latitude !== '' && typed.longitude !== '';
+    outcome.latitudeMatchesRow = outcome.latitudeFilled &&
+      Math.abs(Number(typed.latitude) - Number(row.latitude)) < 0.01 &&
+      Math.abs(Number(typed.longitude) - Number(row.longitude)) < 0.01;
     outcome.buttons = typed.buttons.length;
   } catch (error) { outcome.crash = String(error.message).slice(0, 140); }
   outcome.pageErrors = s.errors;
@@ -157,13 +163,17 @@ for (const row of regionLess) {
     outcome.townReply = chosen.reply.slice(0, 90);
     outcome.selectedAsTown = /is selected as a town point/i.test(chosen.reply);
     outcome.latitude = chosen.latitude;
-    outcome.latitudeMatchesRow = chosen.latitude !== '' && Math.abs(Number(chosen.latitude) - Number(town.latitude)) < 0.01;
+    outcome.longitude = chosen.longitude;
+    outcome.latitudeMatchesRow = chosen.latitude !== '' && chosen.longitude !== '' &&
+      Math.abs(Number(chosen.latitude) - Number(town.latitude)) < 0.01 &&
+      Math.abs(Number(chosen.longitude) - Number(town.longitude)) < 0.01;
   } catch (error) { outcome.crash = String(error.message).slice(0, 140); }
   outcome.pageErrors = s.errors;
   await s.close();
 }
 
 await browser.close();
+await closeApp();
 const fail = row => Boolean(row.crash) || row.pageErrors.length > 0 ||
   (row.group === 'town spelled like its country' && !(row.latitudeFilled && row.latitudeMatchesRow)) ||
   (row.group === 'country name answered at a place question' && (row.silent || row.repeated || row.buttonless ||

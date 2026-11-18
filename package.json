@@ -24,6 +24,10 @@
     "test:firefox": "node scripts/firefox-validation.js",
     "test:qa": "node scripts/qa-validation.js",
     "test:e2e": "npm run build && playwright test",
+    "test:place-audit": "node scripts/audit-matrix.js --deep",
+    "test:chat-place": "node scripts/chat-place-probe.mjs",
+    "test:chat-matrix": "node scripts/chat-place-matrix-probe.mjs",
+    "test:country-spelling": "node scripts/country-spelling-cross-engine-probe.mjs",
     "test:release": "npm test && npm run test:e2e"
   },
   "dependencies": {

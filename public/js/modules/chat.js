@@ -148,12 +148,20 @@ export function initChat(getState, actions) {
       const followUps = answer.followUps ?? (answer.topic === 'weather' ? ['Show me rainfall evidence', 'Show me solar evidence'] :
         /soil|ph\b|sand|clay/i.test(question) ? ['Tell me about soil pH', 'Tell me about soil sand', 'Tell me about soil clay'] : []);
       if (followUps.length) {
-        const choices = el('div', null, { role: 'group', 'aria-label': 'Explore another topic' });
+        // A place question deserves a place-named group: "Explore another topic" told a screen-reader
+        // user nothing when the buttons were the only way to answer "Which town in X?".
+        const isWorkflow = answer.topic === 'workflow' || followUps.some(each => typeof each !== 'string' && each.workflowChoice);
+        const choices = el('div', null, { role: 'group', 'aria-label': isWorkflow ? 'Choose one of these to continue planning' : 'Explore another topic' });
         // Every offered choice is rendered; silently dropping the last one left farmers
-        // with a reply whose only way out was invisible.
-        followUps.slice(0, 6).forEach(followUp => {
+        // with a reply whose only way out was invisible. The workflow assistant bounds its own
+        // offers to a handful of real rows, and tests/matrix-coverage.test.js asserts that bound,
+        // so nothing here may trim the list again.
+        followUps.forEach(followUp => {
           const text = typeof followUp === 'string' ? followUp : followUp.question;
-          const button = el('button', typeof followUp === 'string' ? followUp : followUp.label, { type: 'button', 'data-chat-choice': 'true' });
+          // The choice kind travels with the button so a test can tap the level the app actually asked
+          // for, instead of guessing from the sentence.
+          const button = el('button', typeof followUp === 'string' ? followUp : followUp.label,
+            { type: 'button', 'data-chat-choice': 'true', 'data-choice-type': followUp.workflowChoice?.type ?? 'follow-up' });
           button.addEventListener('click', () => { pendingChoice = followUp.workflowChoice ?? null; $('question').value = text; $('question-form').requestSubmit(); }); choices.append(button);
         });
         response.append(choices);

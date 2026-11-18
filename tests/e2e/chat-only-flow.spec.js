@@ -29,8 +29,16 @@ const sent=page=>page.locator('#chat-history article').evaluateAll(nodes=>nodes.
 const guided=/Which part of|Which state or region|Which town|no named regions|is selected|Step 4 is ready|Whole-country overview|Choose the specific field|three existing crops|fewer than two allowed crops|could not be loaded|could not be assigned|outside the latitude|more than 50 km|Several regions|Several listed towns|not silently discard|no towns are listed|cannot choose a point/i;
 // Every offered choice must be a real target, uniquely labelled, in a flow that never touches
 // the form. Height >= 24 px keeps it usable on a phone.
+// The kind attribute is the contract the browser walks in scripts/chat-place-matrix-probe.mjs tap by: a
+// button that stops declaring which level it selects would make those walks fall back to reading the
+// sentence, which is exactly how a region/town collision was once mis-reported. So it is asserted here,
+// where it costs one attribute read, rather than discovered in a 245-code run.
+const CHOICE_KINDS=['town','region','farm','follow-up'];
 async function smoothChoices(page,step){const buttons=choices(page),count=await buttons.count(),seen=[];
   expect(count,`${step} offers at least one choice`).toBeGreaterThan(0);
+  const group=buttons.first().locator('xpath=..');
+  await expect(group,`${step} choices are one labelled group`).toHaveAttribute('role','group');
+  expect((await group.getAttribute('aria-label'))??'',`${step} choice group is named`).not.toBe('');
   for(let i=0;i<count;i++){const button=buttons.nth(i);
     await expect(button,`${step} choice ${i+1} visible`).toBeVisible();
     await expect(button,`${step} choice ${i+1} enabled`).toBeEnabled();
@@ -40,6 +48,8 @@ async function smoothChoices(page,step){const buttons=choices(page),count=await 
     const label=(await button.textContent()).trim();
     expect(label,`${step} choice ${i+1} label`).not.toBe('');
     expect(seen,`${step} has a duplicate ${label} button`).not.toContain(label);
+    expect(CHOICE_KINDS,`${step} choice ${label} declares the level it selects`)
+      .toContain((await button.getAttribute('data-choice-type'))??'');
     seen.push(label);}
   return seen;}
 

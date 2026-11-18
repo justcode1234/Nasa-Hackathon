@@ -289,6 +289,9 @@ test('one spelling that is both a region and a town follows the question that is
 test(`all ${listCountries.length} countries end in an honest outcome with no dead end or cycle`, async t => {
   const outcomes = { terminal: 0, handoff: 0 };
   const branches = { none: 0, single: 0, comparable: 0 };
+  // The browser renders every choice a reply offers, so an offer has to stay small enough to read:
+  // a wall of buttons hides the way out as surely as dropping the last one did.
+  let maxOffered = 0, widestOffer = '';
   const defects = [];
   for (const country of listCountries) {
     const countryName = COUNTRY_NAMES.of(country);
@@ -299,6 +302,9 @@ test(`all ${listCountries.length} countries end in an honest outcome with no dea
     if (result.status !== 'terminal' && result.status !== 'handoff') {
       defects.push(`${country}: ${result.status} -> ${text.slice(0, 90)}`);
       continue;
+    }
+    for (const reply of result.replies) if ((reply.followUps?.length ?? 0) > maxOffered) {
+      maxOffered = reply.followUps.length; widestOffer = `${country}: ${textOf(reply).slice(0, 70)}`;
     }
     // Every reply on the way must give the farmer a way to continue.
     for (const reply of result.replies.slice(0, -1)) if (!reply.followUps.length) defects.push(`${country}: a mid-plan reply offered no choice`);
@@ -321,6 +327,10 @@ test(`all ${listCountries.length} countries end in an honest outcome with no dea
   // being tested without any test failing.
   assert.ok(branches.none > 0 && branches.single > 0 && branches.comparable > 100,
     `expected all three screened-crop branches, drove ${JSON.stringify(branches)}`);
+  t.diagnostic(`widest offer across the matrix: ${maxOffered} choices — ${widestOffer}`);
+  // Six is the number the browser used to cap its buttons at. Anything larger would have been trimmed in
+  // silence, which is the defect class this assertion now prevents from coming back.
+  assert.ok(maxOffered <= 6, `a reply offered ${maxOffered} choices: ${widestOffer}`);
   assert.deepEqual(defects.slice(0, 12), [], `${defects.length} countries dead-end or misreport through the chat`);
   assert.equal(outcomes.terminal + outcomes.handoff, listCountries.length);
 });
