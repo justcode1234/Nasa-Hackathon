@@ -388,6 +388,22 @@ test('a soil test written with a decimal comma keeps its fraction and is not a p
   assert.equal(ph('salinity 3,7 dS/m'), null, 'a salt reading is not a pH');
   assert.equal(at('soil pH 6,2'), null, 'the two halves of one pH are not a latitude and a longitude');
   assert.deepEqual(at('at 18.52, 73.85 with soil pH 6.2'), { latitude: 18.52, longitude: 73.85 }, 'a real pair beside a pH still lands');
-  assert.equal(at('soil pH 6,2 at 18.52, 73.85'), null, 'measured limit: the pH comma is refused and the second pair is not yet found');
-  assert.deepEqual(at('salinity 3,7 dS/m'), { latitude: 3, longitude: 7 }, 'measured limit: a unit label is not yet a cue to refuse the comma');
+  assert.deepEqual(at('soil pH 6,2 at 18.52, 73.85'), { latitude: 18.52, longitude: 73.85 }, 'a refused pH comma no longer hides the real pair that follows it');
+  assert.equal(at('salinity 3,7 dS/m'), null, 'a salt reading is one number, not a place');
+});
+
+test('one number written with a decimal comma is not a pair of coordinates', () => {
+  const at = tail => (parseWorkflowMessage(`Help me plan a rotation in India. Crops: rice, cabbage, tomato. ${tail}`, true) ?? {}).location ?? null;
+  assert.equal(at('salinity 3,7 dS/m'), null, 'a salt reading is one number, not a latitude and a longitude');
+  assert.equal(at('organic matter 3,5 % and a bit of gravel'), null);
+  assert.equal(at('the soil is 62,5 % sand'), null, '62 would pass as a latitude, which is how a wrong pin goes unnoticed');
+  assert.deepEqual(at('at 18.52, 73.85'), { latitude: 18.52, longitude: 73.85 }, 'the spaced pair is unaffected');
+  assert.deepEqual(at('at 18, 52'), { latitude: 18, longitude: 52 }, 'two whole numbers with a space are still a pair');
+  assert.deepEqual(at('at -31.89,116.77'), { latitude: -31.89, longitude: 116.77 }, 'the app writes its own region list in this tight form');
+  assert.deepEqual(at('at 42,-93.69'), { latitude: 42, longitude: -93.69 });
+  assert.deepEqual(at('at 52.19,0.09'), { latitude: 52.19, longitude: 0.09 });
+  assert.deepEqual(at('at 18,52, 73,85'), { latitude: 18.52, longitude: 73.85 }, 'two comma decimals are still a pair');
+  assert.deepEqual(at('the point is 18.52N 73.85E right now'), { latitude: 18.52, longitude: 73.85 });
+  assert.deepEqual(at('rainfall 1.250,5 mm last season'), { latitude: 1.25, longitude: 5 }, 'measured limit: a dot thousands separator plus a comma decimal is still read as a pair');
+  assert.deepEqual(at('seed rate 3.5 N and 2.1 E per kg'), { latitude: 3.5, longitude: 2.1 }, 'measured limit: the hemisphere route still trusts two agronomy letters');
 });

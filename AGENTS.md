@@ -930,20 +930,32 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
-- **18 Nov, same branch: iteration 32 staged, not shipped — the loop paused with the work half-done on purpose.** The
-  pair pattern at `public/js/modules/workflow-assistant.js:31` accepts a comma with no space around it, so a
-  measurement written in a comma-decimal locale becomes a farm location: `salinity 3,7 dS/m` → 3, 7 · `organic matter
-  3,5 %` → 3, 5 · `the soil is 62,5 % sand` → **62, 5, inside ±90 so nothing warns** · and because the pattern reports
-  only its first match, `salinity 3,7 dS/m at 18.52, 73.85` keeps the invention and loses the real pin. The fix, a
-  29th guard test (red by design at **29 tests, 28 pass, 1 fail**), and a 25-spelling rehearsal against a scratch copy
-  of the module (**0 differences**) are archived as
-  `docs/evidence/workflow-tight-comma-module-patch-2026-11-18.patch.gz`,
-  `docs/evidence/workflow-tight-comma-guard-tests-patch-2026-11-18.patch.gz` and
-  `docs/evidence/workflow-tight-comma-rehearsal-copy-2026-11-18.log.gz`; the rehearsal is what caught that
-  `!candidate[2].trim()` can never fire, since `.trim()` strips whitespace and not the comma. It was deliberately **not**
-  applied while the 196-case gate held `public/`: editing it mid-run would make the static and node projects test
-  different code and invalidate the number the queue has owed since `acb6c96`. The pushed tip therefore still contains
-  the defect, and validation.md subsection 31 says so.
+- **18 Nov, same branch: iteration 32 — one number written with a decimal comma became a farm location.** The pair
+  pattern at `public/js/modules/workflow-assistant.js:31` accepted a comma with no space around it, so
+  `salinity 3,7 dS/m` → 3, 7 · `organic matter 3,5 %` → 3, 5 · `the soil is 62,5 % sand` → **62, 5, inside ±90 so
+  nothing warns** · and because the pattern reported only its first match, `salinity 3,7 dS/m at 18.52, 73.85` kept
+  the invention and lost the real pin. A tight `d,d` whose halves carry neither a dot nor a sign is now refused and
+  the search **continues to the next candidate pair** instead of returning nothing. It was rehearsed on a scratch copy
+  while the gate held `public/` — a rehearsal that caught that the first predicate could never fire, because `.trim()`
+  strips whitespace and not the comma — then applied verbatim once nothing was serving the directory.
+  **Executed:** guard **29 tests, 28 pass, 1 fail → 29 pass, 0 fail**
+  (`docs/evidence/workflow-tight-comma-guard-before-2026-11-18.log.gz`,
+  `docs/evidence/workflow-tight-comma-guard-after-2026-11-18.log.gz`, rehearsal
+  `docs/evidence/workflow-tight-comma-rehearsal-copy-2026-11-18.log.gz`, patch
+  `docs/evidence/workflow-tight-comma-module-patch-2026-11-18.patch.gz`); the two read-only probes re-run unchanged on
+  the live module show the eight coordinate spellings intact, the four invented pins gone and the mixed messages
+  keeping the real coordinates (`docs/evidence/workflow-tight-comma-probe-after-2026-11-18.log.gz` beside
+  `docs/evidence/workflow-tight-comma-baseline-2026-11-18.log.gz`); `npm run build` exit 0 and `npm test` **211/211,
+  0 failed, 0 skipped (23,810 ms)** (`docs/evidence/workflow-tight-comma-npm-test-2026-11-18.log.gz`), re-run green
+  after the documentation edits (211/211, 27,055 ms,
+  `docs/evidence/workflow-tight-comma-npm-test-final-2026-11-18.log.gz`). Two assertions
+  that pinned the superseded behaviour were rewritten to the required behaviour, not deleted: `at('salinity 3,7 dS/m')`
+  now must yield no location and `at('soil pH 6,2 at 18.52, 73.85')` now must yield 18.52, 73.85. Still asserted as
+  limits, not as fixes: `rainfall 1.250,5 mm`, `values 3,5 and 2,1` and `seed rate 3.5 N and 2.1 E per kg`.
+  **The 196-case gate launched on `6db7742` never produced a summary** — 79 case lines printed, then the process was
+  gone — kept as `docs/evidence/e2e-gate-6db7742-interrupted-2026-11-18.log.gz`, so no full-suite figure is claimed for
+  any tip after `acb6c96`; the browser evidence for this commit is the chat/workflow slice — **64 passed, 0 failed
+  (2.3 m)** (`docs/evidence/workflow-tight-comma-e2e-slice-2026-11-18.log.gz`). Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 - **18 Nov, same branch: iteration 31 — a comma-decimal soil test lost its fraction and invented a pin.** The pH
   pattern (`public/js/modules/workflow-assistant.js:78` pre-fix) allowed only a dot, so `soil pH 6,2` was read as
   pH **6** — a legal value the 0-14 check can never question — and the same comma then read as a coordinate

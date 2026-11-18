@@ -28,7 +28,18 @@ export function parseWorkflowMessage(question, active = false) {
   // on the Egypt/Libya border instead of in Goa — and both invented numbers sail through the ±90/±180 check.
   // Requiring the comma-inside-a-number shape on both sides is what keeps "at 18, 52" a pair of whole numbers.
   const commaDecimal = /(?:^|[^\d.,])(-?\d{1,3}),(\d{1,3})\s*(?:,|;|\s+|and)\s*(-?\d{1,3}),(\d{1,3})(?![\d,])/i.exec(question);
-  const point = /(?:^|[^\d.\w+-])([-+]?\d{1,3}(?:\.\d+)?)\s*,\s*([-+]?\d{1,3}(?:\.\d+)?)(?=$|[\s,;!?)\]]|\.(?!\d))/i.exec(question);
+  // A tight comma inside a bare `d,d` is how a comma-decimal locale writes ONE number, so "salinity 3,7 dS/m" is a
+  // salt reading rather than latitude 3, longitude 7 - and 62,5 % sand pins a farm in Norway inside the +-90 check.
+  // A pair survives when its halves are spaced, or when either half already states a fraction with a dot or a sign.
+  // Refusing one candidate does not end the search, so a measurement written before the real coordinates no longer
+  // hides them.
+  const pairForms = /(?:^|[^\d.\w+-])([-+]?\d{1,3}(?:\.\d+)?)(\s*,\s*)([-+]?\d{1,3}(?:\.\d+)?)(?=$|[\s,;!?)\]]|\.(?!\d))/gi;
+  let point = null;
+  for (let candidate; (candidate = pairForms.exec(question)); ) {
+    if (!/\s/.test(candidate[2]) && !/[.+-]/.test(candidate[1]) && !/[.+-]/.test(candidate[3])) continue;
+    point = candidate;
+    break;
+  }
   // The other way a pin is written tags each number with its own half of the world ("18.52N 73.85E", "33.9 S,
   // 18.4 W") or names it ("lat 18.52 lon 73.85"). Those letters are the sign a decimal form states with a minus,
   // so S and W flip. Three things have to hold, because each one is a way an unrelated number pair could look
@@ -55,7 +66,7 @@ export function parseWorkflowMessage(question, active = false) {
   const location = commaDecimal && !phIsPair(commaDecimal)
     ? { latitude: Number(`${commaDecimal[1]}.${commaDecimal[2]}`), longitude: Number(`${commaDecimal[3]}.${commaDecimal[4]}`) }
     : tagged ? tagged
-    : point && !phIsPair(point) ? { latitude: Number(point[1]), longitude: Number(point[2]) } : null;
+    : point && !phIsPair(point) ? { latitude: Number(point[1]), longitude: Number(point[3]) } : null;
   const baselineQuestion=question.replace(/\ballowed crops\s*(?:are|:|=)\s*[^.;]+/ig,'');
   const clause = /\b(?:crops|baseline|(?:existing )?rotation)\s*(?:are|is|:|=)\s*(.+)/i.exec(baselineQuestion)?.[1] ??
     /\b(?:with (?:the )?crops|based on (?:these crops[: ]+)?|rotate:|farmer provides|currently grow|i grow)\s*(.+)/i.exec(question)?.[1] ??

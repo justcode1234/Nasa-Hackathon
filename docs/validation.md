@@ -2423,20 +2423,41 @@ and its tests use before editing: `18.52, 73.85`, `18, 52`, `-31.89,116.77` (the
 uses, `tests/e2e/map3d.spec.js:7`), `42,-93.69`, `52.19,0.09`, `18.520,73.856`, `18,52, 73,85`,
 `coordinates 18,52 and 73,85` and `18.52N 73.85E` all still resolve.
 
-**This subsection describes work that is staged, not shipped.** Nothing in `public/` has been changed for it, so the
-behaviour in the table above is still what the app does on `6db7742`. What has been measured, honestly labelled by how
-it was measured: the guard for it, appended to `tests/workflow-assistant.test.js` and red by design at
-**29 tests, 28 pass, 1 fail** (`docs/evidence/workflow-tight-comma-guard-before-2026-11-18.log.gz`); the 25-spelling
-corpus run against a **rehearsal copy** of the module at `artifacts/wa-patched.js` rather than `public/`, because a
-full-suite Playwright gate holds that directory while this is written - that copy returns **0 differences of 25**, and
-the rehearsal earned its keep by catching that the first predicate never fired at all (`.trim()` strips whitespace but
-not the comma, so the separator test had to become `!/\s/.test(...)`)
-(`docs/evidence/workflow-tight-comma-rehearsal-copy-2026-11-18.log.gz`); and the change itself as a patch that
-`git apply --check` accepts against the current tree, together with the guard patch and the before-behaviour baseline
-(`docs/evidence/workflow-tight-comma-module-patch-2026-11-18.patch.gz`,
-`docs/evidence/workflow-tight-comma-guard-tests-patch-2026-11-18.patch.gz`,
-`docs/evidence/workflow-tight-comma-baseline-2026-11-18.log.gz`). No build, no offline suite total and no browser run
-belongs to this subsection yet; until they are recorded here it is a design with a rehearsal, not a verified fix.
+**This subsection was rehearsed before it was shipped, and the rehearsal found the bug in the fix.** The rule was
+first applied to a copy at `artifacts/wa-patched.js` (imports rewritten to absolute paths) because a
+full-suite Playwright gate held `public/` at the time; running the 25-spelling corpus against that copy returned
+**0 differences of 25** and caught that the first version of the separator test could never fire, since `.trim()`
+strips whitespace and not the comma - the predicate had to become `!/\s/.test(separator)`
+(`docs/evidence/workflow-tight-comma-rehearsal-copy-2026-11-18.log.gz`). The change itself is the archived module
+patch (`docs/evidence/workflow-tight-comma-module-patch-2026-11-18.patch.gz`, applied here verbatim) and the guard
+patch (`docs/evidence/workflow-tight-comma-guard-tests-patch-2026-11-18.patch.gz`); the guard was written red first at
+**29 tests, 28 pass, 1 fail** (`docs/evidence/workflow-tight-comma-guard-before-2026-11-18.log.gz`) and the shipped
+module turns it **29 pass, 0 fail** (`docs/evidence/workflow-tight-comma-guard-after-2026-11-18.log.gz`).
+
+Two assertions that had pinned the old behaviour were rewritten to the new required behaviour, which is a widening
+rather than a weakening and is said here because it is the only way a later reader can tell the two apart: in
+subsection 30's test, `at('salinity 3,7 dS/m')` stops asserting `{ latitude: 3, longitude: 7 }` and asserts `null`,
+and `at('soil pH 6,2 at 18.52, 73.85')` stops asserting `null` and asserts `{ latitude: 18.52, longitude: 73.85 }`
+because a refused candidate no longer ends the search.
+
+**Executed on the shipped tree.** `npm run build` exit 0 and `npm test` **211 tests, 211 pass, 0 fail, 0 skipped
+(23,810 ms)** (`docs/evidence/workflow-tight-comma-npm-test-2026-11-18.log.gz`). It was run again after the
+documentation edits below, because `tests/documentation-commands.test.js` reads the evidence paths these subsections
+cite: **211 pass, 0 fail in 27,055 ms** (`docs/evidence/workflow-tight-comma-npm-test-final-2026-11-18.log.gz`). The two read-only probes that made
+the baseline were re-run unchanged against the live module: all eight coordinate spellings that already landed still
+land identically, the four invented pins are gone, and the mixed messages now keep the real coordinates
+(`docs/evidence/workflow-tight-comma-probe-after-2026-11-18.log.gz`, beside
+`docs/evidence/workflow-tight-comma-baseline-2026-11-18.log.gz` for the same probes before the patch). Still refused,
+and still measured rather than claimed: `rainfall 1.250,5 mm` (a dot thousands separator plus a comma decimal) reads
+as latitude 1.25, longitude 5, `values 3,5 and 2,1` and `seed rate 3.5 N and 2.1 E per kg` read as a pair, and those
+three are asserted as limits in the guard so no later change can report them as fixed.
+
+In the browser, the chat and workflow slice re-ran on the shipped module across all four projects: **64 passed, 0
+failed (2.3 m)** (`docs/evidence/workflow-tight-comma-e2e-slice-2026-11-18.log.gz`), which covers the flow that
+actually consumes a parsed coordinate - a typed message with coordinates reaching step 4, and the three workflow
+cases per project. No full 196-case gate exists for this tip: the run launched on `6db7742` died without printing a
+summary (`docs/evidence/e2e-gate-6db7742-interrupted-2026-11-18.log.gz`), so the last complete gates remain **196/196**
+on `acb6c96` and **195/1** on `bb69aee`.
 
 
 ### Not yet executed at the time of writing
