@@ -2460,6 +2460,71 @@ summary (`docs/evidence/e2e-gate-6db7742-interrupted-2026-11-18.log.gz`), so the
 on `acb6c96` and **195/1** on `bb69aee`.
 
 
+### 32. Two of the four comparison priorities could not be reached from chat
+
+Comparison Priority is a four-value select (`public/index.html:122`: fewer family repeats, known thermal warnings, less
+historical rain-free exposure, shorter maturity), `applyPlanning` writes whatever the chat parser produces straight into
+it (`public/js/app.js:181-183`), each value reorders the comparison (`server/agronomy/rotation.js:143-147`, pinned by
+`tests/qa-contracts.test.js:76`) and the chosen value is named back to the farmer in the reply
+(`server/agronomy/rotation.js:214`, "the first by your *priority* is …"). Before this change the parser had two
+regexes for it (`public/js/modules/workflow-assistant.js:95-96`), matching only `water` and `family|fewer family
+repeats` immediately after the noun. Because the select's first option is `family`, an unread priority is not dropped
+but substituted: the farmer is told the ranking they never asked for, and `climate` and `short-season` were reachable
+only by mouse.
+
+Measured with 26 phrasings - half of them spellings the repository itself uses, from the select's labels and
+`models/judgment/development.json` - against the shipped module on `4cc6178`
+(`docs/evidence/wa-priority-baseline-2026-11-18.log.gz`): **11 of 26** produced the value the sentence asked for.
+`family` was reached by 4 of the 5 phrasings asking for it and `water` by 2 of 5, while `climate` was reached by **0 of
+5** and `short-season` by **0 of 4** - no wording of them set anything. A farmer typing `prioritize heat warnings` got
+a family-repeat ranking and a reply asserting that was their priority.
+
+The rule is positional rather than a bigger synonym list (`:105-116`): a value counts only inside the same clause as
+the noun, up to six words on either side of it, and a message naming two values sets nothing. The window is cut from
+the message **as typed**, not from `text`, because `normalizeName` (`public/js/lib/countries.js:4`) has already
+replaced every comma and period with a space and the clause boundary is the only thing that keeps a neighbour
+sentence from supplying the value. Hyphenated spellings (`rain-free`, `short-season`) are matched in the value
+patterns, and a `:` or `=` between noun and value is still allowed - the old rule read those through `normalizeName`,
+so refusing them would have been a narrowing.
+
+**The rehearsal found two bugs in the first version of the rule.** Both were measured on a scratch copy
+(`docs/evidence/wa-priority-rehearsal-copy-2026-11-18.js.gz`, imports rewritten to absolute paths) because a browser
+run held `public/` at the time. (1) Reading the window from normalized `text` with `\S+` words reached across
+sentences: `priority is unclear, heat warnings worry me` → climate, `set the priority later, the water is fine here` →
+water, `I have no priority yet but the water is short` → water, `the priority menu is confusing, family farm is the
+name of my field` → family (`docs/evidence/wa-priority-overreach-window6-2026-11-18.log.gz`). That is the same
+substituted-not-dropped class as subsections 28-31, arriving through a fix. Cutting the window at clause boundaries
+and adding an explicit decline test removes all four (`docs/evidence/wa-priority-overreach-after-2026-11-18.log.gz`,
+where the only messages that now set a value are the ones that state one). (2) The first version also missed the bare
+compound spelling - `water priority`, `climate priority`, `set a short-season priority` set nothing - and when the
+pre-noun window was narrowed to three words to curb the reach, `with short season as the priority` fell back to
+**25 of 26** (`docs/evidence/wa-priority-rehearsal-window3-2026-11-18.log.gz`). Six words with a boundary cut keeps
+both: **26 of 26**, and the two shipped forms still work.
+
+**Executed on the shipped tree.** The guard was written red first: **30 tests, 29 pass, 1 fail** - the first failure
+is `rerun with fewer family repeats as priority`, which the shipped two-regex rule cannot read at all
+(`docs/evidence/wa-priority-guard-before-2026-11-18.log.gz`) - and the shipped module turns it **30 pass, 0 fail**
+with the 48-spelling corpus, 11 of which must set nothing (`docs/evidence/wa-priority-guard-shipped-2026-11-18.log.gz`). The 26-row probe re-run
+against the live module reports **26 as required, 0 differences** with all four values reachable by their own
+phrasings (`docs/evidence/wa-priority-probe-after-2026-11-18.log.gz`), and the separator probe
+(`docs/evidence/wa-priority-separators-shipped-2026-11-18.log.gz`) shows `priority: water`, `priority = climate`,
+`PRIORITY: WATER`, `priority: shorter maturity`, `set priority to water` and `change the priority to climate` all
+resolving. `npm run build` exit 0 and `npm test` **212 tests, 212 pass, 0 fail, 0 skipped (29,782 ms)**
+(`docs/evidence/wa-priority-npm-test-shipped-2026-11-18.log.gz`).
+
+In the browser the chat and workflow slice re-ran on the shipped module across all four projects: **64 passed, 0
+failed (2.5 m)** (`docs/evidence/wa-priority-e2e-slice-2026-11-18.log.gz`), which includes the sixteen QA prompts and
+the guided flows that carry a parsed `constraints` object into step 4. No full 196-case gate exists for this tip
+either; the last complete gates remain **196/196** on `acb6c96` and **195/1** on `bb69aee`.
+
+Still refused, measured rather than claimed: `priority. water` (a sentence period is a boundary, and the second
+sentence states no priority cue) and `priority—water` (an em dash is not an accepted separator). `low priority heat
+pump install near the water` sets nothing because the six-word window catches both a thermal and a water word, and
+`I have no priority yet but the water is short` sets nothing because the noun is declined - both are asserted in the
+guard so a later change cannot report them as fixed. What the parser now reads is still only what a farmer can say in
+words: no agronomic claim is attached to any priority value, and which ranking is *better* remains unverified and
+outside this app.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has

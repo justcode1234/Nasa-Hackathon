@@ -930,6 +930,37 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 33 — two of the four Comparison Priority values could not be reached from chat.**
+  `#priority` offers `family | climate | water | short-season` (`public/index.html:122`), `applyPlanning` writes the
+  parsed value into that select (`public/js/app.js:181-183`), each value reorders the comparison
+  (`server/agronomy/rotation.js:143-147`) and the reply names it back to the farmer (`:214`) — but the parser had two
+  regexes, so only `water` and `family` were reachable by prose and, since the select's first option is `family`, an
+  unread priority was **substituted, not dropped**. Measured on `4cc6178` with a 26-phrasing corpus: **11 as required**;
+  `climate` reached by **0 of 5** phrasings asking for it and `short-season` by **0 of 4**
+  (`docs/evidence/wa-priority-baseline-2026-11-18.log.gz`). The rule now reads a value only inside the same clause as
+  the noun, up to six words either side, from the message **as typed** — `normalizeName` has already turned every comma
+  and period into a space, and the boundary is what stops a neighbour sentence supplying the value — and a message
+  naming two values sets nothing (`public/js/modules/workflow-assistant.js:105-116`). **The rehearsal caught two bugs
+  in the first version of the fix**, both on a scratch copy while a browser run held `public/`
+  (`docs/evidence/wa-priority-rehearsal-copy-2026-11-18.js.gz`): reading normalized `text` reached across sentences
+  (`set the priority later, the water is fine here` → water, four such cases in
+  `docs/evidence/wa-priority-overreach-window6-2026-11-18.log.gz`), and the bare compound `water priority` set nothing
+  — then narrowing the pre-noun window to three words lost `with short season as the priority` (**25 of 26**,
+  `docs/evidence/wa-priority-rehearsal-window3-2026-11-18.log.gz`). Six words with a boundary cut gives **26 of 26**
+  (`docs/evidence/wa-priority-overreach-after-2026-11-18.log.gz` shows the only messages that set a value are the ones
+  that state one). **Executed:** guard **30 tests, 29 pass, 1 fail → 30 pass, 0 fail** over the 48-spelling corpus
+  (`docs/evidence/wa-priority-guard-before-2026-11-18.log.gz`,
+  `docs/evidence/wa-priority-guard-shipped-2026-11-18.log.gz`); the 26-row probe re-run on the live module reports
+  **26 as required, 0 differences** with all four values reachable
+  (`docs/evidence/wa-priority-probe-after-2026-11-18.log.gz`); `priority: water`, `priority = climate`,
+  `PRIORITY: WATER`, `set priority to water` and `change the priority to climate` all resolve
+  (`docs/evidence/wa-priority-separators-shipped-2026-11-18.log.gz`) — that separator allowance exists because the first
+  draft silently narrowed them; `npm run build` exit 0, `npm test` **212/212, 0 failed, 0 skipped (29,782 ms)**
+  (`docs/evidence/wa-priority-npm-test-shipped-2026-11-18.log.gz`) and the chat/workflow slice **64 passed, 0 failed
+  (2.5 m)** (`docs/evidence/wa-priority-e2e-slice-2026-11-18.log.gz`). Still asserted as limits, not fixes:
+  `priority. water` and `priority—water` set nothing, `low priority heat pump install near the water` is ambiguous and
+  sets nothing, and `I have no priority yet but the water is short` is declined. Nothing was deployed, main is untouched
+  (`4a54fa3`), no NASA portal edit.
 - **18 Nov, same branch: iteration 32 — one number written with a decimal comma became a farm location.** The pair
   pattern at `public/js/modules/workflow-assistant.js:31` accepted a comma with no space around it, so
   `salinity 3,7 dS/m` → 3, 7 · `organic matter 3,5 %` → 3, 5 · `the soil is 62,5 % sand` → **62, 5, inside ±90 so

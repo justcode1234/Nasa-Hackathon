@@ -92,8 +92,28 @@ export function parseWorkflowMessage(question, active = false) {
   if (soil) constraints.soil = soil;
   const ph = phMatch?.[1]?.replace(',', '.');
   if (ph != null) constraints.soilPh = Number(ph);
-  if (/\b(?:priority|prioriti[sz]e)\s+(?:is\s+)?water\b/.test(text)) constraints.priority = 'water';
-  if (/\b(?:priority|prioriti[sz]e)\s+(?:is\s+)?(?:family|fewer family repeats)\b/.test(text)) constraints.priority = 'family';
+  // Comparison priority has four real values (public/index.html:122, validated at
+  // server/agronomy/rotation.js:28), each of which reorders the scenarios (rotation.js:143-147, pinned by
+  // tests/qa-contracts.test.js:76) while the select's first option is "family". A stated priority that is not
+  // read is therefore not dropped but substituted: the reply reports "the first by your family priority is …"
+  // about a ranking the farmer never asked for (rotation.js:214). A value counts only in the same clause as the
+  // noun, up to six words either side of it, and a message naming two values sets nothing. The window is cut from
+  // the message as typed rather than from `text`, because normalizeName has already turned every comma and period
+  // into a space and the clause boundary is the only thing that stops "set the priority later, the water is fine"
+  // from reading the neighbour sentence. Hyphenated spellings are matched here instead of normalised, and a `:` or
+  // `=` between the noun and its value is still allowed because the old rule read those through normalizeName - a
+  // sentence period is not, and "priority. water" is measured as a limit rather than silently widened.
+  const raw = question.toLowerCase();
+  const noun = String.raw`(?:priority|prioriti[sz]e)`;
+  const word = "[a-z0-9'-]+";
+  const priorityValues = [['family', /\bfamily\b/], ['climate', /\b(?:climate|thermal|heat)\b/],
+    ['water', /\b(?:water|rain[- ]free)\b/], ['short-season', /\b(?:shorter|short)[ -]?(?:season|maturity)\b|\bearly maturity\b/]];
+  const priorityClauses = [...raw.matchAll(new RegExp(String.raw`\b${noun}\s*[:=]?\s*((?:${word}\s*){0,6})`, 'gi')),
+    ...raw.matchAll(new RegExp(String.raw`((?:${word}\s*[:=]?\s*){0,6})${noun}\b`, 'gi'))].map(match => match[1] ?? '');
+  const declined = new RegExp(String.raw`\b(?:no|not|never|unset|unknown|unclear|later)\s+(?:\S+\s+)?${noun}\b|\b${noun}\s+(?:is\s+)?(?:unclear|unknown|unset|later|unchanged|open)\b`, 'i').test(raw);
+  const priorityAsked = declined ? [] : priorityValues.filter(([, words]) => priorityClauses.some(clause => words.test(clause)))
+    .map(([value]) => value);
+  if (priorityAsked.length === 1) constraints.priority = priorityAsked[0];
   for (const [key, pattern] of [['planningYear', /\bplanning year\s*(?:is|:)?\s*(20\d{2})/i], ['referenceYear', /\breference year\s*(?:is|:)?\s*(20\d{2})/i]]) {
     const year = pattern.exec(question)?.[1]; if (year) constraints[key] = Number(year);
   }

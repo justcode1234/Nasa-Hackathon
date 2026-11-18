@@ -407,3 +407,41 @@ test('one number written with a decimal comma is not a pair of coordinates', () 
   assert.deepEqual(at('rainfall 1.250,5 mm last season'), { latitude: 1.25, longitude: 5 }, 'measured limit: a dot thousands separator plus a comma decimal is still read as a pair');
   assert.deepEqual(at('seed rate 3.5 N and 2.1 E per kg'), { latitude: 3.5, longitude: 2.1 }, 'measured limit: the hemisphere route still trusts two agronomy letters');
 });
+
+test('every Comparison Priority value a farmer can name in words is reachable from chat', () => {
+  const pr = phrasing => (parseWorkflowMessage(phrasing, true) ?? {}).constraints?.priority ?? '';
+  // The four values are the options of #priority (public/index.html:122) and each one reorders the
+  // comparison (server/agronomy/rotation.js:143-147). Spellings marked app: are the repository's own.
+  for (const [want, phrasing] of [
+    ['water', 'priority is water'], ['family', 'priority is family'],
+    ['family', 'priority is fewer family repeats'], ['family', 'prioritize fewer family repeats'],
+    ['family', 'rerun with fewer family repeats as priority'], ['family', 'the comparison priority is family'],
+    ['climate', 'priority is known thermal warnings'], ['climate', 'priority is climate'],
+    ['climate', 'my priority is heat warnings'], ['climate', 'prioritize thermal risk'],
+    ['climate', 'with climate as the priority'], ['water', 'priority is less historical rain free exposure'],
+    ['water', 'compare again with water as the priority'], ['water', 'priority low water use'],
+    ['water', 'prioritize saving water'], ['short-season', 'priority is shorter maturity'],
+    ['short-season', 'my priority is a shorter season'], ['short-season', 'prioritize early maturity'],
+    ['short-season', 'with short season as the priority'],
+    ['climate', 'climate priority'], ['water', 'water priority'],
+    ['short-season', 'short-season priority'], ['family', 'family priority'],
+    ['water', 'water priority please'], ['short-season', 'set a short-season priority'],
+    ['climate', 'use known climate priority for the rerun'],
+    ['water', 'priority: water'], ['climate', 'priority = climate'],
+    ['short-season', 'priority: shorter maturity'], ['water', 'PRIORITY: WATER'],
+    ['water', 'set priority to water'], ['climate', 'change the priority to climate'],
+    ['', 'priority. water'], ['', 'priority—water'],
+    ['', 'I want fewer crop family repeats'], ['', 'I want the shortest season'],
+    ['', 'priority is water and fewer family repeats'], ['', 'priority is unclear, just show me the options'],
+    ['', 'my farm is short on labour and the season is long'], ['', 'do not change the priority'],
+    ['', 'compare with maize after rice'],
+    ['', 'priority is unclear, heat warnings worry me'], ['', 'set the priority later, the water is fine here'],
+    ['', 'I have no priority yet but the water is short'],
+    ['', 'the priority menu is confusing, family farm is the name of my field'],
+    ['', 'do not change the priority, just show the shorter season options'],
+    ['', 'low priority heat pump install near the water'],
+    ['', 'compare again with water as the priority and fewer family repeats']
+  ]) assert.equal(pr(phrasing), want, `${phrasing} must set priority to ${want || 'nothing'}`);
+  assert.equal(pr('priority is water'), 'water', 'the shipped spelling keeps working');
+  assert.equal(pr('my priority is a shorter season'), 'short-season', 'no phrasing may keep the select on its first option silently');
+});
