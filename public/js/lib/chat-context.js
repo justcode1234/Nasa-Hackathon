@@ -50,3 +50,17 @@ export function contextBlocks(question, state, answer) {
   }
   return { blocks: blocks.slice(0, 2), sources };
 }
+
+// How a reply is assembled once local evidence is added. The panel shows at most three paragraphs.
+// Weather and soil estimates answer the question the generic templates cannot, so they stand in for
+// the API's own paragraphs. A field record, a pest occurrence or the national irrigation ratio only
+// describe the surroundings, so one paragraph of the crop answer has to survive beside them; the API
+// limitation is kept unless the context already carries one.
+export function composeAnswerBlocks(answerBlocks, extraBlocks) {
+  if (!extraBlocks.length) return answerBlocks.slice(0, 3);
+  const context = extraBlocks.slice(0, 2);
+  const replaces = context.some(block => block.kind === 'historical weather evidence' || block.kind === 'regional soil model');
+  const facts = replaces ? [] : answerBlocks.filter(block => block.kind !== 'limitation').slice(0, 1);
+  const caveat = context.some(block => block.kind === 'limitation') ? [] : answerBlocks.filter(block => block.kind === 'limitation').slice(0, 1);
+  return [...context, ...facts, ...caveat].slice(0, 3);
+}

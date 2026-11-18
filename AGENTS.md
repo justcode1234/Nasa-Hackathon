@@ -690,6 +690,26 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   phone, microphone, Safari/WebKit or agronomic review. Nothing was deployed, main is untouched, no
   NASA portal edit.
 
+- **18 Nov, same branch: iteration 19 — added context replaced the answer's own paragraphs, and the
+  owed full gate was run.** The reply kept at most three paragraphs and, when chat added local
+  evidence, kept only the API's limitation: a crop question naming the selected field became the field
+  record plus a caveat with the sourced crop paragraph gone, and with soil context the reply carried
+  two limitation paragraphs. The rule moved to `composeAnswerBlocks()` in
+  `public/js/lib/chat-context.js`, ported verbatim first so the required behaviour could be recorded
+  failing (**3 pass, 2 fail** against the ported rule: the field case returned `mapped field record,
+  limitation` with the crop paragraph gone, and the soil case returned `regional soil model,
+  limitation, limitation`), then shipped: weather and soil estimates
+  still stand in for the generic templates, while field, pest and irrigation records keep one crop
+  paragraph beside them and the API caveat is appended only when the context has none. **Executed:**
+  `tests/chat-context.test.js` **5 pass, 0 fail**; the QA-bearing specs `chat-only-flow`, `assistant`
+  (sixteen graded cases), `small-screen-chat` and `help-and-explanations` passed **60/60 (2.7 m)** in
+  four projects; `npm test` **198/198, 0 failed, 0 skipped (31,438 ms)**, `npm audit` **0
+  vulnerabilities**, `node scripts/check-documentation.js` **`failures: []`**. Separately, the full
+  four-project gate on `b87a6da` passed **196/196 (22.2 m)** including the live public-Overpass
+  `review-phase-a` case, which confirms the earlier failure there was network availability; the
+  composition tip still owes its own gate. No assertion was weakened; the QA fixtures have no
+  forbidden-text cases. Nothing was deployed, main is untouched, no NASA portal edit.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

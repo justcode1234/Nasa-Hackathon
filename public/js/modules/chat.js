@@ -1,6 +1,6 @@
 import { api } from '../lib/api.js';
 import { el, sourceLinks } from '../lib/dom.js';
-import { contextBlocks } from '../lib/chat-context.js';
+import { composeAnswerBlocks, contextBlocks } from '../lib/chat-context.js';
 import { createWorkflowAssistant } from './workflow-assistant.js';
 import { initSpeech } from './speech.js';
 
@@ -95,7 +95,7 @@ export function initChat(getState, actions) {
       const state = getState();
       answer ??= await api('/api/ask', { method: 'POST', body: { ...(state.inputs ?? {}), selectedCountry: state.country, chatContext, question }, signal: request.signal });
       const extra = contextBlocks(question, state, answer);
-      answer.blocks = extra.blocks.length ? [...extra.blocks, ...answer.blocks.filter(block => block.kind === 'limitation').slice(0, 1)].slice(0, 3) : answer.blocks.slice(0, 3);
+      answer.blocks = composeAnswerBlocks(answer.blocks, extra.blocks);
       answer.sources.push(...extra.sources);
       if (version !== revision || serial !== messageSerial) return;
       if (answer.context) chatContext = answer.context;

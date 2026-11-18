@@ -1751,6 +1751,51 @@ model vocabulary changed, so the tiny word LM is not retrained. Nothing was depl
 untouched, and no NASA portal edit was made. This is a unit-level check of a pure function; no real
 phone, touch, microphone, Safari/WebKit or agronomic review was performed.
 
+### 18. Added context replaced the answer's own paragraphs, and the owed full gate was run
+
+Two things in this iteration.
+
+First, the reply assembly in `chat.js` kept at most three paragraphs and, whenever the chat added
+local evidence, kept only the API's *limitation* block from the answer: `[...extra, ...limitations
+slice(1)]`. For a crop question that also named the selected field, the reply became the mapped field
+record plus a caveat and the sourced crop paragraph disappeared — the same class of loss as
+subsection 17, but caused by the composition rule rather than the trigger. A second symptom showed up
+while pinning it: with soil context loaded, the extra blocks already contain a limitation and the API
+limitation was appended as well, so the reply carried two caveat paragraphs.
+
+The rule moved to `composeAnswerBlocks()` in `public/js/lib/chat-context.js`, first ported verbatim so
+the required behaviour could be recorded failing: against the ported rule the file reports **3 pass,
+2 fail** (`docs/evidence/chat-composition-broken-2026-11-18.log.gz`) — the field-record case returns
+`['mapped field record','limitation']` with the crop paragraph gone, and the soil case returns
+`['regional soil model','limitation','limitation']` with the duplicated caveat.
+The shipped rule keeps weather and soil estimates standing in for the generic templates (they are the
+answer to an evidence question), while a field record, a pest occurrence or the irrigation ratio are
+treated as surroundings and one paragraph of the crop answer survives beside them; the API limitation
+is only appended when the context does not already carry one. After the change the file reports
+**5 pass, 0 fail**.
+
+The QA specs that read reply paragraphs were re-run rather than adjusted: `chat-only-flow`,
+`assistant` (the sixteen QA cases with their graded assertions), `small-screen-chat` and
+`help-and-explanations` passed **60/60 (2.7 m)** in four projects
+(`docs/evidence/chat-composition-e2e-2026-11-18.log.gz`), and `npm test` reported **198 tests, 198
+pass, 0 fail, 0 skipped (31,438 ms)**
+(`docs/evidence/chat-composition-npm-test-2026-11-18.log.gz`), with `npm audit` **0
+vulnerabilities** and `node scripts/check-documentation.js` **`failures: []`**. No assertion was
+weakened or removed; `scripts/qa-assertions.js` and `tests/qa/prompts.json` have no forbidden-text
+cases, which is why the extra surviving paragraph cannot trip them.
+
+Second, the full gate owed by subsections 15–17 was run on `b87a6da` with the four projects on the
+default ports and a dedicated output directory: **196 passed (22.2 m)**, exit code 0
+(`docs/evidence/e2e-gate-b87a6da-2026-11-18.log.gz`). It included
+`review-phase-a.spec.js:34` reaching live public Overpass and passing this time, so the earlier
+"fields unavailable after two retries" was network availability, not app behaviour. No test was
+changed for this run. A gate for the composition change itself is still owed and will be recorded
+with its own summary line.
+
+Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
+phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
+review remain unverified.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -1765,11 +1810,12 @@ phone, touch, microphone, Safari/WebKit or agronomic review was performed.
   0 skipped** after it. The **187/187** figures earlier in this section describe the tip before those
   two files were added. Subsection 13 adds one census test and measures **193/193, 0 failed, 0
   skipped (30,013 ms)** on its own fixed tree.
-* A full `npm run test:e2e` summary for the current tip. Iteration 16 raised `--list` to 192 tests
-  and iteration 17 to **196 tests in 19 files**; the one full-gate attempt since then ran on the
-  superseded `022569e` and was stopped at 30/184 after the two non-assertion failures described in
-  subsection 15, so the 180/180 figures above still describe `35a11b7` only. The gate on this tip is
-  owed and only its own summary line will be added here.
+* A full `npm run test:e2e` summary for the current tip. Iterations 16 and 17 raised `--list` to
+  **196 tests in 19 files**, and that suite passed **196/196 (22.2 m)** on `b87a6da`
+  (`docs/evidence/e2e-gate-b87a6da-2026-11-18.log.gz`, subsection 18). The composition change in
+  subsection 18 has not been through a full gate yet, so the 180/180 figures above still describe
+  `35a11b7`; a gate on the tip that carries it is owed and only its own summary line will be added
+  here.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

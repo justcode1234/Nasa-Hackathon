@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { contextBlocks } from '../public/js/lib/chat-context.js';
+import { contextBlocks, composeAnswerBlocks } from '../public/js/lib/chat-context.js';
 
 const observations = {
   period: { start: '2024-01-01', end: '2024-12-31' },
@@ -60,4 +60,30 @@ test('recognised topic words still add their loaded evidence', () => {
 test('a greeting or an answer that must not use the location adds no context', () => {
   assert.deepEqual(kinds('Tell me about wheat in Australia', fullState(), { topic: 'greeting' }), []);
   assert.deepEqual(kinds('Show me rainfall evidence', fullState(), { topic: 'crop', useSelectedLocation: false }), []);
+});
+
+// The reply shows at most three paragraphs. Any added context used to replace the API's own
+// paragraphs except a limitation, so "Tell me about wheat in this field" answered with the field
+// record and dropped the wheat facts completely.
+const block = (kind, text) => ({ kind, text, sourceIds: [] });
+const cropAnswer = [block('sourced crop facts', 'Wheat belongs to Poaceae…'), block('limitation', 'Crop-specific retrieval covers…')];
+
+test('place, pest and irrigation context supplement the crop answer instead of replacing it', () => {
+  assert.deepEqual(composeAnswerBlocks(cropAnswer, [block('mapped field record', 'Field 7.')]).map(b => b.kind),
+    ['mapped field record', 'sourced crop facts', 'limitation']);
+  assert.deepEqual(composeAnswerBlocks(cropAnswer, [block('country occurrence context', 'Helicoverpa in Australia.')]).map(b => b.kind),
+    ['country occurrence context', 'sourced crop facts', 'limitation']);
+  const waterAnswer = [block('observation scope', 'POWER precipitation is regional…'), block('limitation', 'Irrigation amount unverified.')];
+  assert.deepEqual(composeAnswerBlocks(waterAnswer, [block('historical national irrigation context', 'Vegetables: 8.00 ML/ha.')]).map(b => b.kind),
+    ['historical national irrigation context', 'observation scope', 'limitation']);
+});
+
+test('weather and soil evidence still stand in for the generic answer', () => {
+  const weatherAnswer = [block('observation scope', 'POWER precipitation is regional…'), block('limitation', 'Not current weather.')];
+  assert.deepEqual(composeAnswerBlocks(weatherAnswer, [block('historical weather evidence', 'Rainfall: 3.4 mm/day on 2024-06-02.')]).map(b => b.kind),
+    ['historical weather evidence', 'limitation']);
+  const soilAnswer = [block('rule and limitation', 'Family changes may interrupt shared pest hosts…'), block('limitation', 'Soil tests needed.')];
+  assert.deepEqual(composeAnswerBlocks(soilAnswer, [block('regional soil model', 'pH: mean 6.1.'), block('limitation', 'ISRIC advises…')]).map(b => b.kind),
+    ['regional soil model', 'limitation']);
+  assert.deepEqual(composeAnswerBlocks(cropAnswer, []).map(b => b.kind), ['sourced crop facts', 'limitation']);
 });
