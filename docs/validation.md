@@ -2525,6 +2525,84 @@ guard so a later change cannot report them as fixed. What the parser now reads i
 words: no agronomic claim is attached to any priority value, and which ranking is *better* remains unverified and
 outside this app.
 
+### 33. The word "rain" could not reach the rainfall paragraph, and no browser had ever opened that panel
+
+`contextBlocks` decides which loaded evidence a chat reply may quote (`public/js/lib/chat-context.js:22`). The weather
+branch sits behind two independent filters, and until this iteration they did not agree. The gate
+(`:15`) admitted `weather|nasa|temperatures?|rainfalls?|precipitation|solar|frost`, while the series selector inside the
+branch that passed (`:32-36`) enumerates `rain|rains|rainy|rainfall|precipitation` for `PRECTOTCORR` and
+`frost|frosty|freeze|freezing` for `T2M_MIN`. Three of the selector's words - `rain`, `rains`/`rainy`, `freeze`/`freezing`/`frosty` -
+were unreachable, so the farmer's most common word for the topic produced no measurement at all: the reply fell back to
+the answer's own generic scope sentence, which quotes no value. Measured by running the shipped module over 15
+farmer-shaped questions: **6 of 15** reached a weather paragraph (`docs/evidence/rain-gate-before-2026-11-18.log.gz`),
+**15 of 15** after the change (`docs/evidence/rain-gate-after-2026-11-18.log.gz`).
+
+Widening a topic gate is only honest if the whole-word discipline that subsection 17 established survives, because that
+discipline is what keeps `farmer training`, `minimum wages` and `Australian grains` out of a weather paragraph. The
+change is therefore one added alternation with a trailing `(?!-)` (`:15`), nothing removed - so no question that reached
+the evidence before can stop reaching it - and it was measured in both directions on a scratch copy before `public/`
+was touched: **16 of 16** phrasings that must now arrive, **11 of 11** neighbours that must stay out, self-checking
+probe exits 0 (`docs/evidence/rain-gate-corpus-2026-11-18.log.gz`). The 11 negatives include the two spellings the rule
+cannot serve and now states as limits instead of hiding them: `rain-fed maize` (the hyphen guard) and `My rainfed
+field` (a `\b` boundary cannot split `rainfed`, which is the app's own irrigation value spelling). The guard
+`tests/chat-context.test.js` carries the same 27 rows against the live module: **13 tests, 13 pass, 0 fail, 0 skipped
+(50 ms)** (`docs/evidence/rain-gate-guard-2026-11-18.log.gz`).
+
+**The half of this that mattered more was the missing test.** Subsection 32's own open list recorded that "no browser
+case loads NASA POWER and SoilGrids into one session", and `grep -rl soilgrids tests/e2e/` returned only
+`gibs.spec.js`, which never opens the chat. So the panel that renders every fix in subsections 22 to 31 - the caveat
+budget, the crop-matched pest record, the citation-id pairing - had never been observed in a browser, and the gate
+defect above is exactly the class of thing that hides behind that. `tests/e2e/chat-evidence-panel.spec.js` is new:
+three cases against payloads recorded on 18 Nov through this repository's own production adapters
+(`GET /api/observations` and `GET /api/soil` for -31.89, 116.77 year 2024, and `answerQuestion` run on those
+observations for a tomato/cabbage/onion rainfed plan), stored under `tests/e2e/fixtures/` and stubbed with
+`context.route` the way `chat-only-flow.spec.js` stubs the field service. The full untrimmed recording is archived
+alongside (`docs/evidence/rain-gate-raw-recording-2026-11-18.json.gz`); the checked-in observations file is identical
+except that its daily arrays are truncated to the last 8 days of 2024, because the paragraph renders one day.
+Case 1 pins the measurement sentence, its coordinate line and its "not current weather" caveat with the reply's own
+limitation surviving beside it; case 2 pins the ISRIC advisory immediately after the pH estimate in a mixed question,
+which is the budget change of subsection 22 seen on screen for the first time; case 3 pins that `rain-fed` leaves the
+answer's own three paragraphs alone. `--list` rises from **196 tests in 19 files** to **208 in 20 files**.
+
+**Executed.** With the fix in place the new file is **6 passed, 0 failed, 6 skipped (6.4 s)** over all four projects
+(`docs/evidence/rain-gate-e2e-panel-2026-11-18.log.gz`). The sensitivity run is the important number: with only the
+gate line reverted to the pre-fix form the same command reports **2 failed, 6 skipped, 4 did not run** and the failure
+text is the defect verbatim - `the first paragraph must be the recorded precipitation estimate, got: POWER
+precipitation for 2024-01-01 to 2024-12-31 is regional historical evidence in mm/day …`, no value anywhere
+(`docs/evidence/rain-gate-e2e-sensitivity-2026-11-18.log.gz`). `npm run build` exit 0 and `npm test` **213 tests, 213
+pass, 0 fail, 0 skipped (37,535 ms)** (`docs/evidence/rain-gate-npm-test-2026-11-18.log.gz`; an earlier run of the same
+code before the documentation was written measured 29,801 ms, the run between them failed exactly one test -
+`every archived evidence file a doc points at exists`, because that section cited the archive created from that very
+run - which is the known bootstrap of this guard and is why the archived log is the clean one, and a third run once
+this section was complete repeated **213/213** in 28,182 ms
+(`docs/evidence/rain-gate-npm-test-after-docs-2026-11-18.log.gz`)), and the four-spec
+chat-and-workflow slice ran **64 passed, 0 failed (2.9 m)** (`docs/evidence/rain-gate-e2e-slice-2026-11-18.log.gz`). The clock on this host is UTC+8 and these runs crossed local midnight, so the prose keeps the repository's UTC date and the evidence filenames with it.
+
+Measured limits of this iteration, none of them claimed as coverage:
+* The three cases execute in `node-desktop` and `node-mobile` and are skipped in the two `static-*` projects, and the
+  reason is a transport fact rather than a choice. `server/index.js:62-64` rewrites the entry's transport marker to
+  `http` when it serves, so those pages issue their own `/api/*` requests and a route can answer them; `dist/client`
+  keeps the shipped `worker` marker and answers `/api` inside `/js/lib/core-worker.bundle.js`, and Playwright routes
+  cover a page and its frames but not a dedicated worker. Attempting the stubbed run on `static-desktop` failed 3/3
+  with the signature of exactly that: step 2 reporting `The external context service could not respond (Failed to
+  fetch)` and the reply coming back as the bundle's own clarification text. The panel module is shared by both builds,
+  so what the static projects lose is the fixture transport, not the composition - but the chat evidence panel in the
+  worker build remains untested in a browser, and closing that needs an interception point the app does not have today.
+* The test found a second, still-open defect. The weather paragraph cites its own `nasa-power` entry, whose URL is the
+  exact POWER request that reproduces the number, but `public/js/modules/chat.js:99` appends context sources *after*
+  the reply's own and `public/js/lib/dom.js:16` resolves an id with `sources.find`, so the reply's generic "NASA POWER
+  Daily API" documentation page wins and the reproducible request URL is dropped from the panel. Case 1 and case 2 pin
+  the behaviour of today (the reply's own URL) with that mechanism written next to them, and both assertions are
+  scheduled to be rewritten to require `observations.source.url` when the collision is fixed - recorded as the next
+  iteration's target in `docs/handoff-2026-11-18.md`.
+* The pest half of subsection 32's open list is still open: no case has a GBIF country context loaded beside a plan
+  that names the crop a watchlist entry is about. A recorded pest payload exists (`artifacts/iter34-fixtures/`) but is
+  unused by any test, and is not presented as coverage.
+* The fixtures are one set of responses retrieved at 2026-11-18T16:59 UTC, not live services, and every file keeps its own `retrievedAt`;
+  nothing here shows what the panel renders when an upstream is down, and nothing asserts a yield, a saving or a
+  confidence.
+* No full 208-case gate exists for this tip, and the clean **196/196** line remains `acb6c96`'s.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -2568,15 +2646,24 @@ outside this app.
   **64 passed, 0 failed**. The gate that covers most of that span ran during this last iteration: **195 passed,
   1 failed (28.7 m)** on `bb69aee`, the tip carrying iterations 21 to 30
   (`docs/evidence/e2e-gate-bb69aee-2026-11-18.log.gz`), where the lone failure is a select-option timeout on a host at
-  load 6 to 9 whose same case passes on all four projects in the slice just described. A clean 196-case gate on the
+  load 6 to 9 whose same case passes on all four projects in the slice just described. A clean full gate on the
   current tip is still open, as are the 132 map, farm, terrain, evidence, print and accessibility cases on every tip
-  after `bb69aee`.
-* The rendered panel for the two new selection rules. No browser case loads NASA POWER and SoilGrids into
-  one session, and none has a pest context loaded beside a radish plan, so the weather-plus-soil advisory
-  and the crop-matched pest record are pinned by `tests/chat-context.test.js` and direct-module probes only.
-  A chat spec that answers a mixed question against stubbed POWER/SoilGrids/GBIF responses — stubs clearly
-  labelled as such, the same way `chat-only-flow.spec.js` stubs the field service — would move both into
-  the panel.
+  after `bb69aee`. On the subsection-31 tip the offline suite (**211/211**) and the same slice are measured; on the
+  subsection-32 tip **212/212** and **64/64**; on the subsection-33 tip **213/213**, **64/64** and the new panel file's
+  own **6 passed, 6 skipped**. `--list` became **208 tests in 20 files** at subsection 33, so the "196-case gate"
+  quoted above is the size of the suites that ran, not of the suite that is owed.
+* The rendered panel for the two new selection rules. The weather-plus-soil half is paid: subsection 33 added
+  `tests/e2e/chat-evidence-panel.spec.js`, which answers a bare-rain question and a mixed rain-and-pH question against
+  recorded POWER and SoilGrids payloads and sees the advisory beside the estimate on screen. The pest half is still
+  open - no browser case has a GBIF country context loaded beside a plan that names the crop a watchlist entry is
+  about, so the crop-matched pest record remains pinned by `tests/chat-context.test.js` and direct-module probes only.
+  A recorded pest payload exists at `artifacts/iter34-fixtures/` and is used by nothing.
+* Two gaps subsection 33's own test surfaced and left open on purpose. The `nasa-power` citation id is used by both a
+  reply and the weather paragraph with different URLs, and `public/js/lib/dom.js:16` keeps the first match, so the
+  exact POWER request URL never reaches the panel; and the whole evidence panel is untestable against stubs in the
+  two `static-*` projects because their `/api` traffic lives inside a dedicated worker that Playwright routes do not
+  cover. Both are described in subsection 33 with the measured signatures, and the first is the next iteration's
+  target.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

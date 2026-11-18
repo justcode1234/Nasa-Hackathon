@@ -3,6 +3,11 @@ import assert from 'node:assert/strict';
 import { contextBlocks, composeAnswerBlocks } from '../public/js/lib/chat-context.js';
 import { PESTS } from '../server/context/pests.js';
 
+// The labels and names below are short stand-ins that keep each series/property distinguishable inside this
+// file; they are deliberately NOT the strings the services return (POWER calls PRECTOTCORR "Precipitation
+// Corrected", SoilGrids calls phh2o "pH in water"). The paragraph text is built from whatever the payload
+// carries, so the production wording is pinned by the recorded payloads in
+// tests/e2e/chat-evidence-panel.spec.js rather than by anything asserted here.
 const observations = {
   period: { start: '2024-01-01', end: '2024-12-31' },
   dates: ['2024-06-01', '2024-06-02'],
@@ -265,4 +270,34 @@ test('a paragraph never cites a source the panel cannot link', () => {
   const waterRenamed = { ...water, source: { id: 'abs-2022', title: water.source.title, url: water.source.url } };
   assert.deepEqual(orphanCitations('How much water is used for irrigation in Australia?', { water: waterRenamed }), [],
     'a renamed irrigation source orphaned the ratio paragraph');
+});
+
+// The weather gate only accepted weather|nasa|temperature|rainfall|precipitation|solar|frost, yet the series
+// picker behind that gate enumerates rain|rains|rainy and freeze|freezing|frosty. Measured on 18 Nov (UTC), 11 of 16
+// realistic phrasings reached nothing: "how much rain fell here last year?" got no evidence paragraph while
+// "rainfall" got the Rainfall one, so the words a farmer most often writes chose a series nobody could reach.
+// The gate is the topic test for a branch that quotes a measured value, so it may not be narrower than that
+// branch. Widening it is bounded by the whole-word rule subsection 17 established, and the six added words may
+// not be followed by a hyphen so that a compound modifier of another noun ("freeze-dried", "rain-fed") stays
+// out for the same reason "farmer training" and "Australian grains" do.
+test('every weather word the series picker handles can reach the weather paragraph', () => {
+  const weather = question => contextBlocks(question, { observations }, { topic: 'weather' }).blocks
+    .find(block => block.kind === 'historical weather evidence')?.text.split(':')[0] ?? '';
+  for (const [question, series] of [
+    ['How much rain fell here last year?', 'Rainfall'], ['Did we get enough rain this season?', 'Rainfall'],
+    ['The rain came late.', 'Rainfall'], ['It was rainy in March.', 'Rainfall'],
+    ['Rain does not fall evenly here.', 'Rainfall'], ['How does the rain look for beans?', 'Rainfall'],
+    ['The spring rains were short.', 'Rainfall'], ['Are the rainy months getting fewer?', 'Rainfall'],
+    ['Did it freeze here in July?', 'Minimum air temperature'], ['Is freezing common here?', 'Minimum air temperature'],
+    ['A frosty night, is that likely?', 'Minimum air temperature'], ['How much rain fell here? NASA figures', 'Rainfall'],
+    ['Show me rainfall evidence', 'Rainfall'], ['Was there a frost?', 'Minimum air temperature'],
+    ['Is there solar resource here?', 'Solar irradiance'], ['What was the temperature here?', 'Mean air temperature']
+  ]) assert.equal(weather(question), series, `${question} must quote the ${series} series`);
+  // Questions that only contain the added letters, or use them as a modifier of another noun, must stay out.
+  for (const question of [
+    'Tell me about the Australian grains industry', 'The train arrives at 6', 'What is the drainage like here?',
+    'Restrain the dogs near the field', 'A brainstorm is not a plan', 'How long do freeze-dried beans keep?',
+    'Is rain-fed maize viable here?', 'My rainfed field needs no irrigation', 'The drain system is old',
+    'Tell me about grain pricing', 'Our farmer reported a soil pH of 6.5'
+  ]) assert.equal(weather(question), '', `${question} must not add weather evidence`);
 });

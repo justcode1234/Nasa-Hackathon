@@ -930,6 +930,43 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 34 — the farmer's word "rain" could not reach the rainfall paragraph, and the
+  panel that renders it had never been opened in a browser.** `contextBlocks` gates the weather branch on
+  `TOPIC.weather` (`public/js/lib/chat-context.js:15`) and then picks a series inside it (`:32-36`), and the two
+  lists disagreed: the selector handles `rain|rains|rainy` and `freeze|freezing|frosty`, the gate accepted only
+  `rainfalls?` and `frost`, so those words produced **no measurement paragraph at all** and the reply fell back to
+  the answer's own generic scope sentence, which quotes no value. Measured on the shipped module over 15
+  farmer-shaped questions: **6 of 15** reached the evidence before, **15 of 15** after
+  (`docs/evidence/rain-gate-before-2026-11-18.log.gz`, `docs/evidence/rain-gate-after-2026-11-18.log.gz`). The fix is
+  one added alternation with a `(?!-)` guard and nothing removed, so no question that reached the evidence before can
+  stop reaching it; widening was proven in both directions on a scratch copy first — **16 of 16** phrasings that must
+  arrive, **11 of 11** neighbours (`farmer training`, `minimum wages`, `freeze-dried`, `rain-fed`, `rainfed`, `drain`)
+  that must stay closed, self-checking probe exits 0
+  (`docs/evidence/rain-gate-corpus-2026-11-18.log.gz`). The bigger half was the missing test: subsection 32's own open
+  list said no browser case loads POWER and SoilGrids into one session, and `grep -rl soilgrids tests/e2e/` returned
+  only `gibs.spec.js`, which never opens the chat — so every panel change in subsections 22 to 33 had only unit and
+  probe evidence. `tests/e2e/chat-evidence-panel.spec.js` is new (3 cases) against payloads recorded through this
+  repository's own adapters and committed under `tests/e2e/fixtures/`, clearly labelled as recorded and trimmed to the
+  last 8 daily rows with the full 366-row recording archived for comparison
+  (`docs/evidence/rain-gate-raw-recording-2026-11-18.json.gz`): the measurement sentence with its caveat beside it,
+  the ISRIC advisory riding immediately after the pH estimate in a mixed question, and `rain-fed` leaving the answer's
+  own three paragraphs alone. **Executed:** guard **13/13, 0 failed (50 ms)**
+  (`docs/evidence/rain-gate-guard-2026-11-18.log.gz`), `npm run build` exit 0, `npm test` **213/213, 0 failed, 0
+  skipped** (`docs/evidence/rain-gate-npm-test-2026-11-18.log.gz`), `--list` **196 → 208 tests in 20 files**, the new
+  file **6 passed, 0 failed, 6 skipped (6.4 s)** (`docs/evidence/rain-gate-e2e-panel-2026-11-18.log.gz`), the
+  chat/workflow slice **64 passed, 0 failed (2.9 m)** at host load 6
+  (`docs/evidence/rain-gate-e2e-slice-2026-11-18.log.gz`). **Sensitivity:** with only the gate line reverted the same
+  command reports **2 failed, 6 skipped, 4 did not run** and the failure text is the defect verbatim — `got: POWER
+  precipitation for 2024-01-01 to 2024-12-31 is regional historical evidence in mm/day …`
+  (`docs/evidence/rain-gate-e2e-sensitivity-2026-11-18.log.gz`). **Two measured limits the test itself found:** the
+  three cases run only in `node-desktop`/`node-mobile`, because `server/index.js:62-64` rewrites the transport marker
+  to `http` while `dist/client` keeps `worker` and answers `/api` inside `/js/lib/core-worker.bundle.js`, which
+  Playwright routes do not reach (stubbing there failed 3/3 with `The external context service could not respond
+  (Failed to fetch)`) — the evidence panel in the worker build stays untested; and the weather paragraph's exact POWER
+  request URL is dropped by the panel because `public/js/modules/chat.js:99` appends context sources after the
+  reply's own and `public/js/lib/dom.js:16` keeps the first match for a duplicated id, which the new spec pins as
+  today's behaviour with the rewrite scheduled next. The pest half of the open list also stays open (a recorded GBIF
+  payload exists unused). Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 - **19 Nov, same branch: iteration 33 — two of the four Comparison Priority values could not be reached from chat.**
   `#priority` offers `family | climate | water | short-season` (`public/index.html:122`), `applyPlanning` writes the
   parsed value into that select (`public/js/app.js:181-183`), each value reorders the comparison

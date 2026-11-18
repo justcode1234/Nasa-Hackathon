@@ -4,7 +4,15 @@
 // irrigation benchmark to any question naming the country. Both blocks are prepended in chat.js
 // and can displace the answer's own first blocks, so the extra context changed the answer's topic.
 const TOPIC = {
-  weather: /\b(?:weather|nasa|temperatures?|rainfalls?|precipitation|solar|frost)\b/i,
+  // A gate must not be narrower than the selectors behind it. `rain|rains|rainy` and `freeze|freezing` and
+  // `frosty` are all enumerated by the series picker below, so until 18 Nov (UTC) the farmer's most common word for
+  // the topic chose a series nobody could reach: "how much rain fell here?" added no weather evidence at all
+  // while "rainfall" added the Rainfall paragraph. The six added words may not be followed by a hyphen, which
+  // keeps compound modifiers of another noun out ("freeze-dried", "rain-fed") on the same principle that keeps
+  // "farmer training" and "Australian grains" out; the app's own irrigation value is spelled `rainfed` and also
+  // stays out, which is the limit of this rule rather than a silent widening. Nothing was removed, so no
+  // question that reached the evidence before can stop reaching it.
+  weather: /\b(?:weather|nasa|temperatures?|rainfalls?|precipitation|solar|frost)\b|\b(?:rain|rains|rainy|frosty|freeze|freezing)\b(?!-)/i,
   soil: /\bsoil\b|\bph\b|\bsand|\bclay|\bdrain/i,
   water: /\bwater\b|\birrigat/i,
   farm: /\bfarm(?:s|land)?\b|\bfields?\b/i,
