@@ -1,11 +1,20 @@
 {
-  "generatedAt": "2026-11-18T06:33:22.656Z",
+  "generatedAt": "2026-11-18T07:03:10.430Z",
   "branch": "fix/chat-flow-and-answers",
-  "command": [
-    "node scripts/audit-matrix.js --deep",
+  "commit": "prefix-rule",
+  "commands": [
+    "npm test",
+    "npm audit",
     "node scripts/audit-nonsense-town.js",
-    "npm audit"
+    "node scripts/audit-matrix.js --deep"
   ],
+  "npmTest": {
+    "tests": "183",
+    "pass": "183",
+    "fail": "0",
+    "skipped": "0",
+    "duration_ms": "24814.2936"
+  },
   "npmAudit": "found 0 vulnerabilities",
   "nonsenseTownCensus": {
     "cases": 2151,
@@ -15,8 +24,8 @@
   },
   "deepMatrixCensus": {
     "mode": "deep",
-    "generatedAt": "2026-11-18T06:31:19.046Z",
-    "elapsedMs": 38998,
+    "generatedAt": "2026-11-18T07:02:55.818Z",
+    "elapsedMs": 43588,
     "countries": 245,
     "totalPlaces": 70036,
     "matchedByShortReply": 66546,
@@ -76,7 +85,7 @@
       "reply": "Türkmenistan is selected as a town point. Choose the specific field; t"
     }
   ],
-  "longNameChecks": "79/79 selected",
+  "longNameVerifiedThroughEngine": "79/79",
   "flows": [
     {
       "country": "AD",

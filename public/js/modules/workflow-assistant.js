@@ -244,7 +244,17 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     // already selected, the phrase should choose the town instead of re-asking for one.
     if (areaRegion && phrase) regionMentions = regionMentions.filter(region =>
       !(region.id === areaRegion && listedPlaces(places, { phrase, countryName, allowEponymous: true, regionCode: region.id }).length));
-    const townMentions = hasCoordinates ? [] : typedPlace(places, question, { countryName, regionCode: regionFilter, allowEponymous: allowEponymousTown });
+    let townMentions = hasCoordinates ? [] : typedPlace(places, question, { countryName, regionCode: regionFilter, allowEponymous: allowEponymousTown });
+    // A reply that is exactly the country’s own spelling is not a place name, even when the saved list
+    // holds a row whose name sits inside it: typing “São Tomé & Príncipe” at the region question must
+    // not narrow the whole country to the town São Tomé. A row whose own whole spelling *is* that reply
+    // (Guadeloupe’s region row, the seven towns named like their country) really does answer the
+    // question, so it is matched first and left alone here.
+    const countrySpelling = foldName(regionPhrase(countryName));
+    const replySpelling = foldName(regionPhrase(phrase ?? question));
+    const rowCarriesReply = [...places.regions, ...places.places]
+      .some(row => row.name && foldName(regionPhrase(row.name)) === replySpelling);
+    if (replySpelling === countrySpelling && !rowCarriesReply) { regionMentions = []; townMentions = []; }
     const placeMention = regionMentions.length === 1 || townMentions.length > 0;
     // A town answer the saved list cannot match must still leave a tappable way forward;
     // the generic assistant cannot name a town, so silence here strands the pending plan.
@@ -373,10 +383,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       // rows, and state plainly that nothing was selected. A saved row spelled like the country is
       // matched earlier and still selects itself. The long official spellings never reach the
       // short-reply rule, so the whole reply is compared in the same canonical shape.
-      const countrySpelling = foldName(regionPhrase(countryName));
-      const replyIsCountryName = phrase ? foldName(regionPhrase(phrase)) === countrySpelling
-        : foldName(regionPhrase(question)) === countrySpelling;
-      if (replyIsCountryName && !regionMentions.length && !townMentions.length && (scope === 'area' || selectedRegion)) {
+      if (replySpelling === countrySpelling && !regionMentions.length && !townMentions.length && (scope === 'area' || selectedRegion)) {
         const regionName = places.regions.find(region => region.id === selectedRegion)?.name;
         const forTowns = Boolean(selectedRegion) || !namedRegions.length;
         const options = [...(forTowns

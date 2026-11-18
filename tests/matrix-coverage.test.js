@@ -471,7 +471,7 @@ const foldWhole = value => normalizeName(value).normalize('NFD').replace(/\p{M}/
   .replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
 
 test('the country’s own name never re-asks the pending place question and its same-named town stays typeable', async t => {
-  const repeated = [], buttonless = [], silent = [], regionMissed = [], townMissed = [], eponymousTowns = [], townFailures = [];
+  const repeated = [], buttonless = [], silent = [], regionMissed = [], townMissed = [], quietNarrow = [], eponymousTowns = [], townFailures = [];
   for (const country of listCountries) {
     const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
     const regions = namedRegions(list, countryName);
@@ -488,6 +488,13 @@ test('the country’s own name never re-asks the pending place question and its 
       const text = textOf(answer);
       if (text === textOf(area)) repeated.push(`${country} “${phrasing}” -> ${text.slice(0, 60)}`);
       if (!answer.followUps.length) buttonless.push(`${country} “${phrasing}” -> ${text.slice(0, 60)}`);
+      // Naming the whole country must never settle for a row whose name is merely a piece of it:
+      // “São Tomé & Príncipe” holds the town São Tomé, and choosing that town would change the farmer’s
+      // stated scope without saying so. Only a row spelled exactly like the reply may be selected.
+      const replyShape = foldWhole(regionPhrase(phrasing));
+      const rowCarriesReply = [...list.regions, ...list.places].some(row => row.name && foldWhole(regionPhrase(row.name)) === replyShape);
+      if (replyShape === foldWhole(regionPhrase(countryName)) && !rowCarriesReply && /is selected/i.test(text))
+        quietNarrow.push(`${country} “${phrasing}” -> ${text.slice(0, 60)}`);
       // A reply that is exactly the name of a saved row has to select that row; a wording that merely
       // begins one (“Andorra” for the parish Andorra la Vella) is matched by the prefix rules, and
       // naming the country when no row carries that name must stay a question instead.
@@ -523,4 +530,5 @@ test('the country’s own name never re-asks the pending place question and its 
   assert.deepEqual(regionMissed, [], `${regionMissed.length} replies naming a saved region row did not select it`);
   assert.deepEqual(townMissed, [], `${townMissed.length} towns named like their region-less country were not selected`);
   assert.deepEqual(townFailures, [], `${townFailures.length} towns named like their country cannot be typed after their region is chosen`);
+  assert.deepEqual(quietNarrow, [], `${quietNarrow.length} replies naming the whole country selected a row whose name is only part of it`);
 });

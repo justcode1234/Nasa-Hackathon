@@ -420,3 +420,27 @@ test('answering the region question with the country’s own name asks something
   assert.equal(state.regionCode, '01', 'the region it offers still answers the question');
   assert.match(text(chosen), /^Ain is selected/);
 });
+
+// São Tomé and Príncipe stands for every country whose official spelling contains a saved place name.
+// The plan is asking which region it covers, so the whole country name cannot be a place answer and it
+// must not quietly narrow the country to the town that shares a piece of its spelling.
+const saoTomeLocations = {
+  regions: [{ id: 'P', name: 'Príncipe' }, { id: 'S', name: 'São Tomé' }],
+  places: [{ id: 'st1', name: 'São Tomé', regionCode: 'S', latitude: 0.33616, longitude: 6.73397 },
+    { id: 'st2', name: 'Neves', regionCode: 'P', latitude: 1.53667, longitude: 7.42083 }]
+};
+
+test('naming the whole country at the region question does not select the town inside that name', async () => {
+  const { assistant, state } = setup({ country: 'ST', locations: saoTomeLocations });
+  await assistant.respond('Help me plan a rotation in São Tomé and Príncipe');
+  const area = await assistant.respond('A specific area');
+  assert.match(text(area), /Which state or region of São Tomé/i, 'the pending question is about regions');
+  const answer = await assistant.respond('São Tomé & Príncipe');
+  assert.equal(state.location, null, 'the town São Tomé was not chosen');
+  assert.equal(state.regionCode, null, 'no region was chosen either');
+  assert.match(text(answer), /is the country, not one of its regions/);
+  assert.ok(answer.followUps.length > 0, 'the reply still leaves something to tap');
+  const chosen = await click(assistant, answer, 0);
+  assert.ok(chosen);
+  assert.ok(state.regionCode, 'tapping one of the offered regions advances the plan');
+});
