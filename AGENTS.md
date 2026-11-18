@@ -650,6 +650,26 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   change; no app module, CSS or model vocabulary changed, so the tiny word LM is not retrained.
   Nothing was deployed, main is untouched, no NASA portal edit.
 
+- **18 Nov, same branch: iteration 17 — a reply could push the message box and the error status line
+  below the panel's visible edge.** The panel is height-capped and scrolls itself, so appending to
+  `#chat-history` moved `#question-form` and `#answer-status` down without moving the panel's bottom
+  edge; a probe measured the status line at y=385 against a panel bottom of 307 at 320×568, y=399 vs
+  254 at 568×320, and a 12 px clip even at 1280×1000. `announce()` in `public/js/modules/chat.js`
+  now scrolls `#answer-status` into view on every status write, and the `resize` listener re-reveals
+  it after `positionChat()`; the second case in `tests/e2e/small-screen-chat.spec.js` asserts the
+  message box, Send button and status line stay inside the panel and viewport after one reply at
+  320×568, after rotation to 568×320, and after six replies at 568×320. **Executed:** with the first
+  version of the fix the run was **6 passed, 2 failed** (`node-desktop`, `node-mobile`: status
+  bottom 275.19 vs 254.72 after rotation — portrait scroll carried over); with the resize re-reveal
+  four projects passed **8/8 (7.5 s)**; reverting both calls failed `static-desktop` at
+  `Expected: <= 307.203125, Received: 370.34375` and restoring it passed **8/8 (8.3 s)**;
+  `npx playwright test --list` is now **196 tests in 19 files**; `npm test` **193/193, 0 failed, 0
+  skipped (26,095 ms)**, `npm audit` **0 vulnerabilities**, `node scripts/check-documentation.js`
+  **`failures: []`**. An axe `scrollable-region-focusable` hypothesis for `#chat-history` was
+  disproved (0 violations; each reply's Read aloud button makes it focusable) and abandoned. Emulated
+  viewports in headless Chrome only — no claim about real phones, touch or Safari/WebKit. Nothing
+  was deployed, main is untouched, no NASA portal edit.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

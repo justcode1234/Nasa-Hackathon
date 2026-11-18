@@ -1667,6 +1667,50 @@ word LM is not retrained. Nothing was deployed, `main` is untouched, and no NASA
 made. The assertions run in headless Chrome with touch emulation at emulated viewport sizes; they are
 not evidence about real phones, real touch, or Safari/WebKit.
 
+### 16. A reply could push the message box and the status line below the panel's visible edge
+
+The chat panel is height-capped (`max-height: min(740px, calc(100dvh - var(--chat-bottom) - 1rem))`)
+and scrolls inside itself, so content appended to `#chat-history` moves the form and `#answer-status`
+down without moving the panel's bottom edge. Subsection 15 asserted the panel and its choice buttons
+fit at 320×568 and 568×320, but it never checked the controls below the history. A headless probe
+(`docs/evidence/chat-status-clipping-measure-2026-11-18.log.gz`) measured the gap: at 320×568 after
+one reply `#answer-status` sat at y=385 and `#question` at y=329 while the panel ended at y=307; at
+568×320 the status line was at y=399 against a panel bottom of 254; even at 1280×1000 the status line
+was clipped by 12 px (bottom 847 vs 835). Six consecutive replies at 320×568 left the status line at
+y=320 against 307. On the error path `#answer-status` is the only place the message appears, so a
+failed request could be completely invisible on a phone. The first hypothesis for this iteration — an
+axe `scrollable-region-focusable` violation on `#chat-history` — was disproved by the probe (each
+reply's "Read aloud" button makes the log focusable, 0 violations), so it was abandoned.
+
+Fix in [public/js/modules/chat.js:15](../public/js/modules/chat.js): `announce()` now sets the text and
+calls `#answer-status.scrollIntoView({ block: 'nearest' })`, every status write goes through it
+(retrieving, ready, error, invalidated), and the `resize` listener re-reveals the status line after
+`positionChat()` so a rotation does not inherit the previous orientation's scroll position. The
+regression test is the second case in `tests/e2e/small-screen-chat.spec.js` ("a reply keeps the
+message box and the status line inside the visible panel"): after one `thanks` reply at 320×568 and
+after rotating to 568×320, and after six replies at 568×320, it asserts the message box, Send button
+and status line all lie inside the panel's top/bottom edges and the viewport's left/right edges.
+
+Executed: with the fix, the first run reported **6 passed, 2 failed** — only `node-desktop` and
+`node-mobile`, at "one reply at 568×320: status line bottom … Expected: <= 254.71875, Received:
+275.1875" — because portrait scroll survived the rotation with no status update; after adding the
+resize re-reveal the four projects passed **8/8 (7.5 s)**
+(`docs/evidence/chat-status-clipping-fixed-2026-11-18.log.gz`; pre-resize-fix run in
+`docs/evidence/chat-status-clipping-first-run-2026-11-18.log.gz`). Non-vacuity: reverting both the
+`scrollIntoView` call and the resize wrapper, rebuilding, and running `--project=static-desktop -g
+"visible panel"` failed with **1 failed** at `Expected: <= 307.203125, Received: 370.34375`
+(`docs/evidence/chat-status-clipping-broken-2026-11-18.log.gz`); restoring the file and rebuilding
+returned **8/8 (8.3 s)** (`docs/evidence/chat-status-clipping-restored-2026-11-18.log.gz`).
+`npx playwright test --list` is now **196 tests in 19 files**. On the same tree `npm test` reported
+**193 tests, 193 pass, 0 fail, 0 skipped (26,095 ms)**
+(`docs/evidence/chat-status-clipping-npm-test-2026-11-18.log.gz`), `npm audit` **0
+vulnerabilities**, and `node scripts/check-documentation.js` **`failures: []`** (0 external flags).
+
+No CSS, crop data or model vocabulary changed, so the tiny word LM is not retrained. Nothing was
+deployed, `main` is untouched, and no NASA portal edit was made. The scrolling fix is asserted in
+headless Chrome at emulated viewport sizes only; it is not evidence about real phones, real touch,
+or Safari/WebKit.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -1681,11 +1725,11 @@ not evidence about real phones, real touch, or Safari/WebKit.
   0 skipped** after it. The **187/187** figures earlier in this section describe the tip before those
   two files were added. Subsection 13 adds one census test and measures **193/193, 0 failed, 0
   skipped (30,013 ms)** on its own fixed tree.
-* A full `npm run test:e2e` summary for the current tip. Iteration 16 raised `--list` to **192 tests
-  in 19 files**; the one full-gate attempt since then ran on the superseded `022569e` and was stopped
-  at 30/184 after the two non-assertion failures described in subsection 15, so the 180/180 figures
-  above still describe `35a11b7` only. The gate on this tip is owed and only its own summary line
-  will be added here.
+* A full `npm run test:e2e` summary for the current tip. Iteration 16 raised `--list` to 192 tests
+  and iteration 17 to **196 tests in 19 files**; the one full-gate attempt since then ran on the
+  superseded `022569e` and was stopped at 30/184 after the two non-assertion failures described in
+  subsection 15, so the 180/180 figures above still describe `35a11b7` only. The gate on this tip is
+  owed and only its own summary line will be added here.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

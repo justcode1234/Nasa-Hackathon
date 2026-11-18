@@ -70,3 +70,38 @@ test('the chat panel and its choices fit a 320 px phone and a landscape phone',a
   await fits(page,'field prompt at 320×568',320);
   expect(errors).toEqual([]);
 });
+
+// The panel is height-capped and scrolls itself, so growing the history can push the controls that
+// stay put on a desktop out of its visible edge. Measured before the fix at 320×568: after one reply
+// the message box sat at y=329 while the panel ended at y=307, and the status line was at y=385;
+// both invisible. On a failed request the status line is the only place the error appears.
+test('a reply keeps the message box and the status line inside the visible panel',async({page,context})=>{
+  test.setTimeout(180_000);
+  await context.route(fields,route=>route.abort('failed'));
+  const settle=()=>page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const visible=async label=>{
+    await settle();
+    const data=await page.evaluate(()=>{
+      const rect=selector=>{const r=document.querySelector(selector).getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right};};
+      const panel=document.querySelector('#chat-panel').getBoundingClientRect();
+      return {innerWidth,innerHeight,panel:{top:panel.top,bottom:panel.bottom},question:rect('#question'),send:rect('#ask'),status:rect('#answer-status'),statusText:document.querySelector('#answer-status').textContent};
+    });
+    for(const [part,box] of [['message box',data.question],['Send button',data.send],['status line',data.status]]){
+      expect(box.top,`${label}: ${part} top is below the panel's top edge`).toBeGreaterThanOrEqual(data.panel.top-0.5);
+      expect(box.bottom,`${label}: ${part} bottom is below the panel's visible edge`).toBeLessThanOrEqual(data.panel.bottom+0.5);
+      expect(box.left,`${label}: ${part} left edge`).toBeGreaterThanOrEqual(0);
+      expect(box.right,`${label}: ${part} right edge`).toBeLessThanOrEqual(data.innerWidth+0.5);
+    }
+    return data;
+  };
+  const ask=async text=>{await page.locator('#question').fill(text);await page.getByRole('button',{name:'Send',exact:true}).click();await ready(page);};
+  await page.goto('/',{waitUntil:'domcontentloaded'});
+  await expect(page.locator('#catalog-status')).toContainText('Choose a country');
+  await page.getByRole('button',{name:'Open FieldShift assistant',exact:true}).click();
+  await ask('thanks');
+  expect((await visible('one reply at 320×568')).statusText).toContain('Answer ready');
+  await page.setViewportSize({width:568,height:320});
+  await visible('one reply at 568×320');
+  await ask('thanks');await ask('thanks');await ask('thanks');await ask('thanks');await ask('thanks');
+  expect((await visible('six replies at 568×320')).statusText).toContain('Answer ready');
+});
