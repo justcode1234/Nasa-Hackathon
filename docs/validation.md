@@ -1071,9 +1071,22 @@ Tomé" stays typeable by that name, and the two lists whose rows really do carry
   tappable button ([docs/evidence/eponymous-and-country-name-probe-2026-11-18-final.log](evidence/eponymous-and-country-name-probe-2026-11-18-final.log),
   both summaries in [docs/evidence/chat-place-matrix-2026-11-18.json](evidence/chat-place-matrix-2026-11-18.json)
   under `browserProbe`).
-* `npm run test:e2e` on the committed tree, **180 passed / 0 failed / 0 skipped (28.4 min)** across
-  static-desktop, static-mobile, node-desktop and node-mobile on ports 4573/4574 -
-  [artifacts/playwright/full-suite-country-name-loop-2026-11-18.log](../artifacts/playwright/full-suite-country-name-loop-2026-11-18.log).
+* `npm run test:e2e` on 5b4cf29, **180 passed / 0 failed / 0 skipped (28.4 min)** - the summary line
+  reads `180 passed (28.4m)` and the full run is kept gzipped at
+  [docs/evidence/full-suite-5b4cf29-2026-11-18.log.gz](evidence/full-suite-5b4cf29-2026-11-18.log.gz) -
+  across static-desktop, static-mobile, node-desktop and node-mobile on ports 4573/4574.
+  The same suite for the final tip cbeff6b runs into
+  [artifacts/playwright/full-suite-prefix-rule-2026-11-18.log](../artifacts/playwright/full-suite-prefix-rule-2026-11-18.log);
+  only its own summary line counts as that gate, and it is recorded here when it reports.
   An unrelated background run from another workspace (`tests/e2e/chat-basic.spec.js`, which does not
   exist in this repository) is **not** counted as evidence for this project either way.
+
+### Not verified by these checks
+
+Everything above is headless Chrome/Node against the saved place lists and the shipped crop catalog.
+Still unverified, and not inferred from these runs: real phone hardware and touch behaviour, Safari and
+other WebKit browsers, microphone quality and speech recognition under real noise, the audible quality of
+the installed on-device read-aloud voice, and independent agronomic review of the crop windows and
+rotation reasons. Field outlines depend on shared public Overpass services and fail when those services
+are busy; the probe blocks them deliberately, so nothing here proves field discovery works.
 

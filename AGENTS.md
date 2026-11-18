@@ -378,13 +378,13 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   [docs/evidence/chat-place-matrix-2026-11-18.json](docs/evidence/chat-place-matrix-2026-11-18.json).
   Chrome, chat only, 16 sessions on 5b4cf29: 7/7 same-named towns became real town points with the
   latitude field matching the saved row, 0 page errors, and 1 flagged reply that became defect (c)
-  (artifacts/final-quality/eponymous-and-country-name-probe-2026-11-18.log). Re-run on the final tip
+  docs/evidence/eponymous-and-country-name-probe-2026-11-18.log). Re-run on the final tip
   cbeff6b: 16 cases, **0 failures, 0 page errors**, 7/7 towns still selectable and **9/9** country-name
   replies honest, São Tomé now answering "is the country, not one of its regions" — raw rows
   docs/evidence/eponymous-and-country-name-probe-2026-11-18-final.log, extracted summaries in
   docs/evidence/chat-place-matrix-2026-11-18.json under `browserProbe`. A clean full
-  `npm run test:e2e` on 5b4cf29 printed **180 passed (28.4 min)**
-  (artifacts/playwright/full-suite-country-name-loop-2026-11-18.log); the suite for the final tip
+  `npm run test:e2e` on 5b4cf29 printed **180 passed (28.4 min)**, full run kept at
+  docs/evidence/full-suite-5b4cf29-2026-11-18.log.gz; the suite for the final tip
   `cbeff6b` is running into artifacts/playwright/full-suite-prefix-rule-2026-11-18.log and only its own
   summary counts as that gate. An unrelated background Playwright run from another workspace (its
   `tests/e2e/chat-basic.spec.js` does not exist in this repository) is not evidence either way. The
