@@ -2145,6 +2145,94 @@ degraded run took. So the failures are attributed to load, not to either change 
 certify the tip, and the full 196-case gate remains owed (subsection 24 and 25 changed chat selection and
 the citation contract, both of which only a clean whole-suite run covers).
 
+### 26. A soil texture written after the noun never reached the plan
+
+The step-1 form asks the farmer for a texture with a select holding exactly `unknown`, `sandy`, `loam` and
+`clay` (`public/index.html:119`), and the chat parser was supposed to fill that field from a volunteered fact.
+It only recognised one word order: `public/js/modules/workflow-assistant.js` read
+`/\b(sandy|loam|clay) soil\b/`, so "clay soil" set the constraint while the same fact written the other way
+round — "soil is clay" — set nothing. The parser matches `normalizeName(question)`, which lowercases and drops
+punctuation, and that is why the ":" and "=" spellings fail too: "Rainfed; soil: clay" arrives as
+"rainfed soil clay", a string that contains no colon for any pattern to find. Nothing warned the farmer: the
+plan simply used the `unknown` that was already in the field.
+
+**Executed, one script run against the live module before the edit and again after it**
+(`docs/evidence/workflow-soil-order-probe-before-after-2026-11-18.log.gz`; the `soil` column is the key the
+plan actually received):
+
+| Message tail | soil before | soil after |
+| --- | --- | --- |
+| `Rainfed; clay soil` | `clay` | `clay` |
+| `Rainfed; sandy soil` | `sandy` | `sandy` |
+| `irrigation is available; loam soil` | `loam` | `loam` |
+| `Rainfed; soil is clay` | none — `{"irrigation":"rainfed"}` | `clay` |
+| `Rainfed; soil: clay` | none | `clay` |
+| `Rainfed; soil type is clay` | none | `clay` |
+| `Rainfed; soil is sandy` | none | `sandy` |
+| `irrigation is available; soil is loam` | none | `loam` |
+| `Rainfed; the soil here is heavy clay` | none | none — bounded, so prose still guesses nothing |
+| `Rainfed; soil is not clay` | none | none — a negation still sets nothing |
+| `Rainfed; soil pH 6.2` | none | none — naming the property is not naming a texture |
+
+The widened pattern (`public/js/modules/workflow-assistant.js:44-45`) keeps the noun anchor and allows at most
+`type`/`texture` and one `is` between it and the texture, because `normalizeName` has already folded the colon
+and equals spellings into the bare "soil clay" adjacency; a looser `soil.*clay` would have read a texture out
+of "the soil here is heavy clay" and out of "soil is not clay", both of which the guard now pins as *no
+constraint*. "soil is sandy loam" resolves to `sandy` because the select has no mixed option — the first
+texture is taken, and no new option was invented for it. `tests/workflow-assistant.test.js` gained the
+assertion above; it was written first and measured **23 pass, 1 fail** — “soil is clay” was dropped from the
+plan, `null !== 'clay'`
+(`docs/evidence/workflow-soil-order-guard-before-2026-11-18.log.gz`) and **24 pass, 0 fail** after
+(`docs/evidence/workflow-soil-order-guard-after-2026-11-18.log.gz`). `npm run build` exits 0, `npm test`
+reports **206 tests, 206 pass, 0 fail, 0 skipped (26,040 ms)**
+(`docs/evidence/workflow-soil-order-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**.
+
+**The 64-case chat and workflow slice on this tip: 64 passed, 0 failed (2.6 m)**, started at load 3.58
+(`docs/evidence/workflow-soil-order-e2e-slice-2026-11-18.log.gz`). The same 64 cases are the ones that came
+out 61/3 on `32f2888`, so the earlier three click-timeout failures are now covered clean two tips later — that
+run still does not replace the full 196-case gate, which has not been re-run since `acb6c96`.
+
+### 27. A planting month was read only from the verb "start"
+
+`constraints.startMonth` fills the single First-planting-month select (`public/index.html:117`,
+`public/js/app.js:182-183`), and the parser reached it through `/\bstart(?:ing)? (?:in |month )?([a-z]+)/`. So a
+farmer who says the same window with a different verb, or with a qualifier in front of the month, set nothing:
+measured on the live module before any edit (archived as
+`docs/evidence/workflow-month-phrasing-probe-before-after-2026-11-18.log.gz`), `start in April` and
+`starting April` gave `4`, while `start in early April`, `start in mid April`, `start in late April`,
+`start planting in march`, `start around October`, `start at the beginning of April`, `plant in May`,
+`sow in June`, `begin in July` and `gps`-style spacing all gave **no start month at all**. As with subsection 26,
+the plan then kept whatever month was already in the form and said nothing about the dropped window.
+
+The parser now reads the month from either of two bounded shapes (`public/js/modules/workflow-assistant.js:58-60`):
+a planting verb (`start`/`begin`/`plant`/`sow`, with `planting`/`sowing` allowed as a second verb) followed by a
+preposition (`in`/`around`/`about`/`by`/`during`/`from`/`at`/`month`/`week`) and at most one qualifier
+(`early`/`mid`/`middle`/`late`, or `the beginning|end|middle of`); or an `-ing` verb sitting directly in front of
+the month. A base verb still requires the preposition, because "start may take longer than the season allows"
+would otherwise read May into the plan — that sentence and "start in the spring" are pinned as *no constraint*.
+
+**Executed:** the guard was written first and measured **24 pass, 1 fail** — “start in early April” was dropped
+from the plan, `null !== 4` (`docs/evidence/workflow-month-phrasing-guard-before-2026-11-18.log.gz`) — and
+**25 pass, 0 fail** after (`docs/evidence/workflow-month-phrasing-guard-after-2026-11-18.log.gz`). The same probe
+re-run on the fixed tree resolves 14 of the 17 phrasings, up from 5
+(`docs/evidence/workflow-month-phrasing-probe-before-after-2026-11-18.log.gz`). `npm run build` exits 0, `npm test`
+reports **207 tests, 207 pass, 0 fail, 0 skipped (28,026 ms)**
+(`docs/evidence/workflow-month-phrasing-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**. The
+first full-suite run on this tree was **206 pass, 1 fail**, and the failure was not in the app: the evidence
+citation guard in `tests/documentation-commands.test.js:93` refused the subsection-26 doc because it cited
+`workflow-soil-order-probe-before-after-…gz` while I had archived the two probe halves as separate files — the
+guard held the docs and the repository in step, and the renamed file now satisfies it.
+
+**The 64-case chat and workflow slice on the tip carrying subsections 26 and 27 together: 64 passed, 0 failed
+(3.6 m)**, started at load 4.50
+(`docs/evidence/workflow-month-phrasing-e2e-slice-2026-11-18.log.gz`), so the same 64 cases that came out 61/3 on
+`32f2888` are clean here too. The 196-case gate has still not been re-run since `acb6c96`.
+
+**Still not read, recorded rather than tested as supported:** a month named as an abbreviation ("start in Sept"),
+a month behind a copula ("the first planting is in April"), and a season word ("start in the spring") set no
+start month. The first is a two-line widening of the same pattern; the other two are deliberate, because the
+single field holds a month and neither phrase names one.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -2171,15 +2259,16 @@ the citation contract, both of which only a clean whole-suite run covers).
   (`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). The same run covers the eight specs whose
   slice attempts were load-degraded in subsection 19, so those two degraded tallies stand as recorded
   but are no longer the best evidence for that tree.
-* The full gate belongs to `acb6c96`. Subsections 22 to 25 changed `public/js/lib/chat-context.js`
-  afterwards, so the clean **196/196 (19.1 m)** line above must not be quoted for the tip that carries the
-  caveat budget, the crop-matched pest record, the species-name matcher and the citation-id pairing until the
-  suite is re-run there. On the subsection-22 tip only the 52-case chat slice and `npm test` 202/202 are
-  measured; on the subsection-23 tip `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice
-  recorded above are measured; on the subsection-24/25 tip the offline suite (**205/205**) and the 64-case
-  slice are measured, and that slice came out **61 passed, 3 failed** with all three failures proven to be
-  click-timeout load effects by an isolated 3/3 re-run. The remaining 132 cases - the map, farm, terrain,
-  evidence, print and accessibility specs - have not run on any of those four tips.
+* The full gate belongs to `acb6c96`. Subsections 22 to 27 changed `public/js/lib/chat-context.js` and
+  `public/js/modules/workflow-assistant.js` afterwards, so the clean **196/196 (19.1 m)** line above must not be
+  quoted for the tip that carries the caveat budget, the crop-matched pest record, the species-name matcher, the
+  citation-id pairing, the soil word order and the month verbs until the suite is re-run there. On the
+  subsection-22 tip only the 52-case chat slice and `npm test` 202/202 are measured; on the subsection-23 tip
+  `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice are measured; on the subsection-24/25 tip
+  the offline suite (**205/205**) and the 64-case slice are measured, that slice coming out **61 passed, 3 failed**
+  with all three failures proven to be click-timeout load effects by an isolated 3/3 re-run; on the
+  subsection-26/27 tip the offline suite (**207/207**) and the same 64-case slice are measured clean. The remaining
+  132 cases - the map, farm, terrain, evidence, print and accessibility specs - have not run on any of those tips.
 * The rendered panel for the two new selection rules. No browser case loads NASA POWER and SoilGrids into
   one session, and none has a pest context loaded beside a radish plan, so the weather-plus-soil advisory
   and the crop-matched pest record are pinned by `tests/chat-context.test.js` and direct-module probes only.

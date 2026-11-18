@@ -37,7 +37,12 @@ export function parseWorkflowMessage(question, active = false) {
   const constraints = {};
   if (/\b(rainfed|rain fed|no irrigation)\b/.test(text)) constraints.irrigation = 'rainfed';
   else if (/\birrigation (?:is )?available\b/.test(text)) constraints.irrigation = 'available';
-  const soil = /\b(sandy|loam|clay) soil\b/.exec(text)?.[1];
+  // The parser matches the normalized text, where "soil: clay", "soil = clay" and "soil is clay" all arrive as
+  // "soil clay"/"soil is clay" and "clay soil" keeps its order, so both orders are read. At most "type"/"texture"
+  // and one "is" may sit between the noun and the texture: prose like "the soil here is heavy clay" or
+  // "soil is not clay" sets nothing instead of guessing a texture from a word that happens to come later.
+  const soilMatch = /\b(sandy|loam|clay) soil\b|\bsoil(?: (?:type|texture))?(?: is)? (sandy|loam|clay)\b/i.exec(text);
+  const soil = soilMatch?.[1] ?? soilMatch?.[2] ?? null;
   if (soil) constraints.soil = soil;
   const ph = /\b(?:soil )?ph\s*(?:is|:|=)?\s*(\d+(?:\.\d+)?)/i.exec(question)?.[1];
   if (ph != null) constraints.soilPh = Number(ph);
@@ -47,7 +52,12 @@ export function parseWorkflowMessage(question, active = false) {
     const year = pattern.exec(question)?.[1]; if (year) constraints[key] = Number(year);
   }
   const months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-  const month = /\bstart(?:ing)? (?:in |month )?([a-z]+)/.exec(text)?.[1];
+  // The month reaches one field, so a qualifier in front of its name — early, mid, late, the beginning of — does
+  // not change the answer. A base verb keeps requiring a preposition because "start may take longer" would
+  // otherwise read May into the plan, while an -ing verb may sit directly before the month ("starting April").
+  const monthPhrase = /\b(?:start|starts|begin|begins|plant|plants|planted|sow|sows|sown)(?:\s+(?:planting|sowing|starting|beginning))?\s+(?:in|around|about|by|during|from|at|month|week)\s+(?:(?:early|mid|middle|late)\s+|the\s+(?:beginning|end|middle)\s+of\s+)?([a-z]+)/i;
+  const monthAfterParticiple = /\b(?:starting|beginning|planting|sowing)\s+(?:(?:in|around|by|during|from|at)\s+(?:(?:early|mid|middle|late)\s+)?)?([a-z]+)/i;
+  const month = monthPhrase.exec(text)?.[1] ?? monthAfterParticiple.exec(text)?.[1];
   if (months.includes(month)) constraints.startMonth = months.indexOf(month) + 1;
   return { countries, location, baseline, allowed, constraints, wholeCountry, specificArea, intent, implicitList,
     farmId: /\bway\/(\d+)\b/.exec(question)?.[0],

@@ -847,6 +847,43 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   so they are host starvation, not a code regression — but the slice therefore does not certify the tip and the
   full 196-case gate is still owed. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal
   edit.
+- **18 Nov, same branch: iteration 27 — a soil texture written after the noun never reached the plan.** Step 1 asks
+  for a texture with a select holding only `unknown|sandy|loam|clay` (`public/index.html:119`) and
+  `applyPlanning()` copies `constraints.soil` straight into it (`public/js/app.js:181-183`), but the parser read
+  `/\b(sandy|loam|clay) soil\b/` — one word order. "clay soil" set the field; "soil is clay" set nothing, and
+  because `parseWorkflowMessage` matches `normalizeName(question)`, which lowercases and removes punctuation, the
+  colon and equals spellings arrive as the bare "soil clay" and could never be found by a pattern that looked for
+  a colon. The plan then used the `unknown` already in the field and said nothing about the dropped constraint.
+  The pattern now anchors on `soil` and allows at most `type`/`texture` and one `is` before the texture, so the
+  prose shapes stay empty: "the soil here is heavy clay" and "soil is not clay" still set nothing, which the guard
+  pins. **Executed:** guard first — **23 pass, 1 fail** (“soil is clay” was dropped from the plan) then **24 pass,
+  0 fail**; one probe script run against the live module before the edit and again after it shows the three
+  pre-noun orders unchanged, five
+  post-noun spellings going from no soil key to the right texture and three negative shapes empty on both sides
+  (`docs/evidence/workflow-soil-order-probe-before-after-2026-11-18.log.gz`); `npm run build` exit 0, `npm test`
+  **206/206, 0 failed, 0 skipped (26,040 ms)**, `npm audit` **0 vulnerabilities**, and the 64-case chat and
+  workflow slice — the same 64 that came out 61/3 on `32f2888` — passed **64/64 (2.6 m)** at load 3.58
+  (`docs/evidence/workflow-soil-order-e2e-slice-2026-11-18.log.gz`). The 196-case gate is still owed on this tip.
+  Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **18 Nov, same branch: iteration 28 — a planting month was read only from the verb "start".**
+  `constraints.startMonth` drives the one First-planting-month select (`public/index.html:117`,
+  `public/js/app.js:182-183`) and the parser used `/\bstart(?:ing)? (?:in |month )?([a-z]+)/`, so "plant in May",
+  "sow in June", "begin in July", "start around October", "start planting in march", "start at the beginning of
+  April" and "start in early/mid/late April" all parsed to **no start month** — measured on the live module before
+  any edit: 5 of 17 phrasings resolved. Same shape as iteration 27: the plan quietly kept the month already in the
+  form instead of saying the stated window was dropped. The parser now accepts a planting verb plus a preposition
+  plus at most one qualifier, and an `-ing` verb sitting directly before the month
+  (`public/js/modules/workflow-assistant.js:58-60`), while a base verb still requires the preposition so
+  "start may take longer than the season allows" cannot read May into the plan. **Executed:** guard first —
+  **24 pass, 1 fail** (“start in early April” was dropped from the plan) then **25 pass, 0 fail**; the probe re-run
+  resolves 14 of 17 (`docs/evidence/workflow-month-phrasing-probe-before-after-2026-11-18.log.gz`); `npm run build`
+  exit 0, `npm test` **207/207, 0 failed, 0 skipped (28,026 ms)** — an intermediate run was 206/1 and the failure
+  was my own doc citing an evidence filename that did not exist, caught by
+  `tests/documentation-commands.test.js:93` — `npm audit` **0 vulnerabilities**, and the 64-case chat and workflow
+  slice passed **64/64 (3.6 m)** at load 4.50
+  (`docs/evidence/workflow-month-phrasing-e2e-slice-2026-11-18.log.gz`). Abbreviated month names ("start in
+  Sept") and a month behind a copula ("the first planting is in April") are still not read; recorded, not claimed.
+  The 196-case gate remains owed. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

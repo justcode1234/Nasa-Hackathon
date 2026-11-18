@@ -47,6 +47,41 @@ test('workflow parser distinguishes actions from read-only crop questions', () =
   assert.deepEqual(parseWorkflowMessage('help me rotate rice, wheat, beans in India').baseline, ['rice', 'wheat', 'beans']);
 });
 
+// Irrigation survives either word order ("Rainfed", "irrigation is available") but a soil type only reached the
+// plan as `clay soil`: writing the same fact the other way round — "soil is clay", "soil: clay", "soil type is
+// clay" — parsed to no soil at all, and the plan went ahead without saying a constraint was dropped. Both orders
+// are read from the three textures the step-1 select offers, and prose that names soil without naming one of
+// them still reports nothing rather than guessing.
+test('a volunteered soil type is read in either word order', () => {
+  const soilOf = tail => parseWorkflowMessage(`Help me plan a rotation in India. Crops: rice, cabbage, tomato. ${tail}`)?.constraints?.soil ?? null;
+  for (const [phrasing, soil] of [['clay soil', 'clay'], ['soil is clay', 'clay'], ['soil: clay', 'clay'],
+    ['soil = clay', 'clay'], ['soil type is clay', 'clay'], ['soil texture is loam', 'loam'],
+    ['sandy soil', 'sandy'], ['soil is sandy loam', 'sandy']]) {
+    assert.equal(soilOf(`Rainfed; ${phrasing}`), soil, `“${phrasing}” was dropped from the plan`);
+  }
+  assert.equal(soilOf('Rainfed; the soil here is heavy clay'), null, 'an unbounded match would guess from prose');
+  assert.equal(soilOf('Rainfed; soil is not clay'), null, 'a negation must not set the soil');
+  assert.equal(soilOf('Rainfed; soil pH 6.2'), null, 'naming the property is not naming a texture');
+});
+
+// A planting month was read only from "start …": "start in early April", "plant in May", "sow in June" and
+// "start planting in March" all parsed to no month, so the plan used the month already in the form without
+// saying the stated window was dropped. The month survives from a prepositional phrase and from an -ing verb
+// directly before it, and a base verb with no preposition still sets nothing — "start may take longer" is not
+// a plan for May.
+test('a planting month survives the verb and qualifier in front of it', () => {
+  const monthOf = tail => parseWorkflowMessage(`Help me plan a rotation in India. Crops: rice, cabbage, tomato. ${tail}`)?.constraints?.startMonth ?? null;
+  for (const [phrasing, month] of [['start in April', 4], ['starting April', 4], ['start month April', 4],
+    ['start in early April', 4], ['start in mid April', 4], ['start in late april', 4],
+    ['start at the beginning of April', 4], ['start around October', 10], ['start planting in march', 3],
+    ['plant in May', 5], ['sow in June', 6], ['begin in July', 7], ['start in april 2027', 4]]) {
+    assert.equal(monthOf(`Rainfed; ${phrasing}`), month, `“${phrasing}” was dropped from the plan`);
+  }
+  assert.equal(monthOf('Rainfed; start may take longer than the season allows'), null, 'the modal “may” is not May');
+  assert.equal(monthOf('Rainfed; start in the spring'), null, 'a season is not a month');
+  assert.equal(monthOf('Rainfed; start in May and harvest in September'), 5, 'the window, not the end, is the start month');
+});
+
 test('explicit country, coordinates and farmer crops execute through step 4 in order', async () => {
   const { assistant, calls, state } = setup();
   const answer = await assistant.respond('Help me plan a rotation in India at 18.52, 73.85. Crops: rice, wheat, beans. Rainfed');
