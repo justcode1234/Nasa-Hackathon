@@ -82,6 +82,44 @@ test('a planting month survives the verb and qualifier in front of it', () => {
   assert.equal(monthOf('Rainfed; start in May and harvest in September'), 5, 'the window, not the end, is the start month');
 });
 
+// Many locales write 18,52 for 18.52. The pair pattern only allowed a dot inside a number, so it read the comma
+// as the separator between latitude and longitude: "at 18,52, 73,85" (Goa) became latitude 18, longitude 52 —
+// a point on the Egypt/Libya border — and "-23,55, -46,63" (São Paulo) became -23, +55 in the Indian Ocean with
+// the second sign lost. Both invented numbers pass the ±90/±180 range check, so nothing warned the farmer.
+test('a decimal-comma coordinate is read as one number per position', () => {
+  const at = tail => parseWorkflowMessage(`Help me plan a rotation in India. Crops: rice, cabbage, tomato. ${tail}`)?.location ?? null;
+  assert.deepEqual(at('at 18,52, 73,85'), { latitude: 18.52, longitude: 73.85 }, 'the decimal comma was split into a new place');
+  assert.deepEqual(at('the point is -23,55, -46,63'), { latitude: -23.55, longitude: -46.63 }, 'the second sign was dropped');
+  assert.deepEqual(at('gps: 18,52 73,85'), { latitude: 18.52, longitude: 73.85 }, 'a space-separated pair of comma decimals');
+  assert.deepEqual(at('at 8,5 and 49,35'), { latitude: 8.5, longitude: 49.35 });
+  assert.deepEqual(at('at 18.52, 73.85'), { latitude: 18.52, longitude: 73.85 }, 'the dotted pair is unchanged');
+  assert.deepEqual(at('at 18, 52'), { latitude: 18, longitude: 52 }, 'a spaced pair of whole numbers is still two numbers');
+  // Iteration 30 supersedes the limit this line used to pin: a hemisphere letter is now read as the sign,
+  // so the same message must resolve instead of being refused.
+  assert.deepEqual(at('at 35.9 N 14.4 E'), { latitude: 35.9, longitude: 14.4 }, 'a hemisphere pair is read, not refused');
+});
+
+// A pin copied from a paper form or a map app arrives as "18.52N 73.85E", "33.9 S, 18.4 W" or
+// "lat 18.52 lon 73.85". Nine such spellings were measured on the live module and every one parsed to no
+// location at all, so the farmer was told to supply coordinates that they had just supplied. The letters carry
+// the sign a decimal form states with a minus, so N/E stay positive and S/W flip. Only a number with a fraction
+// or a degree mark counts, because "use 4N fertilizer on the 15E slope" is a dose and a gradient, not a point.
+test('a coordinate written with hemisphere letters or lat/lon labels is placed', () => {
+  const at = tail => parseWorkflowMessage(`Help me plan a rotation in India. Crops: rice, cabbage, tomato. ${tail}`)?.location ?? null;
+  assert.deepEqual(at('at 35.9 N, 14.4 E'), { latitude: 35.9, longitude: 14.4 });
+  assert.deepEqual(at('14.4E 35.9N'), { latitude: 35.9, longitude: 14.4 }, 'the pair may be written east first');
+  assert.deepEqual(at('33.9 S, 18.4 W'), { latitude: -33.9, longitude: -18.4 }, 'S and W are the negative half');
+  assert.deepEqual(at('the point is 18.52N 73.85E right now'), { latitude: 18.52, longitude: 73.85 });
+  assert.deepEqual(at('lat 18.52 lon 73.85'), { latitude: 18.52, longitude: 73.85 });
+  assert.deepEqual(at('long 73.85 lat 18.52'), { latitude: 18.52, longitude: 73.85 }, 'each number keeps its own label');
+  assert.deepEqual(at('at 18,52° N, 73,85° E'), { latitude: 18.52, longitude: 73.85 }, 'a decimal comma with degree marks is one number, not the fraction alone');
+  assert.deepEqual(at('18,52 N 73,85 E'), { latitude: 18.52, longitude: 73.85 }, 'a decimal comma with no degree mark');
+  assert.deepEqual(at('at 23,55 S, 46,63 W'), { latitude: -23.55, longitude: -46.63 }, 'the comma decimals flip negative together');
+  assert.equal(at('use 4N fertilizer on the 15E slope'), null, 'an integer grade and a gradient are not a point');
+  assert.equal(at('apply 20.5 N per hectare and 12.4 E of lime'), null, 'two rates in one sentence are not a pin');
+  assert.equal(at('a field 40 km north of town'), null, 'a direction word is not a hemisphere tag');
+});
+
 test('explicit country, coordinates and farmer crops execute through step 4 in order', async () => {
   const { assistant, calls, state } = setup();
   const answer = await assistant.respond('Help me plan a rotation in India at 18.52, 73.85. Crops: rice, wheat, beans. Rainfed');

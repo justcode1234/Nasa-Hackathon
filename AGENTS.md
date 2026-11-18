@@ -884,6 +884,52 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   (`docs/evidence/workflow-month-phrasing-e2e-slice-2026-11-18.log.gz`). Abbreviated month names ("start in
   Sept") and a month behind a copula ("the first planting is in April") are still not read; recorded, not claimed.
   The 196-case gate remains owed. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **18 Nov, same branch: iteration 29 — a decimal-comma coordinate became a different place on Earth.** The pair
+  pattern at `public/js/modules/workflow-assistant.js:22` (pre-fix) allowed a dot inside each number and used a
+  comma as the separator, so in locales that write `18,52` for 18.52 it consumed the decimal comma: "at 18,52,
+  73,85" — Goa — parsed to latitude 18, longitude 52, a point on the Egypt/Libya border, and "-23,55, -46,63" —
+  São Paulo — parsed to **-23, +55** in the Indian Ocean with the second minus sign lost. This is the worst class
+  found so far because it does not drop a fact, it substitutes a wrong one, and the ±90/±180 range check cannot
+  see it (both invented numbers are in range) while the country check only fires when a country was already named.
+  The parser now tries a comma-decimal shape first, requiring `digits,digits` on **both** sides of the separator,
+  and only then falls back to the old pattern (`:26-30`), so "at 18, 52" stays a pair of whole numbers.
+  **Executed:** guard first — **25 pass, 1 fail** ("the decimal comma was split into a new place",
+  `docs/evidence/workflow-coordinate-comma-guard-before-2026-11-18.log.gz`) then **26 pass, 0 fail**; a before/after
+  probe on the live module shows the four comma-decimal spellings going from wrong to right while the dotted pair,
+  "at 18.521, 73.852", "at 18, 52" and "at 18.52 73.85" are unchanged
+  (`docs/evidence/workflow-coordinate-comma-probe-before-after-2026-11-18.log.gz`); `npm run build` exit 0, `npm
+  test` **208/208, 0 failed, 0 skipped (29,168 ms)**, `npm audit` **0 vulnerabilities**. The guard also pins the two
+  forms still *not* read: "at 35.9 N 14.4 E" is pinned by the guard to yield no location (a hemisphere letter is
+  not turned into a sign), and "at 18.52 73.85" is measured to yield none in the probe (a dotted pair with no
+  separator). The 64-case Chrome slice on this tip came out **61 passed, 3 failed (8.3 m)**, all three at
+  `static-desktop` with `locator.click … waiting for element to be visible, enabled and stable` on `#tab-location`
+  and `#flow-next` — the documented starvation signature, and no coordinate assertion failed — and exactly those
+  three cases pass **3/3 (8.2 s)** when run alone, so the slice tally is recorded as degraded rather than as a
+  result about this change. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **18 Nov, same branch: iteration 30 — a hemisphere-letter or labelled coordinate was refused outright.** The parser
+  only recognised two dotted numbers around a comma, so nine spellings measured on the live module — `35.9 N 14.4 E`,
+  `33.9 S, 18.4 W`, `14.4E 35.9N`, `lat 18.52 lon 73.85`, `latitude … longitude …`, `long 73.85 lat 18.52`,
+  `18.52N 73.85E`, `18.52 S and 73.85 W` — all returned no location and the app asked the farmer for coordinates they
+  had just typed. Each number may now carry a fraction in either notation and an optional degree mark, `S`/`W` flip
+  the sign, and a point is accepted only when both halves are tagged, one carries a fraction or `°`, and the tags are
+  written next to each other (`public/js/modules/workflow-assistant.js:34-49`, precedence `:51-55`). **The first
+  version of that rule was itself a defect and is the reason the fraction must stay attached to its own number:** it
+  read `at 18,52° N, 73,85° E` as latitude 52, longitude 85 — the iteration-29 substituted-value class reborn — which
+  the probe captured before the shipped version turned it into 18.52, 73.85. Measured limits, recorded rather than
+  hidden: whole degrees with no `°` (`37N 127E`) are still refused, and `seed rate 3.5 N and 2.1 E per kg` is still
+  read as a point because the "and" connector a real `18.52 S and 73.85 W` needs is indistinguishable. **Executed:**
+  guard **26 pass, 1 fail → 27 pass, 0 fail** (`docs/evidence/workflow-hemisphere-labels-guard-before-2026-11-18.log.gz`,
+  `…-guard-after-2026-11-18.log.gz`), including rewriting the iteration-29 assertion that pinned "at 35.9 N 14.4 E" as
+  unread — that line guarded superseded behaviour, so it now requires the pair; a four-part before/after probe
+  (`docs/evidence/workflow-hemisphere-labels-probe-before-after-2026-11-18.log.gz`); `npm run build` exit 0, `npm test`
+  **209/209, 0 failed, 0 skipped** (`docs/evidence/workflow-hemisphere-labels-npm-test-2026-11-18.log.gz`), `npm audit`
+  **0 vulnerabilities**. The 64-case Chrome slice on this tip came out **60 passed, 4 failed (6.1 m)** — all four at
+  `static-desktop`, all four `locator.click … waiting for element to be visible, enabled and stable` on `#chat-toggle`
+  (`docs/evidence/workflow-hemisphere-labels-e2e-slice-2026-11-18.log.gz`) — and a prompt-level probe of all sixteen
+  `tests/qa/prompts.json` questions through the shipped parser shows only `Q09` carrying a location (18.5204, 73.8567,
+  unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
+  cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
+  and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

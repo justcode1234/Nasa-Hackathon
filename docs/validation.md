@@ -2233,6 +2233,115 @@ a month behind a copula ("the first planting is in April"), and a season word ("
 start month. The first is a two-line widening of the same pattern; the other two are deliberate, because the
 single field holds a month and neither phrase names one.
 
+### 28. A decimal-comma coordinate became a different place on Earth
+
+`public/js/modules/workflow-assistant.js:22` matched a coordinate pair as two numbers that may contain a dot,
+separated by a comma. In the locales that write `18,52` for 18.52 that is not a pair of whole numbers, and the
+pattern used the first comma as the separator, so the app did not merely miss the point — it invented another one.
+Measured before any edit on the live module
+(`docs/evidence/workflow-coordinate-comma-probe-before-after-2026-11-18.log.gz`): "at 18,52, 73,85" (Goa, India)
+parsed to latitude 18, longitude 52, a point on the Egypt/Libya border, and "the point is -23,55, -46,63"
+(São Paulo) parsed to latitude -23, longitude **+55** in the Indian Ocean, the second minus sign dropped because
+`55` was read as the longitude. The range check at `:347` could not catch either one, since every invented value
+is inside ±90/±180; the country check at `:351` only helps when a country was already named.
+
+The parser now tries a comma-decimal shape first — a number of at most three digits, a comma, one to three digits,
+on **both** sides of the separator — and only falls back to the old pair pattern
+(`public/js/modules/workflow-assistant.js:26-30`). Requiring the comma inside both numbers is what keeps "at 18, 52"
+a pair of whole numbers, which the guard pins.
+
+| Message tail | location before | location after |
+| --- | --- | --- |
+| `at 18.52, 73.85` | 18.52, 73.85 | 18.52, 73.85 |
+| `at 18,52, 73,85` | **18, 52** | 18.52, 73.85 |
+| `gps: 18,52 73,85` | **18, 52** | 18.52, 73.85 |
+| `the point is -23,55, -46,63` | **-23, 55** | -23.55, -46.63 |
+| `at 8,52, 49,35` | **8, 52** | 8.52, 49.35 |
+| `at 18.521, 73.852` | 18.521, 73.852 | 18.521, 73.852 |
+| `at 18, 52` | 18, 52 | 18, 52 — a spaced pair of whole numbers is still two numbers |
+| `at 18.52 73.85` | none | none — unchanged, and still reported as missing |
+
+**Executed:** the guard was written first and measured **25 pass, 1 fail** — "the decimal comma was split into a
+new place" (`docs/evidence/workflow-coordinate-comma-guard-before-2026-11-18.log.gz`) — and **26 pass, 0 fail**
+after (`docs/evidence/workflow-coordinate-comma-guard-after-2026-11-18.log.gz`); it also pins one form that is
+*not* read — "at 35.9 N 14.4 E" must stay without a location, so widening hemisphere letters later is a deliberate
+edit rather than an accident. `npm run build` exits 0, `npm
+test` reports **208 tests, 208 pass, 0 fail, 0 skipped (29,168 ms)**
+(`docs/evidence/workflow-coordinate-comma-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**.
+
+The 64-case slice in Chrome (four projects over `chat-only-flow`, `assistant`, `help-and-explanations` and
+`workflow`) came out **61 passed, 3 failed (8.3 m)**
+(`docs/evidence/workflow-coordinate-comma-e2e-slice-2026-11-18.log.gz`) - all three at `static-desktop`, all three
+`TimeoutError: locator.click: Timeout 15000ms exceeded … waiting for element to be visible, enabled and stable`
+on `#tab-location` and `#flow-next`, which is the subsection-19 starvation signature rather than a coordinate
+result. Re-running exactly those three cases alone finished **3 passed (8.2 s)**
+(`docs/evidence/workflow-coordinate-comma-e2e-isolated-2026-11-18.log.gz`), so the slice tally is recorded as
+degraded and is not evidence about this change; the remaining 132 cases have not run on this tip either.
+
+### 29. A coordinate written with hemisphere letters was refused outright
+
+Subsection 28 left a pinned limit in the guard: "at 35.9 N 14.4 E" *had* to yield no location, because the parser
+only recognised two dotted numbers around a comma. Measured on the live module before this iteration
+(`docs/evidence/workflow-hemisphere-labels-probe-before-after-2026-11-18.log.gz`), nine spellings a farmer can
+actually copy off a map or a paper form — `35.9 N 14.4 E`, `at 35.9 N, 14.4 E`, `33.9 S, 18.4 W`, `lat 18.52 lon
+73.85`, `latitude 18.52 longitude 73.85`, `long 73.85 lat 18.52`, `14.4E 35.9N`, `the point is 18.52N 73.85E right
+now`, `at 18.52 S and 73.85 W` — returned `location: null` **9 of 9**, so the app asked for coordinates the farmer
+had just given. Refusing is honest, but a form that will not read the notation its own users copy is a coverage gap.
+
+The parser now reads the tag and the label forms
+(`public/js/modules/workflow-assistant.js:34-49`). Each number may carry a fraction in either notation (`.52` or
+`,52`) and an optional degree mark; `N`/`E` keep the value positive and `S`/`W` flip it, which is the same fact a
+decimal form states with a minus, not an invented one. A point is only accepted when **both** halves are tagged, at
+least one half carries a fraction or a degree mark, and the two tags are written next to each other - separated by
+nothing, punctuation, or the word "and" (`:42-44`). Those three conditions are what keep `use 4N fertilizer on the
+15E slope`, `my field is 2.5 km north of the 7.5 E road` and `the slope is 12.5 percent facing W` from becoming a
+pin. Precedence is comma-decimal, then letter/label pair, then the old dotted pair (`:51-55`), so nothing that used
+to resolve changes value.
+
+| Message tail | location before | location after |
+| --- | --- | --- |
+| `35.9 N 14.4 E` | none | 35.9, 14.4 |
+| `33.9 S, 18.4 W` | none | -33.9, -18.4 |
+| `14.4E 35.9N` | none | 35.9, 14.4 — east written first still lands |
+| `lat 18.52 lon 73.85` | none | 18.52, 73.85 |
+| `long 73.85 lat 18.52` | none | 18.52, 73.85 — each number keeps its own label |
+| `at 18,52° N, 73,85° E` | none, and **18, 52 with the first letter rule** | 18.52, 73.85 |
+| `at 23,55 S, 46,63 W` | none, and **23, 55 with the first letter rule** | -23.55, -46.63 |
+| `use 4N fertilizer on the 15E slope` | none | none |
+| `apply 20.5 N per hectare and 12.4 E of lime` | none | none |
+| `what can I grow at 37N 127E in South Korea` | none | none — whole degrees with no `°` are still refused |
+| `I am at 37°N 127°E` | none | 37, 127 |
+
+The middle column of the last two decimal-comma rows is this iteration's own defect and is why the shipped rule
+requires the fraction to stay attached to its own number: the first version of the letter pattern captured `52`
+from `18,52° N` as the latitude and `85` from `73,85° E` as the longitude, which is the subsection-28 failure class
+reborn as a substituted value rather than a refusal. It was measured, then fixed, and the guard rows pin the fixed
+behaviour. `seed rate 3.5 N and 2.1 E per kg` is measured to **still** be read as a point - the "and" connector that
+legitimate `18.52 S and 73.85 W` needs is the same connector those two rates use, and nothing in the sentence tells
+them apart. It is recorded as a remaining limit rather than claimed as safe.
+
+**Executed:** the guard was written first and measured **26 pass, 1 fail** — the new hemisphere test
+(`docs/evidence/workflow-hemisphere-labels-guard-before-2026-11-18.log.gz`) — and **27 pass, 0 fail** after, with
+the assertion that had pinned "at 35.9 N 14.4 E" as unread rewritten to require the pair, because that line was
+pinning the behaviour this iteration replaces (`docs/evidence/workflow-hemisphere-labels-guard-after-2026-11-18.log.gz`).
+`npm run build` exits 0, `npm test` reports **209 tests, 209 pass, 0 fail, 0 skipped**
+(`docs/evidence/workflow-hemisphere-labels-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**.
+
+The 64-case slice in Chrome (four projects over `chat-only-flow`, `assistant`, `help-and-explanations` and
+`workflow`) came out **60 passed, 4 failed (6.1 m)**
+(`docs/evidence/workflow-hemisphere-labels-e2e-slice-2026-11-18.log.gz`), all four at `static-desktop` and all four
+`TimeoutError: locator.click: Timeout 15000ms exceeded … waiting for element to be visible, enabled and stable` on
+`#chat-toggle` - the same starvation signature as subsections 25 and 28. The run that failed hardest is
+`assistant.spec.js:6`, whose first step is "Q01: Hi"; every one of the twelve `workflow` and thirty-six
+`help-and-explanations` cases passed on all four projects, and `chat-only-flow` failed only on `static-desktop`.
+A direct probe of the sixteen QA prompts in `tests/qa/prompts.json` through the shipped parser
+(`docs/evidence/workflow-hemisphere-labels-qa-prompts-probe-2026-11-18.log.gz`) shows exactly one of them carrying a
+location - `Q09` keeps 18.5204, 73.8567, unchanged - so the parse change cannot have altered those answers.
+Re-running exactly those four cases alone finished **4 passed (20.3 s)**, all sixteen QA steps included
+(`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`), which closes the attribution: the slice
+tally is a loaded host, not this tree. The full offline suite on the shipped tree reports **209 tests, 209 pass,
+0 fail, 0 skipped (37,936 ms)**.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -2259,16 +2368,21 @@ single field holds a month and neither phrase names one.
   (`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). The same run covers the eight specs whose
   slice attempts were load-degraded in subsection 19, so those two degraded tallies stand as recorded
   but are no longer the best evidence for that tree.
-* The full gate belongs to `acb6c96`. Subsections 22 to 27 changed `public/js/lib/chat-context.js` and
+* The full gate belongs to `acb6c96`. Subsections 22 to 29 changed `public/js/lib/chat-context.js` and
   `public/js/modules/workflow-assistant.js` afterwards, so the clean **196/196 (19.1 m)** line above must not be
   quoted for the tip that carries the caveat budget, the crop-matched pest record, the species-name matcher, the
-  citation-id pairing, the soil word order and the month verbs until the suite is re-run there. On the
-  subsection-22 tip only the 52-case chat slice and `npm test` 202/202 are measured; on the subsection-23 tip
-  `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice are measured; on the subsection-24/25 tip
-  the offline suite (**205/205**) and the 64-case slice are measured, that slice coming out **61 passed, 3 failed**
-  with all three failures proven to be click-timeout load effects by an isolated 3/3 re-run; on the
-  subsection-26/27 tip the offline suite (**207/207**) and the same 64-case slice are measured clean. The remaining
-  132 cases - the map, farm, terrain, evidence, print and accessibility specs - have not run on any of those tips.
+  citation-id pairing, the soil word order, the month verbs, the decimal-comma pair and the hemisphere letters until
+  the suite is re-run there. On the subsection-22 tip only the 52-case chat slice and `npm test` 202/202 are measured;
+  on the subsection-23 tip `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice are measured; on the
+  subsection-24/25 tip the offline suite (**205/205**) and the 64-case slice are measured, that slice coming out
+  **61 passed, 3 failed** with all three failures proven to be click-timeout load effects by an isolated 3/3
+  re-run; on the subsection-26/27 tip the offline suite (**207/207**) and the same 64-case slice are measured
+  clean; on the subsection-28 tip the offline suite (**208/208**) is measured and the same slice came out
+  **61/3** with the same three click timeouts proven degraded by an isolated **3/3** re-run; on the subsection-29
+  tip the offline suite (**209/209**) and the same slice are measured, that slice coming out **60/4** with four
+  `#chat-toggle` click timeouts and a prompt-level probe showing the parse itself unchanged on the QA set. The
+  remaining 132 cases - the map, farm, terrain, evidence, print and accessibility specs - have not run on any of
+  those tips.
 * The rendered panel for the two new selection rules. No browser case loads NASA POWER and SoilGrids into
   one session, and none has a pest context loaded beside a radish plan, so the weather-plus-soil advisory
   and the crop-matched pest record are pinned by `tests/chat-context.test.js` and direct-module probes only.

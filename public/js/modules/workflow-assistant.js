@@ -19,8 +19,39 @@ export function parseWorkflowMessage(question, active = false) {
   const specificArea = /\b(?:specific|particular) (?:area|part|region)\b|^choose a (?:town|city|field|place|region)(?: or (?:town|city|field|place|region))*$/.test(text);
   const intent = /\b(help me|guide me|walk me|take me|pick|select|choose|find|use|set|plan|rotate|compare|continue|next|proceed)\b/.test(text);
   if (!active && !wholeCountry && !specificArea && !(intent && (/\b(farm|farmland|field|rotation|rotate|crops|baseline|compare|step|task|point|coordinates)\b/.test(text) || countries.length))) return null;
+  // A comma is a decimal separator in many locales. The pair pattern only allowed a dot inside a number, so it
+  // read the comma in "18,52, 73,85" as the separator between latitude and longitude: the farm became 18, 52 —
+  // on the Egypt/Libya border instead of in Goa — and both invented numbers sail through the ±90/±180 check.
+  // Requiring the comma-inside-a-number shape on both sides is what keeps "at 18, 52" a pair of whole numbers.
+  const commaDecimal = /(?:^|[^\d.,])(-?\d{1,3}),(\d{1,3})\s*(?:,|;|\s+|and)\s*(-?\d{1,3}),(\d{1,3})(?![\d,])/i.exec(question);
   const point = /(?:^|[^\d.\w+-])([-+]?\d{1,3}(?:\.\d+)?)\s*,\s*([-+]?\d{1,3}(?:\.\d+)?)(?=$|[\s,;!?)\]]|\.(?!\d))/i.exec(question);
-  const location = point ? { latitude: Number(point[1]), longitude: Number(point[2]) } : null;
+  // The other way a pin is written tags each number with its own half of the world ("18.52N 73.85E", "33.9 S,
+  // 18.4 W") or names it ("lat 18.52 lon 73.85"). Those letters are the sign a decimal form states with a minus,
+  // so S and W flip. Three things have to hold, because each one is a way an unrelated number pair could look
+  // like a pin: both halves must be tagged, at least one number must carry a fraction or a degree mark (so
+  // "use 4N fertilizer on the 15E slope" stays a dose and a gradient), and the two tags must be written next to
+  // each other, separated only by punctuation or the word "and" (so "20.5 N per hectare and 12.4 E" is not a point).
+  const hemi = letter => {
+    const found = new RegExp(`(?:^|[^\\d.,])(\\d{1,3})(?:[.,](\\d{1,3}))?(\\s*\\u00b0)?\\s*(${letter})\\b`, 'gi').exec(question);
+    if (!found) return null;
+    return { start: found.index, end: found.index + found[0].length, part: Boolean(found[2] || found[3]),
+      value: Number(`${found[1]}.${found[2] ?? '0'}`), sign: found[4].toUpperCase() };
+  };
+  const hemiLat = hemi('[NS]');
+  const hemiLon = hemi('[EW]');
+  const writtenTogether = hemiLat && hemiLon
+    && /^[\s,;]*(?:and[\s,;]*)?$/i.test(hemiLat.end <= hemiLon.start
+      ? question.slice(hemiLat.end, hemiLon.start) : question.slice(hemiLon.end, hemiLat.start));
+  const latLabel = /\blat(?:itude)?\s*[:=]?\s*(-?\d{1,3}(?:\.\d+)?)/i.exec(question);
+  const lonLabel = /\blon(?:g|gitude)?\s*[:=]?\s*(-?\d{1,3}(?:\.\d+)?)/i.exec(question);
+  const tagged = writtenTogether && (hemiLat.part || hemiLon.part)
+    ? { latitude: hemiLat.sign === 'S' ? -hemiLat.value : hemiLat.value, longitude: hemiLon.sign === 'W' ? -hemiLon.value : hemiLon.value }
+    : latLabel && lonLabel ? { latitude: Number(latLabel[1]), longitude: Number(lonLabel[1]) }
+    : null;
+  const location = commaDecimal
+    ? { latitude: Number(`${commaDecimal[1]}.${commaDecimal[2]}`), longitude: Number(`${commaDecimal[3]}.${commaDecimal[4]}`) }
+    : tagged ? tagged
+    : point ? { latitude: Number(point[1]), longitude: Number(point[2]) } : null;
   const baselineQuestion=question.replace(/\ballowed crops\s*(?:are|:|=)\s*[^.;]+/ig,'');
   const clause = /\b(?:crops|baseline|(?:existing )?rotation)\s*(?:are|is|:|=)\s*(.+)/i.exec(baselineQuestion)?.[1] ??
     /\b(?:with (?:the )?crops|based on (?:these crops[: ]+)?|rotate:|farmer provides|currently grow|i grow)\s*(.+)/i.exec(question)?.[1] ??
