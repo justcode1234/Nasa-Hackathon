@@ -1116,10 +1116,27 @@ not equal a saved row's `name`; and a tapped button that does not put that row's
 `latitude`/`longitude` on the plan. All **18** lists (AW BL CC CW CX EH FK GI GS MF NF NU PN SG SX TC
 VA VG) pass, so no name in their area prompt is unreachable from the chat.
 
-* `node --test tests/matrix-coverage.test.js` → **18/18 passed, 0 failed**.
-* `npm test` → **184/184 passed, 0 failed, 0 skipped**
-  ([evidence/unit-regionless-2026-11-18.log](evidence/unit-regionless-2026-11-18.log)).
-* `npm audit` → **0 vulnerabilities**.
+Two more assertions turned out to be narrower than the goal requires, and both are now exhaustive:
+
+* The town-name sweep capped itself at 100 unique names per country, so `npm test` covered 13,673 of the
+  **66,632** unique town names in the saved lists and trusted the standalone script for the rest. The cap
+  is gone: every unique name is typed through `typedPlace` as `Use <name>` and then `in <name>`, and only
+  the residue goes through the assistant engine. That one test costs about 45 s — the file's own runtime
+  went from 26.1 s to 70.3 s — and it found no new defect:
+  `66632 unique town names … 79 needed the exact-row path, 7 skipped as eponymous with the
+  country` — which is the same 79 and 7 the deep audit reports, now asserted in the suite.
+* The unknown-town census lived only in `scripts/audit-nonsense-town.js`. The census moved into
+  `tests/helpers/matrix-harness.js` as `nonsenseCensus()`; the script and a new test both call it, so the
+  printed number and the asserted number cannot drift. Re-run after the move:
+  `{"cases":2151,"countries":245,"failures":0,"deferredToEvidenceAnswer":54}` in 12.9 s — byte-identical
+  to the pre-move result.
+
+* `node --test tests/matrix-coverage.test.js` → **19/19 passed, 0 failed** (70.3 s).
+* `npm test` → **185/185 passed, 0 failed, 0 skipped** in 78.3 s
+  ([evidence/unit-exhaustive-2026-11-18.log](evidence/unit-exhaustive-2026-11-18.log)); the earlier
+  184/184 run of the region-less test alone is kept at
+  [evidence/unit-regionless-2026-11-18.log](evidence/unit-regionless-2026-11-18.log).
+* `npm audit` → **0 vulnerabilities** (no `package.json` or lockfile change in any of these steps).
 * No app module, place row, crop record or model vocabulary changed in this step, so the tiny word LM is
   not retrained and the browser numbers recorded above still describe this code.
 

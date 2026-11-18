@@ -4,7 +4,7 @@ import { catalog } from '../server/agronomy/catalog.js';
 import { getCountryCrops } from '../server/context/crops.js';
 import { COUNTRY_CODES, COUNTRY_NAMES, findCountries, normalizeName, regionPhrase } from '../public/js/lib/countries.js';
 import { parseWorkflowMessage, resolveCropInput, typedPlace } from '../public/js/modules/workflow-assistant.js';
-import { countryPhrasings, driveAssistant, listCountries, locations, makeAssistant, textOf } from './helpers/matrix-harness.js';
+import { countryPhrasings, driveAssistant, listCountries, locations, makeAssistant, nonsenseCensus, textOf } from './helpers/matrix-harness.js';
 
 // Coverage for every country the app offers a town list for. These are the same production
 // modules the browser imports; the doubles only record workflow actions, never observations.
@@ -117,11 +117,12 @@ test('every named region in every saved list can be selected by typing its name'
 });
 
 test('town names stay selectable and every unmatchable name has a stated reason', async t => {
-  const perCountry = 100, unexplained = [], eponymous = [], driven = [];
+  const unexplained = [], eponymous = [], driven = [];
   let checked = 0;
-  // The short-reply matcher is the fast path. A name it cannot reach is still checked against the
-  // production engine, which accepts a reply that equals a step 1 row exactly (“Chak One Hundred
-  // Forty Nine Left”, “Петровец”) and asks which one when several rows share a name.
+  // Every unique town name in every saved list goes through the short-reply matcher. A name it cannot
+  // reach is still checked against the production engine, which accepts a reply that equals a step 1 row
+  // exactly (“Chak One Hundred Forty Nine Left”, “Петровец”) and asks which one when several rows share
+  // a name.
   const engines = new Map();
   const drive = async (country, name) => {
     let engine = engines.get(country);
@@ -139,7 +140,7 @@ test('town names stay selectable and every unmatchable name has a stated reason'
     const byName = new Map();
     for (const place of list.places) if (!byName.has(normalizeName(place.name))) byName.set(normalizeName(place.name), place);
     const names = [...byName.values()];
-    for (const place of names.slice(0, perCountry)) {
+    for (const place of names) {
       checked++;
       if (typedPlace(list, `Use ${place.name}`, { countryName, allowEponymous }).some(match => match.id === place.id)) continue;
       // A name beyond the bare-reply limit is still typeable with the lead-in the reply suggests.
@@ -161,8 +162,8 @@ test('town names stay selectable and every unmatchable name has a stated reason'
       unexplained.push(`${country}/${place.name} -> ${text.slice(0, 70) || '(no reply)'}`);
     }
   }
-  assert.ok(checked > 13000, `expected a wide town sample, checked ${checked}`);
-  t.diagnostic(`typed-place coverage: ${checked} unique town names sampled, ${driven.length} needed the exact-row path, ` +
+  assert.ok(checked > 60000, `expected every unique town name, checked ${checked}`);
+  t.diagnostic(`typed-place coverage: ${checked} unique town names in every saved list, ${driven.length} needed the exact-row path, ` +
     `${eponymous.length} skipped as eponymous with the country: ${eponymous.join(', ') || 'none'}`);
   assert.deepEqual(unexplained.slice(0, 12), [], `${unexplained.length} listed towns cannot be selected from the chat`);
 });
@@ -372,6 +373,16 @@ test('an unknown town during a pending area plan stays recoverable with buttons'
     const town = answer.followUps.find(choice => choice.workflowChoice?.type === 'town');
     if (town) { await assistant.respond(town.question, town.workflowChoice); assert.ok(calls.includes('location')); }
   }
+});
+
+// The same census scripts/audit-nonsense-town.js prints, now inside the suite: five sampled countries
+// above cannot catch a button-less unknown-town reply in one of the other 240 saved lists.
+test('an unknown town at every pending position of every saved list keeps a way forward', async t => {
+  const { cases, failures, deferred } = await nonsenseCensus();
+  t.diagnostic(`${cases} unknown-town cases over ${listCountries.length} lists, ` +
+    `${deferred.length} deferred to the grounded evidence answer with an earlier button on screen`);
+  assert.ok(cases >= 2000, `only ${cases} unknown-town cases ran; the saved lists shrank`);
+  assert.deepEqual(failures, [], `${failures.length} unknown-town replies offered no way forward:\n${failures.slice(0, 10).join('\n')}`);
 });
 
 // The region rows a farmer can accidentally lose to the country tables: those whose spelling contains

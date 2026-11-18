@@ -403,9 +403,16 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   rotation in &lt;country&gt;" through "A specific area" and asserts a non-empty reply, a town button for every
   offered name that resolves to that saved row, `Whole &lt;country&gt;` still present, the "no named regions" and
   "not a recommendation" wording, and that tapping the button sets the plan to that row's own
-  coordinates. **Executed:** `node --test tests/matrix-coverage.test.js` 18/18, `npm test` **184/184, 0
-  failed** (docs/evidence/unit-regionless-2026-11-18.log), `npm audit` 0 vulnerabilities. Test
-  files only — no app module, no place data, no model vocabulary changed, so the tiny word LM is again
+  coordinates. **Executed:** `node --test tests/matrix-coverage.test.js` 19/19, `npm test` **185/185, 0
+  failed, 0 skipped (78.3 s)** (docs/evidence/unit-exhaustive-2026-11-18.log), `npm audit` 0
+  vulnerabilities. Two more assertions were then widened to the whole matrix because the cap was
+  invisible: the town sweep had typed only 100 unique names per country (13,673 of 66,632) and now types
+  every unique name through `typedPlace`, with only the 79 long/ambiguous residue driven through the
+  engine and the 7 eponymous towns asserted under their own region — 0 unexplained; and the unknown-town
+  census moved from `scripts/audit-nonsense-town.js` into `tests/helpers/matrix-harness.js` as
+  `nonsenseCensus()`, called by both the script and a new test, re-run after the move with the identical
+  `{"cases":2151,"countries":245,"failures":0,"deferredToEvidenceAnswer":54}`. Test and script files
+  only — no app module, no place data, no model vocabulary changed, so the tiny word LM is again
   not retrained and the `cbeff6b` browser gate above still describes this app code.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
