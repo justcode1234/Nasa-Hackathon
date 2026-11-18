@@ -364,3 +364,163 @@ test('an unknown town during a pending area plan stays recoverable with buttons'
     if (town) { await assistant.respond(town.question, town.workflowChoice); assert.ok(calls.includes('location')); }
   }
 });
+
+// The region rows a farmer can accidentally lose to the country tables: those whose spelling contains
+// another country’s name (Inner Mongolia, Northern Ireland, New Jersey, Port of Spain) and those
+// spelled exactly like their own country (Luxembourg, Djibouti, Martinique…). Scanned from the saved
+// lists, so a new collision in the data is covered without editing this test.
+test('every region row that collides with a country spelling stays selectable as a region', async t => {
+  const collisions = [], failures = [];
+  for (const country of listCountries) {
+    const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
+    const named = list.regions.filter(row => row.name);
+    const nameCount = new Map();
+    for (const row of named) nameCount.set(normalizeName(row.name), (nameCount.get(normalizeName(row.name)) ?? 0) + 1);
+    for (const region of named) {
+      const eponymous = normalizeName(region.name) === normalizeName(countryName);
+      const other = findCountries(`in ${region.name}`).filter(code => code !== country);
+      if (!eponymous && !other.length) continue;
+      collisions.push(`${country}/${region.name}${other.length ? ` (${other.join(',')})` : ' (own country)'}`);
+      if (nameCount.get(normalizeName(region.name)) > 1) continue;
+      for (const typed of [`Use ${region.name}`, `in ${region.name}`, region.name]) {
+        const { assistant, state } = makeAssistant();
+        await assistant.respond(`Help me plan a rotation in ${countryName}`);
+        await assistant.respond('A specific area');
+        const answer = await assistant.respond(typed);
+        if (state.country !== country) { failures.push(`${country}: “${typed}” moved the plan to ${state.country}`); continue; }
+        const text = answer ? textOf(answer) : '';
+        if (state.regionCode !== region.id && !/^Which one do you mean/.test(text)) {
+          failures.push(`${country}: “${typed}” -> ${text.slice(0, 70) || '(no reply)'}`);
+        }
+      }
+    }
+  }
+  t.diagnostic(`${collisions.length} region rows collide with a country spelling, each typed three ways: ${collisions.join(', ')}`);
+  assert.ok(collisions.length >= 20, `the scan found only ${collisions.length} colliding region rows; the saved lists or the country tables changed shape`);
+  assert.deepEqual(failures.slice(0, 12), [], `${failures.length} colliding region names are not selectable from the chat`);
+});
+
+// Thirty-odd saved town rows fold to one or two letters (Aš, Ry, Ii, Od, Pa…). A bare reply that short
+// is normally a typo, so only the exact whole-reply path can reach them, and that path must not lose a
+// row simply because another region is already selected.
+test('a town row too short for the bare-reply rule is still selectable while another region is chosen', async t => {
+  const short = [], failures = [];
+  for (const country of listCountries) {
+    const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
+    const regions = namedRegions(list, countryName);
+    if (!regions.length) continue;
+    for (const place of list.places) {
+      if (normalizeName(place.name).normalize('NFD').replace(/\p{M}/gu, '').length >= 3) continue;
+      if (place.regionCode === regions[0].id) continue;
+      short.push(`${country}/${place.name}`);
+      const { assistant, state } = makeAssistant();
+      await assistant.respond(`Help me plan a rotation in ${countryName}`);
+      await assistant.respond('A specific area');
+      await assistant.respond(regions[0].name);
+      const answer = await assistant.respond(place.name);
+      const text = answer ? textOf(answer) : '';
+      // India lists both “Un” and “Ūn”, whose folded spellings are one reply, so the honest outcome is
+      // the disambiguation question — but only if it puts real buttons on screen to answer it with.
+      const asked = /Which one do you mean/.test(text) && (answer?.followUps ?? []).length > 0;
+      if (!state.location && !asked) {
+        failures.push(`${country}/${place.name} (region ${regions[0].name}) -> ${text.slice(0, 70) || '(no reply)'}`);
+      }
+    }
+  }
+  t.diagnostic(`${short.length} one- or two-letter town rows typed while a different region was selected`);
+  assert.ok(short.length >= 10, `the scan found only ${short.length} short town rows; the saved lists changed shape`);
+  assert.deepEqual(failures.slice(0, 12), [], `${failures.length} short town rows cannot be selected from the chat`);
+});
+
+// Guadeloupe and Martinique hold a region row spelled exactly like the country and nothing else, so the
+// old region question pointed at a step 1 list whose only entry its own wording had just ruled out and
+// offered no button. Every saved list with regions must leave something to tap, and a region button it
+// offers must select that very row.
+test('the region question always leaves a tappable choice, even when only the country’s own name is listed', async t => {
+  const buttonless = [], mistapped = [], eponymousOnly = [];
+  for (const country of listCountries) {
+    const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
+    const rows = list.regions.filter(region => region.name);
+    if (!rows.length) continue;
+    const { assistant, state } = makeAssistant();
+    await assistant.respond(`Help me plan a rotation in ${countryName}`);
+    const area = await assistant.respond('A specific area');
+    const choices = area?.followUps ?? [];
+    if (!choices.length) buttonless.push(`${country} (${rows.length} region rows) -> ${textOf(area).slice(0, 60) || '(no reply)'}`);
+    if (rows.every(region => normalizeName(region.name) === normalizeName(countryName))) {
+      eponymousOnly.push(country);
+      const offered = choices.find(choice => choice.workflowChoice?.type === 'region');
+      if (!offered) { mistapped.push(`${country}: the question offered no region button`); continue; }
+      await assistant.respond(offered.question);
+      if (state.country !== country || state.regionCode !== offered.workflowChoice.id)
+        mistapped.push(`${country}: tapping “${offered.label}” left region ${state.regionCode ?? 'unset'}`);
+    }
+  }
+  t.diagnostic(`${eponymousOnly.join(', ')}: ${eponymousOnly.length} lists whose only region row is spelled like the country; ${buttonless.length} buttonless region questions`);
+  assert.ok(eponymousOnly.length >= 1, 'no all-eponymous region list was found; the saved lists changed shape');
+  assert.deepEqual(buttonless, [], `${buttonless.length} region questions offered nothing to tap`);
+  assert.deepEqual(mistapped, [], `${mistapped.length} offered region buttons did not select their own row`);
+});
+
+// Replying to a place question with the country’s own name used to bring back the very same question,
+// so the chat could ask itself the same thing twice with nothing new to tap. The reply must change, must
+// leave something to tap, and must not claim a place it did not select. A saved row spelled like the
+// country is its own case: at the region question that region is what the name means, and where the
+// name belongs to a town the town has to be typeable once its region is chosen.
+const foldWhole = value => normalizeName(value).normalize('NFD').replace(/\p{M}/gu, '')
+  .replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+
+test('the country’s own name never re-asks the pending place question and its same-named town stays typeable', async t => {
+  const repeated = [], buttonless = [], silent = [], regionMissed = [], townMissed = [], eponymousTowns = [], townFailures = [];
+  for (const country of listCountries) {
+    const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
+    const regions = namedRegions(list, countryName);
+    const sameName = row => row.name && foldWhole(row.name) === foldWhole(countryName);
+    const townRow = list.places.find(sameName);
+    // Every spelling the app itself shows or ships is tried, so the long official names are covered
+    // too: “South Georgia & South Sandwich Islands” is far past the short-reply limit.
+    for (const phrasing of countryPhrasings(country)) {
+      const { assistant, state } = makeAssistant();
+      await assistant.respond(`Help me plan a rotation in ${countryName}`);
+      const area = await assistant.respond('A specific area');
+      const answer = await assistant.respond(phrasing);
+      if (!answer) { silent.push(`${country} “${phrasing}”`); continue; }
+      const text = textOf(answer);
+      if (text === textOf(area)) repeated.push(`${country} “${phrasing}” -> ${text.slice(0, 60)}`);
+      if (!answer.followUps.length) buttonless.push(`${country} “${phrasing}” -> ${text.slice(0, 60)}`);
+      // A reply that is exactly the name of a saved row has to select that row; a wording that merely
+      // begins one (“Andorra” for the parish Andorra la Vella) is matched by the prefix rules, and
+      // naming the country when no row carries that name must stay a question instead.
+      const canonical = foldWhole(phrasing);
+      const exactRegion = list.regions.find(row => row.name && foldWhole(row.name) === canonical);
+      const exactTown = list.places.find(row => row.name && foldWhole(row.name) === canonical);
+      if (exactRegion) {
+        if (state.regionCode !== exactRegion.id) regionMissed.push(`${country} “${phrasing}”: expected region ${exactRegion.id}, got ${state.regionCode ?? 'unset'}`);
+      } else if (exactTown && !regions.length) {
+        if (!state.location) townMissed.push(`${country}/${exactTown.name} “${phrasing}” -> ${text.slice(0, 60)}`);
+      }
+    }
+    if (!townRow || !regions.length) continue;
+    eponymousTowns.push(`${country}/${townRow.name}`);
+    const second = makeAssistant();
+    await second.assistant.respond(`Help me plan a rotation in ${countryName}`);
+    await second.assistant.respond('A specific area');
+    const townRegion = list.regions.find(row => row.id === townRow.regionCode);
+    if (!townRegion?.name) continue;
+    await second.assistant.respond(townRegion.name);
+    if (second.state.regionCode !== townRegion.id) {
+      townFailures.push(`${country}: its own region row “${townRegion.name}” is not selectable by name, so the town was never reached`);
+      continue;
+    }
+    const typed = await second.assistant.respond(townRow.name);
+    if (!second.state.location) townFailures.push(`${country}/${townRow.name} (region ${townRegion.name}) typed after its region -> ${typed ? textOf(typed).slice(0, 60) : '(no reply)'}`);
+  }
+  t.diagnostic(`${eponymousTowns.length} lists hold a town spelled like the country while also listing named regions: ${eponymousTowns.join(', ')}`);
+  assert.ok(eponymousTowns.length >= 5, `only ${eponymousTowns.length} same-named town rows were found; the saved lists changed shape`);
+  assert.deepEqual(silent, [], `${silent.length} country spellings answered with silence`);
+  assert.deepEqual(repeated, [], `${repeated.length} replies repeated the pending place question`);
+  assert.deepEqual(buttonless, [], `${buttonless.length} replies offered nothing to tap`);
+  assert.deepEqual(regionMissed, [], `${regionMissed.length} replies naming a saved region row did not select it`);
+  assert.deepEqual(townMissed, [], `${townMissed.length} towns named like their region-less country were not selected`);
+  assert.deepEqual(townFailures, [], `${townFailures.length} towns named like their country cannot be typed after their region is chosen`);
+});

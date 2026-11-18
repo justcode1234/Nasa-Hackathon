@@ -328,3 +328,95 @@ test('an unmatched town typed after a town point still leaves a tappable way for
     `recovery runs no data action: ${calls.join(', ')}`);
   assert.equal(state.location.placeId, 'p1', 'the point already chosen stays as it was');
 });
+
+// Fifteen saved lists hold a region whose spelling contains another country (Inner Mongolia,
+// Northern Ireland, the Macedonias, West Azerbaijan, Niger State, New Jersey, Port of Spain…). The
+// town buttons send “Use <name>”, so the same lead-in is what a farmer copies for a region; the whole
+// region-name scan over the saved lists runs in tests/matrix-coverage.test.js.
+const provinces = { regions: [{ id: '20', name: 'Inner Mongolia' }, { id: '13', name: 'Hebei' }],
+  places: [{ id: 'n1', name: 'Hohhot', regionCode: '20', latitude: 40.8494, longitude: 111.6649 },
+    { id: 'n2', name: 'Baotou', regionCode: '20', latitude: 40.6582, longitude: 109.8404 },
+    { id: 'n3', name: 'Shijiazhuang', regionCode: '13', latitude: 38.0428, longitude: 114.5149 }] };
+
+test('“Use Inner Mongolia” answers the region question instead of moving the plan to Mongolia', async () => {
+  const { assistant, state, calls } = setup({ country: 'CN', locations: provinces });
+  await assistant.respond('Help me plan a rotation in China');
+  const answer = await assistant.respond('Use Inner Mongolia');
+  assert.equal(state.country, 'CN', 'a Chinese province is not the country Mongolia');
+  assert.equal(calls.filter(call => call === 'country').length, 0, 'the plan must not change country');
+  assert.equal(state.regionCode, '20');
+  assert.match(text(answer), /^Inner Mongolia is selected/);
+  assert.deepEqual(towns(answer).map(choice => choice.label), ['Hohhot', 'Baotou'], 'its own towns follow the region');
+});
+
+const states = { regions: [{ id: 'GA', name: 'Georgia' }, { id: 'NJ', name: 'New Jersey' }],
+  places: [{ id: 's1', name: 'Athens', regionCode: 'GA', latitude: 33.9609, longitude: -83.3779 },
+    { id: 's2', name: 'Newark', regionCode: 'NJ', latitude: 40.7357, longitude: -74.1724 }] };
+
+test('a state spelled like another country stays in the country the plan is already in', async () => {
+  const { assistant, state, calls } = setup({ country: 'US', locations: states });
+  await assistant.respond('Help me plan a rotation in the United States');
+  const answer = await assistant.respond('in Georgia');
+  assert.equal(state.country, 'US', '“in Georgia” inside a US plan is the state');
+  assert.equal(state.regionCode, 'GA');
+  assert.equal(calls.filter(call => call === 'country').length, 0);
+  assert.match(text(answer), /^Georgia is selected/);
+});
+
+// Luxembourg, Djibouti, Martinique, San Marino, Taiwan, Guadeloupe and Guatemala each save a region
+// spelled exactly like their country. It is left out of the suggestion lists so those never duplicate
+// “Whole X”, which must not make the row itself unanswerable.
+const districts = { regions: [{ id: 'LU', name: 'Luxembourg' }, { id: 'GR', name: 'Grevenmacher' }],
+  places: [{ id: 'd1', name: 'Luxembourg', regionCode: 'LU', latitude: 49.6116, longitude: 6.1319 },
+    { id: 'd2', name: 'Echternach', regionCode: 'GR', latitude: 49.8124, longitude: 6.4198 }] };
+
+test('the region spelled like its country is selectable by typing it at the region question', async () => {
+  const { assistant, state, calls } = setup({ country: 'LU', locations: districts });
+  await assistant.respond('Help me plan a rotation in Luxembourg');
+  const area = await assistant.respond('A specific area');
+  assert.match(text(area), /Which state or region of Luxembourg/);
+  assert.ok(!area.followUps.some(choice => choice.label === 'Luxembourg'),
+    'the buttons stay distinct from “Whole Luxembourg”, so the country spelling is not offered twice');
+  const answer = await assistant.respond('Use Luxembourg');
+  assert.equal(state.country, 'LU');
+  assert.equal(state.regionCode, 'LU', 'the saved region row answers the question that was asked');
+  assert.equal(calls.filter(call => call === 'country').length, 0);
+  assert.match(text(answer), /^Luxembourg is selected/);
+});
+
+// Seven saved lists also hold a town carrying the country’s own name (Colombia in Huila, Türkmenistan
+// in Ahal, Luxembourg in Luxembourg), and outside a chosen region that spelling means the country, so
+// it stayed untypeable: the town question came back unchanged. Once a region is picked the pending
+// question is “which town”, and the row has to answer it.
+test('the town spelled like its country is typeable once another region is chosen', async () => {
+  const { assistant, state, calls } = setup({ country: 'LU', locations: districts });
+  await assistant.respond('Help me plan a rotation in Luxembourg');
+  await assistant.respond('Use Grevenmacher');
+  assert.equal(state.regionCode, 'GR', 'the test drives a plan inside one region');
+  const answer = await assistant.respond('Luxembourg');
+  assert.equal(state.location?.placeId, 'd1', 'the saved town row answers the question that was asked');
+  assert.match(text(answer), /^Luxembourg is selected as a town point/);
+  assert.equal(calls.filter(call => call === 'country').length, 0, 'a Luxembourg town is not a request to change country');
+});
+
+const franceRegions = { regions: [{ id: '01', name: 'Ain' }, { id: '02', name: 'Aisne' }, { id: '03', name: 'Allier' }],
+  places: [{ id: 'f1', name: 'Bourg-en-Bresse', regionCode: '01', latitude: 46.2046, longitude: 5.228 },
+    { id: 'f2', name: 'Laon', regionCode: '02', latitude: 49.5642, longitude: 3.6237 }] };
+
+// Naming the country answers neither “which region?” nor “which town?”, and until this round the
+// assistant replied with that same question, so the chat could be asked it twice with nothing new to
+// tap. The reply must say what the word is, leave the real regions to choose from and select nothing.
+test('answering the region question with the country’s own name asks something new instead of repeating itself', async () => {
+  const { assistant, state } = setup({ country: 'FR', locations: franceRegions });
+  await assistant.respond('Help me plan a rotation in France');
+  const area = await assistant.respond('A specific area');
+  const answer = await assistant.respond('France');
+  assert.notEqual(text(answer), text(area), 'the pending question must not come back unchanged');
+  assert.match(text(answer), /is the country, not one of its regions/);
+  assert.equal(state.regionCode, null, 'naming the country does not pick a region');
+  assert.equal(state.location, null, 'and it does not pick a town either');
+  assert.ok(answer.followUps.length > 0, 'the reply still leaves a way forward to tap');
+  const chosen = await click(assistant, answer, 0);
+  assert.equal(state.regionCode, '01', 'the region it offers still answers the question');
+  assert.match(text(chosen), /^Ain is selected/);
+});

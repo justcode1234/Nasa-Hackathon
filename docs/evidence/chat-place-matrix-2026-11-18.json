@@ -1,0 +1,1307 @@
+{
+  "generatedAt": "2026-11-18T06:33:22.656Z",
+  "branch": "fix/chat-flow-and-answers",
+  "command": [
+    "node scripts/audit-matrix.js --deep",
+    "node scripts/audit-nonsense-town.js",
+    "npm audit"
+  ],
+  "npmAudit": "found 0 vulnerabilities",
+  "nonsenseTownCensus": {
+    "cases": 2151,
+    "countries": 245,
+    "failures": 0,
+    "deferredToEvidenceAnswer": 54
+  },
+  "deepMatrixCensus": {
+    "mode": "deep",
+    "generatedAt": "2026-11-18T06:31:19.046Z",
+    "elapsedMs": 38998,
+    "countries": 245,
+    "totalPlaces": 70036,
+    "matchedByShortReply": 66546,
+    "eponymousNames": 7,
+    "eponymousSelected": 7,
+    "tooLongForShortReply": 79,
+    "totalRegions": 3743,
+    "regionsSelected": 3743,
+    "countryOnlyChecked": 250,
+    "defects": [],
+    "ambiguousCountryNames": [],
+    "flowStatuses": {
+      "terminal": 245
+    }
+  },
+  "eponymousTownChecks": [
+    {
+      "country": "CO",
+      "name": "Colombia",
+      "selected": true,
+      "reply": "Colombia is selected as a town point. Choose the specific field; the t"
+    },
+    {
+      "country": "DJ",
+      "name": "Djibouti",
+      "selected": true,
+      "reply": "Djibouti is selected as a town point. Choose the specific field; the t"
+    },
+    {
+      "country": "LU",
+      "name": "Luxembourg",
+      "selected": true,
+      "reply": "Luxembourg is selected as a town point. Choose the specific field; the"
+    },
+    {
+      "country": "MC",
+      "name": "Monaco",
+      "selected": true,
+      "reply": "Monaco is selected as a town point. Choose the specific field; the tow"
+    },
+    {
+      "country": "MZ",
+      "name": "Mozambique",
+      "selected": true,
+      "reply": "Mozambique is selected as a town point. Choose the specific field; the"
+    },
+    {
+      "country": "SM",
+      "name": "San Marino",
+      "selected": true,
+      "reply": "San Marino is selected as a town point. Choose the specific field; the"
+    },
+    {
+      "country": "TM",
+      "name": "Türkmenistan",
+      "selected": true,
+      "reply": "Türkmenistan is selected as a town point. Choose the specific field; t"
+    }
+  ],
+  "longNameChecks": "79/79 selected",
+  "flows": [
+    {
+      "country": "AD",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "AE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "AF",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "AG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "AI",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "AL",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "AM",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "AO",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "AR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "AS",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "AT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "AU",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "AW",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "AX",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "AZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BB",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BD",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BF",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BH",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BI",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "BJ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BL",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "BM",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "BN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BO",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BQ",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "BR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BS",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BW",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BY",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "BZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CC",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "CD",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CF",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "CG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CH",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CI",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CK",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "CL",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CM",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CO",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CU",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CV",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CW",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "CX",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "CY",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "CZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "DE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "DJ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "DK",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "DM",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "DO",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "DZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "EC",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "EE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "EG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "EH",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "ER",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "ES",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "ET",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "FI",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "FJ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "FK",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "FM",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "FO",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "FR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "GA",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GB",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "GD",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "GE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "GF",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GG",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GH",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "GI",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "GL",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GM",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "GP",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GQ",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "GS",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "GT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "GU",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GW",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "GY",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "HK",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "HN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "HR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "HT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "HU",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "ID",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "IE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "IL",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "IM",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "IN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "IQ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "IR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "IS",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "IT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "JE",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "JM",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "JO",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "JP",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "KE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "KG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "KH",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "KI",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "KM",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "KN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "KP",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "KR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "KW",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "KY",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "KZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "LA",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "LB",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "LC",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "LI",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "LK",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "LR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "LS",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "LT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "LU",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "LV",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "LY",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MC",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "MD",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "ME",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MF",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "MG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MH",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "MK",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "ML",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MM",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "MN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MO",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "MP",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "MQ",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "MR",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "MS",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "MT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MU",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MV",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MW",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MX",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MY",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "MZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NC",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "NE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NF",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "NG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NI",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NL",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NO",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NP",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "NU",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "NZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "OM",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PF",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PH",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PK",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PL",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PM",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "PN",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "PR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PS",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "PW",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "PY",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "QA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "RE",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "RO",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "RS",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "RU",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "RW",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SB",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "SC",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "SD",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SG",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "SH",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "SI",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SJ",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "SK",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SL",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SM",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "SN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SO",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SS",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "ST",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SV",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SX",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "SY",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "SZ",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "TC",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "TD",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "TF",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "TG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "TH",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "TJ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "TK",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "TL",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "TM",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "TN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "TO",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "TR",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "TT",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "TV",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "TW",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "TZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "UA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "UG",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "US",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "UY",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "UZ",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "VA",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "VC",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "VE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "VG",
+      "status": "terminal",
+      "replies": 4
+    },
+    {
+      "country": "VI",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "VN",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "VU",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "WF",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "WS",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "XK",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "YE",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "YT",
+      "status": "terminal",
+      "replies": 5
+    },
+    {
+      "country": "ZA",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "ZM",
+      "status": "terminal",
+      "replies": 6
+    },
+    {
+      "country": "ZW",
+      "status": "terminal",
+      "replies": 6
+    }
+  ]
+}

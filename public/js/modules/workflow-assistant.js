@@ -197,9 +197,11 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       // “Carriacou and Petite Martinique” is a parish of Grenada and “Inner Mongolia” is a province
       // of China. A saved local place name that happens to contain another country’s name answers
       // the pending place question; it is not a request to move the whole plan to that country.
-      const replied = foldName(question);
+      const replied = foldName(question), phrase = mentionPhrase(question) ?? replied;
+      const SWITCH_LEAD_IN = /^(?:switch to|change to|move to|go to)\s+/;
       const local = await getLocationList(state.country).catch(() => null);
-      if (local && [...(local.regions ?? []), ...(local.places ?? [])].some(row => row.name && foldName(row.name) === replied)) requestedCountry = undefined;
+      if (local && [...(local.regions ?? []), ...(local.places ?? [])].some(row => row.name && foldName(row.name) === phrase)
+        && !SWITCH_LEAD_IN.test(replied)) requestedCountry = undefined;
     }
     if (requestedCountry && requestedCountry !== state.country) {
       progress(`Step 1: selecting ${COUNTRY_NAMES.of(requestedCountry)}…`);
@@ -217,19 +219,31 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     // the spelling is identical: Réunion’s single saved region is ASCII “Reunion”, and excluding it
     // here would leave a name the farmer can see in step 1 unanswerable in the chat.
     const namedRegions = places.regions.filter(region => region.name && normalizeName(region.name) !== normalizeName(countryName));
-    const allowEponymousTown = namedRegions.length === 0;
+    const regionFilter = scope === 'area' ? (areaRegion ?? state.regionCode ?? null) : null;
+    // The country’s own spelling stays out of the town matches while the plan is still asking which
+    // region it covers, so no reply can quietly mean the whole country. Once a region is chosen, or the
+    // saved list holds no regions at all, the pending question is “which town”, and seven lists really
+    // do hold a town carrying the country’s name — Colombia in Huila, Djibouti in Djibouti, plus
+    // Luxembourg, Monaco, Mozambique, San Marino and Türkmenistan — so that town has to be typeable.
+    const allowEponymousTown = namedRegions.length === 0 || Boolean(regionFilter);
     // Coordinates the farmer supplied are the more precise input: a town named in the same sentence
     // verifies that point (checked above) instead of replacing it with the town centroid.
     const hasCoordinates = Boolean(parsed.location);
     const phrase = choice?.type === 'town' || hasCoordinates ? null : mentionPhrase(question);
     let regionMentions = phrase ? namedRegions.filter(region => nameMatchesPhrase(region.name, phrase)) : [];
+    // A region spelled exactly like its country is left out of the suggestion lists so no button asks
+    // for the country again, but the farmer can still type it: Luxembourg, San Marino, Taiwan,
+    // Djibouti, Guatemala, Guadeloupe and Martinique really do hold such a saved region row in step 1’s
+    // Region list. Only a reply equal to that whole name counts, and a region of another name is matched
+    // first, so nothing that already resolved changes.
+    if (phrase && !regionMentions.length && !regionFilter) regionMentions = places.regions
+      .filter(region => region.name && normalizeName(region.name) === normalizeName(countryName) && foldName(region.name) === phrase);
     const exactRegions = regionMentions.filter(region => foldName(region.name) === phrase);
     if (exactRegions.length) regionMentions = exactRegions;
     // Tuvalu-style lists hold a town with the same name as its region. Once that region is
     // already selected, the phrase should choose the town instead of re-asking for one.
     if (areaRegion && phrase) regionMentions = regionMentions.filter(region =>
       !(region.id === areaRegion && listedPlaces(places, { phrase, countryName, allowEponymous: true, regionCode: region.id }).length));
-    const regionFilter = scope === 'area' ? (areaRegion ?? state.regionCode ?? null) : null;
     const townMentions = hasCoordinates ? [] : typedPlace(places, question, { countryName, regionCode: regionFilter, allowEponymous: allowEponymousTown });
     const placeMention = regionMentions.length === 1 || townMentions.length > 0;
     // A town answer the saved list cannot match must still leave a tappable way forward;
@@ -329,6 +343,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
         if (!townMentions.length) return placeRecovery();
       } else if (regionMatches.length === 1) return selectRegion(regionMatches[0]);
       const matches = choice?.type === 'town' ? places.places.filter(place => place.id === choice.id) :
+        choice?.type === 'towns' ? places.places.filter(place => choice.ids.includes(place.id)) :
         townMentions.length ? townMentions : places.places.filter(place => {
         const name = normalizeName(place.name);
         return (scope === 'area' || name !== normalizeName(countryName)) && (!selectedRegion || place.regionCode === selectedRegion) &&
@@ -352,6 +367,27 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
             question: `Use ${place.name}`, workflowChoice: { type: 'town', id: place.id } })));
       }
       if(!hasInput&&!placeMention)return phrase&&!state.location&&(scope==='area'||areaRegion)?placeRecovery():null;
+      // The country’s own name is neither a region nor a town, so a place question answered with it
+      // cannot select anything — but answering with the very question the farmer is replying to leaves
+      // the chat asking itself the same thing. Name the level that is still missing, offer its real
+      // rows, and state plainly that nothing was selected. A saved row spelled like the country is
+      // matched earlier and still selects itself. The long official spellings never reach the
+      // short-reply rule, so the whole reply is compared in the same canonical shape.
+      const countrySpelling = foldName(regionPhrase(countryName));
+      const replyIsCountryName = phrase ? foldName(regionPhrase(phrase)) === countrySpelling
+        : foldName(regionPhrase(question)) === countrySpelling;
+      if (replyIsCountryName && !regionMentions.length && !townMentions.length && (scope === 'area' || selectedRegion)) {
+        const regionName = places.regions.find(region => region.id === selectedRegion)?.name;
+        const forTowns = Boolean(selectedRegion) || !namedRegions.length;
+        const options = [...(forTowns
+          ? townButtons(places, selectedRegion)
+          : namedRegions.slice(0, 3).map(region => next(region.name, region.name, { type: 'region', id: region.id }))),
+          next(`Whole ${countryName}`, `Whole ${countryName}`)];
+        actions.showStep('location');
+        if (!namedRegions.length && !places.places.length) return reply(`“${countryName}” is the country, and its saved place list holds no towns or regions to choose from. Choose Whole ${countryName} for the country overview, or give your farm coordinates. Nothing was selected.`, options);
+        const level = regionName ? `a town in ${regionName}` : namedRegions.length ? 'one of its regions' : 'one of its towns';
+        return reply(`“${countryName}” is the country, not ${level}. Tap a ${forTowns ? 'town' : 'region'} below, type its name here, or choose Whole ${countryName} for the country overview. Nothing was selected.`, options);
+      }
       await keepInputs();
       actions.showStep('location');
       if (scope === 'country' && !explicitPoint && !placeMention) return countryOverview(getState(), inputsInForm);
@@ -421,6 +457,17 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       const anywhere = (list?.places ?? []).filter(row => row.name && foldName(row.name) === folded);
       return anywhere.length === 1 ? { type: 'town', id: anywhere[0].id } : null;
     }
+    // A chosen region narrows the search but never hides the country’s other towns: the saved lists
+    // hold 33 short rows such as “As”, a town in one Belgian region, and typedPlace already looks
+    // country-wide once its in-region filter finds nothing. One exact match elsewhere is that town;
+    // two rows sharing the name stay a question rather than a guess.
+    if (regionCode && !towns.length && !regions.length) {
+      const elsewhere = (list?.places ?? []).filter(row => row.name && foldName(row.name) === folded);
+      if (elsewhere.length === 1) return { type: 'town', id: elsewhere[0].id };
+      // India really does list both “Un” and “Ūn”, whose folded spellings are the same one reply.
+      // Two points share the name, so the honest answer is the question, not one of them.
+      if (elsewhere.length > 1) return { type: 'towns', ids: elsewhere.map(row => row.id) };
+    }
     return regions.length === 1 ? { type: 'region', id: regions[0].id } : null;
   }
   function areaPrompt(countryName, regionName, places, options = {}) {
@@ -434,6 +481,16 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
         .sort((a, b) => b[1] - a[1] || a[0].name.localeCompare(b[0].name)).slice(0, 3).map(([region]) => region)) shortcuts.push(next(region.name, region.name, { type: 'region', id: region.id }));
       const noTowns = !(places.places ?? []).length;
       return reply(`Which state or region of ${countryName}? ${shortcuts.length ? 'Tap one below, ' : ''}choose any region in the Region list in step 1, or type its name.${shortcuts.length ? ' The buttons are the three regions with the most towns in the saved place list, not a recommendation.' : ''}${noTowns ? ` No towns are listed for ${countryName} in this saved place list, so after a region you may need the map, place search or coordinates.` : ''}`, shortcuts);
+    }
+    // Two saved lists (Guadeloupe, Martinique) hold region rows whose only name is the country’s own.
+    // Leaving them out would ask “which region?” with nothing to tap, so the row is offered as it stands
+    // and the wording says plainly why the button repeats the country name.
+    const eponymous = (places?.regions ?? []).filter(region => region.name && normalizeName(region.name) === normalizeName(countryName));
+    if (!regionName && !named.length && eponymous.length) {
+      const options = eponymous.slice(0, 3).map(region => next(region.name, region.name, { type: 'region', id: region.id }));
+      if (wholeEscape) options.push(next(`Whole ${countryName}`, `Whole ${countryName}`));
+      const only = eponymous.length === 1;
+      return reply(`${countryName} has ${only ? 'one region row' : `${eponymous.length} region rows`} in this saved place list and ${only ? 'it carries the country’s own name' : 'they all carry the country’s own name'}, so the button below repeats that name. Tap it, type “${eponymous[0].name}”, or choose the whole country instead. Towns are then offered from that list.`, options);
     }
     const towns = townButtons(places, regionCode);
     if (wholeEscape) towns.push(next(`Whole ${countryName}`, `Whole ${countryName}`));
