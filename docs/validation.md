@@ -1884,6 +1884,46 @@ reply text and the sixteen graded QA cases — passed **52/52 (3.9 m)** across a
 the load average above 10, which is the condition subsection 19 records as degrading the wider slice.
 No assertion was weakened and no timeout or retry was configured.
 
+### 21. A farmer who named the pest got no pest evidence at all
+
+The first hypothesis for this iteration was that the soil property selector repeated the substring
+mistake of subsection 20 — "sand" inside "standard", "clay" inside "display". A probe against the
+shipped module rejected it: all five soil questions returned the property they asked for, and neither
+"standard" nor "expansive" contains "sand" as a letter run
+(`docs/evidence/chat-pest-names-probe-2026-11-18.log.gz` holds that run). Nothing was changed for it.
+
+The pest branch did have a defect, and it is the mirror image of the one subsection 17 fixed. Its
+trigger is a closed list of generic nouns — `pests?|insects?|moths?|worms?|diseases?` with word
+boundaries — so it fires on the *topic* word and never on the *species* word, which is what a farmer
+types. Measured against `1699089`:
+
+* "How do I control fall armyworm in my maize?" → no pest paragraph, because `armyworm` is one word and
+  `\bworms?\b` cannot match inside it;
+* "Tell me about the Australian plague locust" → no pest paragraph, even though the app had that exact
+  record loaded with its occurrence count and host note, because "locust" is not in the noun list.
+
+The record-matching line below the trigger already searched the question for each loaded name, so the
+data the answer needed was in hand and the gate above it discarded the question. The fix lets the
+loaded names open the branch as well, matching the whole name or its **head noun** ("armyworm",
+"locust") — deliberately not every word of it, because "Australian plague locust" would then answer any
+sentence containing "Australian", which is precisely the leak subsection 17 recorded. The matched record
+is also the one quoted, so a locust question no longer receives whatever species the country list
+happens to start with.
+
+**Executed.** `tests/chat-context.test.js` with the three-record fixture reports **7 pass, 1 fail**
+against the committed module — `+ [] / - ['Fall armyworm']`, i.e. an empty answer to a question about a
+pest the app knows
+(`docs/evidence/chat-pest-names-before-2026-11-18.log.gz`) — and **8 pass, 0 fail** with the fix
+(`docs/evidence/chat-pest-names-after-2026-11-18.log.gz`); the same run pins the negative cases, so
+"Tell me about the Australian grains industry" and a soil question still add no occurrence paragraph.
+`npm test` reports **201 tests, 201 pass, 0 fail, 0 skipped (24,907 ms)**
+(`docs/evidence/chat-pest-names-npm-test-2026-11-18.log.gz`), `npm audit` **0 vulnerabilities**, and
+`chat-only-flow`, `assistant`, `help-and-explanations` and `workflow` — the four specs whose prompts
+name pests — passed **64/64 (2.6 m)** across all four projects
+(`docs/evidence/chat-pest-names-e2e-2026-11-18.log.gz`), this time with the device load average back to
+4.2. No assertion was weakened, and the earlier species-first behaviour is kept for questions that name
+no record: "Which pests affect wheat?" still returns the first country record.
+
 Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
 review remain unverified.
@@ -1907,8 +1947,9 @@ review remain unverified.
   (`docs/evidence/e2e-gate-b87a6da-2026-11-18.log.gz`, subsection 18). The gate on the tip that carries
   the composition change ran on `c659a59` and is recorded there: **195 passed, 1 failed (22.2 m)**, the
   failure being the live AWS terrain fetch in `field-terrain.spec.js:4`, which passes in isolation. The
-  frost change in subsection 19 and the series change in subsection 20 have not been through a full
-  gate, so a 196-case run on the tip that carries them is still owed; only its own summary line will be added here. The wider eight-spec chat
+  frost change in subsection 19, the series change in subsection 20 and the pest-name change in
+  subsection 21 have not been through a full gate, so a 196-case run on the tip that carries them is
+  still owed; only its own summary line will be added here. The wider eight-spec chat
   slice used while measuring it also owes one clean run on an idle device - the two recorded attempts
   were load-degraded (subsection 19), and only the 16-case `chat-only-flow` + `assistant` slice on
   that tree is green so far.

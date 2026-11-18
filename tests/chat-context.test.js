@@ -32,7 +32,9 @@ const water = {
 const farm = { name: 'Field 7', crops: ['wheat'], updatedAt: '2023-04-02', sourceUrl: 'https://example.invalid/osm/way/1' };
 const pests = {
   country: 'Australia',
-  records: [{ id: 'helicoverpa', name: 'Helicoverpa', status: 'present', occurrenceCount: 120, hostNote: 'Recorded on several crops.', sourceUrl: 'https://example.invalid/gbif', hostSource: { id: 'helicoverpa-host', title: 'GBIF host query', url: 'https://example.invalid/gbif/host' } }]
+  records: [{ id: 'helicoverpa', name: 'Helicoverpa armigera', status: 'present', occurrenceCount: 120, hostNote: 'Recorded on several crops.', sourceUrl: 'https://example.invalid/gbif', hostSource: { id: 'helicoverpa-host', title: 'GBIF host query', url: 'https://example.invalid/gbif/host' } },
+    { id: 'armyworm', name: 'Fall armyworm', status: 'present', occurrenceCount: 88, hostNote: 'Recorded on maize.', sourceUrl: 'https://example.invalid/gbif/2', hostSource: { id: 'armyworm-host', title: 'GBIF armyworm host query', url: 'https://example.invalid/gbif/2/host' } },
+    { id: 'locust', name: 'Australian plague locust', status: 'present', occurrenceCount: 40, hostNote: 'Recorded on grasses.', sourceUrl: 'https://example.invalid/gbif/3', hostSource: { id: 'locust-host', title: 'GBIF locust host query', url: 'https://example.invalid/gbif/3/host' } }]
 };
 const fullState = () => ({ observations, soil, water, farm, pests });
 const kinds = (question, state = fullState(), answer = { topic: 'crop' }) => contextBlocks(question, state, answer).blocks.map(block => block.kind);
@@ -115,4 +117,21 @@ test('the weather series is chosen by whole words, not by letters inside other w
   assert.equal(series('How strong is the solar evidence here?'), 'Solar irradiance');
   assert.equal(series('What was the lowest temperature the NASA series recorded?'), 'Minimum air temperature');
   assert.equal(series('Show me frost evidence'), 'Minimum air temperature');
+});
+
+// The pest trigger is a list of generic nouns, so a farmer who names the insect — which is what farmers
+// do — gets nothing: "fall armyworm" is one word (`worms?` cannot match it) and "locust" is not in the
+// list at all even though the app has that record loaded. The loaded names are the vocabulary the
+// answer is allowed to use, so they have to be able to open the branch and pick their own record.
+test('naming a pest the app has a record for opens the pest evidence', () => {
+  const asked = question => contextBlocks(question, { pests }, { topic: 'pest' }).blocks
+    .filter(b => b.kind === 'country occurrence context').map(b => b.text.split(' in ')[0]);
+  assert.deepEqual(asked('How do I control fall armyworm in my maize?'), ['Fall armyworm']);
+  assert.deepEqual(asked('Tell me about the Australian plague locust'), ['Australian plague locust']);
+  assert.deepEqual(asked('Are locusts a problem here?'), ['Australian plague locust']);
+  assert.deepEqual(asked('Which pests affect wheat?'), ['Helicoverpa armigera']);
+
+  // Opening the branch on a name must not turn every sentence about the country into a pest answer.
+  assert.deepEqual(asked('Tell me about the Australian grains industry'), []);
+  assert.deepEqual(asked('What is the soil pH here?'), []);
 });

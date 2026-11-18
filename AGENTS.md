@@ -743,6 +743,22 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `npm test` **200/200, 0 failed, 0 skipped (25,927 ms)**, `npm audit` **0 vulnerabilities**, and
   `chat-only-flow` + `assistant` + `help-and-explanations` **52/52 (3.9 m)** in four projects at load
   average above 10. Nothing was deployed, main is untouched, no NASA portal edit.
+- **18 Nov, same branch: iteration 22 — a farmer who named the pest got no pest evidence at all.** The
+  pest trigger is a closed list of generic nouns, so it fired on "pests"/"worms" but not on the species
+  words farmers use: "How do I control fall armyworm in my maize?" and "Tell me about the Australian
+  plague locust" both returned nothing although the app had that record, its occurrence count and its
+  host note loaded. The record-matching line under the trigger already searched for those names, so the
+  gate above it was throwing away data it held. Loaded record names now open the branch too, matched on
+  the whole name or the head noun only — matching every word would let "Australian" pull a pest
+  paragraph into any sentence about the country, the leak iteration 18 removed — and the matched record
+  is the one quoted. An earlier hypothesis for this iteration (soil properties selected by substrings,
+  "sand" in "standard") was probed against the shipped module and **rejected**; nothing was changed for
+  it, and the probe run is in the evidence. **Executed:** `tests/chat-context.test.js` **7 pass, 1 fail**
+  against the committed module (`+ [] / - ['Fall armyworm']`), **8 pass, 0 fail** after, including the
+  negative cases; `npm test` **201/201, 0 failed, 0 skipped (24,907 ms)**, `npm audit` **0
+  vulnerabilities**, `chat-only-flow` + `assistant` + `help-and-explanations` + `workflow` **64/64
+  (2.6 m)** in four projects at load average 4.2. Nothing was deployed, main is untouched, no NASA portal
+  edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

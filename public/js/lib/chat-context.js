@@ -51,8 +51,17 @@ export function contextBlocks(question, state, answer) {
     blocks.push({ kind: 'mapped field record', text: `${farm.name}. ${farm.crops.length ? `Recorded crop tags: ${farm.crops.join(', ')}.` : 'No crop tags are recorded.'} OSM edit date: ${farm.updatedAt ?? 'unknown'}; current crops, ownership and access are unverified.`, sourceIds: ['selected-field'] });
     sources.push({ id: 'selected-field', title: 'Selected OpenStreetMap field', url: farm.sourceUrl });
   }
-  if (TOPIC.pest.test(question)) {
-    if (state.pests) for (const pest of [state.pests.records.find(p => question.toLowerCase().includes(p.name.toLowerCase())) ?? state.pests.records[0]].filter(Boolean)) {
+  // The trigger list cannot hold every species, and a farmer names the insect rather than the topic,
+  // so the record names the app already holds open the branch too. Only the head noun of a name is used
+  // ("armyworm" from "Fall armyworm", "locust" from "Australian plague locust"): matching every word
+  // would let "Australian" or "cotton" pull a pest paragraph into an unrelated question. The matched
+  // record is the one quoted, instead of whatever the country list happens to start with.
+  const askedPest = (state.pests?.records ?? []).find(p => {
+    const name = p.name.toLowerCase(), head = name.split(/\s+/).at(-1);
+    return question.toLowerCase().includes(name) || (head.length > 4 && question.toLowerCase().includes(head));
+  });
+  if (TOPIC.pest.test(question) || askedPest) {
+    if (state.pests) for (const pest of [askedPest ?? state.pests.records[0]].filter(Boolean)) {
       blocks.push({ kind: 'country occurrence context', text: `${pest.name} in ${state.pests.country}: ${pest.status}${pest.occurrenceCount !== null ? ` (${pest.occurrenceCount} historical occurrence records)` : ''}. ${pest.hostNote} This does not establish farm presence or current outbreak.`, sourceIds: [pest.id, `${pest.id}-host`] });
       sources.push({ id: pest.id, title: `GBIF ${pest.name} country query`, url: pest.sourceUrl }, { id: `${pest.id}-host`, ...pest.hostSource });
     } else blocks.push({ kind: 'limitation', text: 'Country pest context is not loaded. Use Plan crops → Country pest context. There are no pest observations for this farm in the app.', sourceIds: [] });
