@@ -36,14 +36,14 @@ export function contextBlocks(question, state, answer) {
       const property = state.soil.properties.find(p => /sand/i.test(question) ? p.id === 'sand' : /clay/i.test(question) ? p.id === 'clay' : p.id === 'phh2o');
       [property].filter(Boolean).forEach(p => blocks.push({ kind: 'regional soil model', text: `${p.name}: mean ${p.mean ?? 'missing'} ${p.units}; source 5th–95th prediction quantiles ${p.lower ?? 'missing'}–${p.upper ?? 'missing'} ${p.units}. SoilGrids ${state.soil.nominalResolutionM} m grid, ${state.soil.depth}, retrieved ${state.soil.retrievedAt}; no single observation date. This is not a farm measurement.`, sourceIds: ['soilgrids'] }));
       blocks.push({ kind: 'limitation', text: 'ISRIC advises against local/farm-level use of SoilGrids. These estimates are regional context only; no measured pH, drainage or soil-water capacity is inferred for this field.', sourceIds: ['soilgrids'] });
-      sources.push(state.soil.source);
+      sources.push({ ...state.soil.source, id: 'soilgrids' });
     } else blocks.push({ kind: 'limitation', text: 'Mapped soil context is not loaded. Load it in Plan crops. No soil type or pH is guessed for this field.', sourceIds: [] });
   }
   if (TOPIC.water.test(question)) {
     if (state.water?.available) {
       const row = state.water.rows.find(row => /vegetable/i.test(row.category)) ?? state.water.rows[0];
       if (row) blocks.push({ kind: 'historical national irrigation context', text: `${row.category}: Australia ${state.water.period}, ${row.waterAppliedMl} ML applied ÷ ${row.irrigatedHa} irrigated ha = ${row.appliedMlPerIrrigatedHa.toFixed(2)} ML/ha annually. ABS release ${state.water.publishedDate}. This broad national ratio is not this farm's water requirement or a daily watering schedule.`, sourceIds: ['abs-irrigation'] });
-      sources.push(state.water.source);
+      sources.push({ ...state.water.source, id: 'abs-irrigation' });
     } else blocks.push({ kind: 'limitation', text: 'No verified irrigation benchmark is loaded for this country. Australian national statistics are not substituted for another country or for a field irrigation schedule.', sourceIds: [] });
   }
   if (TOPIC.farm.test(question) && state.farm) {
@@ -73,7 +73,10 @@ export function contextBlocks(question, state, answer) {
   if (TOPIC.pest.test(question) || askedPest) {
     if (state.pests) for (const pest of [askedPest ?? cropPest ?? state.pests.records[0]].filter(Boolean)) {
       blocks.push({ kind: 'country occurrence context', text: `${pest.name} in ${state.pests.country}: ${pest.status}${pest.occurrenceCount !== null ? ` (${pest.occurrenceCount} historical occurrence records)` : ''}. ${pest.hostNote} This does not establish farm presence or current outbreak.`, sourceIds: [pest.id, `${pest.id}-host`] });
-      sources.push({ id: pest.id, title: `GBIF ${pest.name} country query`, url: pest.sourceUrl }, { id: `${pest.id}-host`, ...pest.hostSource });
+      // The id goes after the spread everywhere in this file: the paragraph cites `<pest.id>-host`, the panel
+      // counts ids (`chat.js:108`) and links only the ones it can resolve (`dom.js:17`), so a host entry that
+      // carries its own id would otherwise leave the citation counted and unrenderable.
+      sources.push({ id: pest.id, title: `GBIF ${pest.name} country query`, url: pest.sourceUrl }, { ...pest.hostSource, id: `${pest.id}-host` });
     } else blocks.push({ kind: 'limitation', text: 'Country pest context is not loaded. Use Plan crops → Country pest context. There are no pest observations for this farm in the app.', sourceIds: [] });
   }
   // Two measured blocks are what a reply can carry, but the old shared budget of two counted caveats too,

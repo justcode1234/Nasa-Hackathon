@@ -225,3 +225,44 @@ test('a pest is found by the word that makes its name unique', () => {
   assert.deepEqual(quoted('Should I sow in the fall or the spring?'), []);
   assert.deepEqual(quoted('Tell me about the Australian grains industry'), []);
 });
+
+// The panel prints `Sources (n)` from the ids its paragraphs carry (public/js/modules/chat.js:108) but renders
+// a link only for an id it can resolve (public/js/lib/dom.js:17, `if (!source) return`), so a paragraph whose
+// citation is missing from the source list shows a count with nothing behind it. The shipped data agrees today
+// (`server/context/soil.js:17` ids the soil block as `soilgrids`, `server/context/water.js:13` as
+// `abs-irrigation`, and the watchlist host entries carry no id at all), but the module pushes the record's own
+// object — `{ id, ...hostSource }` lets a host entry rename the citation it is spread into, and
+// `sources.push(state.soil.source)` lets a future id change orphan the paragraph. Pairing is therefore
+// asserted for the shipped shapes and for records that disagree with them.
+const orphanCitations = (question, state) => {
+  const { blocks, sources } = contextBlocks(question, state, { topic: 'crop' });
+  const ids = new Set(sources.map(source => source.id));
+  return blocks.flatMap(block => block.sourceIds.filter(id => !ids.has(id)));
+};
+
+test('a paragraph never cites a source the panel cannot link', () => {
+  for (const [question, state] of [
+    ['Show me rainfall evidence', { observations }],
+    ['Tell me about the soil pH here', { soil }],
+    ['How much water is used for irrigation in Australia?', { water }],
+    ['Tell me about this farm', { farm }],
+    ['Which pests affect wheat?', { pests }],
+    ['What does this field record say about pests?', fullState()]
+  ]) assert.deepEqual(orphanCitations(question, state), [], `${question} cited a source the panel cannot link`);
+
+  const hostWithId = { ...pests, records: pests.records.map(pest => ({ ...pest,
+    hostSource: { ...pest.hostSource, id: `${pest.id}-publisher` } })) };
+  for (const question of ['Which pests affect wheat?', 'How do I control fall armyworm?']) {
+    assert.deepEqual(orphanCitations(question, { pests: hostWithId }), [],
+      `a host source id overwrote the citation ${question} declares`);
+  }
+  const soilWithoutId = { ...soil, source: { title: 'ISRIC SoilGrids', url: soil.source.url } };
+  assert.deepEqual(orphanCitations('Tell me about the soil pH here', { soil: soilWithoutId }), [],
+    'a soil source with no id orphaned both soil paragraphs');
+  const soilRenamed = { ...soil, source: { id: 'soilgrids-v2', title: soil.source.title, url: soil.source.url } };
+  assert.deepEqual(orphanCitations('Tell me about the soil pH here', { soil: soilRenamed }), [],
+    'a renamed soil source orphaned both soil paragraphs');
+  const waterRenamed = { ...water, source: { id: 'abs-2022', title: water.source.title, url: water.source.url } };
+  assert.deepEqual(orphanCitations('How much water is used for irrigation in Australia?', { water: waterRenamed }), [],
+    'a renamed irrigation source orphaned the ratio paragraph');
+});

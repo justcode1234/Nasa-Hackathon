@@ -2085,11 +2085,56 @@ a place word can become a key only in front of a generic head — with the two s
 `moth` or `diamondback` (`grep` over `tests/e2e/`), so re-running the 64-case chat slice on this tip can only
 confirm that the wider matcher pulls no pest paragraph into an unrelated answer; it is not a check of the new
 behaviour in the rendered panel — that coverage is still the stubbed POWER/SoilGrids/GBIF chat spec owed in the
-gap list below.
+gap list below. The 64-case chat slice for this change and for the one below was run together on the
+subsection-25 tip and is recorded there.
 
 Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
 review remain unverified.
+
+### 25. A paragraph could cite a source the panel counts but cannot link
+
+Every paragraph carries `sourceIds`, the panel prints `Sources (n)` from the ids of the paragraphs it renders
+(`public/js/modules/chat.js:108`) and then, in `sourceLinks()`, skips any id it cannot resolve
+(`public/js/lib/dom.js:16-17`, `const source = sources.find(...); if (!source) return;`). A count of three
+above two links is a citation the farmer cannot check. `contextBlocks()` paired the two by copying the record
+through, in two shapes that let the record win over the paragraph:
+
+```js
+sources.push(state.soil.source);                                  // the paragraph cites id 'soilgrids'
+sources.push({ id: `${pest.id}-host`, ...pest.hostSource });      // a host entry with its own id overwrites it
+```
+
+Nothing is broken with the data that ships — `server/context/soil.js:17` ids the soil source `soilgrids`,
+`server/context/water.js:13` ids the benchmark `abs-irrigation`, and neither `hostSource` in
+`server/context/pests.js` declares an id, so the pairing held by agreement rather than by construction. That
+agreement is one field rename in a service away from silently unlinking a citation, and the assertion below is
+what keeps it.
+
+**Executed, with the shipped shapes on both sides of the change**
+(`docs/evidence/chat-citation-probe-before-after-2026-11-18.log.gz`, one process, `git
+show fe9a510:public/js/lib/chat-context.js` against the fixed module):
+
+| Shape | Orphaned citations before | after |
+| --- | --- | --- |
+| soil, irrigation, pest, weather and field as shipped | none | none — and the rendered titles are identical on both sides |
+| a host source that carries its own id | `fall-armyworm-host` | none |
+| a soil source with no id | `soilgrids` ×2 (paragraph and advisory) | none |
+| a soil source renamed upstream | `soilgrids` ×2 | none |
+| an irrigation source renamed upstream | `abs-irrigation` | none |
+
+The fix states the id after the spread at all three sites (`public/js/lib/chat-context.js:39`, `:46`, `:79`),
+so the paragraph decides what the citation is called and the record still supplies the title, url and licence
+next to it. `tests/chat-context.test.js` gained the invariant plus the four disagreement shapes; it was written
+first and measured **11 pass, 1 fail** (`a host source id overwrote the citation Which pests affect wheat?
+declares`, `+ ['helicoverpa-host'] / - []`,
+`docs/evidence/chat-citation-guard-before-2026-11-18.log.gz`) and **12 pass, 0 fail** after
+(`docs/evidence/chat-citation-guard-after-2026-11-18.log.gz`). `npm run build` exits 0, `npm test` reports
+**205 tests, 205 pass, 0 fail, 0 skipped (31,575 ms)**
+(`docs/evidence/chat-citation-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**.
+
+**The 64-case chat slice for subsections 24 and 25, run together on this tip** (the matcher change and the
+pairing change sit in the same tree): *recorded here when the run lands.*
 
 ### Not yet executed at the time of writing
 

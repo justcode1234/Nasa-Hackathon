@@ -826,6 +826,24 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   matcher pulled no pest paragraph into other answers; pinning the new behaviour in the rendered panel still
   needs the stubbed POWER/SoilGrids/GBIF chat spec. Nothing was deployed, main is untouched (`4a54fa3`), no NASA
   portal edit.
+- **18 Nov, same branch: iteration 26 — a paragraph could cite a source the panel counts but cannot link.**
+  `chat.js:108` prints `Sources (n)` from the ids the rendered paragraphs carry, while `dom.js:16-17` skips an id
+  with no matching entry, so an unresolved citation is a count with nothing behind it. `contextBlocks()` paired
+  them by copying the record through — `sources.push(state.soil.source)` and
+  `sources.push({ id: `${pest.id}-host`, ...pest.hostSource })` — which lets the record's own id win over the one
+  the paragraph cites. The shipped services agree today (`soilgrids` in `server/context/soil.js:17`,
+  `abs-irrigation` in `server/context/water.js:13`, no id on either `hostSource` in `server/context/pests.js`),
+  so nothing is visibly broken; the pairing was agreement, not construction, and one renamed field from a
+  service would have unlinked a citation. The id is now written after the spread at all three sites, so the paragraph
+  decides what the citation is called and the record still supplies title, url and licence. **Executed:** guard
+  first — **11 pass, 1 fail** (`a host source id overwrote the citation Which pests affect wheat? declares`)
+  then **12 pass, 0 fail**; a paired before/after probe shows the five shipped shapes orphan nothing on either
+  side *and* render identical titles, while a host entry with its own id, a soil source with no id, a renamed
+  soil source and a renamed irrigation source all go from orphaned to clean
+  (`docs/evidence/chat-citation-probe-before-after-2026-11-18.log.gz`); `npm run build` exit 0, `npm test`
+  **205/205, 0 failed, 0 skipped (31,575 ms)**, `npm audit` **0 vulnerabilities**. The 64-case chat slice covers
+  iterations 25 and 26 together on this tip. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal
+  edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
