@@ -9,20 +9,20 @@ import {test,expect} from '@playwright/test';
 // the species, the country, the host sentence, the non-farm-presence sentence and the two citation URLs are all
 // strings the app itself composes (public/js/lib/chat-context.js) from its own watchlist (server/context/pests.js).
 //
-// Why these two cases exist: the pest branch of the evidence composer is guarded offline by tests/chat-context.test.js,
-// which every time calls `contextBlocks(question, state, { topic: 'pest' })`. That answer shape is not what a
-// pest-worded question produces. Measured on 18 Nov (UTC) through the real route, `useSelectedLocation` is set to `false` at
-// eight sites across the catalog, grounded, planning and conversational layers, and
-// public/js/lib/chat-context.js:24 returns early on that flag - so no unit guard exercises a reply the app can
-// actually hand back for these sentences. One reply shape (`server/agronomy/answers.js:84`) does leave the flag
-// unset, but an 8-wording scan against the live handler with no comparison found 0 of 8 replies whose gate stood
-// open, because a crop named in the question is routed to the country-aware retrieval at
-// `server/agronomy/conversation.js:120` first. The shape that does open it is the comparison-backed answer at
-// server/api.js:59, which needs `state.inputs`, and the browser only sets that when a comparison has
-// run (public/js/app.js:290). That pairing - a plan, a loaded watchlist, and a real reply - happens nowhere else
-// in the suite, and it is where the citation ids are resolved (public/js/modules/chat.js:99 appends the context
-// sources after the answer's own, public/js/lib/dom.js:16 keeps the first entry per id), so the paragraph and
-// its two links are asserted together rather than assumed to travel together.
+// Why these three cases exist: iteration 37 measured, through the real route on 18 Nov (UTC), that
+// `useSelectedLocation` is set to `false` at nine sites across the catalog, grounded, planning, conversational and
+// guided-workflow layers, and that the composer returned early on that flag. A pest-worded question the app holds a watchlist for
+// therefore reached no record at all: an 8-wording scan against the live handler with no comparison found 0 of 8
+// replies whose gate stood open, because a crop named in the question is routed to the country-aware retrieval at
+// `server/agronomy/conversation.js:120` first, and the one reply shape that leaves the flag unset
+// (`server/agronomy/answers.js:84`) is only produced after a comparison - the browser sets `state.inputs` there
+// (public/js/app.js:290). The first two cases below pin that comparison pairing, which happens nowhere else in the
+// suite. The third is the same kind of sentence with no comparison run at all, which is what iteration 38 changed:
+// public/js/lib/chat-context.js:29 now gates only the field-scoped topics and decides the watchlist branch on the
+// country the reply and the loaded records share (:99-105), so a species a farmer names outright is answered from
+// the lookup they already ran. Citation ids are resolved where the paragraphs are (public/js/modules/chat.js:99
+// appends the context sources after the answer's own, public/js/lib/dom.js:16 keeps the first entry per id), so the
+// paragraph and its two links are asserted together rather than assumed to travel together.
 test.describe.configure({ mode: 'serial' });
 const fields=/overpass-api\.de|overpass\.private\.coffee|maps\.mail\.ru|\/api\/farms\?/;
 const last=page=>page.locator('#chat-history article').last();
@@ -31,7 +31,7 @@ const paragraphs=async page=>{const reply=last(page);await expect(reply.locator(
 const links=page=>last(page).locator('details a').evaluateAll(nodes=>nodes.map(node=>node.href));
 const summary=page=>last(page).locator('details summary').innerText();
 
-async function planned(page,context,withPestLookup){
+async function planned(page,context,withPestLookup,withComparison=true){
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
   await context.route(fields,route=>route.abort('failed'));
   await page.goto('/',{waitUntil:'domcontentloaded'});
@@ -52,12 +52,15 @@ async function planned(page,context,withPestLookup){
   for(const choice of await page.locator('[name=allowedCrops]').all())await choice.uncheck();
   await page.locator('[name=allowedCrops][value="sweet-corn"]').check();
   await page.locator('[name=allowedCrops][value="onion"]').check();
-  await page.locator('#compare').click();
-  await expect(page.locator('.scenario')).toHaveCount(3,{timeout:90_000});
+  if (withComparison) {
+    await page.locator('#compare').click();
+    await expect(page.locator('.scenario')).toHaveCount(3,{timeout:90_000});
+  }
   if (withPestLookup) {
     // The comparison opens step 04 by itself (public/js/app.js:293), and the watchlist control lives in step 03,
-    // so a farmer has to come back for it - the same click a person would make.
-    await page.locator('#tab-si').click();
+    // so a farmer has to come back for it - the same click a person would make. Without a comparison the app is
+    // still on step 03, so there is nothing to come back from.
+    if (withComparison) await page.locator('#tab-si').click();
     await page.locator('#load-pests').click();
     await expect(page.locator('#pest-status')).toContainText('Country context loaded',{timeout:60_000});
   }
@@ -110,5 +113,35 @@ test('a pest question without a loaded country context says it is not loaded ins
   expect(seen.filter(text=>/^Country pest context is not loaded/.test(text)),`the missing-context sentence is absent: ${JSON.stringify(seen)}`).toHaveLength(1);
   expect(seen.filter(text=>/^Country pest context is not loaded/.test(text))[0]).toContain('There are no pest observations for this farm in the app.');
   expect(seen.filter(text=>/armyworm|moth|occurrence records/i.test(text)),'a species or an occurrence count was quoted with no country context loaded').toEqual([]);
+  expect(errors).toEqual([]);
+});
+
+// Why this third case exists: iteration 37 recorded that a pest question with no comparison never reached the
+// watchlist because every reply the app can hand back sets `useSelectedLocation: false` and the composer returned
+// early. Measured through the real route on 18 Nov (UTC) before the change, "Do I need to worry about diamondback
+// moth here?" rendered one paragraph - `deterministic clarification`, Sources (0) - with the watchlist loaded in
+// the same session. The composer now decides the pest branch on the country the reply and the lookup share, so the
+// case below is the browser pin for that pairing, and it is deliberately run with no comparison so nothing else in
+// the state can supply the record.
+test('a species named outright reaches the loaded watchlist with no comparison run',async({page,context})=>{
+  test.setTimeout(240_000);
+  const errors=await planned(page,context,true,false);
+  await ask(page,'Do I need to worry about diamondback moth here?');
+  const seen=await paragraphs(page);
+  expect(seen.length,'a reply shows at most three paragraphs').toBeLessThanOrEqual(3);
+  expect(seen[0],`the first paragraph must be the record for the species named in the question, got: ${JSON.stringify(seen)}`).toMatch(/^Diamondback moth in AU:/);
+  expect(seen[0]).toContain('Crucifer vegetables including radish are hosts; local damage is unassessed.');
+  expect(seen[0]).toContain('This does not establish farm presence or current outbreak.');
+  // The other watchlist entry must not be quoted just because it heads the list: this is the no-comparison state,
+  // so nothing in a plan can justify it, and a head-of-list fallback is what would show instead.
+  expect(seen.filter(text=>/Fall armyworm/.test(text)),'the species nobody asked about was quoted').toEqual([]);
+  // The reply's own sentence survives: the record supplements a clarification, it does not replace it.
+  expect(seen.findIndex(text=>/^I could not match that request/.test(text)),'the clarification the reply produced is missing').toBeGreaterThan(0);
+  expect(await summary(page)).toBe('Sources (2)');
+  const hrefs=await links(page);
+  expect(hrefs[0],`the first citation must be the GBIF country query for the named species: ${hrefs[0]}`).toContain('api.gbif.org/v1/occurrence/search');
+  expect(hrefs[0]).toContain('country=AU');
+  expect(hrefs[0]).toContain('taxonKey=1831136');
+  expect(hrefs[1],'the second citation must be the host reference this record carries').toContain('ask.ifas.ufl.edu');
   expect(errors).toEqual([]);
 });

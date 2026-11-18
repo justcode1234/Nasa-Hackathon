@@ -930,6 +930,76 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 39 - the composer caveat iteration 38 added deleted the reply's own honesty
+  sentence, and the red gate is what proved it.** Subsection 37 registered that displacement as an open limit; the gate
+  run on that tree answered it in a browser: `tests/e2e/assistant.spec.js:6:1` failed only on Q10, with exactly one check
+  left failing (`Explains shared-host or pest-control limits`), and `tests/e2e/help-and-explanations.spec.js:16:33`
+  failed with the model off and on with U19 rendered as the pointer alone
+  (`docs/evidence/pest38-gate-red-2026-11-18.log.gz`, **12 failed, 6 skipped, 202 passed (24.1 m)**). Attributed before
+  any edit (`docs/evidence/pest39-attribution-2026-11-18.log.gz`): **2** corpus checks move across the three composers,
+  both `pre-38=PASS iter38=FAIL caveat-rule=PASS`, with **0** cases whose checks were inert offline, so iteration 38
+  caused it and it was not pre-existing. Root cause is `public/js/lib/chat-context.js:137-138` - `facts` accepts only a
+  non-`limitation` reply paragraph and the reply's `limitation` is dropped whenever the context carries one, so a reply
+  built of nothing but limits rendered one paragraph out of three slots. The smaller repair, making the pointer
+  conditional, was measured first and rejected: `docs/evidence/pest39-pointer-pin-2026-11-18.log.gz` shows the wording
+  `tests/e2e/chat-pest-context.spec.js:105` pins rendering `pointer=true` on the shipped composer and `pointer=false` on
+  that one, so it would have bought the fix by deleting the sentence a farmer most needs in that state. The adopted rule
+  lets a context caveat and the reply's own caveats share the slots that remain. Blast radius over 88 wordings in three
+  context states (`docs/evidence/pest39-blast-radius-2026-11-18.log.gz`): **4 render differently, 84 byte-identical, all
+  4 additions** (Q10 2→3, U21 2→3, U19 1→3, U19 loaded 2→3); the first attempt of that harness reported "0 of 88"
+  because it handed `contextBlocks`'s `{blocks, sources}` object where an array was expected, which is the false negative
+  to remember. Negative control on `tests/chat-context.test.js`
+  (`docs/evidence/pest39-rehearsal-2026-11-18.log.gz`): **18 tests, 18 passed** against the corrected composer and
+  **17 passed, 1 failed** against the shipped one, the failure being
+  `not ok 8 - a context caveat does not evict the reply own limitation while a slot remains`; no existing assertion
+  pinned the old rule, so none was rewritten or skipped. Costs: that file is now **18 tests**, the whole offline suite
+  **219/219** (`docs/evidence/pest39-offline-2026-11-18.log.gz`), and the rebuilt bundle carries the rule
+  (`grep -c "replyCaveats.slice(0, Math.max" dist/client/js/lib/chat-context.js` = **1**,
+  `docs/evidence/pest39-build-2026-11-18.log.gz`). The full gate on this tree is **214 passed, 6 skipped, 0 failed
+  (28.3 m)**, all 220 case lines present, exit 0 (`docs/evidence/pest39-gate-green-2026-11-18.log.gz`), so the pointer
+  case `tests/e2e/chat-pest-context.spec.js:105` passes in all four projects beside the two new ones. Limit that survives: the other half of subsection 37's
+  displacement is a non-`limitation` block, so this rule cannot reach it - "What pests affect sweet corn?" still renders
+  **2 of 3 with a slot left free and the AU FAOSTAT `country context` sentence dropped**
+  (`docs/evidence/pest39-budget-2026-11-18.log.gz`), because `facts.slice(0, 1)` caps the reply at one paragraph.
+  Registered as the next candidate. Nothing was deployed, no NASA portal edit, main untouched (`4a54fa3`).
+- **19 Nov, same branch: iteration 38 — a pest question the app could answer was swallowed by a gate built for a
+  different question, so it answered with a clarification and no source.** Measured on `e45fe1d` before any edit, with
+  one probe that drives the real `server/api.js` handler and composes paragraphs exactly as
+  `public/js/modules/chat.js:96-99` does (`docs/evidence/pest38-before-after-2026-11-18.log.gz`): with the AU
+  watchlist loaded, "Do I need to worry about diamondback moth here?", "Which pests should I watch for in this plan?"
+  and "Are there pest records for this country?" each rendered **one** paragraph — `deterministic clarification`,
+  **Sources (0)** — and "What pests affect sweet corn?" attached **0** evidence blocks to a crop-country reply. The
+  cause was the composer's opening `return` on `answer.useSelectedLocation === false`: a *location* refusal, applied
+  to a watchlist that is keyed to a country (`server/context/pests.js`) and needs no point. `public/js/lib/chat-context.js`
+  now gates only the four field-scoped topics (`:29-30`, the `if (!gated)` block closing at `:76`, order and budget
+  unchanged) and decides the pest branch on the country the reply and the loaded records share (`:99-107`): agreement
+  quotes `askedPest ?? askedCrop ?? cropPest ?? records[0]`, a mismatch says which country the list covers and quotes
+  nothing. The server-side alternative iteration 37 preferred is recorded as retired here, because
+  `chat.js:96` posts no pest payload, so `/api/ask` cannot know which country's list the browser holds. **Correction to
+  iteration 37's own measurement:** the flag is set at **nine** sites, not eight — re-measuring with a pattern that
+  tolerates the unspaced form found `public/js/modules/workflow-assistant.js:164` (the guided layer) beside the eight
+  listed in `server/`, and a scratch browser probe of five pest wordings in a country-selected session showed **5 of 5
+  issuing exactly one `/api/ask`** (`docs/evidence/pest38-guided-layer-probe-2026-11-18.log.gz`), so no guided reply
+  reaches the new branch and no exclusion was invented for it. Coverage: `tests/chat-context.test.js:82` and `:118`
+  (the state loads every evidence layer so the weather refusal is still a real refusal, and `PESTS` is reversed so a
+  head-of-list fallback cannot pass for crop matching) plus `tests/e2e/chat-pest-context.spec.js:126`, the same
+  species question **with no comparison run**, asserting the species, its host sentence, the non-farm-presence
+  sentence, `Sources (2)` and both live hrefs while the unasked species stays out. Controls, all measured: composer at
+  the previous tip **15 passed, 2 failed**; country guard removed **16 passed, 1 failed**; reply-crop term removed
+  **16 passed, 1 failed**; restored **17 passed, 0 failed** (`…-pest38-controls-…`); in the browser, with
+  `grep -c askedCrop dist/client/js/lib/chat-context.js` reading **0** before and **2** after a rebuild, the new case
+  is **4 failed → 4 passed (15.1 s)** (`…-pest38-control-composer-at-tip-…`). Costs: spec as landed **12 passed
+  (31.8 s)** (`…-pest38-spec-…`), offline suite **218/218 (50,732 ms)** (`…-pest38-npm-test-…`), `--list` **220 tests
+  in 21 files**; the full four-project gate on that tree came back red - **12 failed, 6 skipped, 202 passed (24.1 m)**,
+exit code 1 (`docs/evidence/pest38-gate-red-2026-11-18.log.gz`) - which is how the limit below was measured in a browser
+instead of projected from a scratch harness. Honest limit recorded rather than hidden: the mismatch advisory is a `limitation`, and with only
+  that block attached `composeAnswerBlocks` keeps it plus one non-`limitation` paragraph of the reply
+  (`facts.slice(0, 1)` at :137), so on the Brazil wording it displaces the FAOSTAT "no matching record" sentence and
+  the count moves 5 → 4 while the third slot stays empty — re-measured at **2 of 7 probe wordings losing a reply
+  paragraph with a slot left free**
+  (`docs/evidence/pest38-budget-limit-2026-11-18.log.gz`) and registered as iteration 39
+  candidate 1, because the budget drops an answer paragraph even when a third slot is free. Nothing was deployed, no
+  NASA portal edit, main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 37 — the live pest paragraph had never been rendered by a browser, because the
   only reply that carries it needs a comparison first.** Measured on `120461e` before any edit: `grep -rn "load-pests"
   tests/e2e/` and `grep -rn "occurrence/search" tests/e2e/` both returned **0 hits**, and `Fall armyworm in AU: Country
