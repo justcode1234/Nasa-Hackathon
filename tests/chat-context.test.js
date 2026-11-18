@@ -199,3 +199,29 @@ test('the pest record quoted is the one about the crop being planned', () => {
     { topic: 'pest' }).blocks.filter(block => block.kind === 'country occurrence context')
     .map(block => block.text.split(' in ')[0]), ['Fall armyworm'], 'the named insect must beat the planned crop');
 });
+
+// Iteration 22 let a loaded record name open the branch through its last word only, and only if that word
+// is five letters or longer. Measured against the shipped watchlist on a maize plan (so iteration 24's crop
+// match cannot rescue it): "Is the diamondback pressure high this year?" answered with nothing at all,
+// because the head noun "moth" is four letters and the distinguishing word is the modifier; and "do moths
+// matter here?" opened the branch through the generic trigger and then quoted the *armyworm*. A short head
+// noun is too generic to name a pest on its own, but the word in front of it is exactly what makes the
+// species unique — so that is the word the matcher uses when the head is short.
+test('a pest is found by the word that makes its name unique', () => {
+  const records = PESTS.map(pest => ({ ...pest, status: 'Country records found', occurrenceCount: 4213,
+    sourceUrl: `https://example.invalid/gbif/${pest.id}`, hostSource: { ...pest.hostSource } }));
+  const maizePlan = { pests: { country: 'IN', records, retrievedAt: '2026-11-18T00:00:00Z' },
+    planning: { baseline: ['wheat', 'barley', 'sorghum'], allowedCrops: [] } };
+  const quoted = question => contextBlocks(question, maizePlan, { topic: 'pest' }).blocks
+    .filter(block => block.kind === 'country occurrence context').map(block => block.text.split(' in ')[0]);
+
+  assert.deepEqual(quoted('Is the diamondback pressure high this year?'), ['Diamondback moth'],
+    'the distinguishing word of a record name was invisible to the matcher');
+  assert.deepEqual(quoted('do moths matter here?'), ['Diamondback moth'],
+    'a moth question was answered with the armyworm record');
+
+  // The specificity rule must not open the branch on words that are not about a pest at all: "Fall" is a
+  // season, and a geographic adjective names a place rather than a species (iteration 22's leak).
+  assert.deepEqual(quoted('Should I sow in the fall or the spring?'), []);
+  assert.deepEqual(quoted('Tell me about the Australian grains industry'), []);
+});

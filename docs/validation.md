@@ -2032,6 +2032,61 @@ case 9.0 s. The load climbed back above 8 partway through, which is why the per-
 the wall clock are quoted here. Passing this slice does not pay the 196-case gate, which stays owed for this
 tip and is recorded below.
 
+### 24. A moth question was answered with the armyworm, and a diamondback question with nothing
+
+Iteration 22 let the record names the app already holds open the pest branch, through one rule: the last word
+of the name, and only if it is longer than four letters, tested as a substring. The trigger list
+(`TOPIC.pest`, `public/js/lib/chat-context.js:11`) already contains `moths?`, so the app promises to answer a
+moth question; the selector then cannot honour it, because the shipped name is `Diamondback moth` and its
+head noun is four letters. Both columns below are measured in one process, against the committed module
+(`git show a9e4566:public/js/lib/chat-context.js`, copied to `artifacts/` for the run) and the fixed one
+(`docs/evidence/chat-name-word-before-after-2026-11-18.log.gz`), with the plan deliberately set to
+wheat/barley/sorghum — crops the watchlist does not cover — so subsection 23's crop match cannot select a
+record and only the words in the question can. The rows under the two broken ones (`How bad are armyworms
+here?`, `Should I sow in the fall or the spring?`, `Tell me about the Australian grains industry`,
+`What is the soil pH here?`) are what the change must not disturb; the paired probe also shows
+`tell me about the fall armyworm`, `do pests matter here?` and `My diamondback moths are eating the
+seedlings.` unchanged:
+
+| Question | Before | After | Why |
+| --- | --- | --- | --- |
+| `Is the diamondback pressure high this year?` | no pest paragraph | `Diamondback moth` | `moth` fails the five-letter rule and `diamondback` — the only word that distinguishes the species — was never consulted |
+| `do moths matter here?` | `Fall armyworm` | `Diamondback moth` | `moths?` in the trigger list opens the branch, then no record matches and the list's first entry is quoted |
+| `How bad are armyworms here?` | `Fall armyworm` | `Fall armyworm` | unchanged: a head noun that can carry its name still does |
+| `Should I sow in the fall or the spring?` | no pest paragraph | none | must stay closed: `Fall` is the modifier of `Fall armyworm` and a season word |
+| `Tell me about the Australian grains industry` | no pest paragraph | none | must stay closed: the iteration-22 leak the head-noun rule was written to keep shut |
+| `What is the soil pH here?` | no pest paragraph | none | must stay closed: no pest word in the question |
+
+The selector now takes the words that identify a species: the head noun when it can carry the name on its own
+(`armyworm`, `locust`), and when the head is short the word in front of it as well (`moth` **or**
+`diamondback` → `Diamondback moth`). Every key is matched as a whole word with an optional plural
+(`\b<key>s?\b`) instead of a substring, so `months` still cannot match `moth`. Both halves are the same rule
+stated once, in `askedPest` (`public/js/lib/chat-context.js:59-68`), with no vocabulary added and no change to
+the record-selection order: a name typed in the question still beats the plan's crops, which still beat the
+first entry.
+
+**Executed.** The guard was written first and measured failing — `tests/chat-context.test.js` reported
+**10 pass, 1 fail** (`expected: 0: 'Diamondback moth'`, i.e. `Is the diamondback pressure high this year?`
+answered with nothing; `docs/evidence/chat-name-word-guard-before-2026-11-18.log.gz`) and **11 pass, 0 fail**
+afterwards (`docs/evidence/chat-name-word-guard-after-2026-11-18.log.gz`). The new test pins the modifier
+question, the plural head (`do moths matter here?` → `Diamondback moth`), the season word and the demonym
+staying closed; the previous ten tests, including the iteration-22 whole-word cases and iteration 24's six
+plan shapes, pass unchanged. The probe re-run against the fixed module gives `["Diamondback moth"]` for both
+moth questions, `["Fall armyworm"]` for `How bad are armyworms here?` and for the uncovered generic
+`do pests matter here?`, and keeps `tell me about the fall armyworm` on its own record
+(`docs/evidence/chat-name-word-probe-after-2026-11-18.log.gz`). `npm run build` exits 0, `npm test` reports
+**204 tests, 204 pass, 0 fail, 0 skipped (27,360 ms)**
+(`docs/evidence/chat-name-word-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**.
+
+**Known limit, recorded rather than tested.** The modifier is consulted only when the head noun is short, so
+a place word can become a key only in front of a generic head — with the two shipped names that yields
+`diamondback` and nothing else. A future entry shaped like `Peruvian moth` would open the branch on
+`peruvian`; no shipped record is, and the guard above would need widening with it. No e2e spec mentions
+`moth` or `diamondback` (`grep` over `tests/e2e/`), so re-running the 64-case chat slice on this tip can only
+confirm that the wider matcher pulls no pest paragraph into an unrelated answer; it is not a check of the new
+behaviour in the rendered panel — that coverage is still the stubbed POWER/SoilGrids/GBIF chat spec owed in the
+gap list below.
+
 Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
 review remain unverified.

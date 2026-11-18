@@ -52,13 +52,16 @@ export function contextBlocks(question, state, answer) {
     sources.push({ id: 'selected-field', title: 'Selected OpenStreetMap field', url: farm.sourceUrl });
   }
   // The trigger list cannot hold every species, and a farmer names the insect rather than the topic,
-  // so the record names the app already holds open the branch too. Only the head noun of a name is used
-  // ("armyworm" from "Fall armyworm", "locust" from "Australian plague locust"): matching every word
-  // would let "Australian" or "cotton" pull a pest paragraph into an unrelated question. The matched
-  // record is the one quoted, instead of whatever the country list happens to start with.
+  // so the record names the app already holds open the branch too. Only the words that identify a species
+  // are used, as whole words with an optional plural: the head noun when it can carry the name on its own
+  // ("armyworm", "locust"), and when the head is a short generic noun ("moth") the word in front of it,
+  // which is the part that makes the species unique. Matching every word would let "fall" as a season or
+  // "Australian" as a demonym pull a pest paragraph into an unrelated question. The matched record is the
+  // one quoted, instead of whatever the country list happens to start with.
   const askedPest = (state.pests?.records ?? []).find(p => {
-    const name = p.name.toLowerCase(), head = name.split(/\s+/).at(-1);
-    return question.toLowerCase().includes(name) || (head.length > 4 && question.toLowerCase().includes(head));
+    const words = p.name.toLowerCase().split(/\s+/), head = words.at(-1);
+    const keys = head.length > 4 ? [head] : [head, words.at(-2)].filter(Boolean);
+    return keys.some(key => new RegExp(`\\b${key}s?\\b`).test(question.toLowerCase()));
   });
   // The plan names the crops the farmer is growing and each watchlist entry names the crop it is about
   // (`cropIds`), yet the quoted record ignored both: a radish/tomato/cabbage plan asking a plain pest

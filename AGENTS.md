@@ -806,6 +806,26 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `chat-only-flow`/`assistant`/`help-and-explanations`/`workflow` on all four projects (slowest case 9.0 s,
   `docs/evidence/chat-pest-crop-e2e-2026-11-18.log.gz`). The 196-case gate is still owed on this tip; only
   these 64 cases were re-run. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **18 Nov, same branch: iteration 25 — "do moths matter here?" was answered with the armyworm.** Iteration 22
+  opened the pest branch from a loaded record's name, but only through its last word and only when that word
+  is five letters or longer, matched as a substring. `TOPIC.pest` already lists `moths?`, so the app invites a
+  moth question and then cannot pick the moth record: `Diamondback moth` fails the length rule on its head noun
+  and `diamondback`, the word that actually distinguishes the species, was never consulted. Measured on the
+  shipped table with a plan the watchlist does not cover (so iteration 24's crop match cannot interfere), that
+  gave `Is the diamondback pressure high this year?` → no pest paragraph and `do moths matter here?` →
+  `Fall armyworm`. The matcher now uses the head noun when it can carry the name alone and the word in front of
+  it when the head is short, each as a whole word with an optional plural — which keeps `fall` (a season, and
+  the modifier of `Fall armyworm`) and demonyms like `Australian` out. **Executed:** guard first,
+  `tests/chat-context.test.js` **10 pass, 1 fail** → **11 pass, 0 fail**, the previous ten including the
+  iteration-22 whole-word and iteration-24 plan cases unchanged; a paired probe that imports the committed and
+  the fixed module in one process shows both moth questions moving to `Diamondback moth` while every armyworm,
+  season, demonym and soil question selects exactly the record it selected before
+  (`docs/evidence/chat-name-word-before-after-2026-11-18.log.gz`); `npm run build` exit 0, `npm test`
+  **204/204, 0 failed, 0 skipped (27,360 ms)**, `npm audit` **0 vulnerabilities**. No e2e spec mentions `moth`
+  or `diamondback`, so re-running the 64-case chat slice on this tip is a regression check that the wider
+  matcher pulled no pest paragraph into other answers; pinning the new behaviour in the rendered panel still
+  needs the stubbed POWER/SoilGrids/GBIF chat spec. Nothing was deployed, main is untouched (`4a54fa3`), no NASA
+  portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
