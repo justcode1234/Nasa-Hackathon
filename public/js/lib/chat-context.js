@@ -60,8 +60,15 @@ export function contextBlocks(question, state, answer) {
     const name = p.name.toLowerCase(), head = name.split(/\s+/).at(-1);
     return question.toLowerCase().includes(name) || (head.length > 4 && question.toLowerCase().includes(head));
   });
+  // The plan names the crops the farmer is growing and each watchlist entry names the crop it is about
+  // (`cropIds`), yet the quoted record ignored both: a radish/tomato/cabbage plan asking a plain pest
+  // question got the maize armyworm paragraph because the list happens to start with it. The entry that
+  // matches the plan is the one that can say something about this farm; an insect named in the question
+  // still wins, and a crop the watchlist does not cover keeps the existing first-entry answer.
+  const planned = new Set([...(state.planning?.baseline ?? []), ...(state.planning?.allowedCrops ?? [])]);
+  const cropPest = (state.pests?.records ?? []).find(pest => (pest.cropIds ?? []).some(id => planned.has(id)));
   if (TOPIC.pest.test(question) || askedPest) {
-    if (state.pests) for (const pest of [askedPest ?? state.pests.records[0]].filter(Boolean)) {
+    if (state.pests) for (const pest of [askedPest ?? cropPest ?? state.pests.records[0]].filter(Boolean)) {
       blocks.push({ kind: 'country occurrence context', text: `${pest.name} in ${state.pests.country}: ${pest.status}${pest.occurrenceCount !== null ? ` (${pest.occurrenceCount} historical occurrence records)` : ''}. ${pest.hostNote} This does not establish farm presence or current outbreak.`, sourceIds: [pest.id, `${pest.id}-host`] });
       sources.push({ id: pest.id, title: `GBIF ${pest.name} country query`, url: pest.sourceUrl }, { id: `${pest.id}-host`, ...pest.hostSource });
     } else blocks.push({ kind: 'limitation', text: 'Country pest context is not loaded. Use Plan crops → Country pest context. There are no pest observations for this farm in the app.', sourceIds: [] });

@@ -1985,6 +1985,52 @@ Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit 
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
 review remain unverified.
 
+### 23. A pest question about radish was answered with the maize pest
+
+**Found by asking which of the app's own fields the chat layer never reads.** The country watchlist carries
+`cropIds` on every entry — `Fall armyworm → ["sweet-corn"]`, `Diamondback moth → ["radish"]`
+([server/context/pests.js](../server/context/pests.js)) — and the chat state carries the plan's crops
+(`state.planning.baseline` and `allowedCrops`, the same `#baseline-*` values the plan runs on). Neither was
+used to pick which record to quote: `contextBlocks()` took `askedPest ?? state.pests.records[0]`, so unless
+the farmer typed the insect's name, the answer was whichever entry the list happens to start with. Measured
+against the shipped table (`docs/evidence/chat-pest-crop-probe-before-2026-11-18.log.gz`):
+
+| Plan crops | record the chat quoted |
+| --- | --- |
+| radish, tomato, cabbage | `Fall armyworm` — "Maize is a principal host" |
+| sweet-corn, wheat, rice | `Fall armyworm` — correct, by coincidence of list order |
+| wheat, barley, sorghum | `Fall armyworm` |
+
+The first row is the defect: the entry that could say something about that plan (`Diamondback moth`,
+"Crucifer vegetables including radish are hosts") was loaded in the same state and ignored, and the
+paragraph the farmer read was about someone else's crop. Nothing was fabricated — the paragraph names its
+own species and host — which is exactly why no earlier run flagged it: a wrong-subject answer looks honest.
+
+**Fixed in the selection, not the prose.** An insect named in the question still wins (iteration 22), then
+the record whose `cropIds` intersect the planned crops, then the first entry as it was before. No new
+vocabulary or name matching was introduced: both sides already speak crop ids, so the rule is a set
+intersection with the data the app ships.
+
+**Executed.** `tests/chat-context.test.js` — which now builds its fixture from the real `PESTS` table rather
+than a hand-written copy — reports **9 pass, 1 fail** on the committed module
+(`a crucifer plan was answered with the maize pest`, `+ 'Fall armyworm' / - 'Diamondback moth'`,
+`docs/evidence/chat-pest-crop-guard-before-2026-11-18.log.gz`) and **10 pass, 0 fail** after the fix
+(`docs/evidence/chat-pest-crop-guard-after-2026-11-18.log.gz`). The five new cases pin the radish plan, the
+maize plan, an `allowedCrops`-only match, a crop outside the watchlist keeping the old answer, no plan at
+all keeping the old answer, and the typed name beating the plan. The probe re-run against the fixed module
+shows `["Diamondback moth"]` for the crucifer plan and `["Fall armyworm"]` unchanged for maize and for the
+uncovered cereal plan (`docs/evidence/chat-pest-crop-probe-after-2026-11-18.log.gz`). `npm test` reports
+**203 tests, 203 pass, 0 fail, 0 skipped (38,335 ms)**
+(`docs/evidence/chat-pest-crop-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**. The
+duration is inflated and the browser slice is not yet run on this tip: a local Python job held four workers
+at ~260 % CPU each (load average 9.9–11.3) while this was measured, and a rendered-panel run under that load
+would produce numbers that cannot be quoted (subsection 19 records exactly that pattern). The chat slice and
+the 196-case gate for this tip are recorded as owed below.
+
+Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
+phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
+review remain unverified.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -2011,13 +2057,17 @@ review remain unverified.
   (`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). The same run covers the eight specs whose
   slice attempts were load-degraded in subsection 19, so those two degraded tallies stand as recorded
   but are no longer the best evidence for that tree.
-* The full gate belongs to `acb6c96`. Subsection 22 changed `public/js/lib/chat-context.js` afterwards, so
-  the clean **196/196 (19.1 m)** line above must not be quoted for the tip that carries the caveat budget
-  until the suite is re-run there; only the 52-case chat slice and `npm test` 202/202 are measured on it.
-* No browser case loads NASA POWER and SoilGrids into one session, so the weather + soil reply that
-  subsection 22 fixes is pinned only by `tests/chat-context.test.js` and a direct-module probe. A chat spec
-  that answers a mixed question against stubbed POWER/SoilGrids responses — stubs clearly labelled as such,
-  the same way `chat-only-flow.spec.js` stubs the field service — would move it into the rendered panel.
+* The full gate belongs to `acb6c96`. Subsections 22 and 23 changed `public/js/lib/chat-context.js`
+  afterwards, so the clean **196/196 (19.1 m)** line above must not be quoted for the tip that carries the
+  caveat budget and the crop-matched pest record until the suite is re-run there; on the subsection-22 tip
+  only the 52-case chat slice and `npm test` 202/202 are measured, and on the subsection-23 tip only
+  `npm test` 203/203 and `npm audit` so far.
+* The rendered panel for the two new selection rules. No browser case loads NASA POWER and SoilGrids into
+  one session, and none has a pest context loaded beside a radish plan, so the weather-plus-soil advisory
+  and the crop-matched pest record are pinned by `tests/chat-context.test.js` and direct-module probes only.
+  A chat spec that answers a mixed question against stubbed POWER/SoilGrids/GBIF responses — stubs clearly
+  labelled as such, the same way `chat-only-flow.spec.js` stubs the field service — would move both into
+  the panel.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the

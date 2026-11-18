@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { contextBlocks, composeAnswerBlocks } from '../public/js/lib/chat-context.js';
+import { PESTS } from '../server/context/pests.js';
 
 const observations = {
   period: { start: '2024-01-01', end: '2024-12-31' },
@@ -169,4 +170,32 @@ test('a mapped soil estimate keeps its advisory beside another topic', () => {
     `the crop answer was pushed out by context: ${kindsOf(descriptive)}`);
   assert.ok(reply('Tell me about the soil pH here', { soil }).some(block => /ISRIC advises/.test(block.text)),
     'the soil-only reply lost its advisory');
+});
+
+// Each watchlist entry says which crop it is about (`cropIds`) and the plan says which crops the farmer is
+// growing, but the quoted record ignored both: measured against the shipped two-species table, a radish /
+// tomato / cabbage plan asking a plain pest question got the maize armyworm paragraph, because the list
+// happens to start with it. The entry that matches the plan is the one that can say something about this
+// farm; a name typed in the question still beats the plan, and a crop the watchlist does not cover keeps
+// the existing first-entry answer rather than inventing a match.
+test('the pest record quoted is the one about the crop being planned', () => {
+  const records = PESTS.map(pest => ({ ...pest, status: 'Country records found', occurrenceCount: 4213,
+    sourceUrl: `https://example.invalid/gbif/${pest.id}`, hostSource: { ...pest.hostSource } }));
+  const quoted = planning => contextBlocks('Which pests should I watch for this season?',
+    { pests: { country: 'IN', records, retrievedAt: '2026-11-18T00:00:00Z' }, planning }, { topic: 'pest' })
+    .blocks.filter(block => block.kind === 'country occurrence context').map(block => block.text.split(' in ')[0]);
+
+  assert.deepEqual(quoted({ baseline: ['radish', 'tomato', 'cabbage'], allowedCrops: [] }), ['Diamondback moth'],
+    'a crucifer plan was answered with the maize pest');
+  assert.deepEqual(quoted({ baseline: ['wheat', 'sweet-corn', 'rice'], allowedCrops: [] }), ['Fall armyworm'],
+    'a maize plan was answered with the radish pest');
+  assert.deepEqual(quoted({ baseline: ['wheat', 'barley', 'sorghum'], allowedCrops: ['radish'] }), ['Diamondback moth'],
+    'an allowed crop was ignored');
+  assert.deepEqual(quoted({ baseline: ['wheat', 'barley', 'sorghum'], allowedCrops: [] }), ['Fall armyworm'],
+    'a crop outside the watchlist lost the existing answer');
+  assert.deepEqual(quoted(undefined), ['Fall armyworm'], 'a plan that is not filled in yet lost the existing answer');
+  assert.deepEqual(contextBlocks('How do I control fall armyworm in my maize?',
+    { pests: { country: 'IN', records, retrievedAt: '2026-11-18T00:00:00Z' }, planning: { baseline: ['radish', 'radish', 'radish'], allowedCrops: [] } },
+    { topic: 'pest' }).blocks.filter(block => block.kind === 'country occurrence context')
+    .map(block => block.text.split(' in ')[0]), ['Fall armyworm'], 'the named insect must beat the planned crop');
 });

@@ -787,6 +787,23 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   average 3.1. Still owed on this tip: the 196-case gate (the clean run belongs to `acb6c96`) and a browser
   case that loads NASA and SoilGrids into one session — until then the mixed reply is pinned by the unit
   guard and the probe, not by the rendered panel. Nothing was deployed, main is untouched, no NASA portal edit.
+- **18 Nov, same branch: iteration 24 — a pest question about radish was answered with the maize pest.**
+  The watchlist declares the crop each entry is about (`server/context/pests.js`: `Fall armyworm →
+  sweet-corn`, `Diamondback moth → radish`) and the chat state holds the plan's crops
+  (`state.planning.baseline`/`allowedCrops`), but the quoted record was `askedPest ?? records[0]`, so unless
+  the farmer typed the insect it answered whichever entry the list starts with: measured against the shipped
+  table, a radish/tomato/cabbage plan got "Fall armyworm … Maize is a principal host" while the crucifer
+  entry sat loaded in the same state. Selection now prefers the record matching the plan (typed name still
+  wins, first entry stays the fallback), with no new vocabulary — both sides already speak crop ids.
+  **Executed:** guard written first — `tests/chat-context.test.js`, now built from the real `PESTS` table,
+  **9 pass, 1 fail** (`a crucifer plan was answered with the maize pest`, `+ 'Fall armyworm' /
+  - 'Diamondback moth'`) then **10 pass, 0 fail**; the direct-module probe flips the crucifer plan to
+  `Diamondback moth` and leaves the maize and uncovered-cereal plans as they were; `npm test`
+  **203/203, 0 failed, 0 skipped (38,335 ms)** and `npm audit` **0 vulnerabilities**. The chat slice and the
+  196-case gate are owed on this tip: a local Python job held four workers at ~260 % CPU each (load 9.9–11.3)
+  while this was measured, which is the starvation that produced the unquotable tallies in validation.md
+  subsection 19, so the browser runs wait for an idle device rather than adding a third. Nothing was
+  deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
