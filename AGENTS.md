@@ -189,6 +189,11 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   Read it first for current process handles, results and remaining work. Earlier
   implementation notes are preserved in [handoff history](docs/history/implementation-handoff-through-review.md).
   Sections 11-12 below retain the original plans; later user decisions here prevail.
+- **Work on the current branch:** [docs/handoff-2026-11-18.md](docs/handoff-2026-11-18.md) is the
+  cross-device handoff for `fix/chat-flow-and-answers` — environment, exact commands and durations,
+  the chat DOM contract the probes depend on, the invariants paid for by real defects, and the
+  improvement-loop queue. `artifacts/` paths named in the bullets below are gitignored local logs;
+  the durable dated copies live in `docs/evidence/`.
 - **Authorization:** user explicitly requested one merged main branch and answered
   "Deploy after all release checks pass". This supersedes the earlier Phase A
   freeze for this release. Do not edit or submit the NASA portal. Preserve original
@@ -352,6 +357,52 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   250 countries; it names the step-1 dropdown instead. A clean `npm run test:e2e` on this committed code
   is restarted below; until its own number is recorded it is not a passed gate.
 
+- **18 Nov, same branch: iteration 9 — the 75-second field-service wait, taken out of the chat.** The
+  sentence left open by the nine-second fix ("a service that accepts the connection and then answers
+  slowly … is not what was measured here") was measured against `createFarmClient` with a
+  never-answering stub: **75,016 ms** when the stub honours the caller's abort signal the way `fetch` does
+  (docs/evidence/farms-hanging-service-deadline-2026-11-18.log.gz) and 105,029 ms when it does not
+  (docs/evidence/farms-hanging-unreachable-2026-11-18.log.gz) — so the server deadline does bound it, but
+  a town tap in the guided chat `await run('loadFarms')` before replying, freezing the panel on "finding
+  community-mapped fields" with Send disabled for that whole time even though the point was already saved
+  one line earlier. Fixed in the chat layer: `fieldsGraceMs` (default 10 s) caps only how long a guided
+  reply waits, and the reply then names the selected town point, says the field services have not answered
+  and nothing was invented, and offers the two real way-ons `Use selected point` / `Show mapped fields`;
+  the open lookup is kept so a second ask joins it instead of adding another hanging request to a shared
+  community service, and the step-1 button keeps its own full-deadline search and its "up to a minute when
+  busy" notice. Building it exposed one more real defect: the typed sentence "Show mapped fields around
+  this point" carries none of the workflow's intent verbs, so it fell out of the guided path at the
+  place-reply check and the button would only ever produce a generic answer — the field request now counts
+  as farmer input in `hasInput`. **Executed:** `node --test tests/workflow-place-choices.test.js` 26/26
+  (new case: town tap under a never-answering service replies in well under the deadline, keeps
+  `#latitude`, offers both way-ons, claims no field count, retry opens no second lookup), `npm test`
+  **187/187, 0 failed, 0 skipped (55.7 s)**, `npm audit` 0 vulnerabilities, and the chat slice carrying
+  the `data-choice-type` assertions **80 passed, 0 failed (6.0 min)** across four projects
+  (docs/evidence/e2e-chat-slice-choice-type-2026-11-18.log.gz). New durable browser spec
+  `tests/e2e/field-service-latency.spec.js` hangs every field request through `context.route` and asserts
+  the reply, the point and the way-ons in all four projects; its first two runs failed on the test side,
+  not the app: request-count assertions cannot see the chat through the hedge's own second (6 s) and
+  third (12 s) service, so that check lives offline where it is deterministic. It passed there: **4 passed
+  (1.5 m)**, ~21 s per case including page load, i.e. inside the graces rather than inside the deadline
+  (docs/evidence/e2e-field-service-latency-2026-11-18.log.gz). The tiny word LM was again
+  **not** retrained: no place-name vocabulary or reply label in `public/models/fieldshift-mini` changed
+  and `scripts/build-mini-corpus.js` reads only the development questions and QA prompts. Nothing was
+  deployed, main is untouched, no NASA portal edit; a clean full `npm run test:e2e` on this tip is still
+  owed, and 75 s is measured against a stub, never against a real overloaded Overpass.
+
+- **18 Nov, same branch: the branch is now reproducible from another device.** Because this loop's
+  logs live in gitignored `artifacts/`, a fresh clone could read the claims but not re-run them.
+  [docs/handoff-2026-11-18.md](docs/handoff-2026-11-18.md) now carries the branch and `main` commits,
+  the Node v22.14.0 / Playwright 1.65.1 / installed-Chrome environment the numbers came from, every
+  command with its measured duration and the probe `PROBE_*` variables, the chat DOM contract the
+  probes and specs depend on, the place-data census and the invariants past defects paid for, the loop
+  queue, and the `artifacts/` vs `docs/evidence/` rule. Linked from §10, `docs/README.md` and
+  `docs/development.md` (whose additional-checks list was missing all four probe scripts this branch
+  added). **Executed:** `node scripts/check-documentation.js` 117 local links / 0 broken,
+  `npx playwright test --list` 184 tests in 17 files, `npm test` re-run after the edits **187/187**.
+  There is no CI here: every figure in these documents is a locally executed command, and none of it
+  was deployed.
+
 - **18 Nov, same branch: three more chat place defects, from driving every saved list and then the
   browser.** (a) Seven lists hold a town spelled exactly like the country — "Colombia" in Huila (CO),
   "Djibouti" (DJ), "Luxembourg" (LU), "Monaco" in the Municipality of Monaco (MC), "Mozambique" in
@@ -457,9 +508,45 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   Chrome** — which supersedes the earlier note that only Singapore had browser-level region-less proof.
   Playwright chat/workflow specs on that build: **17 passed** static-desktop, then **68 passed (6.1 min)**
   across all four projects (`docs/evidence/e2e-chat-all-projects-fixed-tip-2026-11-18.log.gz`). The
-  complete 180-case `npm run test:e2e` has **not** been re-run since the alias change, so 180/180 must
-  not be quoted for this tip; the unverified list is unchanged (real phones/touch, Safari/WebKit,
-  microphones and noise, audible read-aloud, independent agronomic review, live Overpass discovery).
+  complete 180-case `npm run test:e2e` was then re-run on that alias-fixed tip and printed
+  **180 passed, 0 failed, 0 skipped (24.0 min)** (`docs/evidence/e2e-full-suite-fixed-tip-2026-11-18.log.gz`),
+  so the whole browser gate does describe the released-branch code at `35a11b7`; the app changes after that
+  run are recorded in the next bullet and need their own gate. The unverified list is unchanged (real
+  phones/touch, Safari/WebKit, microphones and noise, audible read-aloud, independent agronomic review,
+  live Overpass discovery).
+- **18 Nov, same branch: an eight-pass improvement loop, and a measured nine-second stall.** Detail with
+  every executed number is in docs/validation.md ("improvement loop on the probe and chat layer"). Each
+  pass names the evidence that provoked it. Picker↔chat parity is now checked in the engine that renders
+  the picker (live `<option>` labels → that engine's `findCountries`): **250 labels, 0 the chat rejects**,
+  beside the 773 Node spellings still at 0 unrecognised. All three browser probes share
+  `scripts/lib/probe-app.mjs`, which starts the static preview and **refuses a bundle older than `public/`
+  or `server/`** (verified by touching a source file). The silent `followUps.slice(0, 6)` DOM cap in
+  `chat.js` is gone — widest offer measured across the matrix at **4** — and that bound is pinned offline.
+  Both browser walks now require the coordinate **pair** to match a saved row, not just the latitude.
+  `chat.js` stamps `data-choice-type` (town/region/farm/follow-up) on every choice and names the group for a
+  screen reader, so `scripts/chat-place-matrix-probe.mjs` taps by position and declared level instead of
+  regexing the sentence, and the five list-less codes (AQ BV HM IO UM) became their own terminal state
+  (5/5 explained, 0 defects). Adding the app's own `fieldshiftAnswerLatencyMs` stamp to that walk found the
+  real defect: **the answer to a town tap took 9042 ms (US) and 9038 ms (AD)** while every other step took
+  tens of milliseconds — traced to `server/context/farms.js` retrying *every* Overpass service through its
+  3 s + 6 s backoff ladder even when all three refused the connection within 60 ms, so an offline or blocked
+  farmer waited the whole ladder to be told the services are unavailable. `server/context/client.js` now
+  records whether a service answered or was merely slow, and the hedge retries only that; the same tap
+  answers in **56 ms** with the same coordinates and the same notice. The superseded
+  `assert.equal(failures, 9)` was replaced rather than removed: each service must still be attempted, the
+  outage reported in under 100 ms, and a busy service in a mixed outage still get its three attempts.
+  **Executed:** `node --test tests/context.test.js` 11/11, `npm test` **186/186, 0 failed, 0 skipped**,
+  `npm audit` **0 vulnerabilities**, the 34-session probe **0 failures / 0 page errors**, and the walk over
+  **every supported code: 250 cases, 245 saved town points, 5 explained list-less replies, 0 defects,
+  0 page errors**, whose latency census (**977 answers, p50 19 ms, p95 47 ms, max 156 ms**) is now the
+  measured responsiveness of the guided place step (`artifacts/final-quality/chat-matrix-full-2026-11-18.log`).
+  The field-lookup fix is committed as `0af312d`. **Not** yet re-run on this tip: the Playwright chat slice
+  carrying the new `data-choice-type` assertion (running into
+  `artifacts/final-quality/e2e-chat-slice-choice-type-2026-11-18.log`) and a clean full
+  `npm run test:e2e` — so the 180/180 above still describes `35a11b7`, not this commit. A slow-but-answering
+  Overpass service (the 75 s shared-deadline path) was not measured, and the standing unverified list is
+  unchanged: real phones/touch, Safari/WebKit, microphones and noise, audible read-aloud, independent
+  agronomic review, live Overpass availability. Nothing was deployed, main is untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

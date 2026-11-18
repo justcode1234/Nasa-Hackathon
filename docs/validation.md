@@ -1246,3 +1246,188 @@ real Chrome (AW BL CC CW CX EH FK GI GS MF NU PN SG SX TC VA VG plus the whole-c
 `docs/validation.md` "Not verified here either" of that earlier section should be read with this
 correction.
 
+## 18 November 2026 - improvement loop on the probe and chat layer, and one measured nine-second stall
+
+### Why this step
+
+The user asked for a loop: find one evidence-backed improvement, make the smallest honest fix, re-run the
+relevant checks, record the executed numbers. Eight passes followed the 180-case gate on `35a11b7`. Each
+item below names what was measured before the change, so the fix is a response to evidence rather than to
+taste.
+
+### 1. The picker and the chat were checked in the wrong engine
+
+`scripts/country-spelling-cross-engine-probe.mjs` compared Node-generated spellings inside Chrome, but the
+guarantee a farmer depends on is that the wording the step-1 dropdown *shows* is a wording the chat
+accepts, and those `<option>` labels come from the browser's own `Intl` table
+([public/js/modules/context.js:13](../public/js/modules/context.js)). The probe now reads the live labels
+out of the rendered DOM and feeds each one to the page's own `findCountries`. Executed on the built
+bundle: **250 codes, 773 spellings, 0 unrecognised in Chrome, 250 picker options checked, 0 labels the
+chat rejects** (`artifacts/final-quality/picker-parity-probe-2026-11-18.log`); the four lines under
+`chromeOwnSpellingNotInNodeList` are Chrome printing its own name, which is context, not a gap.
+
+### 2. Every probe now refuses to measure a stale bundle
+
+The browser probes talk to whatever answers on port 4575. After a source edit, an old `dist/client` would
+have been reported as the new app, so `scripts/lib/probe-app.mjs` starts the static preview itself when the
+port is free and refuses to run when `dist/client` is older than `public/` or `server/` unless
+`PROBE_ALLOW_STALE=1`. Verified by touching `public/js/lib/countries.js` and re-running a probe (refused,
+with the reason printed), then clearing it with `npm run build`. Three probes now share it, so the guard
+cannot be forgotten in a new one.
+
+### 3. The chat silently dropped the button that was the only way out
+
+`public/js/modules/chat.js` rendered `followUps.slice(0, 6)` while the workflow assistant bounds its own
+offers lower than that, so nothing was being cut today - but the day an offer grew, the last choice would
+have vanished from the screen while still being described in the sentence, which is the same defect class as
+the Singapore escape button that was invisible at three. The cap is gone; the widest offer across the whole
+matrix was measured at **4 choices** and is now pinned offline
+([tests/matrix-coverage.test.js](../tests/matrix-coverage.test.js)) with an assertion that no reply ever
+offers more than six. Re-validated after the change: `npm test` **186/186, 0 skipped**, `npm audit`
+**0 vulnerabilities**, the 34-session browser walk **34 cases, 0 failures, 0 page errors**, and the
+four-project Playwright chat slice **68 passed, 0 failed (5.4 min)**
+(`artifacts/final-quality/chat-place-after-uncap-2026-11-18.log`,
+`artifacts/final-quality/e2e-chat-after-uncap-2026-11-18.log`).
+
+### 4. A point is a pair of coordinates, not one of them
+
+Both browser walks compared only `#latitude`. Two saved towns can share a name, a region and a rounded
+latitude, so a wrong point could have passed. Both scripts now read `#longitude` as well and require both
+axes to match one saved row (`chat-place-probe.mjs` at 0.01°, `chat-place-matrix-probe.mjs` at 1e-4).
+Re-run with the pair check: **34 sessions, 0 failures, 0 page errors**
+(`artifacts/final-quality/chat-place-pair-check-2026-11-18.log` via the task log). The first matrix
+subset run of this pass printed **12 crashes**; that was the probe being edited while it ran, not the app,
+and it is recorded here because a probe that crashes loudly is doing its job.
+
+### 5. The buttons now say which level they select, and the five list-less codes are walked
+
+The matrix walk used to guess whether a reply was asking for a region or a town by matching its sentence.
+That guessing produced 17 false defects earlier, and "Andorra la Vella" is both a parish and a town, so the
+app now stamps every choice button with `data-choice-type` (town / region / farm / follow-up) and names the
+group for a screen reader as "Choose one of these to continue planning" when the buttons are the only way
+to answer ([public/js/modules/chat.js:150-166](../public/js/modules/chat.js)). The walk taps by button
+position and kind instead of by text. It also walks the five supported codes with no saved place list
+(AQ BV HM IO UM) as its own terminal state, because requiring a town point there was never meaningful:
+executed **5 cases, 5 explained whole-country replies, 0 defects**. A 17-code subset through the rewritten
+walk printed **16 real town points, 0 page errors, 1 defect** - the defect being the walk itself assuming
+every code has a list, which is what the previous sentence fixed. `tests/e2e/chat-only-flow.spec.js` now
+also asserts the attribute exists and holds a known kind on every button it taps, so the contract the walks
+depend on cannot rot silently; that assertion has not been run in Playwright yet and is listed below.
+
+### 6. A nine-second wait before "the services are unavailable"
+
+Adding the latency stamp to the walk (`window.fieldshiftAnswerLatencyMs`, previously read only by the LM
+benchmark) made the guided place step's responsiveness measurable instead of assumed. The first census
+found the pattern immediately: the answer to a **town** tap took **9042 ms (US · Acton)** and
+**9038 ms (AD · Canillo)** while every other step answered in tens of milliseconds. One traced session
+showed the status line reading "Step 1: finding community-mapped fields near the town…" from 125 ms to
+9187 ms, with all three Overpass services refusing the request within **60 ms** of each other
+(`artifacts/final-quality/latency-diag-2026-11-18.log`). The hedge in
+[server/context/farms.js](../server/context/farms.js) retried every service through its backoff ladder
+(3 s + 6 s) whatever the failure was, so a farmer with no route to those services waits the full ladder to
+be told they are unavailable. `server/context/client.js` now records whether the service answered at all
+(or was merely slow), and the hedge stops retrying an endpoint it cannot reach while still giving a busy or
+slow one its ladder. Measured after the change, same session, same blocked services: the town tap answers
+in **56 ms** (was 9050 ms) with the same coordinates in the form and the same honest notice
+(`artifacts/final-quality/latency-diag-after-fix-2026-11-18.log`). The durable test that had pinned the old
+cost - `assert.equal(failures, 9, 'each of three services gets three attempts with backoff')` - was
+replaced, not deleted: it now requires each of the three services to be attempted, the outage to be
+reported in under 100 ms, and a *mixed* outage (one unreachable, one busy-then-recovered) to still retry
+the busy service three times and the unreachable one once. Executed: `node --test tests/context.test.js`
+**11/11**, `npm test` **186/186, 0 failed, 0 skipped**, `npm audit` **0 vulnerabilities**
+(`artifacts/final-quality/unit-farms-latency-2026-11-18.log`).
+
+### 7. The whole matrix, walked again on the fixed code
+
+`npm run test:chat-matrix` over **every supported code** - the 245 with a saved place list and the five
+without - driving only the buttons the assistant itself offers, tapping by position and by the level each
+button declares: **250 cases, 245 plans carrying a saved town point (both coordinates matching the row),
+5 explained whole-country replies, 0 defects, 0 page errors**
+(`artifacts/final-quality/chat-matrix-full-2026-11-18.log`). The same pass is the latency census for the
+guided place step: **977 answers, p50 19 ms, p95 47 ms, max 156 ms**, the slowest being a first question
+(US, 156 ms). Nothing in the flow now approaches the 9 s the trace above caught, and the number is a
+measurement over every country rather than one benchmark machine.
+
+### 8. A field service that answers late, measured and taken out of the chat path
+
+The section 6 fix covered services this client *cannot reach*. The sentence left there open - "a service
+that accepts the connection and then answers slowly is a different path, bounded by the 75 s shared
+deadline, and is not what was measured here" - was then measured directly against
+`createFarmClient` with a stub that holds the connection and never answers:
+
+* stub ignoring the caller's abort signal: **105,029 ms**, 6 attempts across 3 services
+  (`docs/evidence/farms-hanging-unreachable-2026-11-18.log.gz`);
+* stub honouring it the way `fetch` does: **75,016 ms** for the same 6 attempts
+  (`docs/evidence/farms-hanging-service-deadline-2026-11-18.log.gz`).
+
+The second figure is the one a farmer would see, and it matches the server's own `deadlineMs` exactly, so
+the hedge does bound the wait. What it does not bound is the chat: tapping a town button ran
+`await run('loadFarms')` in [public/js/modules/workflow-assistant.js](../public/js/modules/workflow-assistant.js)
+*before* replying, so for those 75 s the panel sat on "Step 1: finding community-mapped fields near the
+town…" with Send disabled - even though the town point had already been saved one line earlier.
+
+The guided path now waits for the lookup for at most `fieldsGraceMs` (default 10 s) and then answers:
+the reply confirms the selected town point, says the field services have not answered yet and that nothing
+was invented, and offers the two real way-ons `Use selected point` and `Show mapped fields`. The field
+answer itself is not lost - the same request is kept in flight and a second ask joins it instead of adding
+another hanging request to a shared community service; the plan's own invalidation drops it. Step 1 keeps
+its own full-deadline search and its `up to a minute when busy` notice, which is the right budget for the
+button a farmer chose deliberately.
+
+Driving that change also exposed a second, smaller defect: the retry sentence `Show mapped fields around
+this point` carries none of the verbs in the workflow's intent list, so it fell out of the guided path at
+the place-reply check and the chat answered it with a generic evidence reply instead of the fields. The
+field request is now itself counted as farmer input in `hasInput`, so the typed sentence and the button do
+the same thing.
+
+Executed: `node --test tests/workflow-place-choices.test.js` **26/26** (the new case asserts a town tap
+under a never-answering service replies in well under the deadline, keeps `#latitude`, offers both
+way-ons, claims no field count, and that the retry opens no second request); `npm test` **187/187, 0
+failed, 0 skipped (55.7 s)** (`docs/evidence/unit-187-field-grace-2026-11-18.log.gz`); `npm audit` **0
+vulnerabilities**. The browser counterpart is
+[tests/e2e/field-service-latency.spec.js](../tests/e2e/field-service-latency.spec.js), which hangs every
+field request through `context.route`, ran **4 passed (1.5 m)** - one case per project, each completing the
+tap-and-retry flow in about 21 s of wall time including the page load, i.e. inside the two 10 s graces the
+flow crosses rather than inside a 75 s deadline
+(`docs/evidence/e2e-field-service-latency-2026-11-18.log.gz`). Its first two runs failed on the test side,
+not the app: a browser cannot tell the chat's own re-ask apart from the hedge legitimately starting a
+second service after 6 s and a third after 12 s, so the request-count check lives in the offline test where
+it is deterministic and the browser case asserts only what a farmer sees.
+
+### 9. Making the branch reproducible from another device
+
+The improvement loop had recorded its results in `artifacts/` paths that are
+gitignored, so an agent cloning this branch on another machine could read the claims
+but could not re-run or even see them. Added
+[handoff-2026-11-18.md](handoff-2026-11-18.md): the branch and `main` commits, the
+Node/Playwright/Chrome versions the numbers were produced on, the command list with
+measured durations, the probe environment variables, the chat DOM contract the three
+probes and the e2e specs navigate by, the source-data census (245 lists / 250 codes,
+18 unnamed-region lists, 7 eponymous towns, 11 region-name collisions, 5 list-less
+codes), the invariants each past defect paid for, the loop queue, and the rule that
+`artifacts/**` is local while `docs/evidence/*.gz` is the durable copy. It is linked
+from AGENTS.md §10, [docs/README.md](README.md) and the [development
+guide](development.md), whose "Additional checks" list was missing all four probe
+scripts added by this branch.
+
+Executed: `node scripts/check-documentation.js` **117 local links, 0 broken**;
+`npx playwright test --list` **Total: 184 tests in 17 files** (180 plus the four new
+field-latency cases); `npm test` after the documentation edits **187/187, 0 failed, 0
+skipped (55.7 s)**. There is no CI in this repository, so no number above is anything
+other than a locally executed command.
+
+### Not yet executed at the time of writing
+
+* A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
+  changed since (`chat.js`, `farms.js`, `client.js`, `workflow-assistant.js`), so 180/180 must not be
+  quoted for the current commit until it is re-run. The chat-heavy slice that does cover the
+  `data-choice-type` contract ran separately: **80 passed, 0 failed (6.0 min)** across all four projects
+  (`docs/evidence/e2e-chat-slice-choice-type-2026-11-18.log.gz`).
+* Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
+  audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
+  that can actually reach it - the section 6 fix is measured against refused connections, which is the
+  failure mode a blocked or offline farmer sees. The answer-but-late path is now measured and bounded in
+  section 8, but only against a stub, never against a real overloaded Overpass instance.
+
+
+

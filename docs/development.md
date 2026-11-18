@@ -54,9 +54,21 @@ npm run test:browser
 npm run test:node-browser
 npm run test:firefox
 npm run test:qa
+npm run test:place-audit        # offline census of every saved place row (scripts/audit-matrix.js --deep)
+npm run test:chat-matrix        # walks every supported code through chat buttons in real Chrome
+npm run test:chat-place         # one country, detailed place checks
+npm run test:country-spelling   # this engine's country spellings against Chrome's recognition module
 node scripts/check-sourced-context.js
+node scripts/check-documentation.js   # add --external to also GET the public URLs
 node scripts/benchmark-mini-lm.js
 ```
+
+The probes serve the built app themselves and refuse a bundle older than `public/` or
+`server/`, so run `npm run build` first if you have edited either. `PROBE_PORT`,
+`PROBE_WORKERS`, `PROBE_CODES` and `PROBE_ALLOW_STALE` configure them; they need
+installed Chrome and never send a write to an external service.
+[Branch handoff](handoff-2026-11-18.md) lists the exact commands, durations and
+contracts the current chat/place work depends on.
 
 See [Playwright coverage](playwright.md), [original QA prompts](qa-regression.md),
 [validation history](validation.md), and the [repository review](submission-accuracy-review.md)
