@@ -54,12 +54,27 @@ export function parseWorkflowMessage(question, active = false) {
   };
   const hemiLat = hemi('[NS]');
   const hemiLon = hemi('[EW]');
-  const writtenTogether = hemiLat && hemiLon
-    && /^[\s,;]*(?:and[\s,;]*)?$/i.test(hemiLat.end <= hemiLon.start
-      ? question.slice(hemiLat.end, hemiLon.start) : question.slice(hemiLon.end, hemiLat.start));
+  const hemiGap = hemiLat && hemiLon ? (hemiLat.end <= hemiLon.start
+    ? question.slice(hemiLat.end, hemiLon.start) : question.slice(hemiLon.end, hemiLat.start)) : null;
+  const writtenTogether = hemiGap != null && /^[\s,;]*(?:and[\s,;]*)?$/i.test(hemiGap);
   const latLabel = /\blat(?:itude)?\s*[:=]?\s*(-?\d{1,3}(?:\.\d+)?)/i.exec(question);
   const lonLabel = /\blon(?:g|gitude)?\s*[:=]?\s*(-?\d{1,3}(?:\.\d+)?)/i.exec(question);
-  const tagged = writtenTogether && (hemiLat.part || hemiLon.part)
+  const pairStart = hemiLat && hemiLon ? Math.min(hemiLat.start, hemiLon.start) : -1;
+  const leadIn = pairStart < 0 ? '' : question.slice(0, pairStart);
+  // A pin copied as whole degrees ("what can I grow at 37N 127E") carries neither a fraction nor a degree mark, so
+  // it fell to the `(part || part)` test below and the farmer was told to supply coordinates they had just
+  // supplied - the first limit iteration 30 recorded and left open (`docs/handoff-2026-11-18.md:459-466`). Trusting
+  // every fractionless pair instead invented a pin on 8 of 9 agronomy sentences measured on a scratch copy
+  // ("blend 4N 15E for the field" among them: latitude 4, longitude 15, in the Central African Republic). What a
+  // copied point has and a product grade does not is its lead-in: a location word stands in front of it
+  // ("at 37N 127E", "the point is 33S 70W"), or nothing stands in front of it, because the answer to "enter your
+  // farm coordinates" is the pair alone. Two older rules are untouched and still do the refusing: a pair joined by
+  // the word "and" is a list of two measurements ("seed rate 4 N and 2 E per kg"), and prose between the tags is
+  // prose ("use 4N fertilizer on the 15E slope"). Residual: a grade that opens a clause after a colon is still read
+  // as a point, asserted as measured in tests/workflow-assistant.test.js.
+  const tagged = writtenTogether && (hemiLat.part || hemiLon.part
+    || /\b(?:at|near|around|coordinates?|gps|point|place|latitude|longitude|lat|lon)\b(?:\s+is)?\s*$/i.test(leadIn)
+    || /(?:^|[.?!;:])\s*$/.test(leadIn))
     ? { latitude: hemiLat.sign === 'S' ? -hemiLat.value : hemiLat.value, longitude: hemiLon.sign === 'W' ? -hemiLon.value : hemiLon.value }
     : latLabel && lonLabel ? { latitude: Number(latLabel[1]), longitude: Number(lonLabel[1]) }
     : null;

@@ -930,6 +930,44 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 36 — a coordinate copied as bare whole degrees was refused because nothing in it
+  looked like a number.** Iteration 30's first recorded limit (`docs/handoff-2026-11-18.md:459-466`) was that
+  "what can I grow at 37N 127E" returned no location, so step 1 asked the farmer to repeat coordinates they had just
+  typed. `hemi()` reports `part` only for a fraction or a `°` (`public/js/modules/workflow-assistant.js:49-54`) and the
+  hemisphere route required `hemiLat.part || hemiLon.part` (`:75`), so a whole degree matched no pattern at all. Corpus
+  before: **10 of 27 shapes returned `null`** (`docs/evidence/whole-degree-probe-before-2026-11-18.log.gz`). Dropping
+  the requirement outright was measured first and rejected: it invented a pin on **8 of 9** agronomy sentences
+  ("blend 4N 15E for the field" → 4, 15, Central African Republic; `…-risk-nogate-…`), and the side-by-side variant that
+  refuses only pairs joined by "and" on **8 of 9 as well** while losing "37N and 127E" itself, 26 of 27 corpus shapes
+  either way (`…-risk-adjacency-…`, `…-corpus-adjacency-…`, `…-corpus-ungated-…`). What landed is a lead-in gate: a location
+  word immediately in front of the pair (`at`, `near`, `around`, `coordinate(s)`, `gps`, `point`, `place`,
+  `latitude`/`longitude`/`lat`/`lon`, optional `is`) or nothing in front of it, which is the answer to "enter your farm
+  coordinates"; the two older refusals (prose between the tags, "and" between the tags) are untouched. Corpus after
+  **27 of 27** as expected, 19 of 27 producing a location against 9 of 27 before (`…-probe-after-…`); agronomy risk
+  after **1 of 9** (`…-risk-after-…`). `tests/workflow-assistant.test.js` gains one test with 6 must-resolve and 4
+  must-refuse forms and cites the handoff lines it closes: **30 pass, 1 fail** before the module change (`+ null` on
+  `the recorded defect: a whole-degree pin returned no location`, `…-guard-before-…`) and **31 pass, 0 fail** after
+  (**10,128 ms**, `…-guard-after-…`); with the lead-in line deleted from a scratch copy and the
+  assertions untouched the same file still scores **30 pass, 1 fail**, failing at `blend 4N 15E for the field`
+  / `+ { latitude: 4, longitude: 15 } - null` (`…-guard-control-ungated-…`, and identically for the adjacency variant,
+  `…-guard-control-adjacency-…`) - the refusals are what make the passing case mean something. No assertion was rewritten because the pre-change tree `72f6302` holds **0** bare
+  adjacent whole-degree pairs in `tests/` and **0** hemisphere-tagged numbers in `docs/qa`, with a positive control of 2
+  degree-mark coordinates the same grep style finds, so no message that worked before changes answer
+  (`…-corpus-scan-…`). Two findings recorded rather than smoothed over: iteration 30's own example sentence still parses
+  to `null` because "what can I grow …" is not read as a workflow command at all — the `°` and fraction versions of that
+  sentence are refused identically while "Help me plan a rotation at 37N 127E in South Korea" resolves to 37, 127 with KR
+  — so `docs/validation.md:2312` is annotated with a pointer instead of being claimed fixed, and chat (which
+  `workflow-assistant.js:20-21` hands such a sentence to) sends `state.inputs` and never reads a pin out of the question
+  (`public/js/modules/chat.js:96`), registered as iteration 37 candidate 3; and a bare pair opening a clause after a
+  colon is still read as a point ("Note: 4N 15E blend on the field" → 4, 15), which the new test asserts as measured so
+  nobody can later call it fixed. `npm run build` exit 0 with the gate in `dist/client`; `npm test` **216/216, 0 failed
+  (32,505 ms)**, one more test than iteration 35's 215, and **216/216, 0 failed (32,541 ms)** re-run after the
+  documentation landed so the guard could check its own new evidence paths
+  (`docs/evidence/whole-degree-npm-test-final-2026-11-18.log.gz`); `--list` unchanged at **208 tests in 20 files**; `workflow` +
+  `chat-only-flow` + `help-and-explanations` slice **60 passed, 0 failed (2.5 m)**; full gate **202 passed, 0 failed, 6 skipped (21.8 m)**, exit 0 (`…-gate-…`), the first clean 208-case run since
+  `72f6302`, whose lone `field-terrain` failure re-passed in isolation (subsection 34). Nothing
+  was deployed, main is untouched (`4a54fa3`), no NASA portal edit, no dependency added.
+
 - **19 Nov, same branch: iteration 35 — the citation that reproduced a rainfall number was discarded because two
   paragraphs shared its id.** The defect subsection 33 found and left open: the weather paragraph cites
   `nasa-power` and pushes the **assembled POWER request** under it (`public/js/lib/chat-context.js`), the reply's own

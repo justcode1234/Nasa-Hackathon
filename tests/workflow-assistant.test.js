@@ -120,6 +120,34 @@ test('a coordinate written with hemisphere letters or lat/lon labels is placed',
   assert.equal(at('a field 40 km north of town'), null, 'a direction word is not a hemisphere tag');
 });
 
+// Iteration 30 fixed the hemisphere letters and the lat/lon labels but recorded three limits it left open
+// (docs/handoff-2026-11-18.md:459-466); this test closes the first. A pin copied as bare
+// whole degrees ("37N 127E") carries neither a fraction nor a degree mark, so the hemisphere route refused it and
+// the farmer was told to supply coordinates they had just supplied: 10 of 27 corpus shapes measured on the module
+// returned no location at all, and all 10 are the same writing style. What keeps the widening honest is the
+// lead-in. A coordinate is introduced by a location word ("at 37N 127E", "the point is 33S 70W") or starts the
+// clause it is written in; an agronomy grade is introduced by the product's name ("blend 4N 15E for the field").
+// Trusting every fractionless pair instead put a pin on 8 of 9 such sentences, so the four refusals below are the
+// control that catches that half-fix, not decoration. Nothing in the pre-change repository's own question strings
+// writes a bare pair at all - 0 hits in tests/ and 0 in docs/qa, where the same grep finds 2 degree-mark
+// coordinates - so the change moves no existing message.
+test('a coordinate written as bare whole degrees is placed when something introduces it', () => {
+  const at = tail => parseWorkflowMessage(`Help me plan a rotation in India. Crops: rice, cabbage, tomato. ${tail}`)?.location ?? null;
+  assert.deepEqual(at('what can I grow at 37N 127E'), { latitude: 37, longitude: 127 }, 'the recorded defect: a whole-degree pin returned no location');
+  assert.deepEqual(at('at 18N 73E'), { latitude: 18, longitude: 73 });
+  assert.deepEqual(at('the point is 33S 70W'), { latitude: -33, longitude: -70 }, 'S and W still set the sign');
+  assert.deepEqual(at('18N, 73E'), { latitude: 18, longitude: 73 }, 'a pair opening the clause after the sentence break');
+  assert.deepEqual(at('127E 37N'), { latitude: 37, longitude: 127 }, 'the pair may still be written east first');
+  assert.deepEqual(parseWorkflowMessage('18N 73E', true)?.location, { latitude: 18, longitude: 73 }, 'the reply to "enter your farm coordinates" is the pair alone');
+  assert.equal(at('use 4N fertilizer on the 15E slope'), null, 'prose between the tags is still prose');
+  assert.equal(at('blend 4N 15E for the field'), null, 'a grade named by the word in front of it is not a pin');
+  assert.equal(at('apply 40N 20E before sowing'), null, 'a treatment plan is not a point');
+  assert.equal(at('seed rate 4 N and 2 E per kg'), null, 'two whole-degree rates joined by "and" are a list');
+  // Recorded limit, asserted as measured so nobody can later describe it as fixed: a bare pair that opens a clause
+  // after a colon has the same lead-in shape as a coordinate answer that opens one, so it is still read as a point.
+  assert.deepEqual(at('Note: 4N 15E blend on the field'), { latitude: 4, longitude: 15 }, 'measured limit: a clause-initial grade is still read as a pin');
+});
+
 test('explicit country, coordinates and farmer crops execute through step 4 in order', async () => {
   const { assistant, calls, state } = setup();
   const answer = await assistant.respond('Help me plan a rotation in India at 18.52, 73.85. Crops: rice, wheat, beans. Rainfed');

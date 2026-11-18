@@ -2309,7 +2309,7 @@ to resolve changes value.
 | `at 23,55 S, 46,63 W` | none, and **23, 55 with the first letter rule** | -23.55, -46.63 |
 | `use 4N fertilizer on the 15E slope` | none | none |
 | `apply 20.5 N per hectare and 12.4 E of lime` | none | none |
-| `what can I grow at 37N 127E in South Korea` | none | none — whole degrees with no `°` are still refused |
+| `what can I grow at 37N 127E in South Korea` | none | none — whole degrees with no `°` are still refused **(still `none` today, but the reason is the command detector, not the degrees: see subsection 35)** |
 | `I am at 37°N 127°E` | none | 37, 127 |
 
 The middle column of the last two decimal-comma rows is this iteration's own defect and is why the shipped rule
@@ -2708,6 +2708,112 @@ Measured limits of this iteration, none of them claimed as coverage:
   `public/js/lib/core-worker-entry.js:3` passes none) but unexercised.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise, audible
   read-aloud quality, independent agronomic review, and live Overpass availability from a network that can reach it.
+
+### 35. A coordinate copied as bare whole degrees was refused because nothing in it looked like a number
+
+Iteration 30 closed the hemisphere letters and the `lat`/`lon` labels and recorded three limits it did not close
+(`docs/handoff-2026-11-18.md:459-466`). The first is the one a farmer hits when they copy a pin off a map app that
+shows integers: "what can I grow at 37N 127E" returned no location at all, so step 1 asked them for the coordinates
+they had just typed. Measured on `public/js/modules/workflow-assistant.js` at `72f6302`, **10 of 27** corpus shapes
+returned `null` and every one of them is this single writing style
+(`docs/evidence/whole-degree-probe-before-2026-11-18.log.gz`: `what can I grow at 37N 127E`, `at 18N 73E`,
+`the point is 33S 70W`, `18N, 73E`, `37N; 127E`, `127E 37N`, `at 37N 127E with rice`, the same pair joined by "and",
+and the bare pair as a standalone reply to the step-1 question).
+
+The cause is one boolean. `hemi()` (`public/js/modules/workflow-assistant.js:49-54`) reports
+`part: Boolean(found[2] || found[3])`, which is true only when the number carried a fraction or a `°`, and the route
+that turns a tagged pair into a point asked for `hemiLat.part || hemiLon.part` (`:75`). A whole degree satisfies
+neither, so `37N 127E` fell through to the comma-pair patterns, matched none of them, and produced no location.
+Nothing was invented on the way — the app simply refused — but a refusal that asks a farmer to repeat what they just
+typed is the same failure iteration 30 wrote its nine-spelling test for.
+
+Refusing the boolean rather than gating it is what needed measuring, because `N` and `E` also carry dose and gradient
+meanings in this domain, and inventing a pin is the worst failure class this loop has found (subsections 28-33). Two
+wider rewrites were measured on scratch copies of the module before the landed gate was accepted:
+
+* dropping the `part` requirement altogether (`writtenTogether` alone, `hemi()` and the gap test untouched) put a pin
+  on **8 of 9** agronomy sentences — `docs/evidence/whole-degree-risk-nogate-2026-11-18.log.gz`, where "blend 4N 15E
+  for the field" → latitude 4, longitude 15, in the Central African Republic;
+* allowing a fractionless pair whenever the two tags sit side by side, refusing only the pairs joined by the word
+  "and", put a pin on **8 of 9 as well** — `docs/evidence/whole-degree-risk-adjacency-2026-11-18.log.gz` — measured
+  because "4N 15E" is side by side just as "37N 127E" is. Excluding "and" bought nothing on the grade sentences and
+  cost a genuine coordinate writing style: that variant answers **26 of 27** corpus shapes instead of 27 because
+  "what can I grow at 37N and 127E" goes back to `null`
+  (`docs/evidence/whole-degree-corpus-adjacency-2026-11-18.log.gz`), while the ungated rule scores 26 of 27 the other
+  way, inventing latitude 4, longitude 2 for "seed rate 4 N and 2 E per kg"
+  (`docs/evidence/whole-degree-corpus-ungated-2026-11-18.log.gz`).
+
+What a copied point has and a product grade does not is its lead-in, so the landed gate asks for one: a location word
+standing immediately in front of the pair (`at`, `near`, `around`, `coordinate(s)`, `gps`, `point`, `place`,
+`latitude`/`longitude`/`lat`/`lon`, with an optional `is`) or nothing standing in front of it at all, because the pair
+either opens the message — that is the answer to "enter your farm coordinates" — or opens the clause it is written in
+(`public/js/modules/workflow-assistant.js:62-63, 75-79`). Two older refusals are untouched and still do most of the work:
+prose between the tags is prose, and a pair joined by the word "and" is a list of two measurements. The corpus went
+**17 of 27 as expected before the line and 27 of 27 after**, with 19 of 27 producing a location against 9 of 27 before
+(`docs/evidence/whole-degree-probe-after-2026-11-18.log.gz`), and the agronomy risk set fell from 8 of 9 invented pins
+to **1 of 9** (`docs/evidence/whole-degree-risk-after-2026-11-18.log.gz`).
+
+`tests/workflow-assistant.test.js` gains `a coordinate written as bare whole degrees is placed when something
+introduces it`, asserting 6 forms that must resolve and 4 that must not. Run against the unfixed module first:
+**30 pass, 1 fail** with `the recorded defect: a whole-degree pin returned no location` / `+ actual - expected /
++ null` (`docs/evidence/whole-degree-guard-before-2026-11-18.log.gz`). With the gate: **31 pass, 0 fail**
+(`docs/evidence/whole-degree-guard-after-2026-11-18.log.gz`). The four refusals are what makes the passing case mean
+something rather than merely wider: with the lead-in line deleted from a scratch copy of the module and every
+assertion left exactly as committed, this file still scores **30 pass, 1 fail**, and the one failure is inside the new
+test at `blend 4N 15E for the field` / `+ { latitude: 4, longitude: 15 } - null`
+(`docs/evidence/whole-degree-guard-control-ungated-2026-11-18.log.gz`); the adjacency variant produces the identical
+result (`docs/evidence/whole-degree-guard-control-adjacency-2026-11-18.log.gz`). The refusals, not just the
+resolutions, are what the file pins. No assertion
+elsewhere needed rewriting, and the scans say why: on the pre-change
+tree `72f6302` a `git grep` over `tests/` finds **0** bare adjacent whole-degree pairs and `docs/qa` holds **0**
+hemisphere-tagged numbers — with a positive control, since the same grep style finds 2 degree-mark coordinates in
+`tests/` — so no message that worked before changes answer
+(`docs/evidence/whole-degree-corpus-scan-2026-11-18.log.gz`).
+
+Two findings are recorded rather than smoothed over.
+
+* The exact sentence in iteration 30's table (`docs/validation.md:2312`, "what can I grow at 37N 127E in South Korea")
+  still parses to `null`, and not because of this gate: the same sentence written with `°`, and written with fractions
+  (`37.5N 127.5E`), also parse to `null`, while "Help me plan a rotation at 37N 127E in South Korea" resolves to
+  latitude 37, longitude 127 with country KR. The activation test at `public/js/modules/workflow-assistant.js:20-21`
+  returns `null` unless the message carries an intent verb (`help me`, `plan`, `pick`, `find`, …) next to a farm word
+  or a country, and "what can I grow …" has none — so that table row blamed whole degrees for a refusal whose real
+  cause is the command detector, and the row is annotated with a pointer instead of being claimed fixed. The route that
+  does answer such a sentence is chat, and chat never looks for a pin in the question: `public/js/modules/chat.js:96`
+  posts `{ …state.inputs, selectedCountry, chatContext, question }`, so the place sent to `/api/ask` is the one already
+  chosen in state (empty on a fresh launcher), and `public/js/lib/chat-context.js:22` reads `question` only for topic
+  words. Reading a place out of the sentence is not some unavailable trick either - `server/agronomy/answers.js:23-24`
+  already calls `findCountries(question)` to warn when the question names a country other than the selected one - it is
+  only coordinates that go unseen. A farmer who types "what can I grow at 37N 127E" into the assistant is therefore
+  answered about a place they never selected while the pin in their own sentence is discarded. That is registered as the
+  next candidate, not fixed here.
+* A bare pair that opens a clause after a colon is still read as a point ("Note: 4N 15E blend on the field" →
+  latitude 4, longitude 15; the 1 of 9 above). It has the same lead-in shape as a coordinate answer that opens a
+  clause, so no lead-in rule separates the two; the new test asserts the wrong answer as measured, so nobody can later
+  describe it as fixed. A rule that did separate them would have to know that `15E` after `4N` is a grade, which is
+  agronomic vocabulary the parser does not have and this loop will not invent.
+
+`npm run build` exit 0 with `pairStart` present in `dist/client`
+(`docs/evidence/whole-degree-build-2026-11-18.log.gz`); offline `npm test` **216 pass, 0 fail (32,505 ms)**, one more
+test than iteration 35's 215 (`docs/evidence/whole-degree-npm-test-2026-11-18.log.gz`), then re-run once the
+documentation existed so the guard could check its own new evidence paths: **216/216, 0 failed (32,541 ms)**
+(`docs/evidence/whole-degree-npm-test-final-2026-11-18.log.gz`). The repeat is needed rather than cosmetic:
+`tests/documentation-commands.test.js` fails the suite when a doc names a `docs/evidence/...` path that does not
+exist, so the order is archive, document, run again; `npx playwright test --list`
+unchanged at **208 tests in 20 files**; the `workflow` + `chat-only-flow` + `help-and-explanations` slice **60 passed,
+0 failed (2.5 m)** (`docs/evidence/whole-degree-e2e-slice-2026-11-18.log.gz`); full gate **202 passed, 0 failed, 6 skipped (21.8 m)**, exit 0
+(`docs/evidence/whole-degree-gate-2026-11-18.log.gz`) - the first clean gate since `72f6302`,
+where the same 208-case run came out 201 passed, 1 failed, 6 skipped and the lone `field-terrain` failure re-passed in
+isolation (subsection 34), and the second clean 208-case gate after `02fb867`'s 202 passed, 6 skipped, 0 failed. The 6
+skips are the documented `worker`-transport cases, unchanged.
+
+The reproduction is one command (`node artifacts/iter36-coordinate-probe.mjs`, whose corpus is reproduced verbatim in
+the archived log; `artifacts/` is gitignored and the documentation guard deliberately skips it, so the log rather than
+the script is the durable record), and the measurement costs seconds against the minutes a gate costs. **The habit that
+made this fixable is: when the requirement is a boolean that a legitimate writing style cannot satisfy, do not widen
+it before measuring what the domain vocabulary does with the loosened rule.** Here the tempting one-line change
+(`part || part` → nothing) was the single most damaging candidate of the three, and the corpus probe existed before
+any line was edited, so the number that killed it was measured rather than argued.
 
 ### Not yet executed at the time of writing
 
