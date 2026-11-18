@@ -2022,10 +2022,15 @@ shows `["Diamondback moth"]` for the crucifer plan and `["Fall armyworm"]` uncha
 uncovered cereal plan (`docs/evidence/chat-pest-crop-probe-after-2026-11-18.log.gz`). `npm test` reports
 **203 tests, 203 pass, 0 fail, 0 skipped (38,335 ms)**
 (`docs/evidence/chat-pest-crop-npm-test-2026-11-18.log.gz`) and `npm audit` **0 vulnerabilities**. The
-duration is inflated and the browser slice is not yet run on this tip: a local Python job held four workers
-at ~260 % CPU each (load average 9.9–11.3) while this was measured, and a rendered-panel run under that load
-would produce numbers that cannot be quoted (subsection 19 records exactly that pattern). The chat slice and
-the 196-case gate for this tip are recorded as owed below.
+duration is inflated because the same local Python job held four workers at ~260 % CPU each (load average
+9.9–11.3) while it was measured; a rendered-panel run under that load would produce numbers that cannot be
+quoted (subsection 19 records exactly that pattern), so the browser slice was launched by a waiter that polls
+the load average and only starts the suite below 6. It started at **3.97** and reported **64 passed, 0 failed
+(2.6 m)** with exit code 0 (`docs/evidence/chat-pest-crop-e2e-2026-11-18.log.gz`): `chat-only-flow`,
+`assistant`, `help-and-explanations` and `workflow` on all four projects, 16 cases each, the slowest single
+case 9.0 s. The load climbed back above 8 partway through, which is why the per-case durations rather than
+the wall clock are quoted here. Passing this slice does not pay the 196-case gate, which stays owed for this
+tip and is recorded below.
 
 Nothing was deployed, `main` is untouched at `4a54fa3`, and no NASA portal edit was made. Real
 phones, touch, Safari/WebKit, microphones, audible read-aloud quality and independent agronomic
@@ -2060,8 +2065,10 @@ review remain unverified.
 * The full gate belongs to `acb6c96`. Subsections 22 and 23 changed `public/js/lib/chat-context.js`
   afterwards, so the clean **196/196 (19.1 m)** line above must not be quoted for the tip that carries the
   caveat budget and the crop-matched pest record until the suite is re-run there; on the subsection-22 tip
-  only the 52-case chat slice and `npm test` 202/202 are measured, and on the subsection-23 tip only
-  `npm test` 203/203 and `npm audit` so far.
+  only the 52-case chat slice and `npm test` 202/202 are measured, and on the subsection-23 tip
+  `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice recorded above are measured. The
+  remaining 132 cases - the map, farm, terrain, evidence, print and accessibility specs - have not run on
+  either of those two tips.
 * The rendered panel for the two new selection rules. No browser case loads NASA POWER and SoilGrids into
   one session, and none has a pest context loaded beside a radish plan, so the weather-plus-soil advisory
   and the crop-matched pest record are pinned by `tests/chat-context.test.js` and direct-module probes only.

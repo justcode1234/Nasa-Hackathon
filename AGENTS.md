@@ -799,11 +799,13 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   **9 pass, 1 fail** (`a crucifer plan was answered with the maize pest`, `+ 'Fall armyworm' /
   - 'Diamondback moth'`) then **10 pass, 0 fail**; the direct-module probe flips the crucifer plan to
   `Diamondback moth` and leaves the maize and uncovered-cereal plans as they were; `npm test`
-  **203/203, 0 failed, 0 skipped (38,335 ms)** and `npm audit` **0 vulnerabilities**. The chat slice and the
-  196-case gate are owed on this tip: a local Python job held four workers at ~260 % CPU each (load 9.9–11.3)
-  while this was measured, which is the starvation that produced the unquotable tallies in validation.md
-  subsection 19, so the browser runs wait for an idle device rather than adding a third. Nothing was
-  deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+  **203/203, 0 failed, 0 skipped (38,335 ms)** and `npm audit` **0 vulnerabilities**. The browser run waited
+  for an idle device — a local Python job held four workers at ~260 % CPU each (load 9.9–11.3) while this was
+  measured, which is the starvation that produced the unquotable tallies in validation.md subsection 19 — and
+  the waiter started the suite at load **3.97**: **64 passed, 0 failed (2.6 m)**, exit code 0, across
+  `chat-only-flow`/`assistant`/`help-and-explanations`/`workflow` on all four projects (slowest case 9.0 s,
+  `docs/evidence/chat-pest-crop-e2e-2026-11-18.log.gz`). The 196-case gate is still owed on this tip; only
+  these 64 cases were re-run. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
