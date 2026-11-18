@@ -1143,5 +1143,9 @@ Two more assertions turned out to be narrower than the goal requires, and both a
 ### Not verified here either
 
 The same list as the section above: real phones and touch, Safari/WebKit, microphone and read-aloud audio
-quality, independent agronomic review, and live Overpass field discovery.
+quality, independent agronomic review, and live Overpass field discovery. In addition, the seventeen
+region-less lists other than Singapore are proven at the interaction layer through the production
+assistant module offline; only Singapore's equivalent has a browser-level assertion
+(`tests/e2e/help-and-explanations.spec.js`, "Singapore skips unnamed regions"), so a browser-specific
+rendering difference in those seventeen remains unverified.
 
