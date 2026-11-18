@@ -82,15 +82,17 @@ test('a bare-rain question renders the measured rainfall paragraph with its own 
   // The answer's own caveat must survive the estimate arriving beside it: one measured paragraph still leaves
   // room for the limitation, which is what composeAnswerBlocks guarantees.
   expect(seen[1],`the reply dropped the answer's own limitation: ${JSON.stringify(seen)}`).toMatch(/^Rainfed: historical precipitation is context only/);
-  expect(await summary(page)).toBe('Sources (1)');
-  // Measured 18 Nov (UTC), and deliberately pinned here as the behaviour of today rather than as the wanted end
-  // state: the weather paragraph cites its own `nasa-power` entry (the exact POWER request URL that reproduces
-  // the number), but public/js/modules/chat.js appends the context sources *after* the reply's own and
-  // public/js/lib/dom.js:16 resolves an id with `sources.find`, so the first entry with that id wins and the
-  // rendered link is the reply's generic "NASA POWER Daily API" documentation page. One id, two different URLs
-  // = one silently dropped. Recorded as the next iteration's target in docs/handoff-2026-11-18.md; when it lands, this
-  // assertion is rewritten to require observations.source.url and this note replaced by that requirement.
-  expect(await links(page),`the single citation must be the reply's own POWER source`).toEqual([askRain.sources[0].url]);
+  expect(await summary(page)).toBe('Sources (2)');
+  // Required behaviour, replacing what iteration 34 pinned as today's: the weather paragraph used to cite the
+  // registry id `nasa-power` for its own request URL, public/js/modules/chat.js:99 appended that entry after the
+  // reply's own, and public/js/lib/dom.js:16 keeps the first source for an id - so the chip opened the POWER
+  // documentation page and the query that reproduces the quoted number never reached the DOM. The paragraph now
+  // cites two ids and pushes both, so the documentation page the panel already offered keeps linking *and* the
+  // assembled request travels beside it. The old assertion is gone rather than relaxed: this case fails if either
+  // link disappears, which is the half that a distinct id alone could not fix (measured 18 Nov (UTC): citing only
+  // `nasa-power-request` rendered one chip, because the answer paragraph that cites the docs page can be cut by
+  // the three-paragraph cap while the sources list cannot).
+  expect(await links(page),`both the documentation entry and the exact request must be linked`).toEqual([askRain.sources[0].url,observations.source.url]);
   expect(errors).toEqual([]);
 });
 
@@ -109,10 +111,12 @@ test('the SoilGrids advisory travels beside the estimate it qualifies in a mixed
   expect(advisory,'the ISRIC advisory is absent from the rendered reply').toBeGreaterThan(-1);
   expect(seen[advisory-1],`the advisory must follow the estimate it qualifies: ${JSON.stringify(seen)}`).toMatch(/^pH in water: mean/);
   expect(seen[advisory]).toContain('no measured pH, drainage or soil-water capacity is inferred for this field');
-  expect(await summary(page)).toBe('Sources (2)');
-  // Two ids survive in a mixed reply, and the soil one resolves to SoilGrids; the `nasa-power` id is shadowed
-  // exactly as recorded in the first test.
-  expect(await links(page)).toEqual([askRain.sources[0].url,soil.source.url]);
+  expect(await summary(page)).toBe('Sources (3)');
+  // Three ids survive a mixed reply: the POWER documentation entry, the exact request beside it, and SoilGrids for
+  // both the estimate and the advisory that qualifies it. The request URL is asserted here as well as in the bare
+  // case because a busy reply is where the citation used to be lost - the context entries are appended after the
+  // answer's own, so a shared id is the one that disappears.
+  expect(await links(page)).toEqual([askRain.sources[0].url,observations.source.url,soil.source.url]);
   expect(errors).toEqual([]);
 });
 

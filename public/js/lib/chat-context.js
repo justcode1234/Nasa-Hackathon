@@ -36,8 +36,16 @@ export function contextBlocks(question, state, answer) {
       : frost && data.parameters.T2M_MIN ? 'T2M_MIN' : 'T2M';
     const parameter = data.parameters[parameterId], date = parameter.latestAvailableDate;
     const value = date ? parameter.values[data.dates.indexOf(date)] : null;
-    blocks.push({ kind: 'historical weather evidence', text: `${parameter.label}: latest non-missing value inside ${data.period.start} to ${data.period.end} is ${value ?? 'missing'} ${parameter.units} on ${date ?? 'unknown date'}. Regional estimated gridded observation at ${data.location.latitude}°, ${data.location.longitude}°; retrieved ${data.retrievedAt}. It is not current weather, a forecast or a field measurement.`, sourceIds: ['nasa-power'] });
-    sources.push({ id: 'nasa-power', title: 'NASA POWER exact data request', url: data.source.url });
+    blocks.push({ kind: 'historical weather evidence', text: `${parameter.label}: latest non-missing value inside ${data.period.start} to ${data.period.end} is ${value ?? 'missing'} ${parameter.units} on ${date ?? 'unknown date'}. Regional estimated gridded observation at ${data.location.latitude}°, ${data.location.longitude}°; retrieved ${data.retrievedAt}. It is not current weather, a forecast or a field measurement.`, sourceIds: ['nasa-power', 'nasa-power-request'] });
+    // Two entries, two ids, because an id is the only key the panel has: public/js/modules/chat.js:99 appends
+    // these sources after the answer's own and public/js/lib/dom.js:16 resolves an id with `sources.find`, so the
+    // first entry wins - which is how the request URL below was silently discarded while the documentation page
+    // opened instead. Citing the registry id alone would have kept the old single chip; pushing it here under the
+    // URL the payload reports means this paragraph links what it quotes without depending on which of the
+    // answer's own paragraphs survive the three-paragraph cap. Distinct ids are this file's own convention for
+    // one paragraph carrying two sources (`pest.id` / `${pest.id}-host`).
+    sources.push({ id: 'nasa-power', title: 'NASA POWER Daily API', url: data.source.documentationUrl });
+    sources.push({ id: 'nasa-power-request', title: 'NASA POWER exact data request', url: data.source.url });
   }
   if (TOPIC.soil.test(question)) {
     if (state.soil) {

@@ -930,6 +930,64 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 35 — the citation that reproduced a rainfall number was discarded because two
+  paragraphs shared its id.** The defect subsection 33 found and left open: the weather paragraph cites
+  `nasa-power` and pushes the **assembled POWER request** under it (`public/js/lib/chat-context.js`), the reply's own
+  source list carries the same id with the registry's documentation page (`server/agronomy/crops.json:4-7`, filtered
+  into the reply at `server/agronomy/rotation.js:218`, `answers.js:72`, `conversation.js:122`),
+  `public/js/modules/chat.js:99` appends the context entries *after* the reply's own and `public/js/lib/dom.js:16`
+  keeps the first match - so the panel's one chip opened a documentation page that cannot reproduce the number the
+  sentence above it quotes, and `chat.js:108` counts *ids*, so nothing on screen hinted a source had been lost.
+  Scope measured before choosing: replaying that composition over the recorded payloads for all six context branches
+  drops **exactly one** citation (the weather one; `soilgrids`, `abs-irrigation`, `selected-field` and both GBIF pest
+  ids resolve as pushed), the 14 catalog and 7 knowledge server-side ids share **0** entries, and of the 16 recorded
+  QA replies that render a link list **4** cite "NASA POWER Daily API" and **0** cite a request URL
+  (`docs/evidence/citation-shadow-branch-scan-2026-11-18.log.gz`,
+  `docs/evidence/citation-shadow-corpus-scan-2026-11-18.log.gz`). `docs/references.md:60-62,71` promises "the exact
+  data request attached to each result", and the evidence table has always kept that promise
+  (`public/js/modules/data-flow.js:34`) while chat did not. **Two wrong shapes were measured, not argued:** citing
+  only a new id rendered a single chip and *removed* the documentation link, because the answer paragraph citing
+  `nasa-power` can be cut by the three-paragraph cap while the source list cannot
+  (`docs/evidence/citation-shadow-panel-one-id-only-2026-11-18.log.gz`); citing both ids without pushing both broke
+  the existing rule that a paragraph never cites a source the panel cannot link. The landed fix cites
+  `['nasa-power', 'nasa-power-request']` and pushes both - the request from `data.source.url`, the documentation
+  entry from the `documentationUrl` `server/nasa/power.js:87` always sets - which is strictly additive and reuses
+  this file's own two-ids-per-paragraph convention (`:91,95`). Two offline guards are new (the id/URL collision class
+  over six question shapes against the shipped registry, and the weather paragraph's two citations with the request
+  URL differing from the documentation URL so the id can never degrade into a rename): **13 pass / 2 fail before, 15
+  pass / 0 fail after** (`docs/evidence/citation-shadow-guard-before-2026-11-18.log.gz`,
+  `docs/evidence/citation-shadow-guard-after-2026-11-18.log.gz`). **Superseded, not weakened:** cases 1 and 2 of
+  `tests/e2e/chat-evidence-panel.spec.js` had pinned the dropped behaviour on purpose with the mechanism beside them
+  and this iteration named as the owner; they now require `Sources (2)` = `[askRain.sources[0].url,
+  observations.source.url]` and `Sources (3)` with the request inserted before SoilGrids, case 3 still requires
+  `Sources (2)`, and the unit fixture gained the `documentationUrl` field the adapter returns so the guard reads the
+  production shape. **Executed:** panel file **6 passed, 0 failed, 6 skipped (7.0 s)** with the chip order the offline
+  prediction had derived from the recorded payloads
+  (`docs/evidence/citation-shadow-panel-after-2026-11-18.log.gz`,
+  `docs/evidence/citation-shadow-link-prediction-2026-11-18.log.gz`); **sensitivity** with only `chat-context.js`
+  reverted = **2 failed, 6 skipped, 4 did not run** and the text is the defect verbatim `Expected: "Sources (2)"
+  Received: "Sources (1)"` (`docs/evidence/citation-shadow-panel-sensitivity-2026-11-18.log.gz`); `npm run build`
+  exit 0 with the new id in the built `dist/client/js/lib/chat-context.js`; `npm test` **215/215, 0 failed, 0 skipped
+  (35,606 ms)** (`docs/evidence/citation-shadow-npm-test-2026-11-18.log.gz`), then re-run twice after the documentation
+  landed so the documentation guard could check its own new evidence paths: **215/215, 0 failed (30,307 ms)**
+  (`docs/evidence/citation-shadow-npm-test-after-docs-2026-11-18.log.gz`) and **215/215, 0 failed (31,190 ms)** on the
+  tree as committed (`docs/evidence/citation-shadow-npm-test-final-2026-11-18.log.gz`); `--list` unchanged at **208 tests in 20
+  files**; `chat-evidence-panel` + `chat-answer` + `workflow` **18 passed, 0 failed, 6 skipped (27.4 s)**
+  (`docs/evidence/citation-shadow-slice-2026-11-18.log.gz`). The full 208-case gate on this tree is **201 passed, 1
+  failed, 6 skipped (23.8 m)** (`docs/evidence/citation-shadow-gate-2026-11-18.log.gz`), and the single failure is a
+  busy-service failure reported with its cause rather than a pass: `field-terrain.spec.js:4` in `static-mobile`
+  exhausted its own retry budget against live Overpass with `real fields were still unavailable after two user
+  retries`, while the same case passed in `static-desktop` (48.3 s) and `node-desktop` (1.9 m) inside that run and
+  passed in **41.5 s** re-run alone on this tree
+  (`docs/evidence/citation-shadow-gate-terrain-isolated-2026-11-18.log.gz`) - no case this iteration touches failed.
+  The full 208-case gate that ran on the previous tip
+  `02fb867` while this was staged came out **202 passed, 6 skipped, 0 failed (23.2 m)**
+  (`docs/evidence/citation-shadow-gate-prev-tip-2026-11-18.log.gz`), which closes the "no full gate exists for this
+  tip" line in subsection 33's open list. Still open and unchanged: the panel has no browser case in the shipped
+  `worker` build (`server/index.js:62-64` versus `public/js/lib/core-worker-entry.js:3`, which builds
+  `createApiHandler()` with none of the eleven injectable providers `server/api.js:24` accepts), no pest browser
+  case, and real phones/touch, Safari/WebKit, microphones, read-aloud quality and independent agronomic review.
+  Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 - **19 Nov, same branch: iteration 34 — the farmer's word "rain" could not reach the rainfall paragraph, and the
   panel that renders it had never been opened in a browser.** `contextBlocks` gates the weather branch on
   `TOPIC.weather` (`public/js/lib/chat-context.js:15`) and then picks a series inside it (`:32-36`), and the two

@@ -2601,7 +2601,113 @@ Measured limits of this iteration, none of them claimed as coverage:
 * The fixtures are one set of responses retrieved at 2026-11-18T16:59 UTC, not live services, and every file keeps its own `retrievedAt`;
   nothing here shows what the panel renders when an upstream is down, and nothing asserts a yield, a saving or a
   confidence.
-* No full 208-case gate exists for this tip, and the clean **196/196** line remains `acb6c96`'s.
+* This caveat is now closed: the full 208-case gate ran to completion on `02fb867`, the tip this section landed on,
+  and reported **202 passed, 6 skipped, 0 failed (23.2 m)** (`docs/evidence/citation-shadow-gate-prev-tip-2026-11-18.log.gz`).
+  The 6 skips are the three cases above in the two `static-*` projects, so the honest reading is that every case the
+  build can run passed - the clean **196/196** line stays `acb6c96`'s because that was a smaller suite.
+
+### 34. The citation that reproduced a rainfall number was discarded because two paragraphs shared its id
+
+Subsection 33 recorded this as the defect its own test had found and left open. It is now fixed, and the fix is
+`public/js/lib/chat-context.js:39-48`.
+
+**What the farmer saw.** Step 2 loads the POWER payload, the chat answer quotes the measured value - `Precipitation
+Corrected: latest non-missing value inside 2024-01-01 to 2024-12-31 is 0.06 mm/day on 2024-12-31` - and the panel
+opened by "Sources (1)" led to `https://power.larc.nasa.gov/docs/services/api/temporal/daily/`, a documentation page
+that cannot reproduce that number. The URL which does reproduce it, the assembled request with its latitude,
+longitude, parameters, dates and `time-standard=LST`, was in the payload and never reached the DOM.
+
+**Why.** Three individually reasonable facts compose into a silent loss:
+
+* the weather paragraph cited the id `nasa-power` and pushed `{ id: 'nasa-power', url: data.source.url }`;
+* the reply's own source list is the registry filtered by the ids its paragraphs carry
+  (`catalog.sources.filter(source => ids.has(source.id))`, `server/agronomy/rotation.js:218`,
+  `server/agronomy/answers.js:72`, `server/agronomy/conversation.js:122`), and the registry defines `nasa-power`
+  as the documentation page (`server/agronomy/crops.json:4-7`);
+* `public/js/modules/chat.js:99` appends the context sources *after* the reply's own and `public/js/lib/dom.js:16`
+  resolves each counted id with `sources.find`, so the first entry for an id wins and the later one is dropped with
+  no trace. The label comes from `chat.js:108`, which counts *ids*, so the panel said "one source" rather than
+  "one source and a lost one".
+
+**Scope, measured before choosing a fix.** `docs/evidence/citation-shadow-branch-scan-2026-11-18.log.gz` replays the
+panel's own composition over the recorded payloads for all six context branches: exactly one citation is dropped,
+the weather one, while `soilgrids`, `abs-irrigation`, `selected-field`, `fall-armyworm` and `fall-armyworm-host`
+resolve as pushed. `docs/evidence/citation-shadow-corpus-scan-2026-11-18.log.gz`: the 14 catalog and 7 knowledge
+server-side ids share nothing, so no server payload produces this on its own, and of the 16 recorded replies in
+`docs/qa/latest-results.json` that render a link list, 4 cite "NASA POWER Daily API" and 0 cite a request URL. The
+class is confined to the one append site.
+
+**What the project already promised.** `docs/references.md:60-62` says the app records the "exact request URL" and
+`:71` tells the reader to see "the exact data request attached to each result". The evidence table has honoured that
+- `public/js/modules/data-flow.js:34` renders *Open the exact NASA API response* with `href: data.source.url` - so
+the documentation was true for one surface and false for the other. No test covered the chat half before subsection
+33.
+
+**Fix.** The paragraph now cites `['nasa-power', 'nasa-power-request']` and pushes both entries: the request under
+the new id, and `nasa-power` with `data.source.documentationUrl`, the value `server/nasa/power.js:87` always sets.
+Both halves are load-bearing and both were measured rather than assumed. Citing only the new id - the first version
+of this fix - rendered a single chip containing the request URL in case 1, i.e. it *removed* a link the panel offered
+before, because the answer's own paragraph that cites `nasa-power` can be cut by the three-paragraph cap while the
+source list cannot (`docs/evidence/citation-shadow-panel-one-id-only-2026-11-18.log.gz`). Citing both ids without
+pushing the documentation entry violates the rule that a paragraph must never cite what it cannot link, which an
+existing test in `tests/chat-context.test.js` enforces and did, red, on the first attempt. The distinct-id pair is
+this file's own convention for one paragraph carrying two sources (`chat-context.js:91,95`, `pest.id` with
+`${pest.id}-host`), and nothing that was reachable before stops being reachable.
+
+**Tests - two assertions rewritten, not relaxed.** Per the user's rule, `tests/e2e/chat-evidence-panel.spec.js`
+cases 1 and 2 had pinned today's behaviour on purpose with the mechanism beside them and iteration 35 named as the
+owner; they now require the request URL (`Sources (2)` with `[askRain.sources[0].url, observations.source.url]`,
+and `Sources (3)` with the request inserted before the SoilGrids entry). Case 3 still requires `Sources (2)`: the
+hyphenated modifier must not open the gate. Two offline guards are added to `tests/chat-context.test.js`: that no
+citation a context branch adds reuses an id the registry resolves to a *different* URL, tested against the shipped
+registry for six question shapes, and that the weather paragraph carries both ids, that the request entry's URL is
+`observations.source.url`, that it differs from the documentation URL (so the new id can never degrade into a
+rename), that the documentation entry still resolves to the registry's page, and that `nasa-power-request` is absent
+from the registry. The unit fixture's `source` gained the `documentationUrl` field the adapter always returns, so
+the guard reads the same payload shape as production.
+
+**Executed.** Guard before the fix **15 tests, 13 pass, 2 fail**, the first failure naming `'nasa-power'` as the
+shadowed id (`docs/evidence/citation-shadow-guard-before-2026-11-18.log.gz`); after the fix **15 pass, 0 fail**
+(`docs/evidence/citation-shadow-guard-after-2026-11-18.log.gz`). `npm run build` exit 0, with the new id present in
+the built `dist/client/js/lib/chat-context.js`. The rewritten panel file runs **6 passed, 0 failed, 6 skipped
+(7.0 s)** (`docs/evidence/citation-shadow-panel-after-2026-11-18.log.gz`) and the chip order the composition predicts
+from the recorded payloads (`docs/evidence/citation-shadow-link-prediction-2026-11-18.log.gz`) is the order the
+browser rendered. **Sensitivity:** with only `chat-context.js` reverted, the same command reports **2 failed, 6
+skipped, 4 did not run** and the failure text is the defect verbatim - `Expected: "Sources (2)"` / `Received:
+"Sources (1)"` (`docs/evidence/citation-shadow-panel-sensitivity-2026-11-18.log.gz`). `npm test` **215 tests, 215
+pass, 0 fail, 0 skipped (35,606 ms)** (`docs/evidence/citation-shadow-npm-test-2026-11-18.log.gz`), then twice more
+once the documentation existed - **215/215, 0 failed (30,307 ms)** (`docs/evidence/citation-shadow-npm-test-after-docs-2026-11-18.log.gz`)
+and **215/215, 0 failed (31,190 ms)** on the tree as it is committed (`docs/evidence/citation-shadow-npm-test-final-2026-11-18.log.gz`).
+The repeats are needed rather than cosmetic: the documentation guard fails the suite when a doc names a
+`docs/evidence/...` path that does not exist, so the run archived before this section was written cannot have checked
+this section's own new entries (`docs/evidence/citation-shadow-npm-test-2026-11-18.log.gz`), `--list`
+**208 tests in 20 files** (unchanged), and the `chat-evidence-panel` + `chat-answer` + `workflow` slice
+**18 passed, 0 failed, 6 skipped (27.4 s)** (`docs/evidence/citation-shadow-slice-2026-11-18.log.gz`). The full 208-case gate on this tree came out **201
+passed, 1 failed, 6 skipped (23.8 m)** (`docs/evidence/citation-shadow-gate-2026-11-18.log.gz`). The one failure is
+not this change and is reported as a busy-service failure rather than smoothed over: `field-terrain.spec.js:4` in
+`static-mobile` reached its own retry budget against live Overpass and reported `real fields were still unavailable
+after two user retries`, while the same case passed in `static-desktop` (48.3 s) and `node-desktop` (1.9 m) inside
+that very run; re-run alone, on the same tree and a host at load 4-5, it passed in **41.5 s**
+(`docs/evidence/citation-shadow-gate-terrain-isolated-2026-11-18.log.gz`). The other 201 cases and the 6 documented
+`worker`-transport skips are unchanged from the previous tip's clean gate, so no browser case this iteration touches
+failed.
+`docs/evidence/citation-shadow-gate-prev-tip-2026-11-18.log.gz` is the full gate that ran on `02fb867` while this was
+being staged - **202 passed, 6 skipped, 0 failed (23.2 m)**.
+
+Measured limits of this iteration, none of them claimed as coverage:
+* The request URL is a query, not an archived artefact: opening it re-runs the request against live NASA POWER and
+  can return a different latest day. The citation is reproducible, not permanent, and the fixture's recorded `url`
+  is what the assertion pins.
+* Only the weather branch collided. The same shadowing mechanism is live for every id a context branch may add, and
+  the new guard is what keeps it that way; it is a guard against a class, measured over six shapes, not a proof
+  about shapes the app does not produce.
+* The panel's behaviour in the `static-*`/`worker` build is still untested, and this iteration did not change that:
+  `server/index.js:62-64` rewrites the transport marker for the served build while `dist/client` keeps `worker` and
+  answers `/api` from inside the page's dedicated worker, which Playwright routes do not reach. The seam for closing
+  it is identified (`server/api.js:24` already takes eleven injectable providers while
+  `public/js/lib/core-worker-entry.js:3` passes none) but unexercised.
+* Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise, audible
+  read-aloud quality, independent agronomic review, and live Overpass availability from a network that can reach it.
 
 ### Not yet executed at the time of writing
 

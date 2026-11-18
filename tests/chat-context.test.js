@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { contextBlocks, composeAnswerBlocks } from '../public/js/lib/chat-context.js';
 import { PESTS } from '../server/context/pests.js';
+import { catalog } from '../server/agronomy/catalog.js';
 
 // The labels and names below are short stand-ins that keep each series/property distinguishable inside this
 // file; they are deliberately NOT the strings the services return (POWER calls PRECTOTCORR "Precipitation
@@ -13,7 +14,8 @@ const observations = {
   dates: ['2024-06-01', '2024-06-02'],
   location: { latitude: -31.89, longitude: 116.77 },
   retrievedAt: '2025-02-01T00:00:00Z',
-  source: { id: 'nasa-power', title: 'NASA POWER exact data request', url: 'https://example.invalid/power' },
+  source: { id: 'nasa-power', title: 'NASA POWER exact data request', url: 'https://example.invalid/power',
+    documentationUrl: 'https://power.larc.nasa.gov/docs/services/api/temporal/daily/' },
   parameters: {
     T2M: { label: 'Mean air temperature', units: '°C', latestAvailableDate: '2024-06-02', values: [12.1, 12.9] },
     T2M_MIN: { label: 'Minimum air temperature', units: '°C', latestAvailableDate: '2024-06-02', values: [-1.4, -0.6] },
@@ -300,4 +302,62 @@ test('every weather word the series picker handles can reach the weather paragra
     'Is rain-fed maize viable here?', 'My rainfed field needs no irrigation', 'The drain system is old',
     'Tell me about grain pricing', 'Our farmer reported a soil pH of 6.5'
   ]) assert.equal(weather(question), '', `${question} must not add weather evidence`);
+});
+
+// A citation id is the only key the panel has. public/js/modules/chat.js:99 appends the context sources *after*
+// the reply's own and public/js/lib/dom.js:16 resolves each counted id with `sources.find`, so when two entries
+// share an id the later one is dropped with no trace on screen. For the weather paragraph that is a real loss:
+// the point of its citation is `observations.source.url`, the assembled POWER request that reproduces the number
+// it quotes (server/nasa/power.js:86-87), while the registry entry under the same id is the API documentation
+// page (server/agronomy/crops.json:4-7). Observed on 18 Nov (UTC) in tests/e2e/chat-evidence-panel.spec.js: the
+// chip went to the docs page and the request URL never reached the DOM.
+//
+// The reply's own list is exactly the registry filtered by the ids its paragraphs carry
+// (`sources: catalog.sources.filter(source => ids.has(source.id))`, server/agronomy/rotation.js:218,
+// server/agronomy/answers.js:72 and server/agronomy/conversation.js), so the whole registry is the conservative
+// superset to test against: an id a context branch may add may not disagree with the registry on the URL.
+const registry = catalog.sources;
+const shadowed = (question, state) => {
+  const { sources } = contextBlocks(question, state, { topic: 'crop' });
+  const urls = new Map(registry.map(source => [source.id, source.url]));
+  return sources.filter(source => urls.has(source.id) && urls.get(source.id) !== source.url).map(source => source.id);
+};
+
+test('an added citation never shares an id with a different URL than the source the reply already carries', () => {
+  for (const [question, state] of [
+    ['Show me rainfall evidence', { observations }],
+    ['Tell me about the soil pH here', { soil }],
+    ['How much water is used for irrigation in Australia?', { water }],
+    ['Tell me about this farm', { farm }],
+    ['Which pests affect wheat?', { pests }],
+    ['What does this field record say about pests?', fullState()]
+  ]) assert.deepEqual(shadowed(question, state), [], `${question} added an id the panel resolves to another URL`);
+});
+
+test('the weather paragraph cites the exact POWER request beside the documentation entry it linked before', () => {
+  const { blocks, sources } = contextBlocks('How much rain fell here last year?', { observations }, { topic: 'weather' });
+  const weather = blocks.find(block => block.kind === 'historical weather evidence');
+  // Two ids, because the panel counts ids and links the first source with each: dropping `nasa-power` would have
+  // removed a link the panel offered before this change (measured 18 Nov (UTC) in the browser - with only the request
+  // cited, case 1 rendered one chip and the documentation page was gone, because the answer paragraph that cites
+  // it can be cut by the three-paragraph cap), and dropping the request is the defect.
+  assert.deepEqual(weather.sourceIds, ['nasa-power', 'nasa-power-request'],
+    `the weather paragraph must cite the documentation entry and its own request, got ${JSON.stringify(weather.sourceIds)}`);
+  const request = sources.find(source => source.id === 'nasa-power-request');
+  assert.equal(request?.url, observations.source.url, 'the request citation must carry the assembled POWER request URL');
+  // Two chips that open the same page would be a rename, not a second citation: the point of the new id is that
+  // the farmer can reach the query which reproduces the number, so it must differ from the documentation entry.
+  assert.notEqual(request?.url, registry.find(source => source.id === 'nasa-power').url,
+    'the request citation would duplicate the documentation link instead of adding the reproducible query');
+  assert.ok(!registry.some(source => source.id === 'nasa-power-request'),
+    'the request citation must not reuse an id the reply already resolves');
+  // And the documentation entry keeps the page the registry links: a second copy of the request URL under this id
+  // would be the old defect wearing a new label, because the panel would then show one page twice.
+  const docs = sources.find(source => source.id === 'nasa-power');
+  assert.equal(docs?.url, registry.find(source => source.id === 'nasa-power').url,
+    'the documentation citation must resolve to the page the registry links, not a duplicate of the request');
+  // The paragraph must not lean on the reply for its own citation: every id it cites has to be among the sources
+  // it pushes, which is the rule the panel-link test above enforces and the reason a shared id cannot work here.
+  const pushed = new Set(sources.map(source => source.id));
+  weather.sourceIds.forEach(id => assert.ok(pushed.has(id), `${id} is cited by the weather paragraph but never pushed with it`));
 });
