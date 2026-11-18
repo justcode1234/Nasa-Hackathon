@@ -19,6 +19,10 @@ export function parseWorkflowMessage(question, active = false) {
   const specificArea = /\b(?:specific|particular) (?:area|part|region)\b|^choose a (?:town|city|field|place|region)(?: or (?:town|city|field|place|region))*$/.test(text);
   const intent = /\b(help me|guide me|walk me|take me|pick|select|choose|find|use|set|plan|rotate|compare|continue|next|proceed)\b/.test(text);
   if (!active && !wholeCountry && !specificArea && !(intent && (/\b(farm|farmland|field|rotation|rotate|crops|baseline|compare|step|task|point|coordinates)\b/.test(text) || countries.length))) return null;
+  // A soil test in a comma-decimal locale says "pH 6,2". Matched here, before the coordinates below, because the
+  // same comma otherwise reads as the separator between a latitude and a longitude and invents a pin at 6, 2.
+  const phMatch = /\b(?:soil )?ph\s*(?:is|:|=)?\s*(\d+(?:[.,]\d{1,2})?)/i.exec(question);
+  const phIsPair = pair => Boolean(phMatch && pair && phMatch[1].includes(',') && pair[0].includes(phMatch[1]));
   // A comma is a decimal separator in many locales. The pair pattern only allowed a dot inside a number, so it
   // read the comma in "18,52, 73,85" as the separator between latitude and longitude: the farm became 18, 52 —
   // on the Egypt/Libya border instead of in Goa — and both invented numbers sail through the ±90/±180 check.
@@ -48,10 +52,10 @@ export function parseWorkflowMessage(question, active = false) {
     ? { latitude: hemiLat.sign === 'S' ? -hemiLat.value : hemiLat.value, longitude: hemiLon.sign === 'W' ? -hemiLon.value : hemiLon.value }
     : latLabel && lonLabel ? { latitude: Number(latLabel[1]), longitude: Number(lonLabel[1]) }
     : null;
-  const location = commaDecimal
+  const location = commaDecimal && !phIsPair(commaDecimal)
     ? { latitude: Number(`${commaDecimal[1]}.${commaDecimal[2]}`), longitude: Number(`${commaDecimal[3]}.${commaDecimal[4]}`) }
     : tagged ? tagged
-    : point ? { latitude: Number(point[1]), longitude: Number(point[2]) } : null;
+    : point && !phIsPair(point) ? { latitude: Number(point[1]), longitude: Number(point[2]) } : null;
   const baselineQuestion=question.replace(/\ballowed crops\s*(?:are|:|=)\s*[^.;]+/ig,'');
   const clause = /\b(?:crops|baseline|(?:existing )?rotation)\s*(?:are|is|:|=)\s*(.+)/i.exec(baselineQuestion)?.[1] ??
     /\b(?:with (?:the )?crops|based on (?:these crops[: ]+)?|rotate:|farmer provides|currently grow|i grow)\s*(.+)/i.exec(question)?.[1] ??
@@ -75,7 +79,7 @@ export function parseWorkflowMessage(question, active = false) {
   const soilMatch = /\b(sandy|loam|clay) soil\b|\bsoil(?: (?:type|texture))?(?: is)? (sandy|loam|clay)\b/i.exec(text);
   const soil = soilMatch?.[1] ?? soilMatch?.[2] ?? null;
   if (soil) constraints.soil = soil;
-  const ph = /\b(?:soil )?ph\s*(?:is|:|=)?\s*(\d+(?:\.\d+)?)/i.exec(question)?.[1];
+  const ph = phMatch?.[1]?.replace(',', '.');
   if (ph != null) constraints.soilPh = Number(ph);
   if (/\b(?:priority|prioriti[sz]e)\s+(?:is\s+)?water\b/.test(text)) constraints.priority = 'water';
   if (/\b(?:priority|prioriti[sz]e)\s+(?:is\s+)?(?:family|fewer family repeats)\b/.test(text)) constraints.priority = 'family';

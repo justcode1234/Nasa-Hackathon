@@ -930,6 +930,30 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **18 Nov, same branch: iteration 31 — a comma-decimal soil test lost its fraction and invented a pin.** The pH
+  pattern (`public/js/modules/workflow-assistant.js:78` pre-fix) allowed only a dot, so `soil pH 6,2` was read as
+  pH **6** — a legal value the 0-14 check can never question — and the same comma then read as a coordinate
+  separator, giving latitude 6, longitude 2 in the Gulf of Guinea for a message that never mentioned one. Worse,
+  `soil pH 6,2 at 18.52, 73.85` kept the invented pair and discarded the real one, because the pair pattern only
+  reports its first match. The fraction is now accepted behind either separator and the pH is matched before the
+  coordinates, so a pair that is really one labelled decimal is refused rather than plotted
+  (`:24-25`, applied at `:55-58`, `:82`). Measured and pinned as still open, not hidden: `salinity 3,7 dS/m` invents
+  3, 7 because a unit word is not yet a cue to refuse the comma — the guard asserts that wrong answer so a later change
+  cannot claim it is fixed — and the mixed pH-plus-pair message now yields no location, which the guard pins as a
+  refusal rather than a resolution. **Owed evidence paid at the same time:** the 196-case
+  gate on `bb69aee` (iterations 21 to 30) came out **195 passed, 1 failed (28.7 m)**
+  (`docs/evidence/e2e-gate-bb69aee-2026-11-18.log.gz`), the failure a `#baseline-1` select-option timeout on
+  `static-desktop` in a spec whose other three projects passed, so the clean 196/196 line still belongs to
+  `acb6c96`. **Executed for this iteration:** guard **27 pass, 1 fail → 28 pass, 0 fail**
+  (`docs/evidence/workflow-ph-decimal-comma-guard-before-2026-11-18.log.gz`,
+  `docs/evidence/workflow-ph-decimal-comma-guard-after-2026-11-18.log.gz`), a before/after probe of pH and location
+  on the live module (`docs/evidence/workflow-ph-decimal-comma-probe-before-after-2026-11-18.log.gz`), the 64-case
+  chat/workflow slice on this tree **64 passed, 0 failed (3.2 m)**, exit 0 — which re-runs and passes the
+  `help-and-explanations.spec.js:66` case the `bb69aee` gate lost, on all four projects
+  (`docs/evidence/workflow-ph-decimal-comma-e2e-slice-2026-11-18.log.gz`) — `npm run build`
+  exit 0 and `npm test` **210/210, 0 failed, 0 skipped (30,000 ms)**
+  (`docs/evidence/workflow-ph-decimal-comma-npm-test-2026-11-18.log.gz`). Nothing was deployed, main is untouched
+  (`4a54fa3`), no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

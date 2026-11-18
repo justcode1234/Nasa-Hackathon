@@ -370,3 +370,24 @@ test('Singapore with unnamed region codes goes directly to places and never need
   assert.match(picked.blocks[0].text,/Singapore is selected as a town point/);
   assert.ok(!calls.includes('region')&&!calls.includes('NASA'));assert.equal(state.location.latitude,1.29);
 });
+
+// A soil test written in a comma-decimal locale says "pH 6,2". The number pattern only allowed a dot, so it
+// stopped at the comma and kept 6 - a legal pH that the 0-14 range check can never question - and the same comma
+// then looked like a separator between two coordinates, so the message also carried a pin at latitude 6, longitude 2
+// in the Gulf of Guinea. Both halves of that are measured on the live module before any edit.
+test('a soil test written with a decimal comma keeps its fraction and is not a pin', () => {
+  const parse = tail => parseWorkflowMessage(`Help me plan a rotation in India. Crops: rice, cabbage, tomato. ${tail}`, true) ?? {};
+  const ph = tail => parse(tail).constraints?.soilPh ?? null;
+  const at = tail => parse(tail).location ?? null;
+  assert.equal(ph('soil pH 6,2'), 6.2, 'the comma was the decimal separator, not the coordinate separator');
+  assert.equal(ph('the soil ph is 6,2 and it drains badly'), 6.2);
+  assert.equal(ph('pH: 7,5'), 7.5);
+  assert.equal(ph('soil pH 6.2'), 6.2, 'the dotted form is unchanged');
+  assert.equal(ph('soil pH 7'), 7, 'a whole number stays whole');
+  assert.equal(ph('rainfall 1200 mm'), null);
+  assert.equal(ph('salinity 3,7 dS/m'), null, 'a salt reading is not a pH');
+  assert.equal(at('soil pH 6,2'), null, 'the two halves of one pH are not a latitude and a longitude');
+  assert.deepEqual(at('at 18.52, 73.85 with soil pH 6.2'), { latitude: 18.52, longitude: 73.85 }, 'a real pair beside a pH still lands');
+  assert.equal(at('soil pH 6,2 at 18.52, 73.85'), null, 'measured limit: the pH comma is refused and the second pair is not yet found');
+  assert.deepEqual(at('salinity 3,7 dS/m'), { latitude: 3, longitude: 7 }, 'measured limit: a unit label is not yet a cue to refuse the comma');
+});

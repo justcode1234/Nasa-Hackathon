@@ -2342,6 +2342,54 @@ Re-running exactly those four cases alone finished **4 passed (20.3 s)**, all si
 tally is a loaded host, not this tree. The full offline suite on the shipped tree reports **209 tests, 209 pass,
 0 fail, 0 skipped (37,936 ms)**.
 
+### 30. A comma-decimal soil test lost its fraction and invented a pin
+
+The pH pattern at `public/js/modules/workflow-assistant.js:78` (pre-fix) allowed a dot inside the number and
+nothing else, so a soil test written the way much of South America and continental Europe writes it - `6,2` - was
+read as `6`. That is the subsection-28 failure class in another field: not a dropped fact but a substituted one, and
+the 0-14 check has no power over it because 6 is a perfectly legal pH. Measured on the live module
+(`docs/evidence/workflow-ph-decimal-comma-probe-before-after-2026-11-18.log.gz`) the same comma then looked like the
+separator of a coordinate pair, so **"soil pH 6,2" also carried latitude 6, longitude 2** - a point in the Gulf of
+Guinea the farmer never mentioned - and worse, **"soil pH 6,2 at 18.52, 73.85" kept the invented 6, 2 and threw the
+real pin away**, because the pair pattern only reports its first match. `pH: 7,5` behaved the same way, while
+`salinity 3,7 dS/m` invented 3, 7 with no pH involved.
+
+The number now accepts a fraction behind either separator (`:24`), and because the same text is matched before the
+coordinates (`:25`, applied at `:55-58`), a pair that is really one labelled pH decimal is refused instead of
+plotted. Refusing is the deliberate choice for the mixed form: the message with both a comma pH and a real dotted
+pair now yields no location at all rather than the wrong one, and the guard pins that as a measured limit rather
+than pretending it resolves.
+
+| Message tail | pH before | pH after | location before | location after |
+| --- | --- | --- | --- | --- |
+| `soil pH 6,2` | **6** | 6.2 | **6, 2** | none |
+| `the soil ph is 6,2 and it drains badly` | **6** | 6.2 | **6, 2** | none |
+| `pH: 7,5` | **7** | 7.5 | **7, 5** | none |
+| `soil pH 6.2` | 6.2 | 6.2 | none | none |
+| `soil pH 7` | 7 | 7 | none | none |
+| `at 18.52, 73.85 with soil pH 6.2` | 6.2 | 6.2 | 18.52, 73.85 | 18.52, 73.85 |
+| `soil pH 6,2 at 18.52, 73.85` | **6** | 6.2 | **6, 2** | none — the real pair is not yet found |
+| `salinity 3,7 dS/m` | none | none | **3, 7** | **3, 7 — still invented, and now the next candidate** |
+
+**Executed:** the guard was written first and measured **27 pass, 1 fail** - `expected 6.2, actual 6`
+(`docs/evidence/workflow-ph-decimal-comma-guard-before-2026-11-18.log.gz`) - and **28 pass, 0 fail** after
+(`docs/evidence/workflow-ph-decimal-comma-guard-after-2026-11-18.log.gz`). After the browser evidence below came back
+clean, the last row of the table was pinned too - the guard now asserts that `salinity 3,7 dS/m` still resolves to
+3, 7, so the open defect cannot be quietly described as fixed later - and `npm run build` exits 0 with `npm test`
+reporting **210 tests, 210 pass, 0 fail, 0 skipped (30,000 ms)** on that shipped tree
+(`docs/evidence/workflow-ph-decimal-comma-npm-test-2026-11-18.log.gz`).
+
+The owed full-suite run was paid while this iteration was being measured: **195 passed, 1 failed (28.7 m)** on
+`bb69aee`, the tip that carries iterations 21 to 30
+(`docs/evidence/e2e-gate-bb69aee-2026-11-18.log.gz`). The single failure is
+`[static-desktop] help-and-explanations.spec.js:66` at `locator.selectOption: Timeout 15000ms exceeded … #baseline-1
+… element is not enabled` - the app had not finished enabling the baseline selects inside the window, the same family
+as the click-stability timeouts in subsections 25, 28 and 29 - and the case passed on the other three projects in
+that very run. The same tree plus this iteration re-ran it: the 64-case chat/workflow slice came out **64 passed,
+0 failed (3.2 m)** (`docs/evidence/workflow-ph-decimal-comma-e2e-slice-2026-11-18.log.gz`), and `static-desktop`'s
+`help-and-explanations.spec.js:66` finished there in 2.8 s - so that gate failure was the host, not the code, though
+195/196 remains the honest number for `bb69aee` and the clean 196/196 line still belongs to `acb6c96`.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
@@ -2368,21 +2416,26 @@ tally is a loaded host, not this tree. The full offline suite on the shipped tre
   (`docs/evidence/e2e-gate-acb6c96-2026-11-18.log.gz`). The same run covers the eight specs whose
   slice attempts were load-degraded in subsection 19, so those two degraded tallies stand as recorded
   but are no longer the best evidence for that tree.
-* The full gate belongs to `acb6c96`. Subsections 22 to 29 changed `public/js/lib/chat-context.js` and
+* The full gate belongs to `acb6c96`. Subsections 22 to 30 changed `public/js/lib/chat-context.js` and
   `public/js/modules/workflow-assistant.js` afterwards, so the clean **196/196 (19.1 m)** line above must not be
   quoted for the tip that carries the caveat budget, the crop-matched pest record, the species-name matcher, the
-  citation-id pairing, the soil word order, the month verbs, the decimal-comma pair and the hemisphere letters until
-  the suite is re-run there. On the subsection-22 tip only the 52-case chat slice and `npm test` 202/202 are measured;
-  on the subsection-23 tip `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice are measured; on the
-  subsection-24/25 tip the offline suite (**205/205**) and the 64-case slice are measured, that slice coming out
-  **61 passed, 3 failed** with all three failures proven to be click-timeout load effects by an isolated 3/3
-  re-run; on the subsection-26/27 tip the offline suite (**207/207**) and the same 64-case slice are measured
-  clean; on the subsection-28 tip the offline suite (**208/208**) is measured and the same slice came out
-  **61/3** with the same three click timeouts proven degraded by an isolated **3/3** re-run; on the subsection-29
-  tip the offline suite (**209/209**) and the same slice are measured, that slice coming out **60/4** with four
-  `#chat-toggle` click timeouts and a prompt-level probe showing the parse itself unchanged on the QA set. The
-  remaining 132 cases - the map, farm, terrain, evidence, print and accessibility specs - have not run on any of
-  those tips.
+  citation-id pairing, the soil word order, the month verbs, the decimal-comma pair, the hemisphere letters and the
+  comma-decimal pH until the suite is re-run there. On the subsection-22 tip only the 52-case chat slice and
+  `npm test` 202/202 are measured; on the subsection-23 tip `npm test` 203/203, `npm audit` and the 64-case four-spec
+  chat slice are measured; on the subsection-24/25 tip the offline suite (**205/205**) and the 64-case slice are
+  measured, that slice coming out **61 passed, 3 failed** with all three failures proven to be click-timeout load
+  effects by an isolated 3/3 re-run; on the subsection-26/27 tip the offline suite (**207/207**) and the same 64-case
+  slice are measured clean; on the subsection-28 tip the offline suite (**208/208**) is measured and the same slice
+  came out **61/3** with the same three click timeouts proven degraded by an isolated **3/3** re-run; on the
+  subsection-29 tip the offline suite (**209/209**) and the same slice are measured, that slice coming out **60/4**
+  with four `#chat-toggle` click timeouts and a prompt-level probe showing the parse itself unchanged on the QA set;
+  on the subsection-30 tip the offline suite (**210/210**) and the same slice are measured, the slice coming out
+  **64 passed, 0 failed**. The gate that covers most of that span ran during this last iteration: **195 passed,
+  1 failed (28.7 m)** on `bb69aee`, the tip carrying iterations 21 to 30
+  (`docs/evidence/e2e-gate-bb69aee-2026-11-18.log.gz`), where the lone failure is a select-option timeout on a host at
+  load 6 to 9 whose same case passes on all four projects in the slice just described. A clean 196-case gate on the
+  current tip is still open, as are the 132 map, farm, terrain, evidence, print and accessibility cases on every tip
+  after `bb69aee`.
 * The rendered panel for the two new selection rules. No browser case loads NASA POWER and SoilGrids into
   one session, and none has a pest context loaded beside a radish plan, so the weather-plus-soil advisory
   and the crop-matched pest record are pinned by `tests/chat-context.test.js` and direct-module probes only.
