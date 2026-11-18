@@ -930,6 +930,55 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 37 — the live pest paragraph had never been rendered by a browser, because the
+  only reply that carries it needs a comparison first.** Measured on `120461e` before any edit: `grep -rn "load-pests"
+  tests/e2e/` and `grep -rn "occurrence/search" tests/e2e/` both returned **0 hits**, and `Fall armyworm in AU: Country
+  records found` existed only in `tests/chat-context.test.js:189, 218` against hand-built records with a literal
+  `occurrenceCount: 4213` — a unit test with no screenshot. The test could not have caught the gap because it calls
+  `contextBlocks(question, state, { topic: 'pest' })`, a shape production never returns: the composer gate
+  `public/js/lib/chat-context.js:24` returns early on `answer.useSelectedLocation === false`, and that flag is `false`
+  on every route that can answer a pest wording, at eight sites (`server/agronomy/answers.js:72, 80`,
+  `conversation.js:45, 68, 74, 121`, `planning-help.js:16, 39`). One shape does leave it unset (`answers.js:84`,
+  `deterministic evidence retrieval`), so an 8-wording scan against the live handler with no comparison and nothing
+  stubbed measured whether any pest question can reach it: **0 of 8** replies left the gate open
+  (`…-pest-gate-open-scan-…`), because a named crop is routed to the country-aware retrieval at
+  `conversation.js:120` first. The reply that opens it is `server/api.js:59`, the comparison-backed one, which needs
+  `state.inputs` (`public/js/app.js:290`). Three offline probes measured the
+  routes, the composition and a real `/api/compare`+`/api/ask` before any test line was written
+  (`…-pest-route-ask-…`, `…-pest-route-composition-…` — `context blocks added: 0` on all four pest wordings — and
+  `…-pest-route-compare-…`), then a browser probe drove the app itself and recorded three replies
+  (`…-pest-browser-probe-…`): "Which pests should I watch for in this plan?" → `Sources (5)` with the occurrence
+  paragraph first and a live GBIF query as chip one; "What pests affect sweet corn here?" → `Sources (5)` with family
+  and FAOSTAT paragraphs and no occurrence record; "Do I need to worry about diamondback moth here?" →
+  `summary=(no details)`, `links=[]`. `tests/e2e/chat-pest-context.spec.js` lands the first and the unloaded-context
+  shape as **2 cases × 4 projects, no new skip**, stubbing only the field transport so NASA, FAOSTAT and GBIF stay real
+  — which is why no assertion quotes an occurrence count. Controls: composer branch disabled → node-desktop failed
+  quoting the two-paragraph reply it produced instead (`…-pest-control-branch-node-…`) and the missing-context case
+  failed with "the missing context sentence is absent" (`…-pest-control-branch-unloaded-…`); dropping the `-host`
+  citation id → `Expected: "Sources (5)" / Received: "Sources (4)"` (`…-pest-control-citation-…`), the iteration-34
+  failure class caught at the panel boundary. **A protocol finding worth keeping:** the first static control was
+  meaningless — the static projects preview `dist/client/` (`scripts/static-preview.js:7`), so editing `public/` and
+  re-running showed `static-desktop` passing **2 of 2** on a "disabled" build while node-desktop failed; after
+  `npm run build` the same control failed as expected (`1 failed, 1 did not run`, `…-pest-control-branch-built-…`), and
+  the source and built tree were then restored and verified empty of markers (`…-pest-control-branch-build-…`,
+  `…-pest-build-restore-…`, `…-pest-spec-post-restore-…`). One limit is stated, not claimed: removing the `cropIds`
+  match (`server/context/pests.js:5-9`) breaks no test because `diamondback-moth` is keyed to `radish` and a scan of all
+  **197** countries with recorded crop data found **0** radish choices and **0** radish regional records
+  (`…-pest-radish-scan-…`), so the crop-matched record always equals `records[0]` — proven offline, landed and control
+  both quoting `["Fall armyworm"]`, `identical: true` (`…-pest-control-cropmatch-…`);
+  `tests/chat-context.test.js:189` stays the only guard on the choice. A 6-wording suppression scan
+  (`…-pest-suppression-scan-…`) found **2/6** attaching with a comparison and **0/6** without, **4/6** never attaching —
+  3 legitimately (rotation-method questions) and 1 which is the next iteration's candidate: a named species or crop gets
+  a clarification with no sources while the watchlist sits loaded in the same state, registered as iteration 38
+  candidate 1 with both design options and a preference for a server-side answer over dressing a clarification. Costs:
+  new spec **8 passed (20.1 s)** (`…-pest-spec-…`), gate **210 passed, 6 skipped, 0 failed (24.0 m)** with `EXIT=0`
+  (`…-pest-gate-…`), offline **216/216 (37,578 ms)** unchanged in count because the deliverable is a spec
+  (`…-pest-npm-test-…`), `--list` **216 tests in 21 files**, the documentation-guard re-run after this bullet and
+  subsection landed **216/216 (36,088 ms)** (`…-pest-npm-test-final-…`), and the spec re-run after its header comment
+  was corrected **8 passed (19.1 s)** (`…-pest-spec-comment-edit-…`) — the gate itself ran on the earlier wording, which
+  claimed only `api.js:59` leaves the composer flag unset; the corrected text is the measured eight sites plus
+  `answers.js:84`, unreachable at 0 of 8. No production file changed; recorded in
+  `docs/validation.md` subsection 36. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 - **19 Nov, same branch: iteration 36 — a coordinate copied as bare whole degrees was refused because nothing in it
   looked like a number.** Iteration 30's first recorded limit (`docs/handoff-2026-11-18.md:459-466`) was that
   "what can I grow at 37N 127E" returned no location, so step 1 asked the farmer to repeat coordinates they had just

@@ -2815,6 +2815,109 @@ it before measuring what the domain vocabulary does with the loosened rule.** He
 (`part || part` → nothing) was the single most damaging candidate of the three, and the corpus probe existed before
 any line was edited, so the number that killed it was measured rather than argued.
 
+### 36. The live pest paragraph had never been rendered by a browser, because the only reply that carries it needs a comparison first
+
+Iteration 35 registered the pest branch of the chat evidence panel as unobserved in the browser. Measured on `120461e`
+before any edit: `grep -rn "load-pests" tests/e2e/` returned **0 hits**, `grep -rn "occurrence/search" tests/e2e/`
+returned **0 hits**, and the sentence shape `Fall armyworm in AU: Country records found` existed only inside
+`tests/chat-context.test.js:189, 218`, where the records are hand-built objects with a literal `occurrenceCount: 4213`.
+So the panel had a unit test and no screenshot: no run of this repository has ever clicked the pest lookup, and no
+browser has ever shown a number that came from GBIF.
+
+The unit test could not have found the gap it appears to cover, because it calls
+`contextBlocks(question, state, { topic: 'pest' })` — a shape production never returns for a pest wording. The composer
+gate at `public/js/lib/chat-context.js:24` is `if (answer.topic === 'greeting' || answer.useSelectedLocation === false)
+return { blocks, sources };`, and `useSelectedLocation` is set to `false` by every route that can answer a pest-worded
+question, at eight sites: `server/agronomy/answers.js:72, 80`, `server/agronomy/conversation.js:45, 68, 74, 121` and
+`server/agronomy/planning-help.js:16, 39`. One reply shape does leave the flag unset — `server/agronomy/answers.js:84`,
+whose mode is `deterministic evidence retrieval` — and a scan was run to find out whether any pest wording can get
+there: over **8** wordings against the live handler, with no comparison and nothing stubbed, **0 of 8** replies left the
+composer gate open (`docs/evidence/pest-gate-open-scan-2026-11-18.log.gz`), because a crop named in the question is
+routed to the country-aware retrieval at `server/agronomy/conversation.js:120` before it can reach that shape. So the
+reply that does open the gate is `server/api.js:59`
+(`answerQuestion(body.question, result, observations)`), which is the comparison-backed reply — so the panel is
+reachable only after `/api/compare` has produced a scenario, and `state.inputs` itself exists only after that
+(`public/js/app.js:290`). Three offline probes measured this before any test was written: the route answers themselves
+(`docs/evidence/pest-route-ask-2026-11-18.log.gz`), the client composition run over those replies
+(`docs/evidence/pest-route-composition-2026-11-18.log.gz`, `context blocks added: 0` on all four pest wordings), and a
+real `/api/compare` through `createApiHandler` followed by `/api/ask`
+(`docs/evidence/pest-route-compare-2026-11-18.log.gz`).
+
+The browser probe then drove the app itself — WA coordinates, 2024, a sweet corn/tomato/onion baseline, `#load-pests`
+in step 03, then the chat — and recorded the three replies that a unit test cannot see
+(`docs/evidence/pest-browser-probe-2026-11-18.log.gz`). "Which pests should I watch for in this plan?" rendered
+`Sources (5)` with the occurrence paragraph first and `https://api.gbif.org/v1/occurrence/search?country=AU&taxonKey=5109855&occurrenceStatus=PRESENT&limit=1`
+as its first chip. "What pests affect sweet corn here?" rendered `Sources (5)` with two paragraphs about family and
+production records and no occurrence record at all. "Do I need to worry about diamondback moth here?" rendered
+`summary=(no details)` and `links=[]` — one clarification paragraph and no citation. The two assertions that are now in
+the suite are the first and third of those shapes; the second is the defect, recorded below and registered for the next
+iteration rather than papered over in the client.
+
+`tests/e2e/chat-pest-context.spec.js` lands two cases that run in **all four projects** and add **no new skip**: a plan
+naming a watchlist crop must render that country record with both of its citations, and a pest question asked before
+the lookup must say the context is not loaded instead of guessing. Nothing is stubbed except the field transport
+(`overpass-api.de`, `overpass.private.coffee`, `maps.mail.ru`, `/api/farms?`), because NASA, FAOSTAT and GBIF are what
+the panel is for; the price is that no assertion quotes an occurrence count, since the real count moves. The flow is the
+app's own controls, including the step-03 tab that the comparison auto-advances past (`public/js/app.js:293`), which is
+where the probe stalled before the click was added (`docs/evidence/pest-probe-first-flow-2026-11-18.log.gz`).
+
+Each case was shown able to fail. With the occurrence branch of the composer disabled, node-desktop failed quoting the
+reply it produced instead — the two-paragraph rotation-and-uncertainty answer and no country record
+(`docs/evidence/pest-control-branch-node-2026-11-18.log.gz`). The same edit measured the second case a different way and
+this is the control that matters most, because the unloaded-context branch is the one a naive fix breaks: with the
+lookup never run, the "not loaded" sentence was absent from the reply entirely
+(`docs/evidence/pest-control-branch-unloaded-2026-11-18.log.gz`). Dropping the `-host` citation id from the paragraph
+turned the chip count into `Expected: "Sources (5)" / Received: "Sources (4)"`
+(`docs/evidence/pest-control-citation-2026-11-18.log.gz`), which is the iteration-34 failure class caught at the panel
+boundary rather than in the composer.
+
+The static half of that first control was wrong the first time it was run and the reason is worth keeping. The two
+static projects preview `dist/client/` (`scripts/static-preview.js:7`), so editing `public/js/lib/chat-context.js` and
+re-running proved nothing: the log shows `static-desktop` **passing 2 of 2** on the control build while `node-desktop`
+failed, because `node_modules`-served `public/` carried the edit and the built tree did not
+(`docs/evidence/pest-control-branch-node-2026-11-18.log.gz`). After `npm run build`
+(`docs/evidence/pest-control-branch-build-2026-11-18.log.gz`) the same control on the same project failed the expected
+way — `1 failed, 1 did not run` (`docs/evidence/pest-control-branch-built-2026-11-18.log.gz`). The source and the build
+were then restored and re-verified, not assumed: `git status --short public/js/lib/chat-context.js` is empty, the
+control marker is absent from `dist/client/js/lib/chat-context.js`, and the rebuilt tree passes
+(`docs/evidence/pest-build-restore-2026-11-18.log.gz`, `docs/evidence/pest-spec-post-restore-2026-11-18.log.gz`).
+
+One limit is stated rather than claimed. The paragraph quotes the crop-matched watchlist record, and the landed rule
+picks it by matching the plan's crops against `cropIds` (`server/context/pests.js:5-9`). Removing that match makes no
+test fail, and measuring why says it plainly: `fall-armyworm` is the only record whose `cropIds` reach a crop any
+country can offer (`sweet-corn`, **49 of 197** countries), because `diamondback-moth` is keyed to `radish` and FAOSTAT
+has no radish category for any country in the dataset — a scan of all **197** countries with recorded crop data found
+**0** offering a plain radish choice and **0** regional records named radish
+(`docs/evidence/pest-radish-scan-2026-11-18.log.gz`, and the crop library's own notice says "Radish has no mapped
+FAOSTAT category"). So for every reachable plan the crop-matched record *is* `records[0]`, and an offline control on a
+scratch copy proved the two are indistinguishable in the reply: landed rule quotes `["Fall armyworm"]`, control without
+the match quotes `["Fall armyworm"]`, `identical: true`
+(`docs/evidence/pest-control-cropmatch-2026-11-18.log.gz`). `tests/chat-context.test.js:189` remains the only guard on
+the choice; this spec guards that the chosen record reaches the screen with both citations.
+
+A suppression scan over the two QA corpora plus four extra pest wordings is what turns the sweet-corn observation into
+the next iteration's candidate (`docs/evidence/pest-suppression-scan-2026-11-18.log.gz`): of **6** pest-worded
+questions, **2** get the occurrence paragraph when a comparison exists and **0** without one, and **4** get it neither
+way. Three of those four are rotation-method questions where pest evidence genuinely is not the answer. The fourth is
+"What pests affect sweet corn here?", which the app answers with family and production records while the country watchlist
+sits loaded in the same state — and "Do I need to worry about diamondback moth here?", a species a farmer names
+outright, gets a one-paragraph clarification with **no** sources at all. Fixing that means either an exception inside
+`chat-context.js` that dresses a clarification with evidence, or a server-side answer that reads the watchlist the
+question names; the second is preferred and is registered as iteration 38 candidate 1 with both measured reply shapes.
+
+Executed cost: the new spec on the committed tip **8 passed (20.1 s)** across four projects
+(`docs/evidence/pest-spec-2026-11-18.log.gz`), the post-restore sanity run **8 passed (21.5 s)**, the full four-project
+gate **210 passed, 6 skipped, 0 failed (24.0 m)** with `GATE EXIT=0`
+(`docs/evidence/pest-gate-2026-11-18.log.gz`) — one more test pair than iteration 35's 208-case gate, the 6 skips still
+the documented `worker`-transport panel cases — and the offline suite **216/216, 0 failed, 0 skipped (37,578 ms)**
+unchanged in count because this iteration adds a spec, not a unit test (`docs/evidence/pest-npm-test-2026-11-18.log.gz`); after the subsection and the AGENTS bullet existed, the guard re-run
+that checks their new evidence paths came out **216/216, 0 failed (36,088 ms)**
+(`docs/evidence/pest-npm-test-final-2026-11-18.log.gz`), and `npx playwright test --list` reads **216 tests in 21
+files**. The gate above ran on the spec header as first written, which claimed that *only* `server/api.js:59` leaves
+the composer flag unset; the eight-site and `answers.js:84` wording was measured after it, so the spec was re-run
+comment-edited rather than assumed intact: **8 passed (19.1 s)** (`docs/evidence/pest-spec-comment-edit-2026-11-18.log.gz`).
+No production file was changed: the deliverable is the coverage, the recorded limit, and the defect the coverage exposed.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
