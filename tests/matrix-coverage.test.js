@@ -144,9 +144,18 @@ test('town names stay selectable and every unmatchable name has a stated reason'
       if (typedPlace(list, `Use ${place.name}`, { countryName, allowEponymous }).some(match => match.id === place.id)) continue;
       // A name beyond the bare-reply limit is still typeable with the lead-in the reply suggests.
       if (typedPlace(list, `in ${place.name}`, { countryName, allowEponymous }).some(match => match.id === place.id)) continue;
-      // The engine excludes a town spelled like the country (any accent form) unless the list has
-      // no named regions; that is the one documented reason a listed name is not typed.
-      if (regionPhrase(place.name) === regionPhrase(countryName)) { eponymous.push(`${country}/${place.name}`); continue; }
+      // A town spelled like its country is excluded only while the plan still asks which region it
+      // covers. Once its own region is chosen it has to match again, so assert that here instead of
+      // letting the name pass as merely "documented as untyped".
+      if (regionPhrase(place.name) === regionPhrase(countryName)) {
+        eponymous.push(`${country}/${place.name}`);
+        const ownRegion = list.regions.find(row => row.id === place.regionCode);
+        if (ownRegion && !typedPlace(list, `Use ${place.name}`, { countryName, regionCode: ownRegion.id, allowEponymous: true })
+          .some(match => match.id === place.id)) {
+          unexplained.push(`${country}/${place.name} stayed untypeable under its own region ${ownRegion.name}`);
+        }
+        continue;
+      }
       const { text, located } = await drive(country, place.name);
       if (located || /Which one do you mean/.test(text)) { driven.push(`${country}/${place.name}`); continue; }
       unexplained.push(`${country}/${place.name} -> ${text.slice(0, 70) || '(no reply)'}`);
@@ -531,4 +540,43 @@ test('the country’s own name never re-asks the pending place question and its 
   assert.deepEqual(townMissed, [], `${townMissed.length} towns named like their region-less country were not selected`);
   assert.deepEqual(townFailures, [], `${townFailures.length} towns named like their country cannot be typed after their region is chosen`);
   assert.deepEqual(quietNarrow, [], `${quietNarrow.length} replies naming the whole country selected a row whose name is only part of it`);
+});
+
+// Eighteen saved lists carry no region name at all (Aruba, Singapore, Vatican City, Christmas Island,
+// the Falklands, …), so the region question has nothing honest to offer and the plan must go straight to
+// real towns. Only Singapore was pinned by a test, so a regression in the shared prompt could leave the
+// other seventeen with a buttonless or invented list and still pass everything else.
+test('every region-less saved list answers the area question with real saved towns and a way on', async t => {
+  const lists = [], deadEnds = [], invented = [], unselectable = [];
+  for (const country of listCountries) {
+    const list = await listFor(country), countryName = COUNTRY_NAMES.of(country);
+    if (list.regions.some(region => region.name)) continue;
+    lists.push(country);
+    const { assistant, state } = makeAssistant();
+    await assistant.respond(`Help me plan a rotation in ${countryName}`);
+    const area = await assistant.respond('A specific area');
+    if (!area) { deadEnds.push(`${country}: the area question was answered with silence`); continue; }
+    const text = textOf(area);
+    const towns = (area.followUps ?? []).filter(choice => choice.workflowChoice?.type === 'town');
+    if (!towns.length) deadEnds.push(`${country}: ${list.places.length} saved towns but the area question offered none: ${text.slice(0, 60)}`);
+    if (!area.followUps.some(choice => choice.label === `Whole ${countryName}`))
+      deadEnds.push(`${country}: the area question dropped the Whole ${countryName} route`);
+    if (list.places.length && (!/no named regions/i.test(text) || !/not a recommendation/i.test(text)))
+      deadEnds.push(`${country}: its town list is offered without saying the list is not advice: ${text.slice(0, 70)}`);
+    // Every offered name has to be a row the saved list really holds, and tapping it the way the
+    // button does has to put that row's own coordinates on the plan.
+    for (const choice of towns) {
+      const row = list.places.find(place => place.id === choice.workflowChoice.id);
+      if (!row || row.name !== choice.label) { invented.push(`${country}: “${choice.label}” names no saved town row`); continue; }
+      state.location = null;
+      await assistant.respond(choice.question, choice.workflowChoice);
+      if (!state.location || state.location.latitude !== row.latitude || state.location.longitude !== row.longitude)
+        unselectable.push(`${country}: tapping “${row.name}” set ${JSON.stringify(state.location)} instead of ${row.latitude}, ${row.longitude}`);
+    }
+  }
+  t.diagnostic(`${lists.length} saved lists with no region names, each driven from the area question to a tapped town: ${lists.join(', ')}`);
+  assert.ok(lists.length >= 15, `only ${lists.length} region-less lists were found; the saved place data changed shape`);
+  assert.deepEqual(deadEnds, [], `${deadEnds.length} region-less countries dead-end or misreport at the area question`);
+  assert.deepEqual(invented, [], `${invented.length} offered town buttons do not name a saved row`);
+  assert.deepEqual(unselectable, [], `${unselectable.length} offered town buttons did not select their own row's point`);
 });

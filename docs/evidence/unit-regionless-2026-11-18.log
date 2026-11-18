@@ -1,0 +1,944 @@
+
+> fieldshift@0.1.0 test
+> node --test tests/*.test.js
+
+TAP version 13
+# Subtest: QA gaps: confidence, exact yield and guarantees get explicit calibrated limits with or without a comparison
+ok 1 - QA gaps: confidence, exact yield and guarantees get explicit calibrated limits with or without a comparison
+  ---
+  duration_ms: 76.0024
+  ...
+# Subtest: QA gaps: farmer-reported pH and drainage are checked against source facts without certifying safety
+ok 2 - QA gaps: farmer-reported pH and drainage are checked against source facts without certifying safety
+  ---
+  duration_ms: 1.1508
+  ...
+# Subtest: QA gaps: crop-family explanations remain read-only and preserve the shared-family caveat
+ok 3 - QA gaps: crop-family explanations remain read-only and preserve the shared-family caveat
+  ---
+  duration_ms: 2.9757
+  ...
+# Subtest: QA gaps: contrasting grain maize with sweet corn does not transfer sweet-corn facts
+ok 4 - QA gaps: contrasting grain maize with sweet corn does not transfer sweet-corn facts
+  ---
+  duration_ms: 0.7499
+  ...
+# Subtest: QA gaps: kai lan overview includes the actual eligibility boundary
+ok 5 - QA gaps: kai lan overview includes the actual eligibility boundary
+  ---
+  duration_ms: 5.1004
+  ...
+# Subtest: explicit Node transport sends form inputs as JSON and preserves abort signals
+ok 6 - explicit Node transport sends form inputs as JSON and preserves abort signals
+  ---
+  duration_ms: 3.5402
+  ...
+# Subtest: Node transport exposes provider errors and never treats unreadable responses as successful evidence
+ok 7 - Node transport exposes provider errors and never treats unreadable responses as successful evidence
+  ---
+  duration_ms: 2.2552
+  ...
+# Subtest: browser showcase defaults to worker transport without probing an absent backend
+ok 8 - browser showcase defaults to worker transport without probing an absent backend
+  ---
+  duration_ms: 0.2818
+  ...
+# Subtest: mixed orchard baseline explains its calendar gap without inventing rules or adding unapproved corn
+ok 9 - mixed orchard baseline explains its calendar gap without inventing rules or adding unapproved corn
+  ---
+  duration_ms: 84.8509
+  ...
+# Subtest: missing temperatures/rain never become an assessed zero in the explanatory table
+ok 10 - missing temperatures/rain never become an assessed zero in the explanatory table
+  ---
+  duration_ms: 206.2302
+  ...
+# Subtest: Fahrenheit display converts physical temperatures and preserves missingness and source values
+ok 11 - Fahrenheit display converts physical temperatures and preserves missingness and source values
+  ---
+  duration_ms: 0.8335
+  ...
+# Subtest: memory accounting includes descendants in any order and excludes unrelated user browsers
+ok 12 - memory accounting includes descendants in any order and excludes unrelated user browsers
+  ---
+  duration_ms: 2.5174
+  ...
+# Subtest: lifetime peak bookkeeping retains observed exited processes and distinguishes reused process IDs
+ok 13 - lifetime peak bookkeeping retains observed exited processes and distinguishes reused process IDs
+  ---
+  duration_ms: 1.1635
+  ...
+# Subtest: unavailable or malformed memory evidence is never reported as zero usage
+ok 14 - unavailable or malformed memory evidence is never reported as zero usage
+  ---
+  duration_ms: 0.6637
+  ...
+# Subtest: comparison blockers distinguish unavailable coverage from missing farmer selections
+ok 15 - comparison blockers distinguish unavailable coverage from missing farmer selections
+  ---
+  duration_ms: 1.169
+  ...
+# Subtest: comparison navigation prerequisites recover to country/evidence and permit ready inputs
+ok 16 - comparison navigation prerequisites recover to country/evidence and permit ready inputs
+  ---
+  duration_ms: 0.2538
+  ...
+# Subtest: moving while country lookup is pending starts a lookup for the new coordinates and ignores the old result
+ok 17 - moving while country lookup is pending starts a lookup for the new coordinates and ignores the old result
+  ---
+  duration_ms: 71.0523
+  ...
+# Subtest: an outdated country-lookup failure cannot overwrite the newer country selection
+ok 18 - an outdated country-lookup failure cannot overwrite the newer country selection
+  ---
+  duration_ms: 8.2364
+  ...
+# Subtest: OSM normalization draws only complete rings, preserves crop tags and edit dates, and leaves absent crops unknown
+ok 19 - OSM normalization draws only complete rings, preserves crop tags and edit dates, and leaves absent crops unknown
+  ---
+  duration_ms: 24.5691
+  ...
+# Subtest: bounded farm requests validate coordinates, use a fixed host, and cache original retrieval times
+ok 20 - bounded farm requests validate coordinates, use a fixed host, and cache original retrieval times
+  ---
+  duration_ms: 4.3719
+  ...
+# Subtest: field lookup falls back once and rejects partial Overpass responses
+ok 21 - field lookup falls back once and rejects partial Overpass responses
+  ---
+  duration_ms: 520.7442
+  ...
+# Subtest: context errors do not become empty success records
+ok 22 - context errors do not become empty success records
+  ---
+  duration_ms: 0.5106
+  ...
+# Subtest: place searches are validated and contain the country returned by Nominatim
+ok 23 - place searches are validated and contain the country returned by Nominatim
+  ---
+  duration_ms: 39.3735
+  ...
+# Subtest: point verification requests regional detail from the fixed place service and retains its region
+ok 24 - point verification requests regional detail from the fixed place service and retains its region
+  ---
+  duration_ms: 1.2048
+  ...
+# Subtest: pest occurrence counts are country records, zero means no records, and query failures stay unknown
+ok 25 - pest occurrence counts are country records, zero means no records, and query failures stay unknown
+  ---
+  duration_ms: 1.5087
+  ...
+# Subtest: general crop questions return sourced facts without needing a field or synthetic NASA evidence
+ok 26 - general crop questions return sourced facts without needing a field or synthetic NASA evidence
+  ---
+  duration_ms: 2.0082
+  ...
+# Subtest: catalog answers match explicit multiword sweet-corn names and explain unsupported generic corn
+ok 27 - catalog answers match explicit multiword sweet-corn names and explain unsupported generic corn
+  ---
+  duration_ms: 2.09
+  ...
+# Subtest: soil model values use source unit factors, retain intervals and never become farm measurements
+ok 28 - soil model values use source unit factors, retain intervals and never become farm measurements
+  ---
+  duration_ms: 0.9282
+  ...
+# Subtest: Australian irrigation benchmark is a reproducible annual aggregate, never applied to other countries
+ok 29 - Australian irrigation benchmark is a reproducible annual aggregate, never applied to other countries
+  ---
+  duration_ms: 0.4012
+  ...
+# Subtest: greetings and thanks remain brief and need no scientific sources
+ok 30 - greetings and thanks remain brief and need no scientific sources
+  ---
+  duration_ms: 2.5983
+  ...
+# Subtest: kai lan from Singapore is sourced independently of the selected country
+ok 31 - kai lan from Singapore is sourced independently of the selected country
+  ---
+  duration_ms: 11.5107
+  ...
+# Subtest: topic buttons and typed follow-ups retrieve one part of crop knowledge at a time
+ok 32 - topic buttons and typed follow-ups retrieve one part of crop knowledge at a time
+  ---
+  duration_ms: 2.4345
+  ...
+# Subtest: common crop-country pairs resolve to their actual national records
+ok 33 - common crop-country pairs resolve to their actual national records
+  ---
+  duration_ms: 41.3219
+  ...
+# Subtest: a country-only follow-up keeps the crop while a named new crop changes it
+ok 34 - a country-only follow-up keeps the crop while a named new crop changes it
+  ---
+  duration_ms: 2.423
+  ...
+# Subtest: national production and source-region references do not become local cultivation proof
+ok 35 - national production and source-region references do not become local cultivation proof
+  ---
+  duration_ms: 2.3809
+  ...
+# Subtest: named-country weather never reuses observations for a different map country
+ok 36 - named-country weather never reuses observations for a different map country
+  ---
+  duration_ms: 2.1168
+  ...
+# Subtest: country names use complete matches and ask for a focus when two are named
+ok 37 - country names use complete matches and ask for a focus when two are named
+  ---
+  duration_ms: 2.078
+  ...
+# Subtest: answers stay bounded and every visible source ID resolves once
+ok 38 - answers stay bounded and every visible source ID resolves once
+  ---
+  duration_ms: 4.4955
+  ...
+# Subtest: country choices are sourced production records, never a global fallback
+ok 39 - country choices are sourced production records, never a global fallback
+  ---
+  duration_ms: 14.7337
+  ...
+# Subtest: country constraints reject foreign alternatives and preserve named unassessed baselines
+ok 40 - country constraints reject foreign alternatives and preserve named unassessed baselines
+  ---
+  duration_ms: 92.7931
+  ...
+# Subtest: every country spelling the app recognises resolves to that country and to no other
+ok 41 - every country spelling the app recognises resolves to that country and to no other
+  ---
+  duration_ms: 62.7886
+  ...
+# Subtest: the spellings another engine or our own sources use still resolve
+ok 42 - the spellings another engine or our own sources use still resolve
+  ---
+  duration_ms: 4.876
+  ...
+# Subtest: a shorter country name never absorbs a longer one, and no other wording invents a country
+ok 43 - a shorter country name never absorbs a longer one, and no other wording invents a country
+  ---
+  duration_ms: 2.3825
+  ...
+# Subtest: the guided flow finishes step 1 from a name no Intl table returns
+ok 44 - the guided flow finishes step 1 from a name no Intl table returns
+  ---
+  duration_ms: 15.921
+  ...
+# Built static browser app in dist/client. No server functions or /api network calls.
+# Subtest: Vercel build is static and includes browser workers, crop data and local map assets
+ok 45 - Vercel build is static and includes browser workers, crop data and local map assets
+  ---
+  duration_ms: 2915.1829
+  ...
+# Subtest: sourced expansion covers 166 countries without a radish or variant mapping
+ok 46 - sourced expansion covers 166 countries without a radish or variant mapping
+  ---
+  duration_ms: 100.7856
+  ...
+# Subtest: cabbage heat checks name the crop and onion calendar limits remain visible
+ok 47 - cabbage heat checks name the crop and onion calendar limits remain visible
+  ---
+  duration_ms: 87.182
+  ...
+# Subtest: tomato knowledge uses the sourced harvest range and no obsolete screening exclusion
+ok 48 - tomato knowledge uses the sourced harvest range and no obsolete screening exclusion
+  ---
+  duration_ms: 3.019
+  ...
+# Subtest: new crop references retain the verified duration bases and pH ranges
+ok 49 - new crop references retain the verified duration bases and pH ranges
+  ---
+  duration_ms: 0.4631
+  ...
+# Subtest: related unscreened vegetables never acquire the new crops rules in a comparison
+ok 50 - related unscreened vegetables never acquire the new crops rules in a comparison
+  ---
+  duration_ms: 14.7371
+  ...
+# Subtest: GIBS retains exact date gaps, native resolution, source and palette units
+ok 51 - GIBS retains exact date gaps, native resolution, source and palette units
+  ---
+  duration_ms: 4.8012
+  ...
+# Subtest: GIBS rejects external resource URLs, entities and unsupported intervals
+ok 52 - GIBS rejects external resource URLs, entities and unsupported intervals
+  ---
+  duration_ms: 1.2041
+  ...
+# Subtest: GIBS client deduplicates real-host metadata requests and preserves retrieval dates
+ok 53 - GIBS client deduplicates real-host metadata requests and preserves retrieval dates
+  ---
+  duration_ms: 2.076
+  ...
+# Subtest: HTTP conversational crop-country answers bypass NASA and planning validation
+ok 54 - HTTP conversational crop-country answers bypass NASA and planning validation
+  ---
+  duration_ms: 167.7522
+  ...
+# Subtest: HTTP end to end: static modules, local map assets, NASA contract, comparison, sourced assistant
+ok 55 - HTTP end to end: static modules, local map assets, NASA contract, comparison, sourced assistant
+  ---
+  duration_ms: 835.3552
+  ...
+# Subtest: invalid HTTP inputs are rejected before NASA retrieval
+ok 56 - invalid HTTP inputs are rejected before NASA retrieval
+  ---
+  duration_ms: 40.0653
+  ...
+# Subtest: upstream failure surfaces honest error; server remains usable
+ok 57 - upstream failure surfaces honest error; server remains usable
+  ---
+  duration_ms: 11.282
+  ...
+# Subtest: static file routing cannot expose project files, dependencies outside Leaflet, or directories
+ok 58 - static file routing cannot expose project files, dependencies outside Leaflet, or directories
+  ---
+  duration_ms: 34.677
+  ...
+# Subtest: typed-judgment data keeps acceptance prompts out of every split and the held-out set separate
+ok 59 - typed-judgment data keeps acceptance prompts out of every split and the held-out set separate
+  ---
+  duration_ms: 113.1447
+  ...
+# Subtest: typed-judgment report matches the saved weights, uses only schema options and makes no agronomic claim
+ok 60 - typed-judgment report matches the saved weights, uses only schema options and makes no agronomic claim
+  ---
+  duration_ms: 41.0356
+  ...
+# Subtest: read aloud only ever selects an on-device English voice
+ok 61 - read aloud only ever selects an on-device English voice
+  ---
+  duration_ms: 0.6832
+  ...
+# Subtest: country-sized location files match their source manifest, hashes and coordinate contract
+ok 62 - country-sized location files match their source manifest, hashes and coordinate contract
+  ---
+  duration_ms: 1613.7345
+  ...
+# Subtest: a list without named region labels still offers selectable towns
+ok 63 - a list without named region labels still offers selectable towns
+  ---
+  duration_ms: 1240.57
+  ...
+# Subtest: country lists expose real source towns and regions; missing coverage never uses another country
+ok 64 - country lists expose real source towns and regions; missing coverage never uses another country
+  ---
+  duration_ms: 18.0151
+  ...
+# Subtest: place-list failures are visible and a retry can succeed with the original source metadata
+ok 65 - place-list failures are visible and a retry can succeed with the original source metadata
+  ---
+  duration_ms: 8.4876
+  ...
+# Subtest: malformed or cross-country place data cannot become selectable locations
+ok 66 - malformed or cross-country place data cannot become selectable locations
+  ---
+  duration_ms: 0.5553
+  ...
+# Subtest: all 245 saved country lists can complete step 1 from the chat
+ok 67 - all 245 saved country lists can complete step 1 from the chat
+  ---
+  duration_ms: 1429.3559
+  ...
+# Subtest: all 250 supported country codes resolve from every spelling a farmer types
+ok 68 - all 250 supported country codes resolve from every spelling a farmer types
+  ---
+  duration_ms: 111.4555
+  ...
+# Subtest: a country with no saved town list keeps both routes honest and tappable
+ok 69 - a country with no saved town list keeps both routes honest and tappable
+  ---
+  duration_ms: 18.3006
+  ...
+# Subtest: compound region names resolve to one country and never to a name inside them
+ok 70 - compound region names resolve to one country and never to a name inside them
+  ---
+  duration_ms: 0.755
+  ...
+# Subtest: whole-country phrasing works for shortened and spelled-out names
+ok 71 - whole-country phrasing works for shortened and spelled-out names
+  ---
+  duration_ms: 0.7943
+  ...
+# Subtest: every named region in every saved list can be selected by typing its name
+ok 72 - every named region in every saved list can be selected by typing its name
+  ---
+  duration_ms: 4965.8332
+  ...
+# Subtest: town names stay selectable and every unmatchable name has a stated reason
+ok 73 - town names stay selectable and every unmatchable name has a stated reason
+  ---
+  duration_ms: 1479.9635
+  ...
+# typed-place coverage: 13671 unique town names sampled, 28 needed the exact-row path, 6 skipped as eponymous with the country: DJ/Djibouti, LU/Luxembourg, MC/Monaco, MZ/Mozambique, SM/San Marino, TM/Türkmenistan
+# Subtest: towns that share a name and a region never produce two identical buttons
+ok 74 - towns that share a name and a region never produce two identical buttons
+  ---
+  duration_ms: 1277.9752
+  ...
+# duplicate town names exercised in 49 countries (2 of them showing 3 of a larger set): AO/Cambundix2, AR/San Vicentex2, AU/Figtreex2, BD/Shibganjx2, BE/Hallex2, BR/Barrox2, CA/Fairfieldx2, CI/Guézonx2, CL/Cañetex2, CN/Xinglongx4
+# Subtest: one spelling that is both a region and a town follows the question that is pending
+ok 75 - one spelling that is both a region and a town follows the question that is pending
+  ---
+  duration_ms: 2176.4561
+  ...
+# region-and-town name collisions followed in 147 countries, 10 of them answered with a town outside the chosen region and 0 with “not a town here”: AD/Canillo, AE/Abu Dhabi, AF/Farah, AI/Sandy Hill, AL/Tirana, AM/Ararat, AO/Benguela, AR/Buenos Aires | AR/Buenos Aires, BM/Hamilton, CI/Yamoussoukro, CN/Jiangxi, CO/Córdoba, GB/Wales, MN/Sühbaatar, TW/Taipei, WS/Palauli, ZA/Mpumalanga
+# Subtest: all 245 countries end in an honest outcome with no dead end or cycle
+ok 76 - all 245 countries end in an honest outcome with no dead end or cycle
+  ---
+  duration_ms: 2631.1628
+  ...
+# screened-crop branches driven: 67 countries with none, 12 with exactly one, 166 with two or more; outcomes {"terminal":245,"handoff":0}
+# Subtest: no country is offered a comparison it cannot support and unknown crops are never substituted
+ok 77 - no country is offered a comparison it cannot support and unknown crops are never substituted
+  ---
+  duration_ms: 1392.8995
+  ...
+# Subtest: every catalog crop and alias resolves to its own id wherever it is screened
+ok 78 - every catalog crop and alias resolves to its own id wherever it is screened
+  ---
+  duration_ms: 45.4975
+  ...
+# Subtest: an unknown town during a pending area plan stays recoverable with buttons
+ok 79 - an unknown town during a pending area plan stays recoverable with buttons
+  ---
+  duration_ms: 290.2393
+  ...
+# Subtest: every region row that collides with a country spelling stays selectable as a region
+ok 80 - every region row that collides with a country spelling stays selectable as a region
+  ---
+  duration_ms: 1120.4601
+  ...
+# 24 region rows collide with a country spelling, each typed three ways: CN/Inner Mongolia (MN), DJ/Djibouti (own country), GB/Northern Ireland (IE), GD/Carriacou and Petite Martinique (MQ), GG/St Martin (MF), GP/Guadeloupe (own country), GR/East Macedonia and Thrace (MK), GR/Central Macedonia (MK), GR/West Macedonia (MK), GT/Guatemala (own country), IR/West Azerbaijan (AZ), IR/East Azerbaijan (AZ), LU/Luxembourg (own country), MQ/Martinique (own country), NG/Niger State (NE), PG/East New Britain Province (GB), PG/New Ireland (IE), PG/West New Britain Province (GB), SM/San Marino (own country), TT/Port of Spain (ES), TW/Taiwan (own country), US/Georgia (GE), US/New Jersey (JE), US/New Mexico (MX)
+# Subtest: a town row too short for the bare-reply rule is still selectable while another region is chosen
+ok 81 - a town row too short for the bare-reply rule is still selectable while another region is chosen
+  ---
+  duration_ms: 821.4291
+  ...
+# 31 one- or two-letter town rows typed while a different region was selected
+# Subtest: the region question always leaves a tappable choice, even when only the country’s own name is listed
+ok 82 - the region question always leaves a tappable choice, even when only the country’s own name is listed
+  ---
+  duration_ms: 1973.3826
+  ...
+# GP, MQ: 2 lists whose only region row is spelled like the country; 0 buttonless region questions
+# Subtest: the country’s own name never re-asks the pending place question and its same-named town stays typeable
+ok 83 - the country’s own name never re-asks the pending place question and its same-named town stays typeable
+  ---
+  duration_ms: 6229.5145
+  ...
+# 7 lists hold a town spelled like the country while also listing named regions: CO/Colombia, DJ/Djibouti, LU/Luxembourg, MC/Monaco, MZ/Mozambique, SM/San Marino, TM/Türkmenistan
+# Subtest: every region-less saved list answers the area question with real saved towns and a way on
+ok 84 - every region-less saved list answers the area question with real saved towns and a way on
+  ---
+  duration_ms: 25.2591
+  ...
+# 18 saved lists with no region names, each driven from the area question to a tapped town: AW, BL, CC, CW, CX, EH, FK, GI, GS, MF, NF, NU, PN, SG, SX, TC, VA, VG
+# Subtest: compact artifact is a trained word-level sequence LM with traceable weights and candid evaluation
+ok 85 - compact artifact is a trained word-level sequence LM with traceable weights and candid evaluation
+  ---
+  duration_ms: 371.2041
+  ...
+# Subtest: WASM embedding gradient sums repeated IDs correctly and ignores negative segment IDs
+ok 86 - WASM embedding gradient sums repeated IDs correctly and ignores negative segment IDs
+  ---
+  duration_ms: 0.741
+  ...
+# Subtest: validates global coordinates and historical complete-year bounds
+ok 87 - validates global coordinates and historical complete-year bounds
+  ---
+  duration_ms: 2.6265
+  ...
+# Subtest: normalises fill and absent dates without turning missing rainfall into zero
+ok 88 - normalises fill and absent dates without turning missing rainfall into zero
+  ---
+  duration_ms: 38.0166
+  ...
+# Subtest: all-missing parameters have no observed date, mean or total
+ok 89 - all-missing parameters have no observed date, mean or total
+  ---
+  duration_ms: 4.8532
+  ...
+# Subtest: rejects schema and unit changes instead of applying incorrect rules
+ok 90 - rejects schema and unit changes instead of applying incorrect rules
+  ---
+  duration_ms: 5.7097
+  ...
+# Subtest: coalesces concurrent requests, caches original retrieval time, separates coordinates and expires
+ok 91 - coalesces concurrent requests, caches original retrieval time, separates coordinates and expires
+  ---
+  duration_ms: 62.7407
+  ...
+# Subtest: upstream HTTP, JSON and network failures return errors and never cache substitutes
+ok 92 - upstream HTTP, JSON and network failures return errors and never cache substitutes
+  ---
+  duration_ms: 5.3246
+  ...
+# Subtest: MERRA output centre bounds wrap at the date line and clip at poles
+ok 93 - MERRA output centre bounds wrap at the date line and clip at poles
+  ---
+  duration_ms: 2.4944
+  ...
+# Subtest: regional rain keeps zero, missing days, partial sums and exact returned geometry
+ok 94 - regional rain keeps zero, missing days, partial sums and exact returned geometry
+  ---
+  duration_ms: 40.3906
+  ...
+# Subtest: regional adapter validates inputs and uses one bounded fixed-host parameter request
+ok 95 - regional adapter validates inputs and uses one bounded fixed-host parameter request
+  ---
+  duration_ms: 51.2037
+  ...
+# Subtest: column display preserves missing versus true zero and keeps a fixed annual scale
+ok 96 - column display preserves missing versus true zero and keeps a fixed annual scale
+  ---
+  duration_ms: 119.0758
+  ...
+# Subtest: date-line fallback requests one actual native centre and never copies neighbours
+ok 97 - date-line fallback requests one actual native centre and never copies neighbours
+  ---
+  duration_ms: 3.5829
+  ...
+# Subtest: QA F01/R2: Australia produces three distinct comparable scenarios from its recorded screened subset
+ok 98 - QA F01/R2: Australia produces three distinct comparable scenarios from its recorded screened subset
+  ---
+  duration_ms: 435.8945
+  ...
+# Subtest: QA F02: India rice and wheat retain unknown scientific fields while its screened alternatives stay constrained
+ok 99 - QA F02: India rice and wheat retain unknown scientific fields while its screened alternatives stay constrained
+  ---
+  duration_ms: 282.3768
+  ...
+# Subtest: QA F03/R2: Countries without sufficient rules cannot bypass missing screening coverage through the API
+ok 100 - QA F03/R2: Countries without sufficient rules cannot bypass missing screening coverage through the API
+  ---
+  duration_ms: 2.795
+  ...
+# Subtest: QA M03: impossible coordinates and the incomplete current year are rejected before provider access
+ok 101 - QA M03: impossible coordinates and the incomplete current year are rejected before provider access
+  ---
+  duration_ms: 0.8181
+  ...
+# Subtest: QA M06: changing pH/drainage changes sourced soil warnings without changing weather or baseline
+ok 102 - QA M06: changing pH/drainage changes sourced soil warnings without changing weather or baseline
+  ---
+  duration_ms: 456.7864
+  ...
+# Subtest: QA M10: all priorities retain the same hard warnings and disclose their actual ordering
+ok 103 - QA M10: all priorities retain the same hard warnings and disclose their actual ordering
+  ---
+  duration_ms: 895.8308
+  ...
+# Subtest: QA M11: irrigation availability alone cannot become sufficiency or calculated water savings
+ok 104 - QA M11: irrigation availability alone cannot become sufficiency or calculated water savings
+  ---
+  duration_ms: 393.0973
+  ...
+# Subtest: rankings repeat exactly; baseline and two distinct alternatives share one 12-month horizon
+ok 105 - rankings repeat exactly; baseline and two distinct alternatives share one 12-month horizon
+  ---
+  duration_ms: 968.3573
+  ...
+# Subtest: family repetition includes bean/pea, nonadjacent crops and supplied previous crop
+ok 106 - family repetition includes bean/pea, nonadjacent crops and supplied previous crop
+  ---
+  duration_ms: 309.9911
+  ...
+# Subtest: unsupported baseline is preserved and is never assigned crop facts
+ok 107 - unsupported baseline is preserved and is never assigned crop facts
+  ---
+  duration_ms: 419.2298
+  ...
+# Subtest: unspecified corn and maize remain unassessed instead of inheriting sweet-corn maturity rules
+ok 108 - unspecified corn and maize remain unassessed instead of inheriting sweet-corn maturity rules
+  ---
+  duration_ms: 338.4342
+  ...
+# Subtest: alternatives respect crop restrictions while baseline remains intact
+ok 109 - alternatives respect crop restrictions while baseline remains intact
+  ---
+  duration_ms: 28.32
+  ...
+# Subtest: missing weather prevents an apparently clean screening and produces null totals
+ok 110 - missing weather prevents an apparently clean screening and produces null totals
+  ---
+  duration_ms: 296.3366
+  ...
+# Subtest: frost-tender historical exposure is counted; it is not called a safe candidate
+ok 111 - frost-tender historical exposure is counted; it is not called a safe candidate
+  ---
+  duration_ms: 313.7841
+  ...
+# Subtest: calendar screening catches maturity overruns and handles year-wrap and leap-day mapping
+ok 112 - calendar screening catches maturity overruns and handles year-wrap and leap-day mapping
+  ---
+  duration_ms: 705.8974
+  ...
+# Subtest: input validation rejects missing constraints, oversized text and impossible alternatives
+ok 113 - input validation rejects missing constraints, oversized text and impossible alternatives
+  ---
+  duration_ms: 1.0993
+  ...
+# Subtest: priority changes the documented tie-break ordering, not safety checks
+ok 114 - priority changes the documented tie-break ordering, not safety checks
+  ---
+  duration_ms: 0.7252
+  ...
+# Subtest: sourced soil pH and drainage checks use farmer inputs while unassessed crops remain explicit
+ok 115 - sourced soil pH and drainage checks use farmer inputs while unassessed crops remain explicit
+  ---
+  duration_ms: 338.7186
+  ...
+# Subtest: rain-free exposure counts exact zeros, never missing values or water savings
+ok 116 - rain-free exposure counts exact zeros, never missing values or water savings
+  ---
+  duration_ms: 344.9457
+  ...
+# Subtest: crop and water questions use traceable facts and deterministic limitations
+ok 117 - crop and water questions use traceable facts and deterministic limitations
+  ---
+  duration_ms: 283.1387
+  ...
+# Subtest: the Node server, the static preview and vercel.json send the same security headers
+ok 118 - the Node server, the static preview and vercel.json send the same security headers
+  ---
+  duration_ms: 192.8664
+  ...
+# Subtest: the reviewed CSP keeps script, object, framing and base permissions closed
+ok 119 - the reviewed CSP keeps script, object, framing and base permissions closed
+  ---
+  duration_ms: 0.5965
+  ...
+# Subtest: app-authored browser code has no HTML sink, dynamic code execution or unsafe source links
+ok 120 - app-authored browser code has no HTML sink, dynamic code execution or unsafe source links
+  ---
+  duration_ms: 9.8417
+  ...
+# Subtest: untrusted coordinates and place text cannot reach the field or place services
+ok 121 - untrusted coordinates and place text cannot reach the field or place services
+  ---
+  duration_ms: 14.0242
+  ...
+# Subtest: the Node preview rejects traversal, oversized bodies and non-JSON posts
+ok 122 - the Node preview rejects traversal, oversized bodies and non-JSON posts
+  ---
+  duration_ms: 63.6598
+  ...
+# Subtest: every dependency is pinned to an exact version
+ok 123 - every dependency is pinned to an exact version
+  ---
+  duration_ms: 2.4265
+  ...
+# Subtest: starting twice reuses the project preview and opens the same browser URL
+ok 124 - starting twice reuses the project preview and opens the same browser URL
+  ---
+  duration_ms: 236.6983
+  ...
+# Subtest: an unrelated app keeps its port and FieldShift opens the next free one
+ok 125 - an unrelated app keeps its port and FieldShift opens the next free one
+  ---
+  duration_ms: 111.6585
+  ...
+# Subtest: a preview of a different directory is never reused as this project
+ok 126 - a preview of a different directory is never reused as this project
+  ---
+  duration_ms: 268.2691
+  ...
+# Subtest: Node testing and static showcase previews keep separate identities and can run together
+ok 127 - Node testing and static showcase previews keep separate identities and can run together
+  ---
+  duration_ms: 96.4282
+  ...
+# Subtest: Terrarium PNG decoding matches independently checked recorded RGB pixels and rejects corruption
+ok 128 - Terrarium PNG decoding matches independently checked recorded RGB pixels and rejects corruption
+  ---
+  duration_ms: 108.1542
+  ...
+# Subtest: minimal synthetic PNG preserves fractional heights and missing pixels
+ok 129 - minimal synthetic PNG preserves fractional heights and missing pixels
+  ---
+  duration_ms: 3.5187
+  ...
+# Subtest: finite differences recover plane slope, downhill aspect and flat/unknown cases
+ok 130 - finite differences recover plane slope, downhill aspect and flat/unknown cases
+  ---
+  duration_ms: 0.5291
+  ...
+# Subtest: polygon masking excludes holes and never invents a small-field slope
+ok 131 - polygon masking excludes holes and never invents a small-field slope
+  ---
+  duration_ms: 42.011
+  ...
+# Subtest: terrain point client uses bounded fixed-host tiles and retains cached provenance
+ok 132 - terrain point client uses bounded fixed-host tiles and retains cached provenance
+  ---
+  duration_ms: 223.1643
+  ...
+# Subtest: new unexpected questions return grounded limits, source-backed context or clarification
+ok 133 - new unexpected questions return grounded limits, source-backed context or clarification
+  ---
+  duration_ms: 79.5035
+  ...
+# Subtest: verified regional crop records never become FAOSTAT records or ranked alternatives
+ok 134 - verified regional crop records never become FAOSTAT records or ranked alternatives
+  ---
+  duration_ms: 0.5517
+  ...
+# Subtest: shared historical window preserves leap substitution, year wrap and missing rain
+ok 135 - shared historical window preserves leap substitution, year wrap and missing rain
+  ---
+  duration_ms: 26.787
+  ...
+# Subtest: 3D crop-window columns equal strategy daily calculations and reject stale or unsupported slots
+ok 136 - 3D crop-window columns equal strategy daily calculations and reject stale or unsupported slots
+  ---
+  duration_ms: 144.0642
+  ...
+# Subtest: workflow parser distinguishes actions from read-only crop questions
+ok 137 - workflow parser distinguishes actions from read-only crop questions
+  ---
+  duration_ms: 12.3105
+  ...
+# Subtest: explicit country, coordinates and farmer crops execute through step 4 in order
+ok 138 - explicit country, coordinates and farmer crops execute through step 4 in order
+  ---
+  duration_ms: 11.7804
+  ...
+# Subtest: country without a field asks for a point and retains supplied crops across messages
+ok 139 - country without a field asks for a point and retains supplied crops across messages
+  ---
+  duration_ms: 3.3626
+  ...
+# Subtest: whole-country replies use national evidence without loading point weather or comparing
+ok 140 - whole-country replies use national evidence without loading point weather or comparing
+  ---
+  duration_ms: 52.3816
+  ...
+# Subtest: combined place/coordinate sentences resolve a coherent point and reject region/town conflicts
+ok 141 - combined place/coordinate sentences resolve a coherent point and reject region/town conflicts
+  ---
+  duration_ms: 7.0541
+  ...
+# Subtest: national scope clears an existing field point and keeps the farmer sequence
+ok 142 - national scope clears an existing field point and keeps the farmer sequence
+  ---
+  duration_ms: 1.0547
+  ...
+# Subtest: specific-area mode accepts a sourced region and preserves crops through the local comparison
+ok 143 - specific-area mode accepts a sourced region and preserves crops through the local comparison
+  ---
+  duration_ms: 4.8142
+  ...
+# Subtest: whole-country mode can narrow directly to a named region without repeating the crops
+ok 144 - whole-country mode can narrow directly to a named region without repeating the crops
+  ---
+  duration_ms: 3.1576
+  ...
+# Subtest: whole-country choice puts the supplied crops in step 3, offers tappable regions and can finish after a manual town pick
+ok 145 - whole-country choice puts the supplied crops in step 3, offers tappable regions and can finish after a manual town pick
+  ---
+  duration_ms: 20.9952
+  ...
+# Subtest: scope choices apply to other countries and empty national coverage stays honest
+ok 146 - scope choices apply to other countries and empty national coverage stays honest
+  ---
+  duration_ms: 2.7357
+  ...
+# Subtest: a selected point still needs three farmer crops and never fills missing slots
+ok 147 - a selected point still needs three farmer crops and never fills missing slots
+  ---
+  duration_ms: 1.0258
+  ...
+# Subtest: coordinate-country disagreement stops before location and NASA actions
+ok 148 - coordinate-country disagreement stops before location and NASA actions
+  ---
+  duration_ms: 0.6702
+  ...
+# Subtest: field actions require a currently returned source ID
+ok 149 - field actions require a currently returned source ID
+  ---
+  duration_ms: 0.3917
+  ...
+# Subtest: an explicitly numbered returned field is selected without guessing another outline
+ok 150 - an explicitly numbered returned field is selected without guessing another outline
+  ---
+  duration_ms: 0.5764
+  ...
+# Subtest: provider failure is not reported as a successful comparison
+ok 151 - provider failure is not reported as a successful comparison
+  ---
+  duration_ms: 1.099
+  ...
+# Subtest: manual edits cancel a pending continuation before comparison runs
+ok 152 - manual edits cancel a pending continuation before comparison runs
+  ---
+  duration_ms: 13.0785
+  ...
+# Subtest: restricting alternatives to unsupported crops never silently substitutes other crops
+ok 153 - restricting alternatives to unsupported crops never silently substitutes other crops
+  ---
+  duration_ms: 1.1455
+  ...
+# Subtest: a plan blocked on allowed crops offers the screened list as a tappable chat choice
+ok 154 - a plan blocked on allowed crops offers the screened list as a tappable chat choice
+  ---
+  duration_ms: 1.4118
+  ...
+# Subtest: crop resolution preserves unknown varieties and existing FAO selections
+ok 155 - crop resolution preserves unknown varieties and existing FAO selections
+  ---
+  duration_ms: 0.9052
+  ...
+# Subtest: an explicit alternative list is separate from baseline and a mixed unsupported list needs correction
+ok 156 - an explicit alternative list is separate from baseline and a mixed unsupported list needs correction
+  ---
+  duration_ms: 1.1955
+  ...
+# Subtest: unmatched text in national scope does not execute a workflow action
+ok 157 - unmatched text in national scope does not execute a workflow action
+  ---
+  duration_ms: 0.6846
+  ...
+# Subtest: nonsense and full-width read-only questions cannot advance a pending point workflow
+ok 158 - nonsense and full-width read-only questions cannot advance a pending point workflow
+  ---
+  duration_ms: 0.489
+  ...
+# Subtest: Singapore with unnamed region codes goes directly to places and never needs a region
+ok 159 - Singapore with unnamed region codes goes directly to places and never needs a region
+  ---
+  duration_ms: 2.1911
+  ...
+# Subtest: a click path through Singapore never repeats a reply and reaches a real point
+ok 160 - a click path through Singapore never repeats a reply and reaches a real point
+  ---
+  duration_ms: 30.7953
+  ...
+# Subtest: every area prompt for a country with unnamed regions offers tappable towns
+ok 161 - every area prompt for a country with unnamed regions offers tappable towns
+  ---
+  duration_ms: 2.0159
+  ...
+# Subtest: the whole-country overview then offers towns instead of returning to the same prompt
+ok 162 - the whole-country overview then offers towns instead of returning to the same prompt
+  ---
+  duration_ms: 10.5918
+  ...
+# Subtest: typed town names match partially, an exact name wins and a new name re-targets the point
+ok 163 - typed town names match partially, an exact name wins and a new name re-targets the point
+  ---
+  duration_ms: 3.5691
+  ...
+# Subtest: the country name alone still selects the eponymous town when no regions are named
+ok 164 - the country name alone still selects the eponymous town when no regions are named
+  ---
+  duration_ms: 2.2504
+  ...
+# Subtest: a planning request that merely mentions a country does not jump to a town point
+ok 165 - a planning request that merely mentions a country does not jump to a town point
+  ---
+  duration_ms: 1.6042
+  ...
+# Subtest: a region name selects that region and its town buttons stay inside it
+ok 166 - a region name selects that region and its town buttons stay inside it
+  ---
+  duration_ms: 1.6509
+  ...
+# Subtest: a field prompt keeps the town-point button beside the mapped fields
+ok 167 - a field prompt keeps the town-point button beside the mapped fields
+  ---
+  duration_ms: 1.8138
+  ...
+# Subtest: unmatched short replies never execute a place action
+ok 168 - unmatched short replies never execute a place action
+  ---
+  duration_ms: 1.3999
+  ...
+# Subtest: a wording shared by a region row and a town row follows the question that was asked
+ok 169 - a wording shared by a region row and a town row follows the question that was asked
+  ---
+  duration_ms: 1.7193
+  ...
+# Subtest: a town whose name contains a region name is the town when no region was asked for
+ok 170 - a town whose name contains a region name is the town when no region was asked for
+  ---
+  duration_ms: 5.5539
+  ...
+# Subtest: a town name that reads as a crop list is the row the farmer copied, and re-targets a chosen point
+ok 171 - a town name that reads as a crop list is the row the farmer copied, and re-targets a chosen point
+  ---
+  duration_ms: 2.3367
+  ...
+# Subtest: a town name that opens like a question, and one saved in another script, are still selectable
+ok 172 - a town name that opens like a question, and one saved in another script, are still selectable
+  ---
+  duration_ms: 3.2687
+  ...
+# Subtest: a tapped region works from its row id when the saved spelling has no accent
+ok 173 - a tapped region works from its row id when the saved spelling has no accent
+  ---
+  duration_ms: 0.8077
+  ...
+# Subtest: a local place name that contains another country name does not move the plan
+ok 174 - a local place name that contains another country name does not move the plan
+  ---
+  duration_ms: 0.9819
+  ...
+# Subtest: a place name is never read as a question, but a real question stays read-only
+ok 175 - a place name is never read as a question, but a real question stays read-only
+  ---
+  duration_ms: 0.1846
+  ...
+# Subtest: a region named inside its own country name is picked only when the farmer names the region
+ok 176 - a region named inside its own country name is picked only when the farmer names the region
+  ---
+  duration_ms: 1.8102
+  ...
+# Subtest: a town whose own name contains the country name is still selectable
+ok 177 - a town whose own name contains the country name is still selectable
+  ---
+  duration_ms: 5.0591
+  ...
+# Subtest: an unmatched town typed after a town point still leaves a tappable way forward
+ok 178 - an unmatched town typed after a town point still leaves a tappable way forward
+  ---
+  duration_ms: 3.3463
+  ...
+# Subtest: “Use Inner Mongolia” answers the region question instead of moving the plan to Mongolia
+ok 179 - “Use Inner Mongolia” answers the region question instead of moving the plan to Mongolia
+  ---
+  duration_ms: 0.9996
+  ...
+# Subtest: a state spelled like another country stays in the country the plan is already in
+ok 180 - a state spelled like another country stays in the country the plan is already in
+  ---
+  duration_ms: 0.8137
+  ...
+# Subtest: the region spelled like its country is selectable by typing it at the region question
+ok 181 - the region spelled like its country is selectable by typing it at the region question
+  ---
+  duration_ms: 1.096
+  ...
+# Subtest: the town spelled like its country is typeable once another region is chosen
+ok 182 - the town spelled like its country is typeable once another region is chosen
+  ---
+  duration_ms: 0.7795
+  ...
+# Subtest: answering the region question with the country’s own name asks something new instead of repeating itself
+ok 183 - answering the region question with the country’s own name asks something new instead of repeating itself
+  ---
+  duration_ms: 4.7347
+  ...
+# Subtest: naming the whole country at the region question does not select the town inside that name
+ok 184 - naming the whole country at the region question does not select the town inside that name
+  ---
+  duration_ms: 2.0577
+  ...
+1..184
+# tests 184
+# suites 0
+# pass 184
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27334.3054

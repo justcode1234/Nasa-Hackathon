@@ -393,6 +393,20 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   assistant reply strings — and `tests/model.test.js` still passes its sha256 pin. Real phones,
   Safari/WebKit, microphone and read-aloud audio quality and independent agronomic review remain
   unverified.
+- **18 Nov, same branch: closing the last two coverage gaps in the goal's own terms.** Re-auditing the
+  acceptance criteria against the code, not memory, found no new app defect but two places where a
+  regression could hide. (a) `tests/matrix-coverage.test.js` *skipped* a town spelled like its country,
+  so a matcher regression there was silent; it now requires each of the 7 (CO DJ LU MC MZ SM TM) to match
+  through `typedPlace` under its own saved region. (b) Only a synthetic Singapore case pinned the
+  region-less area prompt, so the other 17 of the 18 lists (AW BL CC CW CX EH FK GI GS MF NF NU PN SG SX
+  TC VA VG) were untested at the interaction layer; a new test drives each real list from "Help me plan a
+  rotation in &lt;country&gt;" through "A specific area" and asserts a non-empty reply, a town button for every
+  offered name that resolves to that saved row, `Whole &lt;country&gt;` still present, the "no named regions" and
+  "not a recommendation" wording, and that tapping the button sets the plan to that row's own
+  coordinates. **Executed:** `node --test tests/matrix-coverage.test.js` 18/18, `npm test` **184/184, 0
+  failed** (docs/evidence/unit-regionless-2026-11-18.log), `npm audit` 0 vulnerabilities. Test
+  files only — no app module, no place data, no model vocabulary changed, so the tiny word LM is again
+  not retrained and the `cbeff6b` browser gate above still describes this app code.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

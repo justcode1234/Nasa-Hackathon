@@ -1090,3 +1090,41 @@ the installed on-device read-aloud voice, and independent agronomic review of th
 rotation reasons. Field outlines depend on shared public Overpass services and fail when those services
 are busy; the probe blocks them deliberately, so nothing here proves field discovery works.
 
+## 18 November 2026 - durable coverage for the region-less lists and the eponymous towns
+
+**Branch:** `fix/chat-flow-and-answers`. **Files:** `tests/matrix-coverage.test.js` only.
+
+Re-auditing the validation goal against the shipped tests, rather than against these notes, found no new
+app defect but two assertions weaker than the goal requires:
+
+* The full-list census treated *a town spelled like its own country* as expected-untyped and `continue`d
+  past it, so nothing durable proved those seven rows (CO Colombia, DJ Djibouti, LU Luxembourg,
+  MC Monaco, MZ Mozambique, SM San Marino, TM Türkmenistan) stayed selectable after the Fix A/C changes.
+  The census now keeps them in `eponymous` **and** requires `typedPlace` to return the row when its own
+  saved region is the filter; an untypeable one is reported by name.
+* The seventeen lists other than Singapore had no interaction-layer test. `tests/locations.test.js` proves
+  the *data* shape (18 lists without region names, each holding at least one town) and one synthetic
+  Singapore case pins the wording, but a regression in the shared `areaPrompt`/`townButtons` path could
+  have given Aruba, Christmas Island, the Falklands or Vatican City a buttonless area question and still
+  passed everything recorded above.
+
+The new test drives every real region-less list through the production assistant — `Help me plan a
+rotation in <official country name>` then `A specific area` — and fails on: a silent reply; no town
+button while the list holds towns; a missing `Whole <country>` route; the prompt offering towns without
+saying the list has no named regions and is *not a recommendation*; an offered button whose label does
+not equal a saved row's `name`; and a tapped button that does not put that row's own
+`latitude`/`longitude` on the plan. All **18** lists (AW BL CC CW CX EH FK GI GS MF NF NU PN SG SX TC
+VA VG) pass, so no name in their area prompt is unreachable from the chat.
+
+* `node --test tests/matrix-coverage.test.js` → **18/18 passed, 0 failed**.
+* `npm test` → **184/184 passed, 0 failed, 0 skipped**
+  ([evidence/unit-regionless-2026-11-18.log](evidence/unit-regionless-2026-11-18.log)).
+* `npm audit` → **0 vulnerabilities**.
+* No app module, place row, crop record or model vocabulary changed in this step, so the tiny word LM is
+  not retrained and the browser numbers recorded above still describe this code.
+
+### Not verified here either
+
+The same list as the section above: real phones and touch, Safari/WebKit, microphone and read-aloud audio
+quality, independent agronomic review, and live Overpass field discovery.
+
