@@ -28,6 +28,10 @@ function fencedLines(markdown) {
     .filter(line => !/^\s*#/.test(line));
 }
 const DOCUMENTED_FILE = /(?:scripts|tests|server|notebooks)\/[A-Za-z0-9_./-]+\.(?:m?js|js|py|ipynb)/g;
+// Evidence archives live in folders too, so the character class has to carry `/`. Without it a citation such as
+// docs/evidence/merged-release-visuals/no-such-file.png stops at the slash and stat() approves the directory
+// instead of the file, and a doc can point at an archive that was never shipped while this scan stays green.
+const EVIDENCE_CITATION = /docs\/evidence\/[A-Za-z0-9_.\-*/]+/g;
 // npm's own verbs and the lifecycle hooks a person never types are not project scripts.
 const NPM_VERBS = new Set(['ci', 'install', 'i', 'audit', 'ls', 'exec', 'doctor', 'login', 'logout', 'config', 'update', 'view', 'why', 'fund']);
 
@@ -90,12 +94,22 @@ test('a quoted error message is not a documented file, a command line still is',
   assert.deepEqual(scanned, ['notebooks/legacy-workers/benchmark-candidate.js', 'scripts/check-documentation.js']);
 });
 
+test('an evidence citation is read as one path and not truncated to its directory', () => {
+  // Fictional sample paths only. A real archive cited here would make the index guard read the file as
+  // already documented, and a fabricated .log.gz name would land in the citation guard as a missing archive.
+  const sample = 'see docs/evidence/example-folder/example.png plus docs/evidence/example-folder/example.txt';
+  assert.deepEqual([...sample.matchAll(EVIDENCE_CITATION)].map(match => match[0]), [
+    'docs/evidence/example-folder/example.png',
+    'docs/evidence/example-folder/example.txt'
+  ], 'a scan that stops at the slash stats the directory and passes a citation to an archive nobody shipped');
+});
+
 test('every archived evidence file a doc points at exists', async () => {
   const files = ['AGENTS.md', 'README.md', ...(await markdownFiles('docs'))];
   const missing = [], seen = new Set();
   for (const file of files) {
     const text = await readFile(path.join(ROOT, file), 'utf8');
-    for (const match of text.matchAll(/docs\/evidence\/[A-Za-z0-9_.\-*]+/g)) {
+    for (const match of text.matchAll(EVIDENCE_CITATION)) {
       const target = match[0].replace(/\.+$/, '');
       // An angle bracket marks the shape of a new file name, and a trailing star is a glob;
       // neither is a citation a device is supposed to open.

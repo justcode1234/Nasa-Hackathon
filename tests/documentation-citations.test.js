@@ -25,7 +25,9 @@ const LEDGER = /^(docs\/|AGENTS\.md$)/;
 // vendored or generated file lands here by review, never by silently falling out of the citation rules.
 const GENERATED = new Set(['public/js/lib/core-worker.bundle.js', 'public/vendor/maplibre/maplibre-gl.mjs',
   'public/vendor/maplibre/maplibre-gl-shared.mjs', 'public/vendor/transformers/transformers.min.js']);
-const EVIDENCE = /docs\/evidence\/[A-Za-z0-9._*-]+\.log\.gz/g;
+// Archives files live in folders too, so the class has to carry `/`. A nested citation that truncates
+// before the slash would never be stat()'d as the file it names.
+const EVIDENCE = /docs\/evidence\/[A-Za-z0-9._*\/-]+\.log\.gz/g;
 const LINE_REF = /([A-Za-z0-9_.\-/]{1,120}\.(?:js|mjs|cjs|css|py|sh)):(\d+)(?:-(\d+))?/g;
 
 async function proseFiles(dir = '', collected = [], cap = 300 * 1024) {

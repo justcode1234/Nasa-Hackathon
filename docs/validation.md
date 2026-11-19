@@ -3728,3 +3728,160 @@ size filter is measured against the working tree, so an untracked file above the
 frontend as iteration 46 and is re-run on this tree only to keep the pushed tip green; (v) real phones, Safari/WebKit,
 microphones, read-aloud quality and independent agronomic review remain unverified and untouched. Emulated desktop
 Chrome only; nothing deployed; no NASA portal edit; main untouched (`01be9d0`).
+
+### 47. The evidence guards walk only one way, and 172 of 479 archives were unreachable
+
+Iteration 46b's queue recorded a structural gap, not a code defect. The documentation guards walk docs/evidence in one
+direction: tests/documentation-commands.test.js and tests/documentation-citations.test.js check that an archive a
+document NAMES exists on disk. Nothing checked the other direction: an archive could ship and stay unreachable from
+any document that names it. Measured 19 Nov with the same scan the citation guard uses: of 479 files under
+docs/evidence, 172 are named by their full relative path in no other tracked file, and 103 of those are not named even
+by bare file name - 25,712,457 bytes of evidence a reviewer cannot reach. That denominator has moved since the first
+scan: the tree as committed holds 488 files, eight of them archives this iteration wrote, and the index regenerated at
+the end reports 158 rows over 25,570,808 bytes of them.
+
+The fix is a committed index plus a two-way guard. docs/evidence-index.md lists every still-unreachable archive with
+the byte size read from the filesystem, the only fact a reader can check without opening the file.
+tests/documentation-evidence-index.test.js adds rules: the scan must still see the tree it was sized against; every
+shipped archive must be named by a document or carried by the index; every row must match the bytes on disk and appear
+once; and a row must go stale the moment a document starts citing the archive it carries. The index is read outside
+the prose map, otherwise its own rows would make every later run look tidy.
+
+A second defect was in the citation scanners themselves: their evidence character class carried no slash, so
+docs/evidence/merged-release-visuals/after-390-chat.png truncated at the slash and stat() approved the directory
+instead of the file. A doc could point at an archive nobody shipped and the guard stayed green. Both scans now include
+slash and a sample assertion in the commands guard pins the read-whole-path behaviour. No nested archive is cited
+today, so the widening adds no new checked file and removes a false green.
+
+The 13 loop-era archives the index would otherwise have swallowed are cited below, and with the screenshot named in
+the paragraph above that is 14 paths leaving the unreachable set: 172 at measurement, 158 rows in the committed index.
+Each statement below is read out of the archive itself; none is offered as current behaviour:
+
+* docs/evidence/chat-composition-restored-2026-11-18.log.gz is the five-case chat-composition TAP run: 5 tests, 5
+  pass, 0 fail, with the assertions 'a topic word inside a longer word does not add its evidence' and 'recognised
+  topic words still add their loaded evidence'.
+
+* docs/evidence/chat-name-word-probe-before-2026-11-18.log.gz is the pre-fix pest-name-word probe: a question naming
+  no species returns [], while 'do moths matter here?' returns ['Fall armyworm'].
+
+* docs/evidence/chat-place-matrix-walk-2026-11-18.log is the every-country place walk: per-code two-tap outcomes, a
+  242-point set, pageErrors 0, statuses 242 point and 3 buttonless, and defects 3.
+
+* docs/evidence/country-spelling-cross-engine-2026-11-18.log is the cross-engine spelling check: 250 codes, 773
+  spellings, unrecognisedInChrome 0, chromeOwnSpellingNotInNodeList 4, failures [].
+
+* docs/evidence/e2e-stale-gate-partial-2026-11-18.log.gz is the partial 30-case static-desktop run in which
+  tests/e2e/map3d.spec.js:61 and tests/e2e/review-phase-a.spec.js:34 failed: the state being diagnosed, superseded
+  by the green four-project runs recorded above.
+
+* docs/evidence/pest-build-2026-11-18.log.gz is the 147-byte build log from that window: 'Built static browser app
+  in dist/client. No server functions or /api network calls.'
+
+* docs/evidence/place-probe-fkfix-2026-11-18.log.gz is the 34-case place probe after the foreign-key fix: 7
+  eponymous-town, 9 country-name and 18 region-less cases, 0 failures, 0 page errors, 25 towns selected as town
+  points and 9 honest replies.
+
+* docs/evidence/rain-gate-corpus-script-2026-11-18.mjs.gz and docs/evidence/rain-gate-probe-script-2026-11-18.mjs.gz
+  are the two probe scripts behind the weather-gate subsection: the corpus one compares a patched chat-context
+  against the shipped module in both directions and exits 1 on a wrong verdict, the other is read-only and prints
+  which questions reach a paragraph and which series that paragraph quotes.
+
+* docs/evidence/unit-regionless-2026-11-18.log, docs/evidence/unit-after-alias-fix-2026-11-18.log.gz and
+  docs/evidence/unit-187-after-docs-2026-11-18.log.gz are offline suites of 184, 186 and 187 tests, each 0 failed:
+  three checkpoints of a growing suite, every one superseded by the 226-case run recorded above.
+
+* docs/evidence/wa-priority-npm-test-after-docs-2026-11-18.log.gz is the 212-test, 0-failed, 0-skipped offline suite
+  archived under a name no document ever cited.
+
+Observed while verifying this iteration: the four-project gate is not fully offline, and both of today's red runs say
+so. Attempt 1 measured 1 failed, 221 passed, 6 skipped, exit 1 over 29.1m
+(docs/evidence/iter47-gate-attempt1-2026-11-19.log.gz): tests/e2e/speech-microphone.spec.js:17 on static-mobile
+waited the whole 240 s the assertion at :32 allows with #question empty while the page said 'Voice input unavailable:
+Failed to fetch. Typing works as usual.' Attempt 2 measured 2 failed, 220 passed, 6 skipped, exit 1 over 24.1m
+(docs/evidence/iter47-gate-attempt2-2026-11-19.log.gz): the dictation cases passed that time and two other cases
+failed on 'Model unavailable: Failed to execute importScripts on WorkerGlobalScope' naming
+https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js - review-phase-b.spec.js:96 on static-desktop and
+assistant.spec.js:6 on static-mobile. Both causes are shipped code, not this iteration:
+public/js/modules/mini-lm-worker.js:32 importScripts() two tfjs bundles from that CDN and :34 points wasmPaths at it,
+while public/js/modules/stt-worker.js:8-9 pins onnx-community/whisper-tiny.en at revision 794207fe with
+env.allowLocalModels = false, so three of the 228 cases go green only if two third-party hosts answer. A shell probe
+minutes after attempt 2 got all three URLs - tf.min.js 200 in 0.042 s, the wasm backend 200 in 0.380 s, the pinned
+model revision 307 in 0.266 s (docs/evidence/iter47-egress-probe-2026-11-19.log.gz) - so this host has egress and the
+failures are transient refusals, not a dead network. Re-running the three speech cases alone on the same bytes
+measured 3 passed in 12.5 s, the dictation case in 8.3 s, exit 0
+(docs/evidence/iter47-speech-repro-2026-11-19.log.gz), which locates attempt 1's failure in the fetch and not in the
+frontend. No assertion was relaxed, no case was deselected and the 240 s window was left as written; the gate numbers
+in Costs come from attempt 3 on these same bytes. Vendoring the pinned bundles - tf.min.js alone is 1,469,843 bytes
+of Apache-2.0 code - is recorded as the next iteration rather than done here.
+
+Controls. Run 19 Nov from artifacts/iter47-controls3.sh, gitignored scratch so the next pass can re-run them, and
+archived as docs/evidence/iter47-controls-2026-11-19.log.gz; every mutation was undone from a /tmp snapshot with the
+sha256 re-checked after each one, and the index and ledger hashes at the end equal the ones at the start
+(4744054d59356405 and 9e8ea7f69840e809). Deleting every row fails two of the four cases: the orphan check lists all
+158 paths, and the row floor reports 'the index carries only 0 rows, against 172 measured 19 Nov'. One row recording
+'1 byte' fails the row check; duplicating a row fails it with 'is indexed twice'; shipping an archive with no
+citation and no row fails it by path. The regex probe is the one that shows the old false green, and its fabricated
+target is written here as merged-release-visuals/<no-name>.png rather than as a whole path because the guard this
+subsection just changed would fail on the sentence describing it: that string scans as the directory under HEAD's
+class, which stat() approved, and as the file under the widened class, which the commands guard then fails with 5
+passed and 1 failed. validation.md starting to cite an indexed archive fails the stale-row case. Control F is the
+edit the next pass must actually make - cite an indexed archive and delete its row - and all four cases stayed green
+with the header line still reading "158 of 486 files under docs/evidence/ are named by no other tracked prose file"
+over 157 rows, so header consistency is a demonstrated gap rather than a guess. That quoted 486 was the live
+count when control F ran; the controls archive and the wrap-probe archive are the two files that make the
+committed header read 488. After the restores, the three
+documentation guards measured 15 tests, 15 passed, 0 failed, 0 skipped. The guards then caught a defect of this
+iteration's own making: rewrapping the AGENTS.md bullet with a text-wrapping tool cut one archive citation in two,
+`iter47-npm` at the end of a line and `test-2026-11-19.log.gz` at the start of the next, and because the commands
+guard's archive regex cannot cross a newline it read the first half as a whole path, found no such file and failed
+'every archived evidence file a doc points at exists'. That was the first red documentation run of this iteration and
+a fair demonstration that the check is load-bearing; rewrapping the bullet by hand at 114 columns made all fifteen
+cases green again. How far that catch reaches is then measured in docs/evidence/iter47-wrap-probe-2026-11-19.log.gz
+rather than assumed. The same half-path alone on a line - written here as `…/iter47-npm-`, because a real one in prose
+fails the guard the sentence is describing, which this draft did to itself once - fails the commands guard at 5 passed
+and 1 failed, while the citations guard passes it at 5 passed and 0 failed because its archive regex requires the
+`.log.gz` suffix. A code path is invisible to all fifteen cases whether it is split (`public/js/modules/stt-wor`) or
+whole and non-existent (`public/js/modules/stt-wort.js`): the citations guard reads only `file.js:123` shapes and the
+commands guard only fenced `scripts|tests|server|notebooks` paths, and a fenced bogus `public/` path stayed green at 6
+passed too. So the incident was caught by the one scanner with no extension requirement, and the open candidate is a
+line-level check that fails prose ending inside any path, not a claim that nothing checks today.
+
+A metadata defect this iteration introduced in its own evidence, then fixed: the header builder these archives used
+printed the raw log's birth and mtime through the shell's local clock while labelling the value `Z`, so all eight
+iteration-47 headers carried a time eight hours ahead of UTC. The offset is measured, not assumed - `date` read
+20:01:10 on this host while `date -u` read 12:01:10 in the same second - and iteration 46b is not affected
+(`artifacts/iter46b-gate.log` has mtime 17:59:11 local and its header says 09:59:11Z, the same instant), so this was a
+regression in a recipe copied for this iteration rather than a standing property of the evidence tree. The builder now
+converts with `date -u -r`, and the fields are renamed `log-created` and `log-written` because a raw log's birth is
+when its scratch file was made, not when the run started: the npm-test scratch file predates the run it now carries by
+1 h 43 m, while gate attempt 1's pair brackets its own 29.1 m title exactly (10:24:48Z to 10:53:54Z). All eight
+archives were rewritten from their raw logs with their titles unchanged. No measured number in this subsection moved,
+only the timestamps printed beside them.
+Costs. The offline suite moves from 226 to 231: four assertions in tests/documentation-evidence-index.test.js and the
+one sample assertion in the commands guard. Offline **231/231, 0 failed, 0 skipped, exit 0** on the byte-final tree
+(docs/evidence/iter47-npm-test-2026-11-19.log.gz), whose header carries that run's own UTC write time. The only bytes
+that move after that run are the gzip carrying it, and no case reads it beyond checking the file exists. The
+four-project gate on these bytes measured **222 passed, 6 skipped, 0 failed, exit 0 in 23.3 m** across the 228 cases
+`npx playwright test --list` counts (docs/evidence/iter47-gate-2026-11-19.log.gz); that is attempt 3, no shipped
+frontend changed, and the gate is re-run only to keep the pushed tip green.
+
+Limits. (i) the index rows are a snapshot: a future pass that cites an indexed archive must delete the row, and the
+guard enforces the staleness; (ii) the scan still hides generated bundles and files whose extension is not in the
+prose list; (iii) the floors are sized to the 19 Nov measurement, so a pass that genuinely shrinks the gap rewrites
+them and says so; (iv) the generator that writes the index stays in artifacts/ and is not committed, because the
+repository commits to the check, not to the script that produced this snapshot - a second device re-verifies every
+row against the filesystem with `npm test` and needs no generator to do it; (v) the index header's own counts
+("158 of 488 files", "25,570,808 bytes total") are prose no guard compares with the rows under them, so the edit a
+future pass must make - cite an indexed archive and delete its row - leaves that sentence describing a tree that no
+longer exists while all four cases stay green, which is what control F measured rather than inferred; a fifth case
+that recomputes all three header numbers from the scan is drafted in artifacts/iter48-header-case-draft.js and is
+the next candidate, not something fixed here; (vi) three shipped files reach two third-party hosts at runtime -
+public/js/modules/mini-lm-worker.js:32,34 and public/js/modules/train-mini-lm.js:8,11,12 pull tfjs 4.22.0 and its
+wasm backend from cdn.jsdelivr.net, and public/js/modules/stt-worker.js:8-9 pulls the pinned whisper-tiny.en
+revision from huggingface.co - so a device without that egress sees a red gate that is not a product defect, and
+vendoring those bundles beside leaflet, maplibre and transformers is the candidate that would remove the dependency;
+it changes shipped behaviour, and arguably adds a build-time dependency, so it is not done here; (vii) no guard reads
+the inside of an archive. The row bytes are `stat`'d, but a title, command or timestamp printed in a gzip header is
+text nothing checks, and that is how eight iteration-47 headers came to carry local times under a `Z` label without
+any case failing; (viii) real phones, Safari/WebKit, microphones, read-aloud quality and independent agronomic review
+remain unverified.

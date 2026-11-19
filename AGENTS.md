@@ -991,6 +991,41 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   stays open as the six skips at `chat-evidence-panel.spec.js:82,115,140`; the pairing counts at
   `:99,129,150` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
   untouched (`4a54fa3`).
+- **19 Nov, same branch: iteration 47 - the evidence guards walked one way only, so 172 of 479 archives were
+  unreachable by full path, and the scan that should have caught it could not express a nested path.** Measured
+  with the same prose walk the citation guard uses: 172 files under docs/evidence are named by their full relative
+  path in no other tracked file, 103 of them not even by bare file name - 25,712,457 bytes a reviewer cannot reach
+  from any claim, 13 carrying this loop's own dates. Both older checks ask only whether a CITED archive exists, so
+  an archive nobody cites can never fail anything, and the section 4 index freezing at iteration 33 was the
+  visible half of that blind spot. The fix is two parts. docs/evidence-index.md is a committed measurement: 158
+  rows, one per archive no prose file names, each carrying the byte size read from stat, and
+  tests/documentation-evidence-index.test.js adds four offline cases that hold it true - every shipped archive
+  cited or indexed, every row matching the bytes on disk and appearing once, every row stale the moment a document
+  starts citing it, plus a scan-reach floor so a prose tree the scan lost sight of cannot report a tidy gap.
+  Thirteen loop-era archives left the index for citations written from their own contents, and the nested
+  screenshot the same subsection names made fourteen. The second part is a demonstrated false green: the evidence
+  character classes in tests/documentation-commands.test.js and tests/documentation-citations.test.js carried no
+  slash, so a citation like docs/evidence/merged-release-visuals/after-390-chat.png stopped at the slash and
+  stat() approved its directory instead of the file; both classes now carry slash and a sample assertion pins the
+  whole-path read. Controls: every row deleted fails 'evidence no document names or indexes' with the full
+  unreachable set listed; one row with wrong bytes, a duplicated row, and an archive shipped with no citation each
+  fail the row check; an indexed archive that validation.md starts citing fails the stale-row check; the
+  nested-citation probe resolves as a directory under HEAD's class and as a missing file under the widened one;
+  and the future pass's own edit - cite an indexed archive, delete its row - leaves the header describing the scan
+  before it over 157 rows with all four cases green, which is the next candidate rather than something fixed here.
+  Two defects of this iteration's own making, caught rather than assumed: rewrapping this bullet with a
+  text-wrapping tool split an archive citation across a line and the commands guard failed on the half-path, and
+  the header recipe these archives used printed local time under a `Z` label (measured on this host: `date`
+  20:01:10 against `date -u` 12:01:10). The probes behind the first are
+  docs/evidence/iter47-wrap-probe-2026-11-19.log.gz, which also shows how narrow that catch is, and all eight
+  iteration-47 archives were rewritten with `date -u -r` without any measured number in subsection 47 moving.
+  
+  Costs: the offline suite moves 226 to 231, the four index cases plus the commands guard's parse case. Offline
+  **231/231, 0 failed, 0 skipped, exit 0** on the byte-final tree
+  (docs/evidence/iter47-npm-test-2026-11-19.log.gz), whose header carries that run. The gate on these bytes is
+  **222 passed, 6 skipped, 0 failed, exit 0 in 23.3 m** across the 228 cases `npx playwright test --list` counts
+  (docs/evidence/iter47-gate-2026-11-19.log.gz); that is attempt 3, and attempts 1 and 2 went red on third-party
+  CDN fetches that subsection 47 records. Nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 46b - the citation scanner had silently stopped reading docs/validation.md once
   the ledger passed its 307,200-byte size cap; closed by exempting the ledger by role and naming what the cap may
   drop.**
