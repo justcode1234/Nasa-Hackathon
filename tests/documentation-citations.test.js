@@ -16,14 +16,26 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const SKIP_DIRS = new Set(['evidence', 'history', 'node_modules', '.git', 'dist', 'artifacts', 'submission',
   'coverage', 'playwright-report', 'test-results']);
 const EXTS = new Set(['.js', '.mjs', '.cjs', '.md', '.css', '.py', '.sh', '.txt']);
+// The size cap keeps generated and vendored bulk (bundles, map runtimes) out of the scan. The ledger
+// is handwritten prose the guard exists to police and it grows every iteration, so it is exempt by
+// role: on 19 Nov validation.md passed 300 KB and the scan silently skipped it until the reach
+// assertion below failed. Bumping the number would only re-open the same silent gap later.
+const LEDGER = /^(docs\/|AGENTS\.md$)/;
+// Measured 19 Nov, the only tracked prose-extension files above 300 KB once the ledger is exempt. A new
+// vendored or generated file lands here by review, never by silently falling out of the citation rules.
+const GENERATED = new Set(['public/js/lib/core-worker.bundle.js', 'public/vendor/maplibre/maplibre-gl.mjs',
+  'public/vendor/maplibre/maplibre-gl-shared.mjs', 'public/vendor/transformers/transformers.min.js']);
 const EVIDENCE = /docs\/evidence\/[A-Za-z0-9._*-]+\.log\.gz/g;
 const LINE_REF = /([A-Za-z0-9_.\-/]{1,120}\.(?:js|mjs|cjs|css|py|sh)):(\d+)(?:-(\d+))?/g;
 
-async function proseFiles(dir = '', collected = []) {
+async function proseFiles(dir = '', collected = [], cap = 300 * 1024) {
   for (const entry of await readdir(path.join(ROOT, dir), { withFileTypes: true })) {
     const relative = dir ? `${dir}/${entry.name}` : entry.name;
-    if (entry.isDirectory()) { if (!SKIP_DIRS.has(entry.name)) await proseFiles(relative, collected); }
-    else if (EXTS.has(path.extname(entry.name)) && (await stat(path.join(ROOT, relative))).size <= 300 * 1024) collected.push(relative);
+    if (entry.isDirectory()) { if (!SKIP_DIRS.has(entry.name)) await proseFiles(relative, collected, cap); }
+    else if (EXTS.has(path.extname(entry.name))) {
+      const size = (await stat(path.join(ROOT, relative))).size;
+      if (size <= cap || LEDGER.test(relative)) collected.push(relative);
+    }
   }
   return collected;
 }
@@ -90,8 +102,21 @@ test('the scan actually reaches every file where the two committed defects lived
     assert.ok(files.includes(required), `the scan skipped ${required}`);
     assert.ok(text.get(required).length > 20, `${required} was scanned as almost empty`);
   }
+  // These floors are a second tripwire for a scan that lost sight of prose, sized from the measured
+  // tree rather than left at the values chosen when the guard first landed: 19 Nov saw 551 evidence and
+  // 369 file:line citations with this ledger in scope and 235 and 212 with docs/validation.md dropped by
+  // the size cap, so the old 200/150 floors stayed green through a real 272-and-158 citation loss.
   const evidenceCount = [...text.values()].flat().join('\n').match(/docs\/evidence\//g)?.length ?? 0;
   const lineRefCount = [...text.values()].flat().join('\n').match(/[A-Za-z0-9_./-]+\.(?:js|mjs|cjs):\d+/g)?.length ?? 0;
-  assert.ok(evidenceCount >= 200, `only ${evidenceCount} evidence citations were visible to the scan`);
-  assert.ok(lineRefCount >= 150, `only ${lineRefCount} file:line citations were visible to the scan`);
+  assert.ok(evidenceCount >= 450, `only ${evidenceCount} evidence citations were visible to the scan`);
+  assert.ok(lineRefCount >= 320, `only ${lineRefCount} file:line citations were visible to the scan`);
+});
+
+test('the size cap drops only the named generated or vendored files, never handwritten prose', async () => {
+  const scanned = new Set(await proseFiles());
+  const dropped = (await proseFiles('', [], Infinity)).filter(file => !scanned.has(file)).sort();
+  const unsighted = dropped.filter(file => !GENERATED.has(file));
+  const stale = [...GENERATED].filter(file => !dropped.includes(file));
+  assert.ok(unsighted.length === 0, `files the cap dropped with no review: ${unsighted.join(', ')}`);
+  assert.ok(stale.length === 0, `GENERATED lists files the cap no longer drops: ${stale.join(', ')}`);
 });

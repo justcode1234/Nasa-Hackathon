@@ -991,6 +991,59 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   stays open as the six skips at `chat-evidence-panel.spec.js:82,115,140`; the pairing counts at
   `:99,129,150` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
   untouched (`4a54fa3`).
+- **19 Nov, same branch: iteration 46b - the citation scanner had silently stopped reading docs/validation.md once
+  the ledger passed its 307,200-byte size cap; closed by exempting the ledger by role and naming what the cap may
+  drop.**
+  Test-coverage iteration, one test file changed and nothing shipped. The scanner filters candidates by size
+  before reading them, so when docs/validation.md measured 306,985 bytes at `01be9d0` (215 bytes under the cap)
+  and then 311,056 after subsection 45 landed, the largest handwritten file left the citation scan with nothing
+  saying so; iteration 46's own verification run caught it at 224 pass, 1 fail, 'the scan skipped
+  docs/validation.md'. Counted with the guard's own patterns: cap only, 170 archive and 212 file:line citations
+  visible; ledger back in scope, 442 and 370 - the ledger alone carried 272 and 158. Raising the number was
+  measured as the alternative: on the committed guard any cap from 320 KiB to 1 MiB passes today, so the vendor
+  bulk adds no false citation, but the ledger grows 4,984-5,461 bytes per iteration, so a number expires (1 MiB in
+  roughly 143 iterations) while docs/ and AGENTS.md exempt by role cannot. The same run showed the guard's two
+  visibility floors were not load-bearing: 551 archive and 369 file:line citations measured with the ledger
+  scanned against 235 and 212 without it, so the 200/150 floors chosen at iteration 43 stayed green through the
+  loss; they are raised to 450 and 320, and a control that also removes the ledger from the required list fails
+  'only 235 evidence citations were visible to the scan'. A fifth assertion names the four files the cap is
+  allowed to drop and fails if the cap drops anything else or if the list goes stale, so the size limit and the
+  list cannot be edited apart; it caught a bug in its own first draft, where the recursive directory call dropped
+  the limit argument and subdirectories silently kept the default cap. Controls: removing the role exemption fails
+  two assertions at once ('the scan skipped docs/validation.md' and 'files the cap dropped with no review:
+  docs/validation.md'), restoring byte-identical gives 5/5, and a fabricated 318,611-byte handwritten file at the
+  root is named by the new assertion (docs/evidence/iter46b-controls-2026-11-19.log.gz,
+  docs/evidence/iter46b-guard-green-2026-11-19.log.gz). Costs: the suite total moved 225 to 226; offline
+  **226/226, 0 failed, 0 skipped, exit 0** on the byte-final tree
+  (docs/evidence/iter46b-npm-test-2026-11-19.log.gz), whose header carries that run's own duration; repeated
+  runs of these bytes differed by 10 s with host load, so no duration is quoted as a suite cost. The gate
+  measured **222 passed,
+  6 skipped, 0 failed (22.7 m)** across the 228 cases `npx playwright test --list` counts, exit 0
+  (docs/evidence/iter46b-gate-2026-11-19.log.gz); no e2e spec reads docs/ or AGENTS.md, so the shipped
+  frontend is unchanged from iteration 46 and the gate is re-run to keep the pushed tip green. Nothing
+  deployed; no NASA portal edit; main untouched (`01be9d0`).
+- **19 Nov, same branch: iteration 46 - the deployment test rebuilt public/licenses with fs.cp while the citation
+  scanner walked them; one ENOENT crash, closed with copyFile.**
+  Fix iteration, one production build script changed. Root cause traced before any edit:
+  tests/deployment.test.js:7 runs buildBrowser in one of node --test's parallel file processes and
+  scripts/build-browser.js copied every vendor and licence file with fs.cp, whose overwrite briefly removes the
+  destination; tests/documentation-citations.test.js walks public/ from another process, so a scan overlapping a
+  licence overwrite crashed with ENOENT - the stack is the iteration-45 flake archive. A micro-probe copying a 2
+  MB file over an existing destination under a continuous reader measured cp 4 ENOENT per 310,897 reads against
+  copyFile 0 per 298,594 and staging-then-rename 0 per 287,795 (a first unarchived execution: 19 per 271,668) -
+  the non-atomicity is cp's overwrite path, not libuv's copyFile. The fix moves all eighteen regular-file copies
+  to copyFile (builder :13,15,17,18,21-23,25-30), deliberately leaves the images directory on cp (:14, the scanner
+  never stats or reads .png), and records the why at :6-10; the deployment test now pins the esbuild licence line
+  to copyFile (tests/deployment.test.js:33-34). Controls: reverting that line to cp fails the suite on exactly the
+  new assertion message and the byte-identical restore passes
+  (`docs/evidence/iter46-pin-control-2026-11-19.log.gz`); scanner-shaped system probes measured pre-fix 203 runs
+  over 1,808 passes with 0 ENOENT (`docs/evidence/iter46-system-prefix-2026-11-19.log.gz`) and post-fix 275 runs
+  over 2,363 passes with 0 ENOENT (`docs/evidence/iter46-system-postfix-2026-11-19.log.gz`) - the in-suite flake
+  is rare, so the causal evidence is the micro-probe. Costs: Offline **225/225, 0 skipped (46.3 s)** on the
+  code-final tree (`docs/evidence/iter46-npm-test-2026-11-19.log.gz`); the four-project gate **222 passed, 6
+  skipped, 0 failed (24.3 m)**, exit 0 (`docs/evidence/iter46-gate-2026-11-19.log.gz`) - the same totals as
+  iteration 45, so the restructured vendor copies removed no coverage. Nothing deployed; no NASA portal edit; main
+  untouched (`01be9d0`).
 - **19 Nov, same branch: iteration 45 - the e2e panel cases printed a Sources count and pinned hrefs, but nothing
   compared the count with the chips that rendered.** Coverage iteration, no production file changed. Case 3 of
   `tests/e2e/chat-evidence-panel.spec.js` pinned no link targets at all, and no case compared the printed count

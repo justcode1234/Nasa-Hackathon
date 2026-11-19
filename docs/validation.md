@@ -3630,3 +3630,101 @@ scanner with the surrounding runs green (`docs/evidence/iter45-offline-flake-202
 license write is the obvious next candidate; (vi) real phones, Safari/WebKit, microphones, read-aloud quality and
 independent agronomic review remain unverified and untouched. Emulated desktop Chrome only (the node-desktop project);
 nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
+### 45. The offline suite carried an in-suite race: the deployment test rebuilt public/licenses with fs.cp in one
+parallel test process while the citation scanner walked the same files, and one ENOENT crash was observed.
+Subsection 44 recorded this race as a limit and named the atomic license write as the candidate. Root cause traced
+before any edit: tests/deployment.test.js:7 runs buildBrowser in one of node --test's parallel file processes,
+scripts/build-browser.js copied every vendor and licence file with fs/promises cp, and overwriting an existing
+destination with cp briefly removes it; tests/documentation-citations.test.js collects public/ text files as prose
+candidates and reads each one, so a scan overlapping a licence overwrite crashed with ENOENT in the scanner's
+per-file read - the archived stack names the frame inside scannedTree
+(docs/evidence/iter45-offline-flake-2026-11-19.log.gz), and its line number is not quoted because this test is
+edited often enough that the number has already moved twice.
+Mechanism isolated with a micro-probe (artifacts/iter46-probe.mjs, scratch) that copies a 2 MB file over an existing
+destination in a 60 s loop while a reader calls readFile continuously. Measured: fs.cp produced 4 ENOENT per 310,897
+reads (docs/evidence/iter46-micro-cp-2026-11-19.log.gz); fs.copyFile produced 0 per 298,594
+(docs/evidence/iter46-micro-copyfile-2026-11-19.log.gz); copyFile-to-staging-then-rename produced 0 per 287,795
+(docs/evidence/iter46-micro-atomic-2026-11-19.log.gz). A first unarchived execution of the same probe produced 19 per
+271,668 (terminal session only). The non-atomicity is cp's overwrite path, not libuv's copyFile.
+The fix moves all eighteen regular-file copies in scripts/build-browser.js from cp to copyFile
+(:13,15,17,18,21-23,25-30); the recursive images directory copy deliberately stays on cp (:14) because the scanner
+never stats or reads .png contents, and a comment at :6-10 records the why. The durable pin: the deployment test now
+asserts the esbuild licence line uses copyFile (tests/deployment.test.js:33-34).
+Measured: the pin control reverted the esbuild line back to cp and the suite failed on exactly the new assertion
+message, then restored byte-identical and passed 1 (docs/evidence/iter46-pin-control-2026-11-19.log.gz).
+Scanner-shaped system probes (stat plus readFile over public/licenses while real buildBrowser runs execute) measured
+pre-fix 203 runs over 1,808 passes with 0 ENOENT (docs/evidence/iter46-system-prefix-2026-11-19.log.gz) and post-fix
+275 runs over 2,363 passes with 0 ENOENT (docs/evidence/iter46-system-postfix-2026-11-19.log.gz) - the in-suite flake
+is rare, consistent with its single observation in months, so the causal evidence is the micro-probe, not a
+system-level reproduction.
+Costs: offline **225/225, 0 failed, 0 skipped (46.3 s)** on the code-final tree
+(docs/evidence/iter46-npm-test-2026-11-19.log.gz); the four-project gate re-ran on the fixed tree: **222 passed, 6
+skipped, 0 failed (24.3 m)**, exit 0 (`docs/evidence/iter46-gate-2026-11-19.log.gz`) - the same totals as iteration
+45, so the restructured vendor copies removed no coverage.
+Limits: (i) copyFile's overwrite is measured atomic on this machine's APFS; POSIX does not guarantee it, but the
+scanner's only observable failure mode was the missing-destination ENOENT and a truncated read would not crash it, so
+the observed crash class is closed where it was observed; (ii) the first micro-probe execution's numbers are cited
+from the terminal session, not from an archive; (iii) the system probes cannot reproduce the in-suite timing - rarity,
+not disproof; (iv) the fix covers this build's file copies only; fs.cp remains in use for the images directory
+(deliberate) and the dist/client tree copy (no concurrent reader in any suite); (v) real phones, Safari/WebKit,
+microphones, read-aloud quality and independent agronomic review remain unverified and untouched. Emulated desktop
+Chrome only (the node-desktop project); nothing deployed; no NASA portal edit; main untouched (`01be9d0`).
+
+### 46. The citation scanner had silently stopped reading this ledger: docs/validation.md passed the scanner's
+307,200-byte size cap, so 272 archive citations and 158 file:line citations went unchecked until iteration 46's own
+verification run failed.
+
+Found by a verification run rather than by design: the byte-final offline suite reported 224 pass and 1 fail with 'the
+scan skipped docs/validation.md'. Root cause measured before any edit - the scanner's file walk applies a size filter
+to every candidate before reading it, docs/validation.md was 306,985 bytes at `01be9d0` (215 bytes of headroom under
+the cap) and 311,056 after subsection 45 was appended, so the ledger crossed the cap inside this iteration and nothing
+said so. A scratch delta measured what each scan sees using the guard's own two citation patterns: cap only, 210
+files, 2,112,549 bytes, 170 evidence and 212 file:line citations; ledger back in scope, 211 files, 2,422,823 bytes,
+442 and 370. The filter runs before any content is read, so the loss was total for the largest handwritten file in the
+repository - the one file whose whole job is to cite the others (docs/evidence/iter46b-scan-delta-2026-11-19.log.gz).
+
+The fix exempts the ledger by role instead of raising the number, and the alternative was measured rather than
+assumed. On the committed guard with only the size number changed, any cap from 320 KiB to 1 MiB passes today, so
+pulling the four generated and vendored files into the scan adds no false citation - a bump is safe but finite. The
+ledger grew 4,984 to 5,461 bytes over the four most recent commits that touched it, so 320 KiB buys one iteration and
+1 MiB roughly 143 before the same silent drop returns. The role exemption (docs/ and AGENTS.md stay scanned whatever
+their size) cannot expire. A second guard makes any future skip loud: a named list of the four files the cap may drop,
+with a fifth assertion that fails if the cap drops anything not on the list or if the list names a file the cap no
+longer drops - which also means the number and the list cannot be edited apart
+(docs/evidence/iter46b-controls-2026-11-19.log.gz).
+
+Measured, including my own first draft failing: that assertion caught a bug in itself - the recursive directory call
+passed only two arguments, so subdirectories silently kept the default cap and the new test reported the four vendor
+files as stale list entries instead of drops. Fixed by threading the limit through the recursion; the guard was green
+before any claim was written down.
+
+Controls (docs/evidence/iter46b-controls-2026-11-19.log.gz, guard alone in
+docs/evidence/iter46b-guard-green-2026-11-19.log.gz): removing the role exemption fails two assertions at once, 'the
+scan skipped docs/validation.md' and 'files the cap dropped with no review: docs/validation.md', and restoring
+byte-identical gives 5/5 green. A fabricated 318,611-byte handwritten markdown file at the repository root makes the
+new assertion name it, and it was deleted after the run; two earlier fabrications at 306,811 bytes did not exceed
+307,200 and passed, which was my arithmetic, not the guard's.
+
+The two visibility floors in the reach test were re-measured too, because they were not what caught this: the tree now
+shows 551 archive and 369 file:line citations under the guard's own counters, and 235 and 212 with docs/validation.md
+excluded, so the 200/150 floors chosen when the guard first landed stayed green straight through a real loss of 272
+and 158 citations. They are raised to 450 and 320. Control: with the role exemption disabled and docs/validation.md
+also taken out of the reach test's required list, so only the floors could react, the run fails 'only 235 evidence
+citations were visible to the scan' and the drop-list assertion names the ledger; restoring byte-identical gives 5/5
+again (docs/evidence/iter46b-control2-2026-11-19.log.gz).
+
+Costs: the suite total moved 225 to 226 with the new assertion. Offline **226/226, 0 failed, 0 skipped, exit 0** on
+the byte-final tree (docs/evidence/iter46b-npm-test-2026-11-19.log.gz). The suite's wall time is deliberately not
+recorded as a cost: repeated runs of these same bytes ranged over 10 s of difference purely with host load, so the
+duration belongs to the archived log's own header rather than to the suite. The four-project gate measured **222
+passed, 6 skipped, 0 failed (22.7 m)** across the 228 cases that `npx playwright test --list` counts, exit 0
+(docs/evidence/iter46b-gate-2026-11-19.log.gz).
+
+Limits: (i) the exemption is by path role, so a new handwritten ledger under docs/ or AGENTS.md is always scanned
+while a new large prose file elsewhere must join the named list or fail - reviewed, not silent; (ii) the cap still
+hides any file whose extension is not in the scan's prose list, and generated bundles stay unread by design; (iii) the
+size filter is measured against the working tree, so an untracked file above the cap also shows up in the drop list;
+(iv) this change ships no code - no e2e spec reads docs/ or AGENTS.md, so the four-project gate exercises the same
+frontend as iteration 46 and is re-run on this tree only to keep the pushed tip green; (v) real phones, Safari/WebKit,
+microphones, read-aloud quality and independent agronomic review remain unverified and untouched. Emulated desktop
+Chrome only; nothing deployed; no NASA portal edit; main untouched (`01be9d0`).

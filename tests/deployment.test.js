@@ -30,4 +30,6 @@ test('Vercel build is static and includes browser workers, crop data and local m
   assert.match(browserCore, /rest\.isric\.org/);
   assert.doesNotMatch(browserCore, /node:fs|node:http|readFileSync/);
   assert.match(await readFile('public/js/lib/api.js', 'utf8'), /new Worker/);
+  assert.match(await readFile('scripts/build-browser.js', 'utf8'), /copyFile\('node_modules\/esbuild\/LICENSE\.md'/,
+    'license writes must use copyFile - fs.cp overwrites briefly remove the destination, which the citation scanner observed as ENOENT while this build ran in a parallel test process (iteration 46)');
 });
