@@ -1050,8 +1050,8 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   message was the stub's own; 497 adversarial bodies through the pure code produced none. So the fix is the
   rule, not a per-string patch: `public/js/lib/api.js:48` answers a status-less failure with one sentence and
   keeps the reason on `cause` and in the console, applied at the two places a request can end
-  (`public/js/lib/api.js:9` and `:25`), and `public/js/lib/api.js:51` passes an `AbortError` through because
-  four callers branch on that name. `public/js/lib/core-worker-entry.js:9` now forwards `status` and still holds
+  (`public/js/lib/api.js:9` and `:25`), and `public/js/lib/api.js:54` passed an `AbortError` through while four
+  callers branched on that name until iteration 56; `public/js/lib/core-worker-entry.js:9` forwards `status`, holds
   ten lines, and the worker's `error.code` still has no consumer. The queue had aimed the rule at the worker
   exit; measurement moved it, because a Node-side fetch rejection never reaches the worker.
   `tests/e2e/api-exit-parity.spec.js` drives one failing action on both transports for one expected string, five
@@ -1810,6 +1810,45 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   log it trusts, repairs those two ledger lines, replaces the browser's four `error.name === 'AbortError'` branches with
   a fact set where this app cancels its own request, then runs P3 proper - commit `tests/e2e/fixtures/raw/`, make the
   panel spec transport-aware and delete the three `test.skip` lines.
+
+- **19 Nov, same branch: iteration 56 - a cancellation nobody asked for, and four surfaces that believed it.**
+  Every log this iteration trusts prints its own interpreter first: `INTERPRETER v26.13.1
+  /opt/homebrew/Cellar/node/26.13.1_2/bin/node`, recorded on HEAD `92d6cfe`, which is what the queued step asked
+  for and what lets the two falsified ledger lines be repaired instead of argued about. The defect was P2's last
+  browser-side instance: `public/js/lib/api.js:54` decided a failed request was a cancellation by reading
+  `reason?.name === 'AbortError'`, and four consumers (`public/js/app.js:236`, `public/js/app.js:296`,
+  `public/js/modules/chat.js:149`, `public/js/modules/workflow-assistant.js:404`) made the same test, so any
+  `AbortError` the runtime raised on its own - a dropped frame, an abort the page never requested - silenced the
+  evidence status, hid `#retry-evidence`, and left the farmer with no sentence and no next step. The fix is one
+  structured fact: `cancellation()` at `public/js/lib/api.js:49` sets `cancelled = true` where this app asked for
+  the stop, and `public/js/lib/api.js:56` reads the caller's own `signal.aborted` instead of a name. The case that
+  used to cover this asserted the name and so asserted the bug; it is replaced by four stricter cases
+  (`tests/api-transport.test.js:88`, `:98`, `:106`, `:114`, the last of which greps the four page modules for
+  the old comparison), and one Playwright case drives the same seam on both transports
+  (`tests/e2e/api-exit-parity.spec.js:28`). Executed on these bytes: focused **11 of 11, exit 0**; the
+  reproducing run **4 failed / 7 passed, exit 1** on `git show HEAD:` bytes with `shasum -c` proving the restore,
+  after an earlier control was measured, invalidated and kept because its zsh loop never word-split
+  (`docs/evidence/iter56-negative-control-invalid-wordsplit-2026-11-19.log.gz`); browser parity **8 passed, exit
+  0** on four projects, whose own control went red on the two node projects only, because the static projects
+  read `dist/client` - so the worker half rests on the Node control, not on that run. The gate then went red for a
+  reason this iteration did not cause and that this loop has now seen twice: **3 failed / 231 passed / 6 skipped
+  in 23.7 m**, all three optional-model cases stopped by `net::ERR_NAME_NOT_RESOLVED` on `cdn.jsdelivr.net`
+  after 32.7 s inside the browser, while the same URL answered `http_code=200` in 48 ms seventeen minutes later
+  and an isolated re-run of exactly those three titles gave **6 passed in 38.3 s**. That re-pass is recorded and
+  not accepted: a second whole four-project gate executed **234 passed / 6 skipped / 0 failed in 22.9 m**, exit 0
+  (`docs/evidence/iter56b-gate-2026-11-19.log.gz`), with all three titles green in every project. Offline
+  **254 / 254 pass on the bytes before the change, then 257 tests / 255 pass / 2 fail while the evidence index
+  lagged its own new archives - both failures the index guard, no other case moved - and 257 / 257, exit 0, after
+  the regeneration, a tally that re-ran identically once this bullet and the ledger prose had landed
+  (`docs/evidence/iter56-confirm-suite-2026-11-19.log.gz`)**. Two findings the outage made concrete and did not
+  cause: `public/js/modules/chat.js:63`
+  throws away the `message` the model worker posts at `public/js/modules/mini-lm-worker.js:59` and substitutes
+  "Model could not start on this device", which blamed this device for a hostname that did not resolve; and three
+  gate cases depend on a third-party CDN at load time (`public/js/modules/mini-lm-worker.js:32`). P3 proper did
+  not run: the three `test.skip` lines at `tests/e2e/chat-evidence-panel.spec.js:82` still skip. Safari/WebKit,
+  real phones, microphones, audio quality and independent agronomy stay UNVERIFIED. Next, measured: P3 proper on
+  the bytes this iteration leaves behind, then the model-load sentence above, which is a farmer-facing lie about
+  its own cause.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

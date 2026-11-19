@@ -85,10 +85,41 @@ test('a dropped request reads the same sentence the worker transport reads for t
   assert.equal((await rejected(api('https://['))).message, NO_ANSWER);
 });
 
-test('an intentional cancellation still travels as an AbortError for the four callers that branch on it', async t => {
+test('a cancellation the page asked for carries that fact and not only the runtime name', async t => {
+  nodeMode(t);
+  const controller = new AbortController();
+  controller.abort();
+  t.mock.method(globalThis, 'fetch', async () => { throw new DOMException('The user aborted a request.', 'AbortError'); });
+  const error = await rejected(api('/api/ask', { method: 'POST', body: {}, signal: controller.signal }));
+  assert.equal(error.cancelled, true, 'a cancel this app requested has to be identifiable without reading a name');
+  assert.equal(error.name, 'AbortError', 'the runtime name is kept for anything that inspects it, never used to decide');
+});
+
+test('a failure the runtime calls AbortError that the page did not ask for is announced', async t => {
   nodeMode(t);
   t.mock.method(globalThis, 'fetch', async () => { throw new DOMException('The user aborted a request.', 'AbortError'); });
-  assert.equal((await rejected(api('/api/ask', { method: 'POST', body: {}, signal: new AbortController().signal }))).name, 'AbortError');
+  const error = await rejected(api('/api/ask', { method: 'POST', body: {}, signal: new AbortController().signal }));
+  assert.equal(error.cancelled, undefined, 'nothing cancelled this request, so no caller may treat it as cancelled');
+  assert.equal(error.message, NO_ANSWER, 'the farmer reads a sentence here; the old name check reached four silences');
+});
+
+test('the worker path marks its own cancellation the way the HTTP path does', async t => {
+  workerMode(t);
+  const controller = new AbortController();
+  controller.abort();
+  const error = await rejected(api('/api/soil', { signal: controller.signal }));
+  assert.equal(error.cancelled, true, 'the cancel this module issues is the one fact its callers can act on');
+});
+
+test('no page module decides farmer-visible silence from an error name', async () => {
+  const files = ['public/js/lib/api.js', 'public/js/modules/chat.js', 'public/js/app.js', 'public/js/modules/workflow-assistant.js'];
+  for (const file of files) {
+    const source = await readFile(file, 'utf8');
+    assert.ok(!/name\s*[!=]==\s*'AbortError'/.test(source), `${file} still branches on the runtime's error name`);
+  }
+  for (const file of files.slice(1)) {
+    assert.match(await readFile(file, 'utf8'), /\.cancelled\b/, `${file} must branch on the fact the transport sets`);
+  }
 });
 
 test('the worker forwards the status that lets the page tell authored text from runtime text', async () => {

@@ -233,7 +233,7 @@ async function loadEvidence(options = {}) {
     context.loadSoil();
     return true;
   } catch (error) {
-    if (error.name !== 'AbortError' && revision === version) { status('#evidence-status', error.message, true); $('#retry-evidence').hidden = false; }
+    if (error.cancelled !== true && revision === version) { status('#evidence-status', error.message, true); $('#retry-evidence').hidden = false; }
     return false;
   } finally {
     if (revision === version) { $('#load-evidence').disabled = false; syncControls(); }
@@ -293,7 +293,7 @@ async function runComparison(options = {}) {
     activateTab('strategy');
     return result;
   } catch (error) {
-    if (error.name !== 'AbortError' && version === revision) status('#comparison-status', error.message, true);
+    if (error.cancelled !== true && version === revision) status('#comparison-status', error.message, true);
     return false;
   } finally { if (version === revision) { comparing = false; syncControls(); } }
 }

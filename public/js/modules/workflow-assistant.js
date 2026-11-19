@@ -1,4 +1,4 @@
-import { api } from '../lib/api.js';
+import { api, cancellation } from '../lib/api.js';
 import { COUNTRY_NAMES, findCountries, normalizeName, regionPhrase } from '../lib/countries.js';
 import { isEvidenceQuestion } from '../lib/chat-intent.js';
 
@@ -276,7 +276,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     if (!active) { scope = null; areaRegion = null; pointAccepted = false; }
     active = true;
     const version = ++generation;
-    const guard = () => { if (version !== generation) throw new DOMException('Planning context changed', 'AbortError'); };
+    const guard = () => { if (version !== generation) throw cancellation('Planning context changed'); };
     const run = async (name, ...args) => { const result = await actions[name](...args); guard(); return result; };
     // One mapped-field request in flight per guided session: asking again while a shared community
     // service is still holding the connection must not open a second identical request against it.
@@ -401,7 +401,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     const keepInputs = async () => {
       if (!baseline && !allowed && !Object.keys(constraints).length) return;
       try { await run('applyPlanning', { baseline, constraints, allowed }); inputsInForm = Boolean(baseline); }
-      catch (error) { if (error.name === 'AbortError') throw error; }
+      catch (error) { if (error.cancelled === true) throw error; }
     };
     if(allowed){
       const missing=allowed.filter(name=>!state.countryCrops.screeningCropIds.includes(resolveCropInput(name,state.catalog,state.countryCrops).id));

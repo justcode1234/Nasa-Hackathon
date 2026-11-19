@@ -6,7 +6,7 @@ export function getTransport() {
 
 async function httpApi(path, { method, body, signal }) {
   const response = await fetch(path, { method, signal,
-    ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }).catch(reason => { throw unlabelled(reason); });
+    ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }).catch(reason => { throw unlabelled(reason, signal); });
   let data;
   try { data = await response.json(); }
   catch { throw new Error('The Node.js API returned an unreadable response. Check the local server.'); }
@@ -32,7 +32,7 @@ export function api(path, { method = 'GET', body, signal } = {}) {
   }
   return new Promise((resolve, reject) => {
     const id = ++sequence;
-    const cancel = () => { pending.delete(id); reject(new DOMException('Cancelled', 'AbortError')); };
+    const cancel = () => { pending.delete(id); reject(cancellation()); };
     if (signal?.aborted) return cancel();
     signal?.addEventListener('abort', cancel, { once: true });
     const cleanup = () => signal?.removeEventListener('abort', cancel);
@@ -46,9 +46,14 @@ export function api(path, { method = 'GET', body, signal } = {}) {
 // bans a transport detail one layer down. The reason stays on `cause` and in the console, and every AppError
 // sentence (a 400 validation, a 502/503 upstream) carries a status and passes through untouched.
 export const NO_ANSWER = 'No answer came back for this request. Nothing was invented in its place. Try again.';
-function unlabelled(reason) {
-  // Four callers branch on the name, so a cancellation the app asked for must keep travelling as itself.
-  if (reason?.name === 'AbortError') return reason;
+export function cancellation(message = 'Cancelled') {
+  // Consumers go silent on `cancelled`, so only the code that asked for the stop may set it. The runtime name
+  // rides along: this is what a browser throws by itself, and tests/workflow-assistant.test.js:331 asserts it.
+  const error = new DOMException(message, 'AbortError'); error.cancelled = true; return error;
+}
+function unlabelled(reason, signal) {
+  // The caller's own signal decides, not the error name: an AbortError nobody asked for is a failure to report.
+  if (signal?.aborted === true) return cancellation();
   console.warn('[fieldshift] request ended with no status:', reason?.message ?? reason);
   return new Error(NO_ANSWER, { cause: reason instanceof Error ? reason : new Error(String(reason?.message ?? reason)) });
 }

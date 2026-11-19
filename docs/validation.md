@@ -1523,9 +1523,9 @@ so the numbers above were produced with **Node v22.23.5** from the official tarb
 gitignored `artifacts/` (no system change). On v26.13.1 this repository's esbuild 0.28.2 binary runs
 (`--version` prints 0.28.2) and `transformSync` answers, but the JS `build()`/`buildSync()` API never
 returns: the service process sits idle reading stdin while the parent waits on a semaphore at 0 % CPU
-(sampled). `npm test` therefore cannot complete its `dist/client` build step there. Nothing in the
-repository was changed for this; it is a local toolchain finding a second device should know before
-concluding the suite is hung.
+(sampled). That observation is what made the `dist/client` build step of `npm test` hang in
+November 2026, and iteration 56 measured it gone under **v26.13.1**: that run printed the builder's own
+completion line and its build case passed in 485 ms, so the hang is historical, not a reason to switch.
 
 Measured here and **not fixed** (iteration 14 candidate): at the region question the saved list still
 answers a nonsense reply at the wrong level. Driving the real India list offline, "Which state or
@@ -4778,7 +4778,7 @@ re-derived. First, the archived 254-test suite prints no interpreter, so the ver
 headline number is inferred from that resolution rather than recorded, and the queued step now begins by echoing
 `process.version` and `process.execPath` into every suite log. Second, that same log shows the case which calls
 `buildBrowser()` - `tests/deployment.test.js:7`, esbuild's JS `build()` API - passing in 474 ms, while
-`docs/validation.md:1526` states `npm test` cannot complete its `dist/client` build step on v26.13.1 and
+`docs/validation.md:1526` dated `npm test`'s failure to finish its `dist/client` build step to v26.13.1 and
 `docs/validation.md:1522` attributes the recent numbers to v22.23.5. The gate running while this subsection was written settles it, and not by
 inference: its Playwright driver is process ID 45229, launched in the same second as the gate itself, and the executable
 behind it reads `/opt/homebrew/Cellar/node/26.13.1_2/bin/node` from `lsof` at 19 Nov 21:10 UTC. That chain built
@@ -4795,3 +4795,130 @@ subsection now contradicts, takes the cancellation change the `error.name` calle
 ones replay raw upstream bytes behind an escape tripwire that asserts its own hits), delete the three `test.skip` lines
 rather than widening them, keep the live checks, and pin `chat-context.js:139-147`'s replace-policy in a browser so the
 paragraph above is not the only place that fact lives.
+
+### 56. A runtime's own cancellation silenced four farmer surfaces, and one flag now says who asked
+
+The queued step, in the order it was queued. `docs/validation.md:4791` made the interpreter the first thing
+iteration 56 had to settle, and every run in this one begins by printing it: the reproducing, control, offline
+and both gate logs open with
+`INTERPRETER v26.13.1 /opt/homebrew/Cellar/node/26.13.1_2/bin/node`, executed 19 Nov between 21:07 and 21:55
+UTC on HEAD `92d6cfe`. That is now a recorded fact for iteration 56 rather than an inference from `PATH`, and it
+is still an inference for iterations 53 and 54, whose logs carry no version. With the interpreter settled, the
+two ledger lines subsection 55 contradicted are repaired. `docs/validation.md:1526` used to read as a present
+fact about this device; iteration 56's offline run printed the builder's own completion line inside a case that
+passed in 485 ms under the interpreter it records, so the line now says when that held and what replaced it, and
+the cross-reference at `docs/validation.md:4781` is past tense, because a line reporting what another line once
+observed must not read like current behaviour. The sentence at `AGENTS.md:1053` that described the name
+pass-through as the shipped behaviour now dates it and cites `public/js/lib/api.js:54`, the helper that decides
+it. All three repairs are word swaps: `wc -l` reads 4797 for this file and 1915 for `AGENTS.md` before and after,
+so no cited line below them moved.
+
+What was actually wrong. `public/js/lib/api.js:9` catches the rejection of a request that never reached a
+response, and until this iteration its helper decided what to do with that rejection by reading
+`reason?.name === 'AbortError'`. The same name decided four farmer surfaces: `public/js/app.js:236` (the
+evidence status line and the `#retry-evidence` button), `public/js/app.js:296` (the comparison status),
+`public/js/modules/chat.js:149` (the answer the farmer is waiting for) and
+`public/js/modules/workflow-assistant.js:404` (the inputs a guided plan keeps). A name is not a fact about this
+app. Chromium raises `AbortError` by itself for reasons the page never asked for - a navigation, a discarded
+frame, a backend it decided to drop - and every one of those made four surfaces go silent at once: no status
+line, no retry control, no announced answer, and no console trace. The farmer was left staring at a spinner that
+had stopped moving, on the theory that they had cancelled something they had not.
+
+The fix, five lines of behaviour. `public/js/lib/api.js:49` exports `cancellation()`, which builds the
+`DOMException` under its runtime name and marks it `cancelled = true` at the one place that knows the stop was
+asked for. `public/js/lib/api.js:56` now decides on `signal?.aborted === true` - the caller's own controller, a
+structured fact - so a foreign `AbortError` falls through to `NO_ANSWER` and is announced, and
+`public/js/lib/api.js:35` routes the worker's cancellation through the same helper so both transports mark it the
+same way. `public/js/modules/workflow-assistant.js:279` uses `cancellation('Planning context changed')` for the
+stop the assistant asks for itself, and the four consumers read `error.cancelled`. `tests/workflow-assistant.test.js:331`
+pins the name, so `cancellation()` keeps it; the flag is additive. Nothing else in the app sets `cancelled`.
+
+The test that claimed this before, rewritten stricter. `tests/api-transport.test.js` carried
+"a cancellation the page asked for still travels as an `AbortError` for the four callers that branch on it", and
+that case was the defect: it asserted the name and therefore asserted the wrong contract. It is gone, replaced by
+four cases at `tests/api-transport.test.js:88` (a cancellation the page asked for carries `cancelled`),
+`:98` (a runtime `AbortError` nobody asked for is announced as `NO_ANSWER`, not silenced), `:106` (the worker
+path marks its own cancellation the same way) and `:114` (a source scan that fails if any of the four page
+modules compares `name` to `AbortError` again, and requires `.cancelled` in the three that consume it). Four
+cases were red before the fix and 11 of 11 are green after it
+(`docs/evidence/iter56-reproducing-red-2026-11-19.log.gz`, `docs/evidence/iter56-focused-green-2026-11-19.log.gz`).
+
+Two controls, and what each can and cannot prove. The Node-level control reverted the six shipped files to
+`git show HEAD:` bytes and re-ran the same file: **4 failed / 7 passed, exit 1**, then restored them
+byte-identically, which `shasum -c` confirms against the hashes taken before the revert
+(`docs/evidence/iter56-negative-control-2026-11-19.log.gz`). An earlier attempt at that control is preserved and
+invalidated rather than deleted: it looped over a zsh variable that never word-split, so nothing was reverted and
+its "11 pass" measured the fix against itself
+(`docs/evidence/iter56-negative-control-invalid-wordsplit-2026-11-19.log.gz`). The browser-level control reverted
+`public/js/lib/api.js` alone and re-ran the new Playwright case on all four projects: only the two node projects
+went red, because the static projects load `dist/client` and that directory is only rewritten by
+`npm run build` (`docs/evidence/iter56-browser-control-2026-11-19.log.gz`). So the browser half of this control
+proves the HTTP transport and nothing else; the worker half rests on the Node-level control above. That asymmetry
+is a property of the harness, not of the fix, and it is the reason `tests/e2e/api-exit-parity.spec.js` asserts
+both transports' behaviour in one file: the same seam, the same expected string, four projects.
+
+Browser verification. `tests/e2e/api-exit-parity.spec.js:28` drives the real page: it installs a
+`window.fetch` that rejects with a runtime `AbortError`, asks the shipped module for `/api/ask`, then repeats the
+call with an `AbortController` the test aborted itself, and asserts the reported triple
+`name|cancelled|message` on both transports plus the warning the console must or must not carry. It ran on all
+four projects: **8 passed, exit 0** (`docs/evidence/iter56-browser-parity-2026-11-19.log.gz`), after two
+attempts that were kept because they are the interesting part of the record - one where the harness awaited a
+thunk instead of calling it (`docs/evidence/iter56-browser-parity-attempt1-harness-bug-2026-11-19.log.gz`) and one
+where the assertion was looser than the value the page actually returns, which the shipped file now states
+exactly (`docs/evidence/iter56-browser-parity-attempt2-loose-assertion-2026-11-19.log.gz`).
+
+Offline suite, gate, and one measured outage. On the bytes before this change `npm test` read **254 / 254 pass /
+0 fail**, exit 0 (`docs/evidence/iter56-offline-baseline-2026-11-19.log.gz`), which is the same count
+subsection 55 reported and confirms the new cases are the only movement. With them it reads **257 tests / 255
+pass / 2 fail**, exit 1, and both failures are this file's own index lag: the new archives were on disk before
+`docs/evidence-index.md` was regenerated, so "every shipped evidence file is named by a document or carried by
+the index" and "the index header states counts its own rows and the filesystem agree with" went red on nothing
+else (`docs/evidence/iter56-offline-indexlag-2026-11-19.log.gz`). After the regeneration the suite executed
+**257 tests / 257 passed / 0 failed**, exit 0 in 26.6 s, and its log opens with the interpreter line this
+iteration exists to produce (`docs/evidence/iter56-final-suite-2026-11-19.log.gz`). The attempt before it is kept
+and not cited as evidence: its tally was already 257 / 257 / exit 0, but a shell-quoting slip ate its `node -p`
+line, and a run whose provenance a reader cannot read does not get written up as one
+(`docs/evidence/iter56-final-suite-attempt1-nointerpreter-2026-11-19.log.gz`, whose raw twin sits under the
+gitignored `artifacts/`). Both tallies re-ran identically once this subsection, its AGENTS.md bullet and the
+handoff rows had landed: **257 / 257, exit 0** again in 27.4 s, with the same interpreter line at the head of the
+log (`docs/evidence/iter56-confirm-suite-2026-11-19.log.gz`), and the five documentation guards read 23 of 23 on
+the final tree. The four-project gate then ran on the shipped bytes and came back red for a reason this
+iteration did not cause: **3 failed / 231 passed / 6 skipped in 23.7 m**, exit 1
+(`docs/evidence/iter56-gate-2026-11-19.log.gz`). All three failures are optional-model cases and all three
+stopped on the same sentence, `Model could not start on this device. Evidence chat still works.` Their traces
+hold the cause: the model worker fetches its runtime from a third party
+(`public/js/modules/mini-lm-worker.js:32` importScripts `tf.min.js` from `cdn.jsdelivr.net`), and Chromium
+returned `_failureText: net::ERR_NAME_NOT_RESOLVED` after 32.7 s for that one request, with no other network
+failure in any of the three traces, extracted into
+`docs/evidence/iter56-dns-trace-census-2026-11-19.log.gz`. That archive also records a second mistake of mine: the
+isolated re-run below cleared Playwright's `outputDir` before the traces were copied out, so the three trace.zip
+files no longer exist and only these extracted lines survive - copying failed traces out before starting another
+run is now a rule this loop has. Seventeen minutes later the same URL from the same machine answered
+`http_code=200 size=1469843 time_total=0.048` and `dscacheutil` resolves the name to
+`jsdelivr.map.fastly.net`. Re-running exactly the three case titles in isolation gives **6 passed in 38.3 s**,
+exit 0 (`docs/evidence/iter56-gate-isolated-2026-11-19.log.gz`), which is a reproduction of the recovery and not
+of the gate: the gate was re-measured whole, and the second four-project run executed **234 passed / 6 skipped /
+0 failed in 22.9 m**, exit 0 (`docs/evidence/iter56b-gate-2026-11-19.log.gz`). The three titles that had failed -
+`tests/e2e/review-phase-b.spec.js:96` as case 45 in static-desktop, `tests/e2e/assistant.spec.js:6` as case 63 and
+`tests/e2e/help-and-explanations.spec.js:16` as case 85, both of the last two in static-mobile - were green inside
+the re-run in every project (45/105/165/225, 3/63/123/183 and 24/25/84/85/144/145/204/205), so this iteration
+reports the
+green gate and attributes the red one to that DNS window, which is the opposite of the move iteration 52 made
+when a single re-passed case was written up as a clean run.
+
+What the outage exposes, measured and queued. Two findings the DNS blip made concrete. First, that farmer-visible
+sentence is wrong about its own cause: `public/js/modules/mini-lm-worker.js:59` posts `message: error.message`,
+and `public/js/modules/chat.js:63` drops it and substitutes a sentence about the device. Nothing on this machine
+was the problem; a hostname did not resolve, and the app said otherwise to a farmer who then had no way to know
+the fix was "check your network". Second, three gate cases depend on a third-party host being reachable at the
+moment the model loads, which is the same class of single point iteration 50 found when the gate was found not to
+block the CDN. Both are queued behind P3 with the trace extraction as their evidence.
+
+Carried, unchanged by this iteration. `public/js/lib/api.js:13` still reads only `data?.error?.message`, so the
+`code` the worker forwards at `public/js/lib/core-worker-entry.js:9` is unused on either transport. A
+cancellation that lands while a response body is being read still announces a sentence, because
+`httpApi`'s `response.json()` catch does not consult the signal; the behaviour is identical before and after this
+fix and no test of it exists either way, so it is recorded rather than claimed. P3 proper did not happen: the
+three `test.skip` lines at `tests/e2e/chat-evidence-panel.spec.js:82` still skip, and the raw fixtures are still
+uncommitted, so iteration 55's "then runs P3 proper" is the second Next line this loop has had to move.
+Safari/WebKit, real phones, microphones, audio quality and independent agronomy stay UNVERIFIED.

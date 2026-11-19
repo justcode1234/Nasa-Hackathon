@@ -146,7 +146,7 @@ export function initChat(getState, actions) {
       while (log.children.length > 20) log.firstElementChild.remove();
       log.scrollTop = log.scrollHeight;
       announce('Answer ready. Sources and limits are included.');
-    } catch (error) { if (error.name !== 'AbortError' && version === revision && serial === messageSerial) announce(error.message); }
+    } catch (error) { if (error.cancelled !== true && version === revision && serial === messageSerial) announce(error.message); }
     finally { if (version === revision && serial === messageSerial) { $('ask').disabled = false;starters.forEach(button=>button.disabled=false); } }
   });
   return { invalidate({ fromAssistant = false } = {}) {
