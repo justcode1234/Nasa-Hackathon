@@ -30,6 +30,15 @@ const PINS = [
   { file: 'public/js/lib/dom.js', line: 13, quote: 'export function sourceLinks(ids, sources)', citedBy: 'docs/handoff-2026-11-18.md:207' },
   { file: 'public/js/lib/dom.js', line: 16, quote: 'sources.find(s => s.id === id)', citedBy: 'AGENTS.md:830' },
   { file: 'public/js/lib/dom.js', line: 17, quote: 'if (!source) return;', citedBy: 'public/js/lib/chat-context.js:110' },
+  // The six iteration-51 pins: this is the first subsection whose prose quotes the lines it edits, so an insertion
+  // above any of them would leave the ledger naming code that is no longer there while every other guard stayed green.
+  { file: 'server/index.js', line: 70, quote: 'if (status >= 500) console.error(error);', citedBy: 'docs/validation.md subsection 51, The fix' },
+  { file: 'server/index.js', line: 71, quote: "message: status === 500 ? 'The server could not complete this request.'", citedBy: 'docs/validation.md subsection 51, What was measured' },
+  { file: 'server/context/client.js', line: 40, quote: 'const wrapped = new AppError(\'The external context service could not respond.', citedBy: 'docs/validation.md subsection 51, The fix' },
+  { file: 'server/context/terrain.js', line: 59, quote: "Terrain data is unavailable. Elevation, slope and aspect remain unknown", citedBy: 'docs/validation.md subsection 51, The fix' },
+  { file: 'server/nasa/power.js', line: 120, quote: 'throw Object.assign(new AppError(', citedBy: 'docs/validation.md subsection 51, The fix' },
+  // 116 is quoted by this subsection's own Limits paragraph six times over, and the 16 Nov survey made it a top unpinned target.
+  { file: 'server/nasa/power.js', line: 116, quote: 'NASA POWER is unavailable (HTTP ', citedBy: 'docs/validation.md subsection 51, Limits' },
 ];
 
 // The drift shape this guard exists to catch: line 15 is a comment and 16 is the code, so a citation that lands on a
@@ -57,13 +66,19 @@ test('every pinned ledger citation lands on the statement the ledger quotes', as
 });
 
 test('the pin table covers the citation targets the loop leans on and cannot be narrowed to pass', () => {
-  assert.ok(PINS.length >= 7, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7`);
+  assert.ok(PINS.length >= 13, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, and to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target`);
   const pinned = file => PINS.filter(pin => pin.file === file).map(pin => pin.line);
   for (const line of [16, 96, 99, 108]) {
     assert.ok(pinned('public/js/modules/chat.js').includes(line), `chat.js:${line} is one of the four most-cited targets and is no longer pinned`);
   }
   for (const line of [13, 16, 17]) {
     assert.ok(pinned('public/js/lib/dom.js').includes(line), `dom.js:${line} names the renderer every source-count citation depends on and is no longer pinned`);
+  }
+  for (const line of [70, 71]) {
+    assert.ok(pinned('server/index.js').includes(line), `index.js:${line} is the exit rule subsection 51 compares the worker against and is no longer pinned`);
+  }
+  for (const [file, line] of [['server/context/client.js', 40], ['server/context/terrain.js', 59], ['server/nasa/power.js', 120], ['server/nasa/power.js', 116]]) {
+    assert.ok(pinned(file).includes(line), `${file}:${line} is a producer line subsection 51 quotes and is no longer pinned`);
   }
   for (const pin of PINS) {
     assert.ok(pin.quote.length >= 12, `${pin.file}:${pin.line} is pinned to a ${pin.quote.length}-character fragment, which a rewritten line can satisfy by accident`);
@@ -81,4 +96,11 @@ test('inserting a line above a pinned statement turns this guard red rather than
   const caught = mismatches(drifted, chatPins);
   assert.ok(caught.length === chatPins.length, `the drift left ${chatPins.length - caught.length} of ${chatPins.length} pins passing, so a line inserted above them would not be reported`);
   assert.ok(drifted.length === original.length + 2, 'the replay must be the two-line insertion this guard was written for');
+  const indexOriginal = await linesOf('server/index.js');
+  const indexDrifted = [...indexOriginal.slice(0, 68), '  // two lines inserted above the exit rule', '  const note = 1;', ...indexOriginal.slice(68)];
+  const indexPins = PINS.filter(pin => pin.file === 'server/index.js');
+  assert.deepEqual(mismatches(indexOriginal, indexPins), [], 'the shipped tree must satisfy its own server pins before the drift is replayed');
+  const indexCaught = mismatches(indexDrifted, indexPins);
+  assert.ok(indexCaught.length === indexPins.length, `the drift left ${indexPins.length - indexCaught.length} of ${indexPins.length} server pins passing, so an insertion above the exit rule would not be reported`);
+  assert.ok(indexDrifted.length === indexOriginal.length + 2, 'the server replay must also be a two-line insertion');
 });

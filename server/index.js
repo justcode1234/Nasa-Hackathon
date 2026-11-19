@@ -67,7 +67,7 @@ export function createApp(dependencies = {}) {
       response.end(request.method === 'HEAD' ? undefined : data);
     } catch (error) {
       const status = error.status ?? (error.code === 'ENOENT' || error.code === 'EISDIR' ? 404 : 500);
-      if (status === 500) console.error(error);
+      if (status >= 500) console.error(error); // an upstream 502 keeps its [cause] here, not in the text the page reads
       json({ error: { code: error instanceof AppError ? error.code : 'SERVER_ERROR', message: status === 500 ? 'The server could not complete this request.' : error.message } }, status);
     }
   });

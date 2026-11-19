@@ -991,6 +991,53 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   stays open as the six skips at `chat-evidence-panel.spec.js:82,115,140`; the pairing counts at
   `:99,129,150` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
   untouched (`4a54fa3`).
+- **19 Nov, same branch: iteration 51 - one upstream failure was five different farmer-facing sentences, and the
+  reason now goes to the log instead of the screen.** `server/context/client.js:36` at `9607565` wrapped every
+  upstream failure in a sentence that interpolated `error.message`, and `server/index.js:71` forwards that text
+  verbatim for a 502, so what the farmer read was whatever the runtime calls its own transport failure. Measured
+  first with `artifacts/iter51-error-shape-probe.mjs` against the real `createCachedJson`: five shapes of one
+  condition produced 5 distinct sentences, one per shape, each interpolating the runtime's own wording - `(fetch
+  failed)`, `(signal timed out)`, `(Load failed)`, `(HTTP 503)` and a parser fragment - and the probe counted 4 of
+  the 5 as a detail no farmer can act on; the exception is `(HTTP 503)`, a status the service answered, which
+  `tests/context.test.js:173` keeps as machine-readable `answered` data instead of as text, while
+  `server/nasa/power.js:116` still prints its own status number
+  (`docs/evidence/iter51-error-shapes-2026-11-19.log.gz`). Three of those wordings already sit in this ledger as
+  though they were three products, so the defect was on the record before it was named. The repository already had
+  the right shape: `server/nasa/power.js:116-120` words "could not be reached or returned invalid JSON" itself and
+  interpolates nothing. Four single-statement edits: `server/context/client.js:40` and
+  `server/context/terrain.js:59` now emit one fixed sentence each and keep the reason as `cause`,
+  `server/nasa/power.js:120` attaches the same `cause`, and `server/index.js:70` logs every 5xx rather than only
+  500, which is where an operator reads it - `artifacts/iter51-502-probe.mjs` asks the running app with
+  `globalThis.fetch` replaced, gets clean 502 bodies and 2 stderr lines naming the reason, and 0 of those lines
+  with the sink reverted (`docs/evidence/iter51-502-sink-2026-11-19.log.gz`). `tests/context.test.js` pins one
+  sentence across four of the shapes plus `slow`/`answered`/`cause`; `tests/terrain.test.js:49`'s `/remain
+  unknown/` - which the leaky text satisfied too - is rewritten to the exact sentence, a superseded assertion made
+  stricter. Ten controls, three archives (`docs/evidence/iter51-controls-2026-11-19.log.gz`,
+  `docs/evidence/iter51-power-controls-2026-11-19.log.gz`,
+  `docs/evidence/iter51-anchor-controls-2026-11-19.log.gz`): product files reverted -> 2 of 17 red and exactly the
+  two cases written here; clean sentence with no `cause` -> red on the two `cause` assertions only, so the sink is
+  load-bearing; `error.name` interpolated -> red on one assertion, and the re-run captured it: 1 of 12 in the
+  context file, the exact sentence against `...could not respond (TypeError). No records were invented. Try again
+  later.`, and the case aborts at `tests/context.test.js:163` before the sentence count at `:168`; log line alone
+  reverted -> reason lines 0; POWER's `{ cause: error }` removed -> 1 of 6 named `host unreachable lost the reason
+  the server log needs`; that sentence leaking again -> 1 of 6 on `host unreachable sentence`, so leak and sink
+  fail separately; the answered shape handed an invented cause -> 1 of 6 on `service answered 429 invents a reason
+  it never caught`; and the log-line revert from the guard side -> 2 of 3 in the anchors file, the drift-replay
+  case failing its own precondition first; the new `server/nasa/power.js:116` pin deleted -> 1 of 3 printing the
+  floor message whole; that pinned line reworded -> 1 of 3 naming the file, line and quoting subsection.
+  `tests/documentation-citation-anchors.test.js` went 7 pins to 13 - five for the lines this subsection edits and
+  one for its own `server/nasa/power.js:116` quote, which the re-run survey found at 7 citations - and its floor
+  message, a template literal closed by a stray double quote, is repaired and printed by control (I). Offline
+  suite 240/240. Two gate runs on these bytes: 225 passed / 6 skipped / 1 failed in 31.9m, the red being the
+  non-hermetic `tests/e2e/assistant.spec.js:6` Q07 reading back this iteration's own sentence while the context
+  service was down (`docs/evidence/iter51-gate-attempt1-2026-11-19.log.gz`), and 226 / 6 skipped / 0 failed in
+  20.6m (`docs/evidence/iter51-gate-attempt2-2026-11-19.log.gz`). Subsection 50's queued step was measured too:
+  CDP `Fetch` on either the browser or the page session pauses a dedicated worker's cross-origin fetch and
+  `Fetch.fulfillRequest` answers it inside the worker (`resolved 201 {"probe":"answered-by-cdp"}`,
+  `docs/evidence/iter51-worker-egress-2026-11-19.log.gz`), so the interception point needs no new dependency - but
+  `tests/e2e/fixtures/` holds post-adapter payloads, so the 6 `chat-evidence-panel.spec.js` skips stay until raw
+  captures exist, and a `context.route` re-measurement against the same worker request opens the next iteration.
+
 - **19 Nov, same branch: iteration 50 - the gate never blocked the model CDN, and a two-line fix silently moved 40
   ledger citations.** `public/js/modules/chat.js:63` interpolated the raw worker exception into the panel, so with
   the CDN aborted the status line read `Model unavailable: Failed to execute 'importScripts' on

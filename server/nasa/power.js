@@ -117,7 +117,7 @@ export function createPowerClient({ fetchImpl = fetch, now = () => new Date(), t
         raw = await response.json();
       } catch (error) {
         if (error instanceof AppError) throw error;
-        throw new AppError('NASA POWER could not be reached or returned invalid JSON. Retry later; no substitute readings were generated.', 502, 'NASA_UNAVAILABLE');
+        throw Object.assign(new AppError('NASA POWER could not be reached or returned invalid JSON. Retry later; no substitute readings were generated.', 502, 'NASA_UNAVAILABLE'), { cause: error });
       }
       const data = normalizePower(raw, location, url.href, now().toISOString());
       await writeCached(`power:${key}`, data, data.retrievedAt);

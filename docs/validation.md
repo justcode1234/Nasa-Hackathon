@@ -4105,3 +4105,181 @@ Limits. The new case proves the degraded path on desktop Chromium with the host 
   census counts: a drift in an unpinned file is still silent, which is why the answer here was a line-neutral fix plus
   a floor, not a promise. The first chain of controls ran against the line-inserting draft and is not the archived
   one; it is superseded, and its log stays under `/tmp` with this sentence saying so.
+
+
+### 51. One upstream failure produced five farmer-facing sentences, and the reason now goes to the log
+
+What was measured. `server/context/client.js:36` at `9607565` wrapped every upstream failure in a sentence that
+  interpolated `error.message`, and `server/index.js:71` forwards that text verbatim for a 502, so the farmer read
+  whatever the runtime happens to call its own transport failure. `artifacts/iter51-error-shape-probe.mjs` drives the
+  real `createCachedJson` with five shapes of one condition - host unreachable, deadline missed, a WebKit-shaped
+  rejection, answered 503, answered HTML - and printed 5 distinct sentences before any edit, one per shape, each
+  interpolating the runtime's own wording: `(fetch failed)`, `(signal timed out)`, `(Load failed)`, `(HTTP 503)` and
+  the parser fragment `(Unexpected token < in JSON at position 0)`
+  (`docs/evidence/iter51-error-shapes-2026-11-19.log.gz`). The probe counted 4 of those 5 as a detail no farmer can
+  act on; the exception is `(HTTP 503)`, a status the service really did answer, and the new case keeps it as
+  machine-readable `answered` data at `tests/context.test.js:173` rather than as text - `server/nasa/power.js:116` is
+  the other half of that rule, and still prints `(HTTP ${response.status})`, because there the number is known to have
+  come from the service. This ledger already carries three of those wordings as though they were three products -
+  `tests/e2e/chat-evidence-panel.spec.js:31`, `docs/validation.md:3994` and `docs/validation.md:4078` - which is the
+  defect showing up here as evidence rather than being inferred from the source. The shape of the fix came from the
+  repository, not from taste: `server/nasa/power.js:116-120` already separates "answered with HTTP n" from "could not
+  be reached or returned invalid JSON" in its own words, interpolates nothing into the second sentence, which is why
+  `tests/integration.test.js:77` can match `/no substitute readings/` against it - the only producer whose failure
+  text a test quoted at `9607565` apart from `server/context/farms.js:89`, whose counts `tests/context.test.js:51`
+  matches, while the terrain case settled for `/remain unknown/` and the context sentence appeared in no assertion at
+  all.
+
+The fix. Four single-statement edits. `server/context/client.js:40` now emits "The external context service could
+  not respond. No records were invented. Try again later." and keeps the reason as `cause` on `:41`;
+  `server/context/terrain.js:59` emits "Terrain data is unavailable. Elevation, slope and aspect remain unknown; no
+  values were substituted." the same way; `server/nasa/power.js:120`, whose sentence was already clean, attaches
+  `cause` too so the reason is not simply lost; and `server/index.js:70` logs every 5xx instead of only 500, which is
+  where a `cause` reaches an operator - Node prints it beneath the AppError as `cause: TypeError: ...`.
+  `tests/context.test.js` gains one case that runs four of those five shapes and requires one sentence, no
+  parentheses, a `cause` on each error, and the machine-readable classification intact (`slow` true only for the
+  missed deadline, `answered` true only for the 503). `tests/terrain.test.js:49` had asserted `/remain unknown/`,
+  which the leaky text satisfied too; it is rewritten as the exact sentence plus the no-detail and `cause` assertions.
+  That is a superseded assertion rewritten stricter, not weakened, and the rule says it has to be named here. The same
+  was found by measurement for the producer this iteration only attached a `cause` to: `tests/nasa.test.js:62`
+  asserted `error.status === 502` for three shapes and nothing else, so no test anywhere read the `cause` or the
+  sentence - it is rewritten to pin all three sentences, require the `cause` on the two shapes that caught one,
+  require none on the shape that was answered, and forbid the caught reason from reappearing in the farmer-facing
+  text. That is the second superseded assertion rewritten stricter; the suite count does not move because no case was
+  added. Widening `tests/documentation-citation-anchors.test.js` is the third change, and it is the same kind of
+  protection: this subsection is the first prose in the ledger that quotes the lines it edits, so the table went from
+  7 pins to 12 over `server/index.js:70`, `server/index.js:71`, `server/context/client.js:40`,
+  `server/context/terrain.js:59` and `server/nasa/power.js:120`, and to 13 when `artifacts/iter51-pin-survey.py` was
+  re-run and put this subsection's own quote of `server/nasa/power.js:116` at 7 citations on the drafted prose and 14
+  on the finished bytes, level with the targets the table exists to protect - a gap this iteration created and closes
+  in the same commit. The floor assertion moved with the table, 7 then 12 then 13, rather than being left behind, the
+  per-file `no longer pinned` checks cover the new files, and the guard's own drift replay inserts two lines above
+  `server/index.js:69` as well as above `chat.js:13`, which is how a stale citation in this subsection becomes a red
+  test that names it. Writing that floor assertion twice also caught it broken: the guard was green at 3 of 3 while
+  its own failure text was a template literal closed by a stray double quote, so the message a future reader would
+  have received ran together with an unmatched apostrophe, and control (I) below is the first run that ever printed
+  it. The suite count does not move for this either: 3 cases before, 3 after. A fifth producer was checked rather than
+  assumed: `server/context/farms.js:89` interpolates as well, but what it interpolates is this repository's own
+  attempt and service counts, and the host names collected at `:83` stay inside that aggregate sentence, so nothing a
+  runtime words reaches the page from the field lookup either.
+
+Controls. Ten, run 19 Nov. (A) to (D) are archived in `docs/evidence/iter51-controls-2026-11-19.log.gz`, then re-run
+  the same day from `artifacts/iter51-controls.sh` (`docs/evidence/iter51-controls-repeat-2026-11-19.log.gz`), where
+  (A), (B) and (D) produced the same counts as the 15:40 log. (A) The four product files reverted to `9607565`,
+  keeping the tests: 2 of 17 red, and exactly the two cases this iteration wrote. (B) The naive half-fix - sentences
+  cleaned but no `cause` anywhere - goes red on exactly two assertions, whose own labels read `host unreachable lost
+  the reason the server log needs` and `the terrain reason stays on the error for the server log`, while every message
+  assertion passes, which is what makes the sink load-bearing rather than decorative. (C) Restoring per-runtime
+  wording by interpolating `error.name` instead of `error.message` goes red on one assertion, and the repeat captured
+  which: run against the context file alone it is 1 fail of 12, and the reported comparison is `expected: 'The
+  external context service could not respond. No records were invented. Try again later.'` against `actual: 'The
+  external context service could not respond (TypeError). No records were invented. Try again later.'`, both printed
+  verbatim in the repeat log under the label `host unreachable` - the case asserts that equality at
+  `tests/context.test.js:163` before it counts distinct sentences at `:168`, so the set assertion never runs and no
+  claim is made about it. (D) `server/index.js:70` alone put back to `status === 500`:
+  `artifacts/iter51-502-probe.mjs` asks the running application for `/api/soil` and `/api/observations` with
+  `globalThis.fetch` replaced, so no service is contacted, and reads both bodies - clean in both states - while
+  counting the stderr lines that name the reason: 2 with the change
+  (`docs/evidence/iter51-502-sink-2026-11-19.log.gz`), 0 without. (E) to (H) cover the two changes this subsection
+  made away from the context producer and are archived separately in
+  `docs/evidence/iter51-power-controls-2026-11-19.log.gz`, each driven by a stubbed `fetch` so no service was
+  contacted. (E) `server/nasa/power.js:120`'s `{ cause: error }` removed with the rewritten test kept: 1 fail of 6,
+  and the assertion the runner prints by name is `host unreachable lost the reason the server log needs`. (F) the same
+  file's clean sentence interpolating `error.message` again, `cause` left in place: 1 fail of 6 on `host unreachable
+  sentence`, printed as `+ 'NASA POWER could not be reached or returned invalid JSON (fetch failed). Retry later; no
+  substitute readings were generated.'` against `- 'NASA POWER could not be reached or returned invalid JSON. Retry
+  later; no substitute readings were generated.'` - the leak and the `cause` are therefore separate failures, not one.
+  (G) the answered-429 `AppError` handed a `cause` it never caught, which is what a reader might do to make the log
+  uniform: 1 fail of 6 on `service answered 429 invents a reason it never caught`, `+ Error: invented` against `-
+  undefined`. (H) is (D)'s same revert seen from the guard side - `server/index.js:70` alone back to `status === 500`
+  with the widened anchor table untouched: 2 fail of 3, the pin case reporting `server/index.js:70 reads "if (status
+  === 500) console.error(error);` against the quote in this subsection, and the drift-replay case failing first on its
+  own precondition `the shipped tree must satisfy its own server pins before the drift is replayed` rather than
+  replaying a drift the tree no longer matched. (I) and (J) test the guard that tests the ledger, in
+  `docs/evidence/iter51-anchor-controls-2026-11-19.log.gz`: (I) deletes the new `server/nasa/power.js:116` entry and
+  leaves the other twelve, which is 1 fail of 3, and the floor message prints whole - `the pin table holds 12 entries;
+  it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, and to
+  13 when this iteration's own citation of server/nasa/power.js:116 became a top target` - which is what shows the
+  repaired string works; (J) rewords the line that entry pins and is 1 fail of 3 naming `server/nasa/power.js:116
+  reads ...` against the quote in this subsection. Those six were `cmp`-restored like the first four; the two runs end
+  with `ok` for `server/nasa/power.js`, `tests/nasa.test.js`, `server/index.js` and
+  `tests/documentation-citation-anchors.test.js` against saved copies. Every control was restored before the suite ran
+  again.
+
+Costs. Two gate runs on these bytes, both archived. Attempt 1
+  (`docs/evidence/iter51-gate-attempt1-2026-11-19.log.gz`) is 1 failed, 6 skipped and 225 passed in 31.9m, and the
+  single red is the known non-hermetic case: `tests/e2e/assistant.spec.js:6` asked Q07, expected the substring `Answer
+  ready` and received `The external context service could not respond. No records were invented. Try again later.` -
+  the context service was unreachable during that run, and the sentence the page showed is this iteration's own, so
+  the failure is the outage with the fix visible rather than a new defect. Attempt 2 on the same bytes
+  (`docs/evidence/iter51-gate-attempt2-2026-11-19.log.gz`, raw log born 16:15:09Z, exited 16:35:44Z) is 226 passed, 6
+  skipped and 0 failed in 20.6m with no failure block in the file at all, so the outage did not recur. `npx playwright
+  test --list` on this tree reports 232 tests in 22 files, which is those 226 plus the 6 `chat-evidence-panel.spec.js`
+  skips, and the number did not move because no Playwright case was added or removed. The offline suite is 240 cases,
+  240 pass and 0 fail (`docs/evidence/iter51-npm-test-2026-11-19.log.gz`, run on the byte-final product and test tree;
+  no wall time is quoted for it here because of the load spread recorded in row 19 of `docs/handoff-2026-11-18.md`,
+  and its own log header carries the duration): 239 before this iteration, and the single added case is
+  `tests/context.test.js`'s one-sentence check, since the nasa rewrite replaced a case and the anchor widening added
+  none. The documentation guards, counted per file at `docs/evidence/iter51-costs-2026-11-19.log.gz`, are
+  `documentation-reflow` 4, `-citations` 5, `-commands` 6 and `-citation-anchors` 3 for 18 green, plus
+  `documentation-evidence-index` 5 green once `docs/evidence-index.md` is regenerated; the generator reports 515
+  evidence files of which 158 are named by no other tracked prose file, over 216 prose files, and it is stable at two
+  consecutive runs. `python3 artifacts/iter49-census.py` on the final ledger reads 216 prose files, 805 archive
+  citations and 539 `file:line` references with as-is equal to newline-joined and no split citations, against 779 and
+  436 on iteration 50's bytes. What the fix costs at run time is nothing measurable: no new dependency, fetch, timer
+  or retry, three properties added to errors that were already being thrown, and one log call that now fires for every
+  5xx instead of only for 500s. Which bytes attempt 2 ran on is bound rather than assumed: the last write to a file
+  the gate reads was `server/context/client.js` at 16:14:59Z and attempt 2 began at 16:15:09Z, and the only later
+  writes were control restores, each followed by a `cmp` printed in the two control archives, so re-checking the
+  current tree against the pre-control snapshots reports `server/nasa/power.js`, `server/index.js`,
+  `tests/nasa.test.js` and `tests/documentation-citation-anchors.test.js` identical. That check first read as four
+  failures, because it was written as a shell `for` over quoted pairs: zsh does not word-split an unquoted variable,
+  so every comparison got one argument and failed. Re-run in Python, it is clean, and the sha256 of the four product
+  files at commit time is 38f1b39184af11b5c17a76e0dff7ec27c524c46d9b78c372ebfba5845a4f27c3
+  (`server/context/client.js`), a0db730da86329e5ac3e56b8c001fac67fa7dc9ad69f40bbf40574a32236bf29
+  (`server/context/terrain.js`), 89c7c905daac534217b97bc247897ce787666b42b41387005f8550ca17dcb0d4 (`server/index.js`)
+  and 50d112dbeca07e265915893feb816843dd88f63286a70ce1af0cc6ba156c0417 (`server/nasa/power.js`). All four measurements
+  were repeated after the last prose edit, which is how the numbers in this paragraph are known to be a fixed point
+  rather than a snapshot taken mid-rewrite: the five documentation guards are 23 of 23, the census still reads 805 and
+  539, `artifacts/iter51-pin-survey.py` still counts 462 `file:line` citations over 194 distinct targets in 208
+  tracked files and the generator still reports 158 orphan rows of 515
+  (`docs/evidence/iter51-costs-2026-11-19.log.gz`).
+
+Limits. What iteration 51 covers is the four producers, and it covers them on both transports:
+  `public/js/lib/core-worker-entry.js:2` imports the same `createApiHandler` the Node server calls, so a wrapped
+  sentence reads the same whichever side answers. Nine page-side sites still print whatever their own `catch` caught -
+  `public/js/modules/context.js:80,114,136`, `public/js/modules/terrain-controls.js:56`,
+  `public/js/modules/map3d.js:36,83`, `public/js/modules/gibs-controls.js:40`, `public/js/app.js:307` and
+  `public/js/modules/location-picker.js:46`, which assigns the message instead of interpolating it - and for an error
+  raised outside those four producers, such as the MapLibre failure `map3d.js:36` reports deliberately, a runtime's
+  own wording still reaches the screen. The worker exit is also structurally unlike the Node exit:
+  `server/index.js:71` replaces the text of every 500 with one sentence while `public/js/lib/core-worker-entry.js:9`
+  forwards `error.message` whatever it is, so an unwrapped runtime error inside the worker can name something a page
+  has no business showing; turning that reading of two files into an executed measurement is where iteration 52
+  starts. The machine-readable flags stay heuristic: `server/context/client.js:43` derives `slow` from a regular
+  expression over the error's own name and message, so a runtime that words an abort without matching it reports a
+  missed deadline as a plain failure even though the sentence a farmer reads is fixed. The two producers state one
+  fact differently, and that is measured here rather than assumed: `server/context/client.js:25` throws `HTTP
+  ${response.status}` with `answered: true`, so the 503 is real data in the error, and iteration 51 chose to keep it
+  in `cause.message` and in the flag but out of the sentence, while `server/nasa/power.js:116` prints its status
+  number straight into the text. `tests/nasa.test.js:74` and `tests/context.test.js:164` pin each side, so the
+  difference is now a recorded rule instead of drift - but which sentence a farmer reads about a busy service still
+  depends on which producer failed, and nothing yet forces the two to agree. The WebKit shape in the probe was
+  constructed by hand, not executed on Safari, and real phones, Safari/WebKit, microphones and audio quality remain
+  UNVERIFIED; no agronomic claim moved, because each new sentence still names what remains unknown. The operator sink
+  is stderr only: on a local Node preview that is the terminal running `npm run start:node`, and nowhere else is a
+  `cause` captured, so an upstream reason reaches whoever reads that log and no one else.
+
+The queued step, measured. Subsection 50 left "intercepting the worker's own egress at the browser level" open.
+  `artifacts/iter51-cdp-probe.mjs` starts the static preview, confirms the page is served the `worker` marker, and
+  lets a blob worker fetch one upstream while a CDP `Fetch` hook is installed - once on the browser session, once on
+  the page session, with a page-level fetch of a differently-named URL as the control. In both layers the hook paused
+  the worker's request (`XHR https://rest.isric.org/isric-news?probe=worker`) and its `Fetch.fulfillRequest` answered
+  it inside the worker: the worker resolved `201 {"probe":"answered-by-cdp"}` while the page-level fetch, failed by
+  the same hook, read `rejected Failed to fetch` (`docs/evidence/iter51-worker-egress-2026-11-19.log.gz`). The
+  interception point is therefore reachable without adding a dependency. What it does not yet buy is fixture replay:
+  `tests/e2e/fixtures/chat-evidence-observations.json` and `tests/e2e/fixtures/chat-evidence-soil.json` hold payloads
+  that have already been through this repository's adapters, so answering the worker's upstream calls needs raw
+  captures first and the 6 `chat-evidence-panel.spec.js` skips stay. Re-measuring `context.route` against that same
+  worker request is the first thing the next iteration does, because the probe also showed Playwright reporting both
+  requests as request events, and an event is not a route.

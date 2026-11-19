@@ -46,5 +46,10 @@ test('terrain point client uses bounded fixed-host tiles and retains cached prov
   const first=await client.point({latitude:-31.89,longitude:116.77,url:'https://untrusted.invalid'}),second=await client.point({latitude:-31.89,longitude:116.77});
   assert.equal(calls,1);assert.equal(requested,'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/12/3376/2431.png');assert.equal(first.retrievedAt,second.retrievedAt);assert.equal(first.observationDate,null);assert.ok(Number.isFinite(first.elevationM));
   await assert.rejects(client.point({latitude:89,longitude:0}),/Mercator/);
-  const failed=createTerrainClient({fetchImpl:async()=>({ok:false,status:503})});await assert.rejects(failed.point({latitude:0,longitude:0}),/remain unknown/);
+  // Superseded assertion, rewritten stricter rather than removed: /remain unknown/ also matched the old text
+  // "Terrain data is unavailable (HTTP 503)...", which put a transport fact on the farmer's screen.
+  const failed=createTerrainClient({fetchImpl:async()=>({ok:false,status:503})});const terrainError=await failed.point({latitude:0,longitude:0}).then(()=>null,reason=>reason);
+  assert.equal(terrainError.message,'Terrain data is unavailable. Elevation, slope and aspect remain unknown; no values were substituted.');
+  assert.ok(!/[()]|HTTP |503/.test(terrainError.message),'the terrain sentence names no transport detail');
+  assert.ok(terrainError.cause instanceof Error,'the terrain reason stays on the error for the server log');
 });

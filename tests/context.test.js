@@ -145,3 +145,30 @@ test('Australian irrigation benchmark is a reproducible annual aggregate, never 
   assert.deepEqual(getWaterContext({ country: 'KE' }).rows, []);
   assert.match(au.notices.join(' '), /not a recommended dose/);
 });
+
+test('one upstream failure condition keeps one farmer-facing sentence', async () => {
+  // server/index.js:71 forwards this message to the page for a 502, and the reason createCachedJson used to put in
+  // parentheses is whatever a runtime calls its own transport failure: one unreachable service read "(fetch failed)"
+  // in Node, "(signal timed out)" in a Chromium worker and "(Failed to fetch)" on 18 Nov. The reason now stays on
+  // the error as `cause`, where server/index.js:70 logs it, and the sentence is pinned here.
+  const shapes = {
+    'host unreachable': async () => { throw new TypeError('fetch failed'); },
+    'deadline missed': async () => { throw new TypeError('signal timed out'); },
+    'service answered 503': async () => ({ ok: false, status: 503 }),
+    'service answered HTML': async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('Unexpected token < in JSON at position 0'); } }),
+  };
+  const sentences = new Set();
+  for (const [label, fetchImpl] of Object.entries(shapes)) {
+    const error = await createCachedJson({ fetchImpl, ttlMs: 1 })('https://example.invalid').then(() => null, reason => reason);
+    assert.equal(error.message, 'The external context service could not respond. No records were invented. Try again later.', label);
+    assert.ok(!/[()]|fetch failed|timed out|HTTP |Unexpected token/.test(error.message), `${label} leaked a transport detail into farmer-facing text`);
+    assert.ok(error.cause instanceof Error, `${label} lost the reason the server log needs`);
+    sentences.add(error.message);
+  }
+  assert.equal(sentences.size, 1, 'four failure shapes became four different sentences');
+  const timeout = await createCachedJson({ fetchImpl: shapes['deadline missed'], ttlMs: 1 })('https://example.invalid').then(() => null, reason => reason);
+  const busy = await createCachedJson({ fetchImpl: shapes['service answered 503'], ttlMs: 1 })('https://example.invalid').then(() => null, reason => reason);
+  assert.equal(timeout.slow, true, 'a missed deadline stays classifiable without naming itself in the text');
+  assert.equal(timeout.answered, false, 'a service that never answered is not reported as having answered');
+  assert.equal(busy.answered, true, 'a service that answered 503 stays classifiable as having answered');
+});

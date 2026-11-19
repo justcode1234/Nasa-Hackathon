@@ -56,7 +56,7 @@ export function createTerrainClient({fetchImpl=fetch,now=()=>new Date(),ttlMs=86
           sourceFiles:response.headers?.get('x-amz-meta-x-imagery-sources')??response.headers?.get('x-imagery-sources')??null};
         cache.set(key,{data,storedAt:now().getTime()});while(cache.size>16)cache.delete(cache.keys().next().value);
         await writeCached(key,data,data.retrievedAt);return data;
-      }catch(error){throw new AppError(`Terrain data is unavailable (${error.message}). Elevation, slope and aspect remain unknown; no values were substituted.`,502,'TERRAIN_UNAVAILABLE');}
+      }catch(error){const wrapped=new AppError('Terrain data is unavailable. Elevation, slope and aspect remain unknown; no values were substituted.',502,'TERRAIN_UNAVAILABLE');wrapped.cause=error;throw wrapped;}
     })();pending.set(key,task);try{return await task;}finally{pending.delete(key);}
   }
   function metadata(tiles){return{id:'terrain-context',product:'Terrain Tiles Terrarium DEM mosaic',kind:'derived',units:{elevation:'m',slope:'degrees',aspect:'degrees clockwise from north'},

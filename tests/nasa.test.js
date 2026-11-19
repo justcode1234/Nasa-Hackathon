@@ -60,9 +60,23 @@ test('coalesces concurrent requests, caches original retrieval time, separates c
   assert.equal(calls, 3);
 });
 test('upstream HTTP, JSON and network failures return errors and never cache substitutes', async () => {
-  for (const fetchImpl of [async () => ({ ok: false, status: 429 }), async () => { throw new Error('offline'); },
-    async () => ({ ok: true, json: async () => { throw new Error('invalid json'); } })]) {
-    const client = createPowerClient({ fetchImpl });
-    await assert.rejects(client({ latitude: 0, longitude: 0, year: 2025 }), error => error.status === 502);
+  const unreachable = 'NASA POWER could not be reached or returned invalid JSON. Retry later; no substitute readings were generated.';
+  const shapes = {
+    'service answered 429': { fetchImpl: async () => ({ ok: false, status: 429 }), sentence: 'NASA POWER is unavailable (HTTP 429). Retry later; no substitute readings were generated.', reason: undefined },
+    'host unreachable': { fetchImpl: async () => { throw new TypeError('fetch failed'); }, sentence: unreachable, reason: 'fetch failed' },
+    'service answered invalid JSON': { fetchImpl: async () => ({ ok: true, json: async () => { throw new SyntaxError('Unexpected token < in JSON at position 0'); } }), sentence: unreachable, reason: 'Unexpected token < in JSON at position 0' },
+  };
+  // A status the service answered is a fact a farmer can act on, so it stays in the text; the wording a runtime gives
+  // its own transport failure is not, so it stays on the error as `cause` for the log at server/index.js:70.
+  for (const [label, shape] of Object.entries(shapes)) {
+    const error = await createPowerClient({ fetchImpl: shape.fetchImpl })({ latitude: 0, longitude: 0, year: 2025 }).then(() => null, reason => reason);
+    assert.equal(error.status, 502, label);
+    assert.equal(error.message, shape.sentence, `${label} sentence`);
+    if (shape.reason === undefined) assert.equal(error.cause, undefined, `${label} invents a reason it never caught`);
+    else {
+      assert.ok(error.cause instanceof Error, `${label} lost the reason the server log needs`);
+      assert.equal(error.cause.message, shape.reason, `${label} kept the wrong reason`);
+      assert.ok(!error.message.includes(shape.reason), `${label} leaked its reason into farmer-facing text`);
+    }
   }
 });

@@ -33,7 +33,12 @@ export function createCachedJson({ fetchImpl = fetch, ttlMs = 86_400_000, maxEnt
         // re-trying an endpoint this client cannot reach, but keeps its backoff ladder for one that is
         // busy (an HTTP error) or slow (the request deadline). Both cases may recover; a broken pipe
         // inside one farmer action does not.
-        const wrapped = new AppError(`The external context service could not respond (${error.message}). No records were invented. Try again later.`, 502, 'CONTEXT_UNAVAILABLE');
+        // The sentence a farmer reads cannot carry the reason: the reason is whatever the runtime calls its own
+        // transport failure, so one condition read "(fetch failed)" in Node, "(signal timed out)" in a Chromium
+        // worker and "(Failed to fetch)" on 18 Nov, and server/index.js:71 forwards this text verbatim. The reason
+        // stays on the error for the log instead, where a reader can act on it.
+        const wrapped = new AppError('The external context service could not respond. No records were invented. Try again later.', 502, 'CONTEXT_UNAVAILABLE');
+        wrapped.cause = error;
         wrapped.answered = Boolean(error?.answered);
         wrapped.slow = /abort|timed?\s?out/i.test(`${error?.name ?? ''} ${error?.message ?? ''}`);
         throw wrapped;
