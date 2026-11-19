@@ -3212,6 +3212,88 @@ desktop Chrome emulating mobile viewports; real phones, Safari/WebKit and touch 
 6 skips remain the `chat-evidence-panel.spec.js` worker-transport guard recorded in subsection 38 (iv), which this
 change does not touch.
 
+### 40. The paragraph window had no witness in a browser, and one failure hid the second verdict
+
+**Defect class: coverage, not behaviour.** Subsection 39 landed the rule and recorded two limits that came from the
+same absence: nothing in a browser asserted the filled third slot, and the only page-level evidence for the
+wrong-country advisory that `public/js/lib/chat-context.js:106` emits was an offline unit case with a hand-built state
+(`tests/chat-context.test.js:104-110`). Both branches could therefore regress in the composition budget or in the
+advisory's own rendering without any Chrome case noticing. This iteration adds the two browser cases, one per branch,
+and in doing so closes 39's limit (i).
+
+**Measured before written.** Neither case was drafted from a reading of the composer. Both were first added as prints
+and run on this tree (`docs/evidence/pest41-measure-2026-11-19.log.gz`, 2 passed, 7.1 s, `static-desktop`):
+`What pests affect sweet corn?` in the comparison-plus-watchlist state renders **3 paragraphs** - the country record,
+`Sweet corn belongs to Poaceae…` and `Australia has a 2024 FAOSTAT production record for Green corn (maize)…` - under
+`Sources (7)`, and `What pests affect sweet corn in Brazil?` renders **3** too: the advisory first, then the crop fact,
+then the reply's own `The saved FAOSTAT extract has no matching positive Green corn (maize) record for Brazil
+in 2020–2024…` under `Sources (5)`. Two things the code reading had left open were settled by that run: the advisory
+spells both countries as the **codes** `AU` and `BR` rather than display names, and the second wording's own evidence
+gap does reach the panel. Every shape asserted in the committed cases is a shape that print produced; nothing was
+pinned from the composer's intent. The live occurrence count visible in that output (68 records) is deliberately not
+asserted anywhere, because GBIF can move it.
+
+**What changed.** `tests/e2e/chat-pest-context.spec.js:155` pins the three slots of the first wording by position,
+including the third - the paragraph the cap of one used to cut - and `:175` pins the advisory: exactly one, naming both
+countries, claiming no occurrence record, plus the reply's own evidence gap surviving beside it and a three-paragraph
+bound. No existing assertion was rewritten: the three cases at `:73`, `:105` and `:126` are untouched and still pass in
+the same runs, so nothing was narrowed to accommodate the new pins.
+
+**Negative control, and a property of this spec file worth recording.** With the composer of the previous tip restored
+into `public/` - verified byte-identical to `git show HEAD~1:public/js/lib/chat-context.js` before the swap, and the
+landed file restored byte-identical afterwards, `grep -c` for the window in `dist/client` going 1 → 0 → 1 across the
+three builds - **both new cases fail on their own merits**: `:155` with `Expected length: 3, Received length: 2`
+(the FAOSTAT sentence missing) and `:175` with the same 3-vs-2 on the evidence gap
+(`docs/evidence/pest41-cap-control-2026-11-19.log.gz`). The first control run reported **1 failed, 3 passed,
+1 did not run**, not because a case was skipped but because this file runs `mode: 'serial'`
+(`tests/e2e/chat-pest-context.spec.js:26`): one failure aborts the rest of the file, so a single run cannot give two
+independent verdicts. `:175` was therefore re-run alone on the control composer to obtain its own. Serial order was not
+changed, no case was deselected and none was re-ordered to make that cheaper; the masking is recorded here because it is
+a diagnostic hazard anyone editing this file will hit. On the restored tree the whole file is **5 passed (15.1 s)**.
+
+**Executed cost.** Print run **2 passed (7.1 s)**; green slice **5 passed (15.1 s)** on `static-desktop`; control runs
+**1 failed / 3 passed / 1 did not run** in file order plus **1 failed (1 alone)** for the masked case; the offline suite
+**220/220, 0 failed, 0 skipped** (`docs/evidence/pest41-offline-2026-11-19.log.gz`); `npx playwright test --list` on
+this tree reports **Total: 228 tests in 21 files** (`docs/evidence/pest41-census-2026-11-19.log.gz`), eight more than
+subsection 39's 220 because two cases run in each of the four projects. The full four-project gate on this tree came out
+**1 failed, 221 passed, 6 skipped (23.5 m), `GATE EXIT=1`** on its first attempt
+(`docs/evidence/pest41-gate-1f-livefields-2026-11-19.log.gz`); 221 + 6 + 1 is the 228 census exactly, and the second
+attempt's tally is in the next paragraph.
+
+**The gate's one failure is recorded as a failure, and what it was.** The failing case is
+`tests/e2e/review-phase-b.spec.js:44` in `static-desktop`, and it fails inside the shared live-lookup helper at
+`tests/e2e/live-fields.js:13` - "real fields were still unavailable after two user retries". Nothing in iteration 41
+touches mapped-field discovery: the change is two cases in a different spec file, the same case **passed in the other
+three projects of the same run** (case lines 141, 214 and 287) and passed in iteration 40's gate on this branch. The
+page state captured with the failure quotes the app's own words, which are the behaviour the app is supposed to have:
+`The field lookup services are busy or unavailable (7 attempts across 3 services). No fields were invented.` So the
+public OpenStreetMap mirrors refused the point for the whole budget (one search plus two user retries), the app said so,
+and the test correctly refused to proceed. Re-running exactly that case alone on the unchanged tree passed in **41.2 s**
+(same archive, appended), which is the attribution: an external dependency, not this tree. The retry budget was not
+raised, the case was not marked `skip`/`fixme`, and no `--grep-invert` was used to make the tally look clean; the
+number recorded above is the number the gate printed. A second full attempt on the identical tree came out
+**222 passed, 6 skipped, 0 failed (21.6 m), `GATE EXIT=0`** (`docs/evidence/pest41-gate-green-2026-11-19.log.gz`): 222 + 6
+is the 228 census, all eight new case lines pass in each of the four projects, and `review-phase-b.spec.js:44` - the case
+attempt 1 lost to the external lookup - passes in all four. Both tallies stay in this document - one external-service failure in a 228-case run is now a rate that has to be quoted rather than
+pretended away, and it is registered in handoff §7 as the reason a green gate may need a paid retry.
+
+**One bookkeeping note about the evidence names, because a wrong date reads like a wrong run.** The UTC clock crossed
+midnight in the middle of iteration 40: its probes ran on 18 Nov UTC (05:2x local = 21:2x UTC on the 18th) while its
+gate and final offline run landed on 19 Nov UTC, and every file in that series still carries `-2026-11-18` so one
+iteration names one set. That makes the suffix a label rather than a timestamp for `pest40-*`, and each header inside
+those archives carries the `date -u` value instead. From this subsection on the suffix is the executed UTC day again:
+`pest41-*` files carry `-2026-11-19`.
+
+**Limits that stay open, recorded rather than hidden.** (i) Subsection 39's `Sources (5)` question is *not* closed
+here. This iteration measured the source counts of two different wordings (7 and 5) and pinned paragraph shapes rather
+than counts; the derivation of `:73`'s count in the comparison state is still an inference from the reserved-caveat
+branch, and closing it needs the panel's resolved `sources` array printed for that wording. (ii) The print run and the
+green slice are `static-desktop`; the per-project verdicts for the new cases come only from the gate tally above.
+(iii) These are the same two shapes the offline probe reached; the QA corpus still cannot produce them, so the corpus
+column of subsection 39 stands unchanged. (iv) Real phones, Safari/WebKit and touch remain unexercised - every
+assertion here runs in emulated desktop Chrome. (v) The 6 `chat-evidence-panel.spec.js` worker-transport skips remain
+untouched and are the next coverage item in handoff §7.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has

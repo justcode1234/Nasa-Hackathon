@@ -145,3 +145,52 @@ test('a species named outright reaches the loaded watchlist with no comparison r
   expect(hrefs[1],'the second citation must be the host reference this record carries').toContain('ask.ifas.ufl.edu');
   expect(errors).toEqual([]);
 });
+
+// Why these two cases exist: the shape below is what iteration 40 changed (`public/js/lib/chat-context.js:143`), and
+// until now nothing in a browser could see it - docs/evidence/pest40-blast-radius-2026-11-18.log.gz measured 0 of 88
+// QA wordings reaching the widened branch, so subsection 39's first open limit was that the rule was pinned only by
+// an offline unit case and an offline probe. Both wordings were first run as prints on this tree and their real
+// paragraphs read from that log (docs/evidence/pest41-measure-2026-11-18.log.gz) before a single shape below was
+// written; the counts those prints produced are what `docs/evidence/pest41-*-2026-11-18.log.gz` records as executed.
+test('a pest reply spends its third slot on its own second paragraph rather than leaving it empty',async({page,context})=>{
+  test.setTimeout(240_000);
+  const errors=await planned(page,context,true);
+  await ask(page,'What pests affect sweet corn?');
+  const seen=await paragraphs(page);
+  // The three paragraphs this wording renders on this composer, in order: the loaded record, the crop fact, and the
+  // national-production sentence that the cap of one used to cut. Each is asserted as a slot so a change of order or
+  // a dropped paragraph fails with the rendered list in the message.
+  expect(seen,`the reply's own second paragraph did not reach the panel: ${JSON.stringify(seen)}`).toHaveLength(3);
+  expect(seen[0],`the first paragraph must be the loaded country record, got: ${JSON.stringify(seen)}`).toMatch(/^Fall armyworm in (AU|Australia): Country records found/);
+  expect(seen[1]).toMatch(/^Sweet corn belongs to Poaceae\./);
+  // Measured, not guessed: the third paragraph is the reply's own FAOSTAT sentence for the plan's own country, and it
+  // is a production record rather than a caveat, so this is the paragraph the old facts.slice(0, 1) cut.
+  expect(seen[2],'the third slot holds the reply\'s own sentence').toMatch(/^Australia has a .* FAOSTAT production record for Green corn \(maize\)\./);
+  expect(seen[2]).toContain('National records do not verify local suitability');
+  // No live number is pinned anywhere above: the occurrence count in seen[0] comes from GBIF at request time, so this
+  // case asserts the sentence that carries it and never its value.
+  expect(seen.filter(text=>/Diamondback moth/.test(text)),'a record the plan does not name was quoted').toEqual([]);
+  expect(errors).toEqual([]);
+});
+test('a pest question naming a country the loaded watchlist is not explains the gap instead of quoting it',async({page,context})=>{
+  test.setTimeout(240_000);
+  const errors=await planned(page,context,true);
+  await ask(page,'What pests affect sweet corn in Brazil?');
+  const seen=await paragraphs(page);
+  const advisory=seen.filter(text=>/^The country pest watchlist loaded here covers/.test(text));
+  expect(advisory,`the wrong-country explanation is absent: ${JSON.stringify(seen)}`).toHaveLength(1);
+  // conversation.js:51 lets an explicit country win over the selected point and :121 reports it, so the composer knows
+  // which two countries disagree. The executed render spells both as the codes AU and BR; the assertion accepts the
+  // display names too so the pin fails on the substance (which country is named) rather than on label style.
+  expect(advisory[0]).toMatch(/AU|Australia/);
+  expect(advisory[0]).toMatch(/BR|Brazil/);
+  expect(advisory[0]).toContain('no occurrence record is quoted');
+  expect(advisory[0]).toContain('Load the pest lookup for');
+  // The failure class: Australia's records answering a Brazil question. Nothing but the advisory may speak of records.
+  expect(seen.filter(text=>text!==advisory[0]&&/occurrence record/i.test(text)),'an occurrence claim crossed the country gate').toEqual([]);
+  // The reply keeps its own honesty sentence beside the explanation, which is the same budget the case above pins.
+  expect(seen).toHaveLength(3);
+  expect(seen.some(text=>/^The saved FAOSTAT extract has no matching positive .* record for Brazil/.test(text)),
+    `the reply's own evidence gap was displaced: ${JSON.stringify(seen)}`).toBe(true);
+  expect(errors).toEqual([]);
+});

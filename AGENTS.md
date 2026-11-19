@@ -930,6 +930,38 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 41 - iteration 40's rule had no browser witness, and this file's serial mode hid a
+  second verdict.** Coverage iteration, no source change: two cases land in `tests/e2e/chat-pest-context.spec.js` for the
+  two branches only an offline unit case could see. Both were run as **prints first** and their real rendered paragraphs
+  read from that log (`docs/evidence/pest41-measure-2026-11-19.log.gz`, **2 passed, 7.1 s**) before a single shape was
+  pinned: `What pests affect sweet corn?` in the comparison + watchlist state renders **3** paragraphs (`Sources (7)`)
+  whose third is the reply's own `Australia has a … FAOSTAT production record for Green corn (maize).` sentence, and
+  `What pests affect sweet corn in Brazil?` renders the wrong-country advisory **first**, spelled with the codes `AU` and
+  `BR` rather than display names, then the crop fact and the reply's own evidence gap (`Sources (5)`). `:155` pins those
+  three slots by position - closing iteration 40's limit (i), that no browser asserted the filled slot - and `:175` pins
+  the advisory iteration 38 added, which had never been rendered in a browser at all. No live number is asserted: the
+  `68 historical occurrence records` in that output is GBIF's to move. Negative control with the previous tip's composer
+  restored into `public/` (byte-identical to `git show HEAD~1:…` before the swap, restored byte-identical after,
+  `dist/client` carrying the window 1 → 0 → 1 across three builds): **both new cases fail on their own**, `:155` and
+  `:175` each with `Expected length: 3, Received length: 2` (`docs/evidence/pest41-cap-control-2026-11-19.log.gz`). The
+  first control pass reported **1 failed, 3 passed, 1 did not run** because the file is `mode: 'serial'`
+  (`tests/e2e/chat-pest-context.spec.js:26`) and a failure aborts the rest of it, so `:175` was re-run alone to get its
+  own verdict; nothing was reordered, deselected or skipped to make that cheaper and the masking is now recorded for the
+  next person to edit this file. Costs: restored tree **5 passed (15.1 s)**
+  (`docs/evidence/pest41-green-slice-2026-11-19.log.gz`), offline **220/220, 0 failed, 0 skipped**
+  (`docs/evidence/pest41-offline-2026-11-19.log.gz`), `--list` census **228 tests in 21 files**, eight more than the 220
+  subsection 39 recorded (`docs/evidence/pest41-census-2026-11-19.log.gz`). Full gate attempt 1 came out
+  **1 failed, 221 passed, 6 skipped (23.5 m), `GATE EXIT=1`**, and the one failure is not this tree: it is the shared
+  live mapped-field helper `tests/e2e/live-fields.js:13` giving up after the app's own honest "7 attempts across 3
+  services. No fields were invented", with `review-phase-b.spec.js:44` **passing in the other three projects of that same
+  run** and passing in **41.2 s** when re-run alone on the unchanged tree
+  (`docs/evidence/pest41-gate-1f-livefields-2026-11-19.log.gz`). The retry budget was not raised, nothing was skipped or
+  de-grepped to tidy the tally. Attempt 2 on the identical tree came out **222 passed, 6 skipped, 0 failed (21.6 m), `GATE EXIT=0`** with all eight
+  new case lines green (`docs/evidence/pest41-gate-green-2026-11-19.log.gz`). What stays open: iteration 40's `Sources (5)` derivation at
+  `:73` is still an inference - this iteration measured two other wordings' counts and pinned shapes instead, and
+  closing it needs the panel's resolved `sources` array printed for that wording; emulated Chrome only; and the 6
+  `chat-evidence-panel.spec.js` worker-transport skips remain the next coverage item. Nothing was deployed, no NASA
+  portal edit, main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 40 - the paragraph window was capped at one even when two slots were free, so a
   reply lost its own second sentence.** This closes iteration 39's surviving limit. Measured before any edit from
   `docs/evidence/pest39-budget-2026-11-18.log.gz`: "What pests affect sweet corn?" rendered **2/3 with
