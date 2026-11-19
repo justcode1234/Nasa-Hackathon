@@ -203,22 +203,112 @@ test('one upstream failure condition keeps one farmer-facing sentence', async ()
   // the error as `cause`, where server/index.js:70 logs it, and the sentence is pinned here.
   const shapes = {
     'host unreachable': async () => { throw new TypeError('fetch failed'); },
-    'deadline missed': async () => { throw new TypeError('signal timed out'); },
+    'deadline missed': (url, { signal }) => new Promise((resolve, reject) => { const keep = setTimeout(() => reject(new Error('the fake transport never settles')), 30_000); signal.addEventListener('abort', () => { clearTimeout(keep); reject(signal.reason); }, { once: true }); }),
     'service answered 503': async () => ({ ok: false, status: 503 }),
     'service answered HTML': async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('Unexpected token < in JSON at position 0'); } }),
   };
   const sentences = new Set();
   for (const [label, fetchImpl] of Object.entries(shapes)) {
-    const error = await createCachedJson({ fetchImpl, ttlMs: 1 })('https://example.invalid').then(() => null, reason => reason);
+    const error = await createCachedJson({ fetchImpl, ttlMs: 1 })('https://example.invalid', { timeoutMs: 250 }).then(() => null, reason => reason);
     assert.equal(error.message, 'The external context service could not respond. No records were invented. Try again later.', label);
     assert.ok(!/[()]|fetch failed|timed out|HTTP |Unexpected token/.test(error.message), `${label} leaked a transport detail into farmer-facing text`);
     assert.ok(error.cause instanceof Error, `${label} lost the reason the server log needs`);
     sentences.add(error.message);
   }
   assert.equal(sentences.size, 1, 'four failure shapes became four different sentences');
-  const timeout = await createCachedJson({ fetchImpl: shapes['deadline missed'], ttlMs: 1 })('https://example.invalid').then(() => null, reason => reason);
+  const timeout = await createCachedJson({ fetchImpl: shapes['deadline missed'], ttlMs: 1 })('https://example.invalid', { timeoutMs: 250 }).then(() => null, reason => reason);
   const busy = await createCachedJson({ fetchImpl: shapes['service answered 503'], ttlMs: 1 })('https://example.invalid').then(() => null, reason => reason);
   assert.equal(timeout.slow, true, 'a missed deadline stays classifiable without naming itself in the text');
   assert.equal(timeout.answered, false, 'a service that never answered is not reported as having answered');
   assert.equal(busy.answered, true, 'a service that answered 503 stays classifiable as having answered');
+});
+
+// Iteration 54, P2. Measured 19 Nov in docs/evidence/iter54-failure-taxonomy-2026-11-19.log.gz against the shipped
+// client: an unreadable body and an unreachable host arrived at server/context/farms.js as one verdict
+// (answered=false, slow=false) although only the second ever sent nothing, and the hedge dropped the retry that
+// follows for it in 0 ms while reporting "1 attempts across 1 services". No shape carried a status either, so a
+// service that read the request and declined it read exactly like one that said it was busy: 3 requests and 9.0 s
+// each (docs/evidence/iter54-refusal-cost-2026-11-19.log.gz) for a request already refused. And both flags came
+// from vocabulary rather than observation - server/context/client.js:43 matched /abort|timed?\s?out/i over
+// error.name plus error.message, so the words a runtime happens to use decided whether to ask again.
+test('the retry facts a hedge reads come from what this client observed, not from the words around them', async () => {
+  const ask = (fetchImpl, timeoutMs, path) => createCachedJson({ fetchImpl, ttlMs: 1 })(`https://iter54-${path}.invalid`, { timeoutMs });
+  const failure = async (label, fetchImpl, timeoutMs) => ask(fetchImpl, timeoutMs, label).then(() => { throw new Error(`${label} unexpectedly succeeded`); }, reason => reason);
+
+  // A body that arrived is a service that answered, whatever it did with the request afterwards.
+  const unreadable = await failure('body', async () => ({ ok: true, status: 200, json: async () => { throw new SyntaxError('Unexpected token < in JSON at position 0'); } }));
+  assert.equal(unreadable.answered, true, 'bytes that arrived are an answer, and the hedge must keep its retries for them');
+  assert.equal(unreadable.slow, false, 'an unreadable body is not a missed deadline');
+  assert.ok(unreadable.cause instanceof SyntaxError, 'the parse failure stays on the error for the server log');
+
+  // A deadline this client set is a fact it owns: AbortSignal.timeout aborts its own signal, and nothing else can.
+  // The fake keeps a ref'd timer of its own because AbortSignal.timeout's timer does not hold the event loop open.
+  const expired = await failure('deadline', (url, { signal }) => new Promise((resolve, reject) => {
+    const keep = setTimeout(() => reject(new Error('the fake transport never settles')), 30_000);
+    signal.addEventListener('abort', () => { clearTimeout(keep); reject(signal.reason); }, { once: true });
+  }), 40);
+  assert.equal(expired.slow, true, 'the request this client gave up on is still classifiable as slow');
+  assert.equal(expired.answered, false, 'a request that ran out of time received no response');
+
+  // The lookalike: prose that says timeout while this client's own signal never fired. Classifying on that text is
+  // what made a runtime's vocabulary a product fact, so the structured signal wins and this is not called slow.
+  const lookalike = await failure('prose', async () => {
+    const error = new TypeError('signal timed out');
+    error.name = 'TimeoutError';
+    throw error;
+  }, 30_000);
+  assert.equal(lookalike.slow, false, 'the wording a failure arrives in is not evidence that this deadline expired');
+  assert.equal(lookalike.answered, false, 'nothing arrived, so nothing answered');
+
+  // A status line is the one part of a refusal the application can actually see, and the retry decision needs it.
+  for (const status of [400, 408, 429, 503]) {
+    const answered = await failure(`http${status}`, async () => ({ ok: false, status }), 30_000);
+    assert.equal(answered.answered, true, `HTTP ${status} is an answer`);
+    assert.equal(answered.responseStatus, status, `HTTP ${status} reaches the retry decision as a number`);
+    assert.equal(answered.slow, false, `HTTP ${status} is not a missed deadline`);
+  }
+
+  // An unreachable host produces no response and no status; it must not inherit either fact.
+  const unreachable = await failure('unreachable', async () => { throw new TypeError('fetch failed'); });
+  assert.equal(unreachable.answered, false, 'a host that never received the request did not answer');
+  assert.equal(unreachable.responseStatus, undefined, 'no status was observed, so none is claimed');
+});
+
+test('a request the service declined is not sent three times and is not called busy', async () => {
+  const ladder = async status => {
+    let calls = 0;
+    const startedAt = Date.now();
+    const client = createFarmClient({
+      hosts: ['overpass-api.de'], staggerMs: 1, backoffMs: 100, maxAttempts: 3, deadlineMs: 5_000,
+      fetchImpl: async () => { calls++; return { ok: false, status }; },
+    });
+    const error = await client({ latitude: 1, longitude: 2 }).then(() => { throw new Error('a refused lookup unexpectedly succeeded'); }, reason => reason);
+    return { calls, elapsedMs: Date.now() - startedAt, error };
+  };
+  const refused = await ladder(400);
+  assert.equal(refused.calls, 1, 'a request the service understood and declined is not retried behind a backoff ladder');
+  assert.match(refused.error.message, /refused this request \(HTTP 400, 1 attempts across 1 services\)/, 'the farmer is told the service declined, not that it is busy');
+  assert.match(refused.error.message, /No fields were invented/);
+  assert.ok(refused.elapsedMs < 500, `the refusal is reported without a backoff wait (${refused.elapsedMs} ms)`);
+  const busy = await ladder(503);
+  assert.equal(busy.calls, 3, 'a service that says it is busy keeps the retries backoff was designed for');
+  assert.match(busy.error.message, /busy or unavailable \(3 attempts across 1 services\)/, 'one service busy is still reported as busy');
+  const limited = await ladder(429);
+  assert.equal(limited.calls, 3, 'a rate limit asks for a retry, so it is not a permanent refusal');
+  const gateway = await ladder(408);
+  assert.equal(gateway.calls, 3, 'a timeout the service reported is retryable, not a refusal');
+  // One service declining and another never receiving the request is still reported as unavailable rather than
+  // refused: only one of them answered, and the farmer cannot be told the whole lookup was declined.
+  let mixedCalls = 0;
+  const mixed = createFarmClient({
+    hosts: ['overpass-api.de', 'overpass.private.coffee'], staggerMs: 1, backoffMs: 40, maxAttempts: 3, deadlineMs: 5_000,
+    fetchImpl: async url => {
+      mixedCalls++;
+      if (new URL(url).hostname === 'overpass-api.de') return { ok: false, status: 400 };
+      throw new TypeError('fetch failed');
+    },
+  });
+  const both = await mixed({ latitude: 3, longitude: 4 }).then(() => { throw new Error('a refused and unreachable lookup unexpectedly succeeded'); }, reason => reason);
+  assert.equal(mixedCalls, 2, 'each service is asked once: one declined, the other was never reached');
+  assert.match(both.message, /busy or unavailable \(2 attempts across 2 services\)/, 'a partial refusal is not called a refusal');
 });

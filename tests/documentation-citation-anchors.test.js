@@ -46,6 +46,14 @@ const PINS = [
   { file: 'tests/context.test.js', line: 214, quote: 'leaked a transport detail into farmer-facing text', citedBy: 'docs/validation.md:4265 and 2 more' },
   { file: 'tests/context.test.js', line: 223, quote: 'a service that answered 503 stays classifiable as having answered', citedBy: 'docs/validation.md:4121 and 3 more' },
   { file: 'tests/integration.test.js', line: 78, quote: 'assert.match(body.error.message, /no substitute readings/)', citedBy: 'docs/validation.md:4128' },
+  // The six iteration-54 pins. This subsection names the lines it edits, and it edits them in place, so the pins are
+  // what would notice if a later pass grew one of those files and left the ledger pointing at a neighbour.
+  { file: 'server/errors.js', line: 12, quote: 'export function isPermanentRefusal(status)', citedBy: 'docs/validation.md subsection 54, The fix' },
+  { file: 'server/context/client.js', line: 43, quote: 'wrapped.slow = signal?.aborted === true', citedBy: 'docs/validation.md subsection 54, The fix' },
+  { file: 'server/context/farms.js', line: 78, quote: 'const mayRecover = serviceAnswered', citedBy: 'docs/validation.md subsection 54, The fix' },
+  { file: 'server/context/farms.js', line: 89, quote: 'refused this request (HTTP ', citedBy: 'docs/validation.md subsection 54, Costs' },
+  { file: 'tests/context.test.js', line: 234, quote: 'the retry facts a hedge reads come from what this client observed', citedBy: 'docs/validation.md subsection 54, Tests' },
+  { file: 'tests/nasa.test.js', line: 88, quote: 'a NASA POWER refusal keeps the status it answered', citedBy: 'docs/validation.md subsection 54, Tests' },
 ];
 
 // The drift shape this guard exists to catch: line 15 is a comment and 16 is the code, so a citation that lands on a
@@ -73,7 +81,7 @@ test('every pinned ledger citation lands on the statement the ledger quotes', as
 });
 
 test('the pin table covers the citation targets the loop leans on and cannot be narrowed to pass', () => {
-  assert.ok(PINS.length >= 16, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, and to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green`);
+  assert.ok(PINS.length >= 22, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green, and to 22 by iteration 54 for the six lines its own subsection names while editing them in place`);
   const pinned = file => PINS.filter(pin => pin.file === file).map(pin => pin.line);
   for (const line of [16, 96, 99, 108]) {
     assert.ok(pinned('public/js/modules/chat.js').includes(line), `chat.js:${line} is one of the four most-cited targets and is no longer pinned`);
@@ -90,6 +98,12 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   // Test files carry the assertions the ledger quotes too, and iteration 53 proved they drift the same way.
   for (const [file, line] of [['tests/context.test.js', 214], ['tests/context.test.js', 223], ['tests/integration.test.js', 78]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a test assertion the ledger quotes and is no longer pinned`);
+  }
+  // Subsection 54 names the six lines it edits in place, so the floor alone would let a future pass delete them and
+  // still report a 22-entry table; this is the same paired gate iteration 53 used for its own three pins.
+  for (const [file, line] of [['server/errors.js', 12], ['server/context/client.js', 43], ['server/context/farms.js', 78],
+    ['server/context/farms.js', 89], ['tests/context.test.js', 234], ['tests/nasa.test.js', 88]]) {
+    assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 54 quotes while editing it in place and is no longer pinned`);
   }
   for (const pin of PINS) {
     assert.ok(pin.quote.length >= 12, `${pin.file}:${pin.line} is pinned to a ${pin.quote.length}-character fragment, which a rewritten line can satisfy by accident`);

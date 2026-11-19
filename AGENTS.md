@@ -1740,6 +1740,36 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   (`docs/evidence/workflow-ph-decimal-comma-npm-test-2026-11-18.log.gz`). Nothing was deployed, main is untouched
   (`4a54fa3`), no NASA portal edit.
 
+- **19 Nov, same branch: iteration 54 - the retry ladder decided from the words around a failure, not the facts.**
+  P2 of the programme. `server/context/client.js:43` set `slow` by matching /abort|timed?\s?out/i over
+  `error.name` plus `error.message`, and `answered` came from `Boolean(error?.answered)`, so the vocabulary a
+  runtime happens to use for its own failure chose whether the hedge asked again. Measured before the change
+  (`docs/evidence/iter54-failure-taxonomy-2026-11-19.log.gz`): a body the client could not read and a host it
+  never reached both arrived as `answered=false, slow=false`, although only the second had gone unanswered - the
+  first lost its retry and reported "1 attempts across 1 services" in 0 ms. And a service that read the request
+  and declined it with HTTP 400 cost 3 requests and 9.0 s, then reached the farmer as "busy or unavailable"
+  (`docs/evidence/iter54-refusal-cost-2026-11-19.log.gz`). Four line-neutral edits: the client now records
+  `answered` and `responseStatus` from the response it actually got and takes `slow` only from this request's own
+  `AbortSignal` (`server/context/client.js:43`); one predicate `isPermanentRefusal(status)` at
+  `server/errors.js:12` ends a ladder the service already closed (`server/context/farms.js:78`) and swaps POWER's
+  promise for the truth (`server/nasa/power.js:116`); `server/context/farms.js:89` authors the two sentences from
+  those flags. The same taxonomy re-run after the change reads the refusal as 1 request in 0 ms with "refused this
+  request (HTTP 400, 1 attempts across 1 services)", and 408/429/5xx still buy the ladder. Three new cases
+  (`tests/context.test.js:234`, `:277` and `tests/nasa.test.js:88`) went red first - 3 tests / 0 pass / 3 fail in
+  377 ms (`docs/evidence/iter54-red-baseline-2026-11-19.log.gz`) - and the focused pair came out 23 pass / 0 fail
+  in 1677 ms (`docs/evidence/iter54-focused-run-2026-11-19.log.gz`). Eight negative controls each broke exactly
+  one claimed property and every restore hashed byte-identical
+  (`docs/evidence/iter54-negative-controls-2026-11-19.log.gz`); the first focused attempt stalled three cases on
+  an unref'd `AbortSignal.timeout()` timer and is kept, with its root cause, as
+  `docs/evidence/iter54-focused-harness-cancel-2026-11-19.log.gz` instead of deleted. `npm run build` exited 0 and
+  all four changes are in the worker bundle, so the static transport carries them too; the browser slice on the
+  path that changed was **8 passed, 0 failed in 1.5 m**, exit 0, and `npm test` on the shipped tree is
+  **251 tests / 251 pass / 0 fail / 0 skipped**, exit 0, with the citation pin table grown from 16 to 22 so the
+  six lines this bullet names cannot move in silence (`docs/evidence/iter54-offline-suite-2026-11-19.log.gz`).
+  Left unverified: no case drives a real 400 through either transport, the two flags have exactly one consumer and
+  never reach the page, and no farmer has read the wording. Next, measured: P3 stands - the 6 skips in
+  `tests/e2e/chat-evidence-panel.spec.js` still run on the node projects only.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

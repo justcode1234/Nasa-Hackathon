@@ -1,4 +1,4 @@
-import { AppError } from '../errors.js';
+import { AppError, isPermanentRefusal } from '../errors.js';
 import { readCached, writeCached } from '../persistence.js';
 
 export const PARAMETERS = ['T2M', 'T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'ALLSKY_SFC_SW_DWN'];
@@ -113,7 +113,7 @@ export function createPowerClient({ fetchImpl = fetch, now = () => new Date(), t
       let raw;
       try {
         const response = await fetchImpl(url, { signal: AbortSignal.timeout(timeoutMs), headers: { Accept: 'application/json' } });
-        if (!response.ok) throw new AppError(`NASA POWER is unavailable (HTTP ${response.status}). Retry later; no substitute readings were generated.`, 502, 'NASA_UNAVAILABLE');
+        if (!response.ok) throw new AppError(`NASA POWER is unavailable (HTTP ${response.status}). ${isPermanentRefusal(response.status) ? 'Retrying the same request will not help' : 'Retry later'}; no substitute readings were generated.`, 502, 'NASA_UNAVAILABLE');
         raw = await response.json();
       } catch (error) {
         if (error instanceof AppError) throw error;

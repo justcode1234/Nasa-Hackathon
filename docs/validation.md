@@ -4520,3 +4520,121 @@ names and messages, and `server/nasa/power.js:116` still puts a busy service's s
 text. Making the soil refusal structured rather than textual is one instance of the same rule; the next iteration
 should carry it to the two remaining sites, then take the 6 `chat-evidence-panel.spec.js` skips, which still need
 raw upstream captures before they can assert anything.
+
+### 54. A retry ladder that read the words around a failure, and what that cost a farmer waiting
+
+What was measured. Two probes against the shipped tree at `94408c9`, both with a `fetchImpl` that counts its own
+calls; transcript `docs/evidence/iter54-failure-taxonomy-2026-11-19.log.gz`, paired before/after on identical
+configurations (1 host, backoff 200 ms, one shared 1500 ms deadline). `server/context/client.js:42` set `answered`
+from a property only one line of that file set, and `server/context/client.js:43` set `slow` from
+`/abort|timed?\s?out/i` over `error.name` plus `error.message`. Four consequences, each read off the log rather than
+off the source: a service that answered 200 and sent a body this app could not parse arrived at
+`server/context/farms.js` as `answered=false, slow=false` - the same verdict as a host that was never reached - so
+the hedge dropped its own retries and gave the farmer "1 attempts across 1 services" after **1 request in 0 ms**
+where the same shape now takes **2 requests in 605 ms**; a 400 and a 503 arrived byte-identically except in `cause`,
+because no shape carried a status; and the prose was load-bearing, so a `TypeError` merely *named* `TimeoutError`
+would have bought a retry from a service that had not been given a deadline. The cost of the missing status was
+measured separately at the shipped ladder settings in
+`docs/evidence/iter54-refusal-cost-2026-11-19.log.gz`: an HTTP 400 took **3 requests in 9005 ms** and an HTTP 503
+**3 requests in 9003 ms**, and both ended in the sentence "The field lookup services are busy or unavailable" - a
+promise that asking again helps, made about a request the service had already declined. After the change the same
+harness answers 400 in **1 request in 0 ms** and leaves 503 at **3 requests in 9004 ms**.
+
+The fix. Four edits, no new dependency, no timeout raised, no retry added, and every one of them line-neutral: nine
+ledger citations name `server/context/client.js:40`, `:42`, `:43`, `:44` and `server/context/farms.js:78`, `:89`, and
+iteration 53 measured with its own control that inserting one line above those turns
+`tests/documentation-citation-anchors.test.js` red. `server/context/client.js:19` now keeps `responseStatus` beside
+`answered`, `server/context/client.js:23` records the status the response carried before it decides the response is
+unusable, and `server/context/client.js:42` hands both to the caller while
+`server/context/client.js:43` derives `slow` from one witness only - `signal?.aborted === true`, this request's own
+timer. What a caller does with a status is one definition in `server/errors.js:12`: 408 and 429 are a service asking
+to be asked again, every other 4xx is one that read the request and declined it, 5xx is the service in trouble.
+`server/context/farms.js:78` consults it and `server/context/farms.js:79` stops the ladder on a decline, while
+`server/context/farms.js:89` says refused only when every request this client made was declined - one service
+declining beside another that was never reached is still reported as unavailable, because the lookup as a whole was
+not refused. `server/nasa/power.js:116` keeps the status number the same tests pin and conditions the promise on the
+same predicate, so the two transports of one failure can no longer disagree about what retrying fixes.
+
+Tests. Three cases, taking the offline suite from 248 to 251. They were written first and executed red:
+`docs/evidence/iter54-red-baseline-2026-11-19.log.gz` reads **3 tests, 0 pass, 3 fail in 377 ms** on the unfixed
+tree, each with the assertion message this iteration wanted. `tests/context.test.js:234` pins the verdicts
+themselves - an unreadable body is `answered=true` with `cause instanceof SyntaxError`, a real deadline is
+`slow=true` and `answered=false`, a `TypeError` renamed `TimeoutError` with the signal untouched is `slow=false`,
+each of 400/408/429/503 arrives as `answered=true` with its number, and a thrown transport failure carries no
+status at all. `tests/context.test.js:277` pins what the hedge does with them: 400 is one request and a refusal
+sentence in under 500 ms, 503/429/408 are three requests and a busy sentence, and the mixed pair is two services
+asked once each and reported as unavailable. `tests/nasa.test.js:88` pins the POWER sentence per status: 429 and 503
+keep the wording that iteration 51 pinned character for character, 400 and 404 keep the status they answered and lose
+"Retry later" while keeping "no substitute readings were generated", and 408 stays with the retryables. One earlier
+case was rewritten stricter rather than relaxed: `tests/context.test.js:206`, which used to fake a timeout by
+rejecting with prose, now aborts the signal it was handed and asserts the flags that come back.
+
+Controls. Eight, run by `artifacts/iter54-controls.mjs`, which snapshots the four shipped files as buffers, hashes
+them, applies one edit, runs `tests/context.test.js` plus `tests/nasa.test.js` and restores from the buffer it
+re-hashes - the lesson from iteration 53, whose first harness restored in-process and never applied. Transcript
+`docs/evidence/iter54-negative-controls-2026-11-19.log.gz`, harness source included inside it. C1 reverts
+`client.js` to the shipped rule: the taxonomy case and the ladder case both go red. C2 deletes `refused ||` from
+`server/context/farms.js:79`: the ladder case goes red. C3 restores the name/message regex: the taxonomy case goes
+red, so the prose-lookalike assertion is what carries D2. C4 makes POWER always say "Retry later": the refusal case
+goes red. C5 deletes `(HTTP ${response.status})` from `server/nasa/power.js:116`: the anchors guard, the pre-existing
+sentence test and the new refusal test all go red - the pinned prefix is not decoration. C6 replaces
+`refusalCount === attempts.length` with `refusalCount`: the mixed-service assertion goes red, so the all-or-nothing
+rule is measured. C7 stops carrying `responseStatus`: taxonomy and ladder red. C8 makes 429 a permanent refusal: the
+ladder case and the POWER case red. Fixed tree afterwards **23 pass / 0 fail in 1677 ms**
+(`docs/evidence/iter54-focused-run-2026-11-19.log.gz`), all four files restored byte-identically, "controls that did
+not behave: 0". One failed attempt is kept rather than deleted:
+`docs/evidence/iter54-focused-harness-cancel-2026-11-19.log.gz` shows three cases dying with "Promise resolution is
+still pending but the event loop has already resolved", because `AbortSignal.timeout()` arms an unref'd timer and a
+fake that waits only on the abort event lets Node exit mid-run - a bug in the test harness, not in the code under
+test, and the reason both abort-fakes now hold a ref'd timer of their own.
+
+What the fix did to the ledger. Nothing moved: `client.js` is still 50 lines, `farms.js` 130, `power.js` 132, and the
+`wc -l` reading plus the anchors guard are what say so - this iteration's edits replaced statements in place, so the
+line-shift failure mode of iterations 50 and 53 did not recur and no citation needed re-pointing. Two of my own
+comment preambles were corrected before shipping because they overclaimed: the one above
+`tests/context.test.js:234` said all three failure shapes arrived with the same two flags, which the before-log
+contradicts (the deadline did carry `slow=true`), and the one above `tests/nasa.test.js:88` called a 400 and a 503
+"byte-identical verdicts", which was true of the sentence and false of `cause`. Both now quote the shipped
+transcript instead of an `artifacts/` log a fresh clone cannot read. The anchor pin table grew from 16 entries to 22
+and covers the six lines this subsection names by number - `server/errors.js:12`, `server/context/client.js:43`,
+`server/context/farms.js:78`, `server/context/farms.js:89`, `tests/context.test.js:234` and `tests/nasa.test.js:88` -
+so the next iteration that inserts above any of them is told.
+
+Offline and browser. `npm run build` exited 0 and the minified worker bundle carries all four changes, read out of
+`dist/client/js/lib/core-worker.bundle.js` in `docs/evidence/iter54-build-and-browser-2026-11-19.log.gz`:
+`m.responseStatus=p` beside `m.answered=f` and `m.slow=u?.aborted===!0`, the shared predicate as
+`>=400&&e<500&&e!==408&&e!==429`, the refused sentence with its `${w}` status interpolation, and POWER's
+`o2(p.status)?"Retrying the same request will not help":"Retry later"`. The static transport cannot drift from the
+Node one because both read this source. The browser slice was chosen for the path that changed -
+`tests/e2e/field-service-latency.spec.js:17` holds every field service open on purpose and
+`tests/e2e/api-exit-parity.spec.js:9` compares the two transports' exit sentences - and came out **8 passed, 0 failed
+in 1.5 m**, exit 0, two cases in each of the four local projects. `npm test` on the tree this iteration ships, after
+every word above had landed: **251 tests, 251 pass, 0 fail, 0 skipped, exit 0**
+(`docs/evidence/iter54-offline-suite-2026-11-19.log.gz`), which includes the five documentation guards and the grown
+pin table. No wall time is claimed beyond that log's own header.
+
+Costs. The farmer now reads a number - "refused this request (HTTP 400, 1 attempts across 1 services)" - where the
+previous sentence was generic, and a status code is not something a farmer can act on beyond the second clause. The
+wording is UI copy this agent wrote; no farmer has read it. The hedge also stops earlier than it did, which is the
+point, but it means a service that answers 400 spuriously (a proxy, a misconfigured mirror) now ends the lookup after
+one request instead of buying three chances; `isPermanentRefusal` treats 4xx as a decision, and this iteration did not
+measure how often a public Overpass mirror answers 4xx for a query it would have accepted on the next try.
+
+Limits. `server/context/client.js:40` still says "could not respond" for the shapes that did respond, because that
+sentence is pinned to one per failure class by `tests/context.test.js:218` and the machine-readable truth now travels
+beside it; the callers that author their own text - `farms.js`, `power.js`, `soil.js` - are the ones that tell the
+farmer what happened. The flags reach exactly one consumer (`server/context/farms.js:78`); nothing in `public/js/`
+reads them, and the exit at `server/index.js:71` forwards only a code and a message, so a browser cannot distinguish
+these conditions and this iteration claims no such distinction. No user-cancellation category was added: no external abort signal reaches these
+catches, so there is nothing to observe. No case drives a real 400 through either transport - every number above
+comes from a stubbed `fetchImpl` except the browser slice, which exercises the held-connection path only. Whether the
+`isPermanentRefusal` boundary at 408/429 matches what each mirror actually means is unmeasured against live services;
+the live Overpass behaviour is P0's open item, not this one.
+
+The queued step, measured. P2 is closed. Next is P3: the 6 `chat-evidence-panel.spec.js` skips, which are skips for a
+transport reason that this iteration's bundle grep shows is not a source difference, so the deterministic replay route
+is open - the panel needs the same stub-fixture treatment `tests/api-transport.test.js` gives the exit sentence, and
+the live cases stay. After that, P4's audit of stale/wrong-location answers, and the carried gaps: `public/js/lib/api.js`
+still ignores the `error.code` the worker posts, `tests/e2e/chat-evidence-panel.spec.js:82` and
+`tests/chat-context.test.js:189` are cited without pins, and there is still no base-URL override that would let the
+e2e suite run hermetically against a local stub.

@@ -1,4 +1,4 @@
-import { AppError } from '../errors.js';
+import { AppError, isPermanentRefusal } from '../errors.js';
 import { createCachedJson } from './client.js';
 
 export function locationInput(input) {
@@ -55,7 +55,7 @@ export function createFarmClient({ deadlineMs = 75_000, staggerMs = 6_000, backo
     // its first attempt, so an outage is reported instead of waited out. The first complete real response
     // wins. Nothing is substituted when every service fails.
     const startedAt = Date.now(), remaining = () => deadlineMs - (Date.now() - startedAt);
-    let settled = false, wakeAll = [];
+    let settled = false, wakeAll = [], refusalCount = 0, refusalStatus;
     const pause = ms => new Promise(resolve => { const timer = setTimeout(done, ms); function done() { clearTimeout(timer); resolve(); } wakeAll.push(done); });
     const attempts = [];
     const tryHost = async (host, index, previousFailed) => {
@@ -71,12 +71,12 @@ export function createFarmClient({ deadlineMs = 75_000, staggerMs = 6_000, backo
           return { ...result, sourceUrl: url, retrievedAt: raw._fieldshiftRetrievedAt ?? result.retrievedAt, bounds };
         } catch (error) {
           failed[index]?.();
-          // Backoff is for a service that is busy or slow: it may answer on the next attempt. A request
-          // that never reached the service will not reach it 3 or 9 seconds later inside the same farmer
-          // action, and measured 18 Nov that ladder cost a town tap 9.05 s before saying the services are
-          // unavailable. The other services are tried in parallel, and the reply invites a retry.
-          const mayRecover = serviceAnswered || Boolean(error?.answered) || Boolean(error?.slow);
-          if (settled || !mayRecover || attempt >= maxAttempts || remaining() <= wait) break;
+          // Backoff is for a service that might answer on the next attempt: one that said it is busy, one this client
+          // is still waiting on, and one that sent bytes this app could not read. A request that never reached the
+          // service will not reach it 3 or 9 seconds later inside the same farmer action (measured 18 Nov: a town tap
+          // waited 9.05 s to be told the services are unavailable), and one a service read and declined is no luckier.
+          const mayRecover = serviceAnswered || Boolean(error?.answered) || Boolean(error?.slow), refused = isPermanentRefusal(error?.responseStatus); if (refused) { refusalCount++; refusalStatus = error.responseStatus; }
+          if (settled || !mayRecover || refused || attempt >= maxAttempts || remaining() <= wait) break;
           await pause(wait);
         }
       }
@@ -86,7 +86,7 @@ export function createFarmClient({ deadlineMs = 75_000, staggerMs = 6_000, backo
     try {
       return await Promise.any(hosts.map((host, i) => tryHost(host, i, i ? failedSignals[i - 1] : null)));
     } catch {
-      throw new AppError(`The field lookup services are busy or unavailable (${attempts.length} attempts across ${new Set(attempts).size} services). No fields were invented. Retry the field search.`, 502, 'CONTEXT_UNAVAILABLE');
+      throw new AppError(refusalCount && refusalCount === attempts.length ? `The field lookup services refused this request (HTTP ${refusalStatus}, ${attempts.length} attempts across ${new Set(attempts).size} services). No fields were invented. Retrying the same request will not help.` : `The field lookup services are busy or unavailable (${attempts.length} attempts across ${new Set(attempts).size} services). No fields were invented. Retry the field search.`, 502, 'CONTEXT_UNAVAILABLE');
     } finally { settled = true; wakeAll.forEach(wake => wake()); }
   };
 }

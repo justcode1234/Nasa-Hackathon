@@ -80,3 +80,27 @@ test('upstream HTTP, JSON and network failures return errors and never cache sub
     }
   }
 });
+
+// Iteration 54, P2. server/nasa/power.js:116 puts the status it observed into the sentence, which tests/nasa.test.js:65
+// pins for 429, and then promises "Retry later" for every status alike. A 400 from POWER means the request itself was
+// declined, so the recovery the page offers is a dead end: docs/evidence/iter54-failure-taxonomy-2026-11-19.log.gz
+// shows a 400 and a 503 reaching the farmer as one sentence with one pair of flags, differing only in `cause`.
+test('a NASA POWER refusal keeps the status it answered and drops the promise that retrying helps', async () => {
+  const ask = async status => createPowerClient({ fetchImpl: async () => ({ ok: false, status }) })({ latitude: 0, longitude: 0, year: 2025 })
+    .then(() => { throw new Error(`HTTP ${status} unexpectedly returned readings`); }, reason => reason);
+  for (const status of [429, 503]) {
+    const busy = await ask(status);
+    assert.equal(busy.status, 502, `HTTP ${status} is still reported to the page as an upstream failure`);
+    assert.equal(busy.message, `NASA POWER is unavailable (HTTP ${status}). Retry later; no substitute readings were generated.`, `HTTP ${status} keeps the retry promise`);
+  }
+  for (const status of [400, 404]) {
+    const refused = await ask(status);
+    assert.equal(refused.status, 502, `HTTP ${status} is still an upstream failure`);
+    assert.ok(refused.message.startsWith(`NASA POWER is unavailable (HTTP ${status}).`), `HTTP ${status} still names the status the service answered`);
+    assert.ok(!/Retry later/i.test(refused.message), `HTTP ${status} promises a retry that cannot help: ${refused.message}`);
+    assert.match(refused.message, /no substitute readings were generated/, 'the honesty clause survives the rewrite');
+  }
+  // 408 is a timeout the service reported about itself: retrying is the right answer, so it stays with 429.
+  const timedOut = await ask(408);
+  assert.match(timedOut.message, /Retry later/, 'HTTP 408 asks for a retry, so it is not a refusal');
+});
