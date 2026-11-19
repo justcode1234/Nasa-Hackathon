@@ -3931,3 +3931,87 @@ A pass that regenerates the index re-derives them; a pass that edits the sentenc
 which is the point. One ordering limit is worth naming rather than hiding: the gate ran before a comment-only typo
 fix inside `tests/documentation-evidence-index.test.js`, a file no browser loads, and the offline suite was re-run
 after it so the archived run covers the bytes that ship.
+
+### 49. A citation cut by a line break was invisible to every scanner in the repository, and one had shipped
+
+What was measured. Iteration 47 nearly shipped a broken ledger when a text wrapper cut an archive citation in half:
+the head of the name landed at the end of one line and the rest at the start of the next. The commands guard went red,
+which is how the accident was found, but it went red by accident - its archive regex cannot cross a newline, so it
+read the head half as a path that does not exist and reported a nonexistent archive. Nothing in the repository reads
+line boundaries, so nothing could say whether the class was present or absent. Measured 19 Nov before writing the
+guard, and again afterwards over the tree that carries it (docs/evidence/iter49-census-2026-11-19.log.gz): 214 prose
+files in scope, and the two scanner regexes find 763 archive citations and 389 file:line references read as-is against
+763 and 389 read with every newline replaced by a space. A join can only add matches, because no character class in
+either regex contains a space, so the equality is the measurement: no citation spans a line break today. It is a
+narrow catch, not an empty one. The same log counts 156 lines that end in a multi-segment path token, and before the
+fix exactly one line carried a list marker a wrapper had prepended a second time: the iteration-43 bullet at
+`AGENTS.md:933`, which had shipped that way and rendered as a nested bullet.
+
+The fix. `tests/documentation-reflow.test.js` (new, 4 cases) asks a question that does not need to know which tokens
+are archives: take the last path-shaped token on a line, take the first file-named token on the line under it, join
+them, and if the result exists on disk the citation was cut. One rule then covers archives, code paths and every other
+tracked file at once. Case 1 floors the scan against the measurement above - file count, three named files, and the
+number of path-ended lines - so a pass that narrows the walk cannot report a clean tree. Case 2 asserts zero resolving
+joins. Case 3 keeps two split fixtures, an archive and a code path, because the first draft of the head pattern
+terminated at a word character, silently skipped the hyphen a wrapper really leaves behind, counted 94 heads instead
+of 153, and stayed green on a clean tree; the fixture is what stops that narrowing passing quietly again. Case 4
+sweeps for the doubled marker, and the shipped `AGENTS.md:933` bullet is repaired in the same commit so the case
+starts green for the right reason.
+
+Controls. Run 19 Nov from artifacts/iter49-controls.sh - gitignored scratch, so the next pass can re-run them -
+archived in docs/evidence/iter49-controls-2026-11-19.log.gz. Baseline 4 passed, 0 failed; every mutation is undone
+from a snapshot whose hash is re-checked at the end. (A) The 19 Nov incident replayed on `AGENTS.md`: case 2 goes red
+naming the file and line and printing the join that resolves - the failure reads "AGENTS.md:1665 rejoins to
+docs/evidence/iter48-gate-2026-11-19.log.gz" and then shows the two halves it concatenated. The citations guard stays
+green on the same mutation at 5 passed, 0 failed, because its regex demands the suffix and a cut name has none; the
+commands guard goes red on its case 6, which is the accidental catch this iteration replaces with an intentional one.
+(B) The shape nothing has ever read: the same file with a source path cut in half. Case 2 red on the resolved join,
+and both older guards green - 5 of 5 and 6 of 6 - so the gap is measured, not assumed. (C) A re-introduced second
+bullet marker: case 4 red with "lines whose bullet marker was doubled by a rewrap: AGENTS.md:1665", both older guards
+green. (D) The negative control: a break whose halves join to an archive that does not exist leaves all four cases
+green, so the rule reads existence rather than adjacency. (E) Narrowing the head pattern back to the first draft fails
+two cases, the floor with "only 94 lines end in a path-shaped token, against 153 measured 19 Nov" and the fixture with
+"a split archive citation is no longer caught". (F) Dropping markdown from the extension list fails the floor with
+"the scan saw only 174 prose files, against 213 measured 19 Nov". After (F), `AGENTS.md` and the test file match their
+snapshots byte for byte (2e339b6a87c4a6cf and 9f57420c8a7f77cb) and the four documentation guards run together at 20
+passed, 0 failed.
+
+Costs. The offline suite moves from 232 to 236 tests: the four new cases, one new file. The full offline suite took
+three passes on these bytes and the two red passes are worth naming rather than hiding: pass 1 read 236 tests, 234
+passed, 2 failed because `docs/validation.md` and `docs/handoff-2026-11-18.md` already cited the offline log that pass
+1 had not yet written, and pass 2 read 235 passed, 1 failed because the index header still counted 495 evidence files
+while that new archive made 496. Later passes on those bytes read 236 tests, 236 passed, 0 failed, 0 skipped, exit 0,
+and the archived log (docs/evidence/iter49-npm-test-2026-11-19.log.gz) is the last of them, run after every citation
+this subsection makes already resolved. The ordering limit travels with the claim: a gzip cannot record its own
+existence, so an archived pass can only ever check that the file it becomes was already there - passes 1 and 2 are the
+evidence that this guard bites. The documentation guards move from 16 to 20 tests across four files. No product file
+changed, so the gate is re-run to keep the pushed tip green on the iteration-49 bytes, and it took two attempts.
+Attempt 1 (docs/evidence/iter49-gate-attempt1-2026-11-19.log.gz) exited 1 with 2 failed, 220 passed and 6 skipped in
+24.1 m, and both failures are `node-desktop` cases in `tests/e2e/chat-only-flow.spec.js` reaching live third-party
+services. The `:56` case failed its `Step 4 is ready` assertion (`tests/e2e/chat-only-flow.spec.js:81`) with the panel
+reading `NASA evidence could not be loaded. The app has not generated a comparison.` The `:95` case failed the shared
+ready helper (`tests/e2e/chat-only-flow.spec.js:8`), which polls `#answer-status` for up to 180 s and recorded `The
+external context service could not respond (fetch failed). No records were invented.` 335 times. Running that file
+alone on the same bytes returns 3 passed (6.7 s), which is what makes the pair an upstream condition rather than a
+result about this change - recorded as degraded, not rewritten as a pass. Attempt 2
+(docs/evidence/iter49-gate-2026-11-19.log.gz) is the gate this subsection stands on: **222 passed, 6 skipped, 0
+failed, exit 0 in 24.8 m** over the 228 cases `npx playwright test --list` counts on the four projects, with no failed
+case anywhere in the log. The offline run on the byte-final tree is docs/evidence/iter49-npm-test-2026-11-19.log.gz
+and the controls are docs/evidence/iter49-controls-2026-11-19.log.gz.
+
+Limits. The rule joins a line with its immediate successor, so a cut that leaves a blank line, an HTML comment or a
+markdown construct between the halves stays invisible, as does a head whose tail carries no dot. It reports a join
+that resolves, which cannot distinguish a genuine split citation from prose that legitimately ends in a path and opens
+the next line with a file name; today the count is zero, so no suppression list was needed and none was written. The
+walk shares the citation guards' blind spots - the size cap, the extension list, the skip list - and this iteration
+moved both numbers the guard was sized against - prose files 213 to 214, one gained when the guard's own file joined
+the walk, and path-ended lines 153 to 156, one gained the same way and two by this iteration's prose - which is why
+case 1 states floors rather than copies. One ledger correction belongs here: the iteration-48 handoff bullet quoted
+"739 archive citations and 387 file:line references" from a probe run whose stdout was never archived. Re-measured on
+the shipped tree the archived census reads 763 archive citations and 389 file:line references, and the pair is a
+moving quantity that grows each time the ledger gains a citation, which is a further reason the guard states floors
+rather than copies. Two further candidates were measured on the way and deliberately not shipped, both recorded in
+`docs/handoff-2026-11-18.md`: an unclosed-bold sweep of the ledger, whose count-per-block rule still reports one hit
+inside the hundred-line iteration-39 block at `docs/handoff-2026-11-18.md:449` that was not adjudicated, and a
+prose-width floor, which today would mean rewrapping 2,988 over-width lines across 176 files with the same class of
+tool that cut the citation this case exists to catch.

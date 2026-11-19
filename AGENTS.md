@@ -930,7 +930,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
-- - **19 Nov, same branch: iteration 43 - the citation guard: nothing read a citation that lived inside a code
+- **19 Nov, same branch: iteration 43 - the citation guard: nothing read a citation that lived inside a code
   file's comments.** Coverage iteration, no production file changed. `scripts/check-documentation.js` walks
   markdown links and `tests/documentation-commands.test.js` reads `AGENTS.md` and the fenced commands of
   `docs/*.md`, so a path inside a `.js` comment was checked by nothing - iteration 41 committed two unresolvable
@@ -991,6 +991,33 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   stays open as the six skips at `chat-evidence-panel.spec.js:82,115,140`; the pairing counts at
   `:99,129,150` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
   untouched (`4a54fa3`).
+- **19 Nov, same branch: iteration 49 - a citation cut by a line break was invisible to every scanner in the
+  repository, and one had shipped.** Iteration 47's wrap split an archive citation in half and was caught only
+  because the commands guard's archive regex cannot cross a newline, so it mistook the head half for an archive
+  that does not exist. Measured first (docs/evidence/iter49-census-2026-11-19.log.gz): 214 prose files, 763
+  archive citations and 389 file:line references read as-is against exactly the same counts read with every
+  newline replaced by a space - joining can only add matches, so nothing is cut today - while 156 lines end in a
+  path-shaped token and the iteration-43 bullet at `AGENTS.md:933` carried a list marker a wrapper had prepended
+  twice. Fix: a new offline guard, `tests/documentation-reflow.test.js`, rejoins the last path-shaped token of a
+  line with the first file-named token of the next and calls the citation cut when the result exists, which needs
+  no per-extension regex and so covers archives, code paths and every other tracked file at once. Its case 1
+  floors the walk against the measurement, case 3 keeps two split fixtures because the first head pattern
+  terminated at a word character - it silently skipped the hyphen a wrapper really leaves behind, counted 94 heads
+  instead of 153 and stayed green on a clean tree - case 2 asserts zero resolving joins, case 4 sweeps doubled
+  markers, and the shipped bullet is repaired in the same commit so case 4 starts green for the right reason.
+  Controls (docs/evidence/iter49-controls-2026-11-19.log.gz): a planted archive split goes red here and on
+  commands case 6 while the citations guard stays green; a planted code-path split goes red here and green on both
+  older guards, 5 of 5 and 6 of 6, which is the gap measured rather than assumed; a break whose halves join to
+  nothing stays green; narrowing the head pattern fails the floor and the fixture; dropping markdown from the walk
+  fails the floor at 174 files; every mutation restores byte-identically and the four documentation guards finish
+  green at 20 passed, 0 failed. The 228-case Playwright gate on these bytes went red on its first attempt: two
+  `node-desktop` chat cases in tests/e2e/chat-only-flow.spec.js reached live third-party services
+  (docs/evidence/iter49-gate-attempt1-2026-11-19.log.gz), while that file alone on the same bytes returns 3 passed
+  in 6.7 s, so the red is an upstream condition and not a result about this change; attempt 2 is the gate this
+  iteration stands on at 222 passed, 6 skipped, 0 failed in 24.8 m (docs/evidence/iter49-gate-2026-11-19.log.gz).
+  The offline suite moves from 232 to 236. One ledger correction: the iteration-48 handoff bullet quoted 739
+  archive citations and 387 references from a probe whose stdout was never archived; the live pair is 763 and 389
+  and both now cite an archived log. Nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 48 - the evidence index checked every claim it makes about individual files and
   none of the claim it makes about itself, so the first sentence a reviewer reads was the least checked line in
   the tree.** Iteration 47's control F made the edit every later pass has to make - start citing an indexed
