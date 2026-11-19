@@ -15,11 +15,11 @@ import {test,expect} from '@playwright/test';
 // therefore reached no record at all: an 8-wording scan against the live handler with no comparison found 0 of 8
 // replies whose gate stood open, because a crop named in the question is routed to the country-aware retrieval at
 // `server/agronomy/conversation.js:120` first, and the one reply shape that leaves the flag unset
-// (`server/agronomy/answers.js:84`) is only produced after a comparison - the browser sets `state.inputs` there
+// (`server/agronomy/answers.js:88`) is only produced after a comparison - the browser sets `state.inputs` there
 // (public/js/app.js:290). The first two cases below pin that comparison pairing, which happens nowhere else in the
 // suite. The third is the same kind of sentence with no comparison run at all, which is what iteration 38 changed:
-// public/js/lib/chat-context.js:29 now gates only the field-scoped topics and decides the watchlist branch on the
-// country the reply and the loaded records share (:99-105), so a species a farmer names outright is answered from
+// public/js/lib/chat-context.js:33 now gates only the field-scoped topics and decides the watchlist branch on the
+// country the reply and the loaded records share (:103-109), so a species a farmer names outright is answered from
 // the lookup they already ran. Citation ids are resolved where the paragraphs are (public/js/modules/chat.js:99
 // appends the context sources after the answer's own, public/js/lib/dom.js:16 keeps the first entry per id), so the
 // paragraph and its two links are asserted together rather than assumed to travel together.
@@ -190,7 +190,7 @@ test('a species named outright reaches the loaded watchlist with no comparison r
   expect(errors).toEqual([]);
 });
 
-// Why these two cases exist: the shape below is what iteration 40 changed (`public/js/lib/chat-context.js:143`), and
+// Why these two cases exist: the shape below is what iteration 40 changed (`public/js/lib/chat-context.js:147`), and
 // until now nothing in a browser could see it - docs/evidence/pest40-blast-radius-2026-11-18.log.gz measured 0 of 88
 // QA wordings reaching the widened branch, so subsection 39's first open limit was that the rule was pinned only by
 // an offline unit case and an offline probe. Both wordings were first run as prints on this tree and their real

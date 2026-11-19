@@ -2061,7 +2061,7 @@ The selector now takes the words that identify a species: the head noun when it 
 (`armyworm`, `locust`), and when the head is short the word in front of it as well (`moth` **or**
 `diamondback` → `Diamondback moth`). Every key is matched as a whole word with an optional plural
 (`\b<key>s?\b`) instead of a substring, so `months` still cannot match `moth`. Both halves are the same rule
-stated once, in `askedPest` (`public/js/lib/chat-context.js:59-68`), with no vocabulary added and no change to
+stated once, in `askedPest` (`public/js/lib/chat-context.js:63-72`), with no vocabulary added and no change to
 the record-selection order: a name typed in the question still beats the plan's crops, which still beat the
 first entry.
 
@@ -2123,7 +2123,7 @@ show fe9a510:public/js/lib/chat-context.js` against the fixed module):
 | a soil source renamed upstream | `soilgrids` ×2 | none |
 | an irrigation source renamed upstream | `abs-irrigation` | none |
 
-The fix states the id after the spread at all three sites (`public/js/lib/chat-context.js:39`, `:46`, `:79`),
+The fix states the id after the spread at all three sites (`public/js/lib/chat-context.js:43`, `:50`, `:83`),
 so the paragraph decides what the citation is called and the record still supplies the title, url and licence
 next to it. `tests/chat-context.test.js` gained the invariant plus the four disagreement shapes; it was written
 first and measured **11 pass, 1 fail** (`a host source id overwrote the citation Which pests affect wheat?
@@ -2530,7 +2530,7 @@ outside this app.
 `contextBlocks` decides which loaded evidence a chat reply may quote (`public/js/lib/chat-context.js:22`). The weather
 branch sits behind two independent filters, and until this iteration they did not agree. The gate
 (`:15`) admitted `weather|nasa|temperatures?|rainfalls?|precipitation|solar|frost`, while the series selector inside the
-branch that passed (`:32-36`) enumerates `rain|rains|rainy|rainfall|precipitation` for `PRECTOTCORR` and
+branch that passed (`:36-40`) enumerates `rain|rains|rainy|rainfall|precipitation` for `PRECTOTCORR` and
 `frost|frosty|freeze|freezing` for `T2M_MIN`. Three of the selector's words - `rain`, `rains`/`rainy`, `freeze`/`freezing`/`frosty` -
 were unreachable, so the farmer's most common word for the topic produced no measurement at all: the reply fell back to
 the answer's own generic scope sentence, which quotes no value. Measured by running the shipped module over 15
@@ -2582,12 +2582,12 @@ Measured limits of this iteration, none of them claimed as coverage:
 * The three cases execute in `node-desktop` and `node-mobile` and are skipped in the two `static-*` projects, and the
   reason is a transport fact rather than a choice. `server/index.js:62-64` rewrites the entry's transport marker to
   `http` when it serves, so those pages issue their own `/api/*` requests and a route can answer them; `dist/client`
-  keeps the shipped `worker` marker and answers `/api` inside `/js/lib/core-worker.bundle.js`, and Playwright routes
-  cover a page and its frames but not a dedicated worker. Attempting the stubbed run on `static-desktop` failed 3/3
-  with the signature of exactly that: step 2 reporting `The external context service could not respond (Failed to
-  fetch)` and the reply coming back as the bundle's own clarification text. The panel module is shared by both builds,
-  so what the static projects lose is the fixture transport, not the composition - but the chat evidence panel in the
-  worker build remains untested in a browser, and closing that needs an interception point the app does not have today.
+  keeps the shipped `worker` marker and answers `/api` inside `/js/lib/core-worker.bundle.js`, so no `/api` request ever
+  leaves the page and the stubs have nothing to match: the stubbed run on `static-desktop` failed 3/3 with step 2
+  reporting `The external context service could not respond (Failed to fetch)` and the bundle's own clarification text.
+  What this iteration recorded as the reason - that routes do not reach a dedicated worker - is false, and subsection 55
+  falsifies it by answering this bundle's own POWER and SoilGrids fetches. The panel module is shared by both builds, so
+  what the static projects lost was the fixture, not the seam; subsection 55 is where the panel gets replayed.
 * The test found a second, still-open defect. The weather paragraph cites its own `nasa-power` entry, whose URL is the
   exact POWER request that reproduces the number, but `public/js/modules/chat.js:99` appends context sources *after*
   the reply's own and `public/js/lib/dom.js:16` resolves an id with `sources.find`, so the reply's generic "NASA POWER
@@ -2609,7 +2609,7 @@ Measured limits of this iteration, none of them claimed as coverage:
 ### 34. The citation that reproduced a rainfall number was discarded because two paragraphs shared its id
 
 Subsection 33 recorded this as the defect its own test had found and left open. It is now fixed, and the fix is
-`public/js/lib/chat-context.js:39-48`.
+`public/js/lib/chat-context.js:43-52`.
 
 **What the farmer saw.** Step 2 loads the POWER payload, the chat answer quotes the measured value - `Precipitation
 Corrected: latest non-missing value inside 2024-01-01 to 2024-12-31 is 0.06 mm/day on 2024-12-31` - and the panel
@@ -2651,7 +2651,7 @@ before, because the answer's own paragraph that cites `nasa-power` can be cut by
 source list cannot (`docs/evidence/citation-shadow-panel-one-id-only-2026-11-18.log.gz`). Citing both ids without
 pushing the documentation entry violates the rule that a paragraph must never cite what it cannot link, which an
 existing test in `tests/chat-context.test.js` enforces and did, red, on the first attempt. The distinct-id pair is
-this file's own convention for one paragraph carrying two sources (`chat-context.js:91,95`, `pest.id` with
+this file's own convention for one paragraph carrying two sources (`chat-context.js:95,95`, `pest.id` with
 `${pest.id}-host`), and nothing that was reachable before stops being reachable.
 
 **Tests - two assertions rewritten, not relaxed.** Per the user's rule, `tests/e2e/chat-evidence-panel.spec.js`
@@ -2703,9 +2703,9 @@ Measured limits of this iteration, none of them claimed as coverage:
   about shapes the app does not produce.
 * The panel's behaviour in the `static-*`/`worker` build is still untested, and this iteration did not change that:
   `server/index.js:62-64` rewrites the transport marker for the served build while `dist/client` keeps `worker` and
-  answers `/api` from inside the page's dedicated worker, which Playwright routes do not reach. The seam for closing
-  it is identified (`server/api.js:24` already takes eleven injectable providers while
-  `public/js/lib/core-worker-entry.js:3` passes none) but unexercised.
+  answers `/api` from inside the page's dedicated worker, where no `/api` request exists for a route to match. The
+  seam for closing it is identified (`server/api.js:24` already takes eleven injectable providers while
+  `public/js/lib/core-worker-entry.js:3` passes none) but unexercised; routes do reach the worker's own upstreams.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise, audible
   read-aloud quality, independent agronomic review, and live Overpass availability from a network that can reach it.
 
@@ -2829,7 +2829,7 @@ The unit test could not have found the gap it appears to cover, because it calls
 gate at `public/js/lib/chat-context.js:24` is `if (answer.topic === 'greeting' || answer.useSelectedLocation === false)
 return { blocks, sources };`, and `useSelectedLocation` is set to `false` by every route that can answer a pest-worded
 question, at eight sites: `server/agronomy/answers.js:72, 80`, `server/agronomy/conversation.js:45, 68, 74, 121` and
-`server/agronomy/planning-help.js:16, 39`. One reply shape does leave the flag unset — `server/agronomy/answers.js:84`,
+`server/agronomy/planning-help.js:16, 39`. One reply shape does leave the flag unset — `server/agronomy/answers.js:88`,
 whose mode is `deterministic evidence retrieval` — and a scan was run to find out whether any pest wording can get
 there: over **8** wordings against the live handler, with no comparison and nothing stubbed, **0 of 8** replies left the
 composer gate open (`docs/evidence/pest-gate-open-scan-2026-11-18.log.gz`), because a crop named in the question is
@@ -2914,7 +2914,7 @@ unchanged in count because this iteration adds a spec, not a unit test (`docs/ev
 that checks their new evidence paths came out **216/216, 0 failed (36,088 ms)**
 (`docs/evidence/pest-npm-test-final-2026-11-18.log.gz`), and `npx playwright test --list` reads **216 tests in 21
 files**. The gate above ran on the spec header as first written, which claimed that *only* `server/api.js:59` leaves
-the composer flag unset; the eight-site and `answers.js:84` wording was measured after it, so the spec was re-run
+the composer flag unset; the eight-site and `answers.js:88` wording was measured after it, so the spec was re-run
 comment-edited rather than assumed intact: **8 passed (19.1 s)** (`docs/evidence/pest-spec-comment-edit-2026-11-18.log.gz`).
 No production file was changed: the deliverable is the coverage, the recorded limit, and the defect the coverage exposed.
 
@@ -2961,13 +2961,13 @@ No exclusion was added for it; the corner that stays open is a question that the
 pest, which the probe did not construct.
 
 **What changed.** The early return became a flag that now covers only the four field-scoped topics
-(`public/js/lib/chat-context.js:29-30`, `if (!gated)` closing at `:76`): weather, soil, irrigation and the mapped
+(`public/js/lib/chat-context.js:33-34`, `if (!gated)` closing at `:80`): weather, soil, irrigation and the mapped
 field record stay behind the location gate, in the same order, under the same two-block budget, with no word
-removed from `TOPIC`. The pest branch (`:105`) is decided on its own terms and gains one guard the branch was
+removed from `TOPIC`. The pest branch (`:109`) is decided on its own terms and gains one guard the branch was
 missing: the reply reports the country it answered (`conversation.js:121` sets `context.country`), the loaded list
 reports the country it describes (`server/context/pests.js` returns `country` from the `/api/pests` request), and if
-the two differ the composer says so in one limitation instead of quoting records from elsewhere (`:99-106`). When
-they agree, the entry quoted is chosen `askedPest ?? askedCrop ?? cropPest ?? records[0]` (`:107`): the species named
+the two differ the composer says so in one limitation instead of quoting records from elsewhere (`:103-110`). When
+they agree, the entry quoted is chosen `askedPest ?? askedCrop ?? cropPest ?? records[0]` (`:111`): the species named
 outright, else the crop the *reply* is about, else a crop in the plan, else the head of the list.
 
 **Why the composer and not the server.** Iteration 37 registered the server-side option as preferred. Measurement
@@ -3142,13 +3142,13 @@ affect sweet corn in Brazil?" was `own=2 [sourced crop facts, evidence gap]`, `a
 the reply's own statement of its missing data. Neither dropped block is a `limitation`, so subsection 38's rule could
 not reach either one.
 
-**Why it happened.** `public/js/lib/chat-context.js:137` capped the reply at one non-`limitation` paragraph
+**Why it happened.** `public/js/lib/chat-context.js:141` capped the reply at one non-`limitation` paragraph
 unconditionally (`facts.slice(0, 1)`). With one descriptive context block attached, `context` took one slot and
 `facts` took one, so the third slot was only ever filled from `replyCaveats`; a reply with two facts and no caveat of
 its own lost the second fact to `[...context, ...facts, ...caveat].slice(0, 3)`.
 
 **What changed.** The cap now depends on whether a caveat slot is actually needed
-(`public/js/lib/chat-context.js:138-143`): `facts` takes `Math.max(1, 3 - context.length - (replyCaveats.length ? 1 : 0))`
+(`public/js/lib/chat-context.js:142-147`): `facts` takes `Math.max(1, 3 - context.length - (replyCaveats.length ? 1 : 0))`
 paragraphs on the descriptive route. A reply that carries a limitation still has one reserved for it and its fact
 window stays at one - which is what keeps subsection 38's cases intact - while a reply with no limitation spends the
 spare slot on its own second paragraph. The floor of `1` means two context blocks can never squeeze the reply out
@@ -3216,7 +3216,7 @@ change does not touch.
 
 **Defect class: coverage, not behaviour.** Subsection 39 landed the rule and recorded two limits that came from the
 same absence: nothing in a browser asserted the filled third slot, and the only page-level evidence for the
-wrong-country advisory that `public/js/lib/chat-context.js:106` emits was an offline unit case with a hand-built state
+wrong-country advisory that `public/js/lib/chat-context.js:110` emits was an offline unit case with a hand-built state
 (`tests/chat-context.test.js:104-110`). Both branches could therefore regress in the composition budget or in the
 advisory's own rendering without any Chrome case noticing. This iteration adds the two browser cases, one per branch,
 and in doing so closes 39's limit (i).
@@ -3315,7 +3315,7 @@ out `Sources (5)`, `(7)`, `(5)`, `(2)` and `(3)` with anchors equal to each coun
 
 **What was unpinned, proven by injection rather than argument.** Two control patches were applied and reverted on
 scratch copies (`artifacts/iter42-chat-context.before.js`, `artifacts/iter42-chat.before.js`). Dropping the
-`nasa-power` source inside `contextBlocks` (`chat-context.js:122`) *is* caught today: the offline suite came out
+`nasa-power` source inside `contextBlocks` (`chat-context.js:126`) *is* caught today: the offline suite came out
 **220 tests, 218 pass, 2 fail** - `a paragraph never cites a source the panel cannot link`
 (`tests/chat-context.test.js:350`) and the POWER-citation case - and the browser case at `:73` failed on its own
 `hrefs[1]` assertion (`docs/evidence/pest42-control-contextblocks-2026-11-19.log.gz`). Dropping the same citation
@@ -3388,7 +3388,7 @@ needs the *first* counted id to drop, and no measured wording renders that. (v) 
 counts are not the same numbers and are not claimed to be - the census state has no `state.inputs`, which is what
 makes the browser's reply carry the plan's own weather and FAOSTAT paragraphs. (vi) The `nasa-power` id collision
 that `docs/handoff-2026-11-18.md` §7 already carries was not resolved here: `server/nasa/power.js:85-87` puts the
-request url under that id while `public/js/lib/chat-context.js:53` pushes the `documentationUrl` under the same id,
+request url under that id while `public/js/lib/chat-context.js:57` pushes the `documentationUrl` under the same id,
 `dom.js:16` keeps whichever comes first, and the print shows the panel rendering the documentation url. Which entry
 wins for which wording, and whether the exact request url ever reaches the panel, is the next iteration's
 measurement. (Repaired 19 Nov, iteration 44: the collision itself was already resolved by subsection 34's two-id
@@ -3460,7 +3460,7 @@ point-in-time renders on 19 Nov (UTC), and only the pairing between number and l
 * Two gaps subsection 33's own test surfaced and left open on purpose. The `nasa-power` citation id used to be
   pushed by both a reply and the weather paragraph with different URLs while `public/js/lib/dom.js:16` kept the
   first match; and the whole evidence panel is untestable against stubs in the two `static-*` projects because
-  their `/api` traffic lives inside a dedicated worker that Playwright routes do not cover. Both are described in
+  their `/api` traffic never becomes a request a route could see inside the dedicated worker. Both are described in
   subsection 33 with the measured signatures. Status, brought current in iteration 44: the id collision was fixed
   by subsection 34's two-id paragraph and is pinned in a browser with `state.inputs` set at
   `tests/e2e/chat-evidence-panel.spec.js:110` and `:135` in the node projects (the earlier status text here claimed
@@ -4099,8 +4099,8 @@ Limits. The new case proves the degraded path on desktop Chromium with the host 
   the two iteration-49 failures and the three here were. The mechanism is documented, not guessed:
   `tests/e2e/chat-evidence-panel.spec.js:24-33` records that `dist/client` keeps the `worker` transport marker, so the
   static projects make those calls inside `public/js/lib/core-worker.bundle.js`, which fetches the real upstreams
-  itself and is outside the reach of a page-level route - the Node projects can be stubbed, the static ones can only
-  be waited on. Intercepting the worker's own egress at the browser level, which page routes cannot do, is the queued
+  itself. Only the `/api` leg escapes a route, because in that build no request is made - the Node projects can be
+  stubbed and the static ones can only be waited on. Replaying that egress, which routes do reach, is the queued
   next step. The anchors guard pins 7 statements in 2 files, not the 436 `file:line` references this subsection's own
   census counts: a drift in an unpinned file is still silent, which is why the answer here was a line-neutral fix plus
   a floor, not a promise. The first chain of controls ran against the line-inserting draft and is not the archived
@@ -4638,3 +4638,160 @@ the live cases stay. After that, P4's audit of stale/wrong-location answers, and
 still ignores the `error.code` the worker posts, `tests/e2e/chat-evidence-panel.spec.js:82` and
 `tests/chat-context.test.js:189` are cited without pins, and there is still no base-URL override that would let the
 e2e suite run hermetically against a local stub.
+
+### 55. A loaded field, an unmatched question, and a panel that hid the readings it already had
+
+What was measured. The farmer journey in the artifact the submission ships: `dist/client` served by
+`scripts/static-preview.js` on 4191, coordinates -31.89/116.77, reference year 2024, both evidence calls answered from
+raw upstream captures. `#evidence-status` reads `Historical evidence loaded`, `#soil-context-status` reads `Regional
+soil context loaded`, and then the question "How much rain fell here last year?" renders one paragraph - "I could not
+match that request to a supported question or planning step. Please clarify in English: name a crop and country, …" -
+with no `Sources` disclosure at all (`(none)`) while `#answer-status` says `Answer ready`. Transcript
+`docs/evidence/iter55-shipped-build-control-red-2026-11-19.log.gz`; it is the fix reverted, which is what the negative
+control below uses it for.
+
+Root cause. Two different facts travel in one boolean. `server/agronomy/answers.js:80` answers an unmatched question
+with `mode: 'deterministic clarification'` and `useSelectedLocation: false`, and `public/js/lib/chat-context.js:33`
+(line 29 before this iteration) hides every loaded-evidence block from a reply carrying that flag. The flag is correct
+for "this reply speaks about another country" and wrong for "this reply speaks about no place at all": a decline
+contradicts nothing the panel is showing, so the readings the farmer already loaded for their own point should have
+stayed on screen.
+
+The fix. Two edits, one rewritten statement in each file plus four inserted lines above the cited code in each (`+5/−1`
+in `public/js/lib/chat-context.js`, `+4/−0` in `server/agronomy/answers.js`), no dependency, no timeout raised and no
+new interception point: the producer names the scope (`locationScope: 'unmatched'`, `server/agronomy/answers.js:84`)
+and the consumer reads it (`answer.locationScope !== 'unmatched'`, `public/js/lib/chat-context.js:33`). Every other
+`useSelectedLocation: false` reply keeps the gate, which is what the maize assertion in the control run below holds.
+
+Why nothing saw it. `tests/chat-context.test.js` composes in-process and passed, `tests/e2e/chat-pest-context.spec.js`
+renders the same module over HTTP and passed, and the one spec that targets the panel in a browser skipped the two
+static projects. Its header recorded the reason as a page-level route being unable to reach a dedicated worker. That
+sentence was false, and correcting it is the part of this iteration with the longest tail.
+
+The transport, measured. Scratch #4 (`docs/evidence/iter55-egress-measure-2026-11-19.log.gz`, **2 passed in 37.3 s**)
+ran the same journey in `static-desktop` with a `**/*` tripwire registered first and the fixture routes after it. The
+page issued **51** outbound requests and **none** of them carried `/api/`, because `public/js/lib/api.js:18` posts
+those to the worker instead of fetching them; the worker's own upstream calls were caught and answered - `fixtureHits`
+reads `["POWER","SOIL"]` and the `ESCAPED` tripwire never fired. So `context.route` does reach a dedicated worker's
+egress, and what it cannot stub is a request the application never makes. That turns P3 from "needs an interception
+point the app does not have" into "needs two committed fixtures", which is why iteration 56 is scoped as it is. The 51
+is `outbound.length` in the scratch; the log prints only the first 25 URLs because that array is capped deliberately,
+which is worth knowing before doubting the count.
+
+The fixtures. `artifacts/scratch/raw/power-daily-2024.json` - HTTP 200, 31079 bytes, sha256
+`1ac92e1ca2ae9a0c9b72ebc63e4d005479f7687e102cc0f94c697d6ef32a5cde`, capturedAt 2026-11-19T20:07:11.967Z - and
+`artifacts/scratch/raw/soilgrids-query.json` - HTTP 200, 866 bytes, sha256
+`d43e4a81c3a1fe0942d52849cfbca99efa55df239f230ac844a997580a4b1ad3`, capturedAt 2026-11-19T20:07:12.659Z. Both are
+upstream bytes rather than post-adapter payloads like those in `tests/e2e/fixtures/`, because the worker build runs the
+real handler and needs the real input. They stay under gitignored `artifacts/` until iteration 56 decides where they
+belong.
+
+Negative control, on the artifact that ships. Reverting only these two files (`git apply --check -R` before
+`git apply -R`, both versions archived first) and rebuilding left `dist/client/js/lib/chat-context.js` and
+`dist/client/js/lib/core-worker.bundle.js` with a `locationScope` count of **0/0**, and the scratch went **1 failed**
+with `Expected length: 1, Received length: 0`. Restoring both files byte-identically (`diff -q` silent) and rebuilding
+gave counts **2/1** and **1 passed (1.3 s)**
+(`docs/evidence/iter55-shipped-build-green-2026-11-19.log.gz`), rendering "Precipitation Corrected: latest non-missing
+value inside 2024-01-01 to 2024-12-31 is 0.06 mm/day on 2024-12-31. Regional estimated gridded observation at
+-31.89°, 116.77°; retrieved 2026-11-19T20:31:09.579Z. It is not current weather, a forecast or a field measurement."
+under `Sources (2)`. The same run asked a mixed question, which added "pH in water: mean 7.2 pH; …" and the ISRIC
+advisory under `Sources (3)`, and asked "Is rain-fed maize viable here?", which kept its own FAOSTAT-and-unassessed
+reply under `Sources (1)` with no loaded evidence pasted onto it. No request escaped to a live service in any phase.
+
+One assertion I had to correct. The first draft also required the decline's own text to survive next to the reading; it
+came back **1 failed**, Expected true / Received false
+(`docs/evidence/iter55-expectation-redraft-2026-11-19.log.gz`). `composeAnswerBlocks` has long let a mapped estimate
+*replace* the reply's paragraphs - `public/js/lib/chat-context.js:139` sets `replaces` for exactly these two block kinds
+and `:147` then sets `facts = []` - and the clarification's kind is `clarification`, not `limitation`, so dropping it is
+pre-existing policy rather than a new defect. The expectation was rewritten to assert that policy instead of changing
+the app: the reading's caveat and coordinates must survive and the decline text must not render. The failed draft is
+kept, not deleted, because it is the measurement of where that boundary is.
+
+What the fix did to the ledger. This is the first iteration since 50 to insert lines above cited code: four lines in
+each of the two most-cited chat files, which between them carry 38 `file:line` references in `docs/`, `AGENTS.md` and
+`tests/`. 22 diff lines in those files named one of the two edited files and were re-pointed by recomputing each file's
+insertion points from the hunk headers - the first pass assumed a blanket +4 and wrongly flagged 15 citations that sit
+above the insertions. `tests/e2e/chat-pest-context.spec.js` moved four of its own. The evidence-panel spec's METHOD
+header and its three skip reasons were rewritten into the lines they already occupied, so `git diff --numstat` reads
+12/12 there and 8/8 in each of the three prose documents, the skips still sit at 82/115/140 as the ledger names them,
+and the falsified claim now reads correctly in all six places it appeared. The anchor pin table grew from 22 entries to
+25 - `chat-context.js:33`, `answers.js:80`, `answers.js:84` - and its floor assertion names the two files it would fail
+on, so the next insertion above this gate is told rather than shown.
+
+Offline and browser. `npm test` on the tree this iteration ships: **254 tests, 254 pass, 0 fail, 0 skipped, exit 0 in
+26.8 s** (`docs/evidence/iter55-offline-suite-2026-11-19.log.gz`), three more than iteration 54's 251 -
+`tests/chat-loaded-evidence.test.js`, which drives the real `createApiHandler` with the recorded fixtures injected as
+providers and composes the result through the panel. The five documentation guards run inside that suite and, run
+standalone, read **23 pass / 0 fail**. The focused browser slice (`chat-evidence-panel.spec.js` plus
+`chat-pest-context.spec.js`, all four local projects): **26 passed, 6 skipped, exit 0 in 48.6 s**
+(`docs/evidence/iter55-focused-browser-2026-11-19.log.gz`), and the six skips are the panel cases in the two static
+projects - unchanged in number, with the reason they state now being the measured one.
+
+The gate. The four-project run on these bytes executed **230 passed, 0 failed, 6 skipped in 26.4 m** against the
+`Running 236 tests` line it began with, so every case is accounted for (`docs/evidence/iter55-gate-2026-11-19.log.gz`).
+The launcher never recorded the process exit status, so the tally is read from the reporter's own summary lines rather
+than from a code. Iteration 52's red case, `tests/e2e/field-terrain.spec.js:4`, ran green in all four projects here at
+42.4 s, 1.4 m, 49.4 s and 2.6 s. The upstream condition that caused it also recurred and was survived: the mapped-field
+case `tests/e2e/review-phase-a.spec.js:34` spent 3.0 m in `node-desktop` while `server/context/farms.js:89` logged eight
+attempts across three services at status 502, code `CONTEXT_UNAVAILABLE`, after which the helper found its fields. So this
+subsection reports the gate green and reports no repair: nothing iteration 55 shipped touches field discovery, which makes
+a passing case evidence that the public lookup services had capacity for 26 minutes rather than evidence that the outage
+is fixed.
+
+Costs. Numbers now appear beside a decline. A farmer who asks something unsupported sees the readings for their point
+under `Sources (2)` and could read that as an answer to the question they actually asked; the only mitigation is the
+reading's own caveat sentence, which is data provenance rather than an explanation of the mismatch. The decline text is
+unchanged, so this iteration improved what surrounds it and not the recovery it offers. And the honest price of four
+inserted lines was 22 citation re-pins: three iterations of line-neutral editing did not make that cheap, they only made
+it visible when it happened.
+
+Limits. The shipped-build proof is a gitignored scratch spec, so **no committed browser case exercises the worker
+transport yet**: a regression on this path is caught today by `tests/chat-loaded-evidence.test.js` offline and not in a
+browser. The 6 skips stand until iteration 56 commits the fixtures. The offline negative control this subsection said
+had not been re-run has been re-run since, in both directions, and the interpreter that ran it turned out to need its
+own paragraph.
+Whether the composed reply should also re-word the decline - name the point it did load, offer the supported questions -
+is a copy decision no measurement here supports. The `conversation.js:20` versus `chat-context.js:43` weather-vocabulary
+asymmetry measured in iteration 54 stays open. Real phones, Safari/WebKit, microphones, audio quality and independent
+agronomy remain UNVERIFIED, and beyond the two upstream captures listed above this section claims no live integration run.
+
+Offline negative control, executed. The gate was still running while this was measured, and the Node projects read
+`public/` and `server/` from disk per request, so the product files could not be reverted in place. The control reverts
+the consumer as bytes instead: `git show HEAD:public/js/lib/chat-context.js`, which has no imports and so behaves in a
+copy exactly as the shipped file does, written beside the working copy, with two copies of the new test built by
+`artifacts/scratch/iter55-control/make-control.mjs` whose only difference from the committed file is three relative
+specifiers - assertions verbatim, and the generator throws instead of measuring the wrong subject if one fails to
+rewrite. Against the pre-fix bytes: **3 tests, 1 pass, 2 fail, exit 1** - the rainfall case fails at
+`tests/chat-loaded-evidence.test.js:42` with actual 0 against expected 1 and the soil case reports the estimate missing
+at `tests/chat-loaded-evidence.test.js:56`, while the suppression case at `tests/chat-loaded-evidence.test.js:64` stays
+green. Against the shipped bytes the same two copies are **3 pass, 0 fail, exit 0**
+(`docs/evidence/iter55-offline-control-2026-11-19.log.gz`). The copies carry one extra comment line, so those three
+citations name the committed file. Only the product file differed between the two runs, which is what makes the first a
+control and not a second test.
+
+Which interpreter produced the numbers. Building that control needed the same command form as the suite above, and the
+prefix this loop documents - `PATH="/opt/homebrew/bin:$PWD/artifacts/toolchains/node-v22.23.5-darwin-arm64/bin:$PATH"` -
+resolves `node` to `/opt/homebrew/Cellar/node/26.13.1_2/bin/node`, i.e. **v26.13.1**, measured 19 Nov 21:01 UTC. The
+pinned binary is present at `artifacts/toolchains/node-v22.23.5-darwin-arm64/bin/node` but sits behind
+`/opt/homebrew/bin`, which acquired a Node on 18 Nov. Two things follow, both stated as measurements and neither
+re-derived. First, the archived 254-test suite prints no interpreter, so the version that produced this subsection's
+headline number is inferred from that resolution rather than recorded, and the queued step now begins by echoing
+`process.version` and `process.execPath` into every suite log. Second, that same log shows the case which calls
+`buildBrowser()` - `tests/deployment.test.js:7`, esbuild's JS `build()` API - passing in 474 ms, while
+`docs/validation.md:1526` states `npm test` cannot complete its `dist/client` build step on v26.13.1 and
+`docs/validation.md:1522` attributes the recent numbers to v22.23.5. The gate running while this subsection was written settles it, and not by
+inference: its Playwright driver is process ID 45229, launched in the same second as the gate itself, and the executable
+behind it reads `/opt/homebrew/Cellar/node/26.13.1_2/bin/node` from `lsof` at 19 Nov 21:10 UTC. That chain built
+`dist/client` before the first case, and the build prints as complete at the head of
+`docs/evidence/iter55-gate-2026-11-19.log.gz`, so iteration 55's browser numbers and its build step belong to v26.13.1 and
+`docs/validation.md:1526` no longer describes this device. Iterations 53 and 54 launched with the same command form, which
+makes their interpreter an inference rather than a recorded fact, so the ledger lines are left for iteration 56 to repair
+against a log that carries its own version instead of against this one.
+
+The queued step. Iteration 56 names the interpreter in the log before anything else, corrects the two ledger lines this
+subsection now contradicts, takes the cancellation change the `error.name` callers in `public/js/lib/api.js` and
+`public/js/app.js` still need, then runs P3 proper: commit the two raw fixtures under `tests/e2e/fixtures/raw/`, make
+`tests/e2e/chat-evidence-panel.spec.js` transport-aware (the node projects keep their composed `/api` stubs, the static
+ones replay raw upstream bytes behind an escape tripwire that asserts its own hits), delete the three `test.skip` lines
+rather than widening them, keep the live checks, and pin `chat-context.js:139-147`'s replace-policy in a browser so the
+paragraph above is not the only place that fact lives.

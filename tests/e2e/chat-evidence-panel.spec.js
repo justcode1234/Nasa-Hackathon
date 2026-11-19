@@ -22,15 +22,15 @@ import {readFileSync} from 'node:fs';
 // order, and which citation chips the panel can actually resolve (sourceLinks, public/js/lib/dom.js:16).
 //
 // These cases run in the two Node-transport projects, and that is a measured limit rather than a preference.
-// server/index.js:62-64 rewrites the entry's transport marker to `http` when it serves, so the page itself
-// issues /api/ask, /api/soil and /api/observations and a route can answer them. dist/client keeps the shipped
-// `worker` marker (public/index.html:8), and there the same calls are posted to /js/lib/core-worker.bundle.js,
-// which contains the compiled API handler and fetches the real upstreams from inside the worker; Playwright
-// routes cover the page and its frames, not a dedicated worker. Running stubbed here produced exactly that
-// signature on 18 Nov (UTC): the reply came back as the worker bundle's own clarification text and step 2 reported
-// "The external context service could not respond (Failed to fetch)". The panel code under test is the same
-// module in both builds, so what the static projects lose here is the fixture transport, not the composition —
-// and they still carry the live chat coverage of the other specs.
+// server/index.js:62-64 rewrites the transport marker to http when it serves, so those pages issue their own
+// /api/ask, /api/soil and /api/observations and a route can answer them. dist/client keeps worker, and there
+// public/js/lib/api.js:18 posts those paths to /js/lib/core-worker.bundle.js instead of requesting them:
+// measured 19 Nov (UTC), 51 outbound requests and no /api/* among them. The stubs below therefore have
+// nothing to answer, step 2 fell back to the live upstreams (18 Nov: "The external context service could not
+// respond"), and this note's old excuse - that a page-level route cannot reach a dedicated worker - is false,
+// since context.route does intercept the worker's own POWER and SoilGrids fetches and drove the shipped static
+// build to both loaded states with zero escapes. The static projects need replay fixtures at that layer, not a
+// new interception point; that conversion is queued, and the composition itself is shared by both builds today.
 test.describe.configure({ mode: 'serial' });
 const fixture=name=>JSON.parse(readFileSync(new URL(`./fixtures/${name}`,import.meta.url),'utf8'));
 const observations=fixture('chat-evidence-observations.json'), soil=fixture('chat-evidence-soil.json'), askRain=fixture('chat-evidence-ask-rain.json');
@@ -79,7 +79,7 @@ async function ask(page,text){await page.locator('#question').fill(text);await p
   await expect(page.locator('#answer-status')).toContainText('Answer ready',{timeout:60_000});}
 
 test('a bare-rain question renders the measured rainfall paragraph with its own citation',async({page,context},testInfo)=>{
-  test.skip(!testInfo.project.name.startsWith('node'),'the static build answers /api inside /js/lib/core-worker.bundle.js, which a page-level route cannot reach - see the METHOD header');
+  test.skip(!testInfo.project.name.startsWith('node'),'the worker build answers /api in-process, so the /api stubs here never fire - see the METHOD header');
   const errors=await prepared(page,context);
   await ask(page,'How much rain fell here last year?');
   const seen=await paragraphs(page);
@@ -112,7 +112,7 @@ test('a bare-rain question renders the measured rainfall paragraph with its own 
 });
 
 test('the SoilGrids advisory travels beside the estimate it qualifies in a mixed question',async({page,context},testInfo)=>{
-  test.skip(!testInfo.project.name.startsWith('node'),'the static build answers /api inside /js/lib/core-worker.bundle.js, which a page-level route cannot reach - see the METHOD header');
+  test.skip(!testInfo.project.name.startsWith('node'),'the worker build answers /api in-process, so the /api stubs here never fire - see the METHOD header');
   const errors=await prepared(page,context);
   await ask(page,'How much rain fell here last year, and is the soil pH acidic?');
   const seen=await paragraphs(page);
@@ -137,7 +137,7 @@ test('the SoilGrids advisory travels beside the estimate it qualifies in a mixed
 });
 
 test('a compound modifier is not read as a weather topic and the answer keeps its own paragraphs',async({page,context},testInfo)=>{
-  test.skip(!testInfo.project.name.startsWith('node'),'the static build answers /api inside /js/lib/core-worker.bundle.js, which a page-level route cannot reach - see the METHOD header');
+  test.skip(!testInfo.project.name.startsWith('node'),'the worker build answers /api in-process, so the /api stubs here never fire - see the METHOD header');
   const errors=await prepared(page,context);
   await ask(page,'Is rain-fed maize viable here?');
   const seen=await paragraphs(page);

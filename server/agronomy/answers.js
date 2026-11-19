@@ -78,6 +78,10 @@ export function answerCatalogQuestion(question) {
     text: `${crop.name}: ${crop.family}; maturity reference ${crop.maturityDays.join('–')} days. ${crop.notes.join(' ')}`, sourceIds: crop.sourceIds }));
   if (ambiguousCornQuestion(question)) blocks.push({ kind: 'limitation', text: cornScopeNotice, sourceIds: [] });
   if (!blocks.length) return { schemaVersion: 1, mode: 'deterministic clarification', question, useSelectedLocation: false,
+    // `useSelectedLocation: false` tells the panel this reply does not speak about the loaded field, which is
+    // right for a reply about another country and wrong here: this sentence claims no place at all, so it cannot
+    // contradict a reading the farmer already loaded for the point they asked about. `locationScope` says which.
+    locationScope: 'unmatched',
     blocks: [{kind:'clarification',text:'I could not match that request to a supported question or planning step. Please clarify in English: name a crop and country, ask why a crop control is unavailable, or ask me to help plan a rotation.',sourceIds:[]}],sources:[] };
   blocks.push({ kind: 'limitation', text: 'No location-specific comparison is attached to this message. Crop references are not global agronomic validation. Create a comparison for historical weather context.', sourceIds: [] });
   const ids = new Set(blocks.flatMap(b => b.sourceIds));

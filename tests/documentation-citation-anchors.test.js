@@ -29,7 +29,7 @@ const PINS = [
   { file: 'public/js/modules/chat.js', line: 108, quote: 'const sourceIds = [...new Set(', citedBy: 'tests/e2e/chat-pest-context.spec.js:74 and 14 more' },
   { file: 'public/js/lib/dom.js', line: 13, quote: 'export function sourceLinks(ids, sources)', citedBy: 'docs/handoff-2026-11-18.md:207' },
   { file: 'public/js/lib/dom.js', line: 16, quote: 'sources.find(s => s.id === id)', citedBy: 'AGENTS.md:830' },
-  { file: 'public/js/lib/dom.js', line: 17, quote: 'if (!source) return;', citedBy: 'public/js/lib/chat-context.js:110' },
+  { file: 'public/js/lib/dom.js', line: 17, quote: 'if (!source) return;', citedBy: 'public/js/lib/chat-context.js:114' },
   // The six iteration-51 pins: this is the first subsection whose prose quotes the lines it edits, so an insertion
   // above any of them would leave the ledger naming code that is no longer there while every other guard stayed green.
   { file: 'server/index.js', line: 70, quote: 'if (status >= 500) console.error(error);', citedBy: 'docs/validation.md subsection 51, The fix' },
@@ -54,6 +54,11 @@ const PINS = [
   { file: 'server/context/farms.js', line: 89, quote: 'refused this request (HTTP ', citedBy: 'docs/validation.md subsection 54, Costs' },
   { file: 'tests/context.test.js', line: 234, quote: 'the retry facts a hedge reads come from what this client observed', citedBy: 'docs/validation.md subsection 54, Tests' },
   { file: 'tests/nasa.test.js', line: 88, quote: 'a NASA POWER refusal keeps the status it answered', citedBy: 'docs/validation.md subsection 54, Tests' },
+  // The three iteration-55 pins: this iteration inserted 4 lines into each of the two files whose ledger citations it
+  // also had to re-pin, and neither file was pinned, so the drift it would have caused was visible only to construction.
+  { file: 'public/js/lib/chat-context.js', line: 33, quote: "answer.locationScope !== 'unmatched'", citedBy: 'docs/validation.md subsection 55, The fix' },
+  { file: 'server/agronomy/answers.js', line: 80, quote: "mode: 'deterministic clarification'", citedBy: 'docs/validation.md subsection 55, The fix' },
+  { file: 'server/agronomy/answers.js', line: 84, quote: "locationScope: 'unmatched',", citedBy: 'docs/validation.md subsection 55, The fix' },
 ];
 
 // The drift shape this guard exists to catch: line 15 is a comment and 16 is the code, so a citation that lands on a
@@ -81,8 +86,14 @@ test('every pinned ledger citation lands on the statement the ledger quotes', as
 });
 
 test('the pin table covers the citation targets the loop leans on and cannot be narrowed to pass', () => {
-  assert.ok(PINS.length >= 22, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green, and to 22 by iteration 54 for the six lines its own subsection names while editing them in place`);
+  assert.ok(PINS.length >= 25, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green, to 22 by iteration 54 for the six lines its own subsection names while editing them in place, and to 25 by iteration 55 because it inserted 4 lines above cited code in two files that held no pin at all`);
   const pinned = file => PINS.filter(pin => pin.file === file).map(pin => pin.line);
+  for (const line of [33]) {
+    assert.ok(pinned('public/js/lib/chat-context.js').includes(line), `chat-context.js:${line} is the composer gate every location-suppression citation in the ledger depends on and is no longer pinned`);
+  }
+  for (const line of [80, 84]) {
+    assert.ok(pinned('server/agronomy/answers.js').includes(line), `answers.js:${line} is the decline whose new structured fact the gate reads and is no longer pinned`);
+  }
   for (const line of [16, 96, 99, 108]) {
     assert.ok(pinned('public/js/modules/chat.js').includes(line), `chat.js:${line} is one of the four most-cited targets and is no longer pinned`);
   }

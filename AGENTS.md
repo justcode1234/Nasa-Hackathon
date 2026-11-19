@@ -1344,7 +1344,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   because no shipped wording reaches it; the same pairing is not yet applied to the three counts in
   `chat-evidence-panel.spec.js:99,129,150`; the `dom.js:23` span branch and the orphan separator have never been
   seen by a measured render; and the `nasa-power` id collision this run surfaced twice
-  (`server/nasa/power.js:85-87` puts the request url under that id, `public/js/lib/chat-context.js:53` the
+  (`server/nasa/power.js:85-87` puts the request url under that id, `public/js/lib/chat-context.js:57` the
   `documentationUrl`, `dom.js:16` keeps the first) is the next iteration's measurement. Emulated Chrome only;
   nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 41 - iteration 40's rule had no browser witness, and this file's serial mode hid a
@@ -1384,7 +1384,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `docs/evidence/pest39-budget-2026-11-18.log.gz`: "What pests affect sweet corn?" rendered **2/3 with
   `room_left_unfilled=YES` and the AU FAOSTAT `country context` sentence dropped**, and "What pests affect sweet corn
   in Brazil?" rendered **2/3 with its `evidence gap` sentence dropped** - the reply admitting its own missing data,
-  cut by `facts.slice(0, 1)`. `public/js/lib/chat-context.js:138-143` now reserves a caveat slot only when the reply
+  cut by `facts.slice(0, 1)`. `public/js/lib/chat-context.js:142-147` now reserves a caveat slot only when the reply
   actually has a caveat (`Math.max(1, 3 - context.length - (replyCaveats.length ? 1 : 0))`), so a caveat-free reply
   spends the free slot on its own second paragraph while the three-paragraph bound and iteration 39's reservation both
   hold. Re-running the same probe on this tree gives **`rendered=3/3 room_left_unfilled=no dropped=0` for both** rows
@@ -1414,7 +1414,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   (`docs/evidence/pest38-gate-red-2026-11-18.log.gz`, **12 failed, 6 skipped, 202 passed (24.1 m)**). Attributed before
   any edit (`docs/evidence/pest39-attribution-2026-11-18.log.gz`): **2** corpus checks move across the three composers,
   both `pre-38=PASS iter38=FAIL caveat-rule=PASS`, with **0** cases whose checks were inert offline, so iteration 38
-  caused it and it was not pre-existing. Root cause is `public/js/lib/chat-context.js:137-138` - `facts` accepts only a
+  caused it and it was not pre-existing. Root cause is `public/js/lib/chat-context.js:141-142` - `facts` accepts only a
   non-`limitation` reply paragraph and the reply's `limitation` is dropped whenever the context carries one, so a reply
   built of nothing but limits rendered one paragraph out of three slots. The smaller repair, making the pointer
   conditional, was measured first and rejected: `docs/evidence/pest39-pointer-pin-2026-11-18.log.gz` shows the wording
@@ -1484,7 +1484,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `contextBlocks(question, state, { topic: 'pest' })`, a shape production never returns: the composer gate
   `public/js/lib/chat-context.js:24` returns early on `answer.useSelectedLocation === false`, and that flag is `false`
   on every route that can answer a pest wording, at eight sites (`server/agronomy/answers.js:72, 80`,
-  `conversation.js:45, 68, 74, 121`, `planning-help.js:16, 39`). One shape does leave it unset (`answers.js:84`,
+  `conversation.js:45, 68, 74, 121`, `planning-help.js:16, 39`). One shape does leave it unset (`answers.js:88`,
   `deterministic evidence retrieval`), so an 8-wording scan against the live handler with no comparison and nothing
   stubbed measured whether any pest question can reach it: **0 of 8** replies left the gate open
   (`…-pest-gate-open-scan-…`), because a named crop is routed to the country-aware retrieval at
@@ -1523,7 +1523,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   subsection landed **216/216 (36,088 ms)** (`…-pest-npm-test-final-…`), and the spec re-run after its header comment
   was corrected **8 passed (19.1 s)** (`…-pest-spec-comment-edit-…`) — the gate itself ran on the earlier wording, which
   claimed only `server/api.js:59` leaves the composer flag unset; the corrected text is the measured eight sites plus
-  `answers.js:84`, unreachable at 0 of 8. No production file changed; recorded in
+  `answers.js:88`, unreachable at 0 of 8. No production file changed; recorded in
   `docs/validation.md` subsection 36. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 - **19 Nov, same branch: iteration 36 — a coordinate copied as bare whole degrees was refused because nothing in it
   looked like a number.** Iteration 30's first recorded limit (`docs/handoff-2026-11-18.md:459-466`) was that
@@ -1651,9 +1651,9 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   precipitation for 2024-01-01 to 2024-12-31 is regional historical evidence in mm/day …`
   (`docs/evidence/rain-gate-e2e-sensitivity-2026-11-18.log.gz`). **Two measured limits the test itself found:** the
   three cases run only in `node-desktop`/`node-mobile`, because `server/index.js:62-64` rewrites the transport marker
-  to `http` while `dist/client` keeps `worker` and answers `/api` inside `/js/lib/core-worker.bundle.js`, which
-  Playwright routes do not reach (stubbing there failed 3/3 with `The external context service could not respond
-  (Failed to fetch)`) — the evidence panel in the worker build stays untested; and the weather paragraph's exact POWER
+  to `http` while `dist/client` keeps `worker` and answers `/api` inside `/js/lib/core-worker.bundle.js`, where no
+  `/api` request exists for a route to match (stubbing there failed 3/3 with `The external context service could not
+  respond (Failed to fetch)`) — the panel stayed untested until iteration 55; and the weather paragraph's exact POWER
   request URL is dropped by the panel because `public/js/modules/chat.js:99` appends context sources after the
   reply's own and `public/js/lib/dom.js:16` keeps the first match for a duplicated id, which the new spec pins as
   today's behaviour with the rewrite scheduled next. The pest half of the open list also stays open (a recorded GBIF
@@ -1769,6 +1769,47 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   Left unverified: no case drives a real 400 through either transport, the two flags have exactly one consumer and
   never reach the page, and no farmer has read the wording. Next, measured: P3 stands - the 6 skips in
   `tests/e2e/chat-evidence-panel.spec.js` still run on the node projects only.
+
+- **19 Nov, same branch: iteration 55 - a farmer who loaded evidence for their own field was shown a decline alone.**
+  Found by replaying upstream bytes in the shipped artifact, not by the audit list. With POWER and SoilGrids answered
+  from raw captures, `#evidence-status` reads `Historical evidence loaded` and the question "How much rain fell here
+  last year?" renders only "I could not match that request…" with no `Sources` line at all.
+  `server/agronomy/answers.js:80` sets `useSelectedLocation: false` for the unmatched clarification - right for a reply
+  about another country, wrong for one naming no place - and `public/js/lib/chat-context.js:33` hid every loaded block
+  behind that single flag. The fix splits the two facts: `locationScope: 'unmatched'` at `answers.js:84`, read by the
+  gate at `chat-context.js:33`. Four lines per file - the first line-inserting fix since iteration 50 - and 22 ledger
+  citation lines moved, which is what it costs. The control ran on the artifact itself: revert plus rebuild leaves
+  `locationScope` at 0/0 in `dist/client` and the replay red (`Expected length: 1, Received length: 0`); restore
+  byte-identical plus rebuild gives 2/1 and **1 passed**, with the reading, its coordinates and `Sources (2)` on screen
+  while a crop question still keeps its own reply (`docs/evidence/iter55-shipped-build-green-2026-11-19.log.gz` and
+  `docs/evidence/iter55-shipped-build-control-red-2026-11-19.log.gz`). The same replay falsified the excuse these skips
+  have carried since iteration 33: in the worker build `/api` is a `worker.postMessage`
+  (`public/js/lib/api.js:18`), so 51 outbound requests contained no `/api/` at all while `context.route` answered the
+  worker's own POWER and SoilGrids fetches (`docs/evidence/iter55-egress-measure-2026-11-19.log.gz`). P3 therefore
+  needs two committed fixtures, not a new interception point, and the false claim is corrected in six places, each of
+  them line-neutral. `npm test` reads **254 tests / 254 pass / 0 fail / 0 skipped**, exit 0, and the focused
+  four-project slice **26 passed, 6 skipped, exit 0 in 48.6 s**
+  (`docs/evidence/iter55-offline-suite-2026-11-19.log.gz`, `docs/evidence/iter55-focused-browser-2026-11-19.log.gz`).
+  Left unverified: the browser witness is a gitignored scratch spec, so no committed case covers the worker transport
+  yet and the 6 skips stand until iteration 56; the decline sentence still offers no next step; Safari/WebKit, real
+  phones, microphones, audio quality and independent agronomy stay UNVERIFIED. The offline control an earlier draft of
+  this bullet reported as not run has since been run on reverted bytes - `git show HEAD:` of the consumer, which has no
+  imports so a copy behaves as the shipped file does, plus two generated copies of the new test that differ from it
+  only in three relative specifiers: **3 tests, 1 pass, 2 fail, exit 1** against the pre-fix bytes versus **3 pass, 0
+  fail** against the shipped ones (`docs/evidence/iter55-offline-control-2026-11-19.log.gz`). Building it exposed a
+  provenance hole: the documented prefix `PATH="/opt/homebrew/bin:$PWD/artifacts/toolchains/node-v22.23.5-darwin-arm64/bin:$PATH"`
+  resolves `node` to `/opt/homebrew/Cellar/node/26.13.1_2/bin/node`, **v26.13.1** rather than the pinned v22.23.5, and
+  no archived suite log names its interpreter. The gate then answered it from the process table instead of from `PATH`:
+  its Playwright driver, started in the gate's own first second, executes that Homebrew binary, and the `dist/client`
+  build it launched prints as complete at the head of `docs/evidence/iter55-gate-2026-11-19.log.gz`. That gate executed
+  **230 passed, 0 failed, 6 skipped in 26.4 m** - iteration 52's red case green in all four projects, and a real
+  upstream 502 on the field lookups survived inside the same helper's retry budget in another case, which is capacity
+  rather than a repair. Iteration 55's numbers are therefore v26.13.1's and `docs/validation.md:1526` no longer
+  describes this device, while `docs/validation.md:1522` and the interpreter behind iterations 53-54 stay inferred until
+  a log carries its own version. Next, measured: iteration 56 prints `process.version` and `process.execPath` into each
+  log it trusts, repairs those two ledger lines, replaces the browser's four `error.name === 'AbortError'` branches with
+  a fact set where this app cancels its own request, then runs P3 proper - commit `tests/e2e/fixtures/raw/`, make the
+  panel spec transport-aware and delete the three `test.skip` lines.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

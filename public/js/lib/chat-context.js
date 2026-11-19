@@ -26,7 +26,11 @@ export function contextBlocks(question, state, answer) {
   // crop-country reply and every clarification sets `useSelectedLocation: false`, so a pest question the app can
   // answer was rendered with no record and no citation. The pest branch is therefore decided on its own terms
   // above, and only the field-scoped topics stay behind the gate.
-  const gated = answer.topic === 'greeting' || answer.useSelectedLocation === false;
+  // Declining to speak about the field and speaking about somewhere else are different facts, and only the second
+  // one may hide a reading the farmer already loaded for the place they asked about: the unmatched clarification
+  // (`server/agronomy/answers.js:80`) names no location at all, so it carries `locationScope: 'unmatched'` and the
+  // loaded evidence stays on screen beside it. Every other `useSelectedLocation: false` reply keeps the gate.
+  const gated = answer.topic === 'greeting' || (answer.useSelectedLocation === false && answer.locationScope !== 'unmatched');
   if (!gated) {
     if (TOPIC.weather.test(question) && state.observations) {
       const data = state.observations;
