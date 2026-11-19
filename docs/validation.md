@@ -1682,7 +1682,7 @@ failed request could be completely invisible on a phone. The first hypothesis fo
 axe `scrollable-region-focusable` violation on `#chat-history` — was disproved by the probe (each
 reply's "Read aloud" button makes the log focusable, 0 violations), so it was abandoned.
 
-Fix in [public/js/modules/chat.js:15](../public/js/modules/chat.js): `announce()` now sets the text and
+Fix in [public/js/modules/chat.js:16](../public/js/modules/chat.js): `announce()` now sets the text and
 calls `#answer-status.scrollIntoView({ block: 'nearest' })`, every status write goes through it
 (retrieving, ready, error, invalidated), and the `resize` listener re-reveals the status line after
 `positionChat()` so a rotation does not inherit the previous orientation's scroll position. The
@@ -4015,3 +4015,93 @@ rather than copies. Two further candidates were measured on the way and delibera
 inside the hundred-line iteration-39 block at `docs/handoff-2026-11-18.md:449` that was not adjudicated, and a
 prose-width floor, which today would mean rewrapping 2,988 over-width lines across 176 files with the same class of
 tool that cut the citation this case exists to catch.
+
+### 50. The gate never blocked the model CDN, and a two-line fix silently moved 40 citations
+
+What was measured. Two things, and the second is the one that matters to the ledger. (a) Opening the assistant starts
+  a model load by itself (`public/js/modules/chat.js:37`); when the runtime cannot be fetched,
+  `public/js/modules/mini-lm-worker.js:59` posts the raw worker exception and `public/js/modules/chat.js:63`
+  interpolated it into the panel. Measured 19 Nov with the CDN aborted, the status line read: `Model unavailable:
+  Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at
+  'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js' failed to load.. Evidence chat still works.` A
+  CDN URL, an internal API name and a doubled period, on the one chat dependency that comes from off-box. The sibling
+  branch at `public/js/modules/chat.js:66` already said the plain sentence, and `scripts/firefox-validation.js:63` and
+  `scripts/browser-validation.js:287` already match `could not`, so the wording was in the codebase and only this
+  branch leaked it. Coverage: the Firefox harness has blocked the host and asserted the block since before this
+  iteration (`scripts/firefox-validation.js:35`), `tests/security-boundaries.test.js:50` proves the CSP allows it, and
+  no Playwright spec in the 228-case gate had ever intercepted it - which is why that gate's iteration-49 first
+  attempt could go red on an unreachable upstream with no assertion naming the cause. (b) The trap this draft nearly
+  sprang: the first version of the fix inserted a comment and a `const` above line 13. Measured over tracked files
+  outside `docs/evidence/`, 40 citations name a `chat.js` line number (targets :15, :96 eight times, :99 fifteen
+  times, :108 fifteen times, :150-166), and a two-line insertion moves every one of them off the statement it quotes.
+  Run against those bytes (`docs/evidence/iter50-citation-drift-2026-11-19.log.gz`): `chat.js:99` reads `const extra =
+  contextBlocks(question, state, answer);` and `chat.js:108` reads `response.append(el('p', block.text));`, and all 20
+  shipped documentation guards stay green, because the citations guard checks only that the file exists and the line
+  is not blank (`tests/documentation-citations.test.js:74-82`). One of the 40 was already stale before this iteration:
+  `docs/validation.md:1685` cited `chat.js:15` for `announce()`, which a comment block had pushed to line 16.
+
+The fix. `public/js/modules/chat.js:63` now emits the sentence its sibling already used, as a one-line edit that
+  leaves the file at its 170 lines - `git diff --numstat` reads 1 added, 1 removed - so none of the 40 citations
+  moves. Line-neutrality is the point: the shared-constant form was the tidier code and the worse ledger.
+  `tests/e2e/chat-model-egress.spec.js` (new, 1 case, 4 runs across the projects) aborts the model CDN and the
+  Overpass hosts, requires the degraded sentence, requires `#load-model` enabled and `#unload-model` disabled, asks a
+  typed question and requires `Answer ready`, then requires `window.fieldshiftModelMetrics === undefined` so the panel
+  cannot claim a model it never started; the only two writers of that global are `public/js/modules/chat.js:59` and
+  `public/js/modules/chat.js:60`. `tests/documentation-citation-anchors.test.js` (new, 3 cases) pins the 7 statements
+  the ledger quotes most to the line numbers it names and reports which citation moved, and `docs/validation.md:1685`
+  is repaired from `:15` to `:16` in the same commit.
+
+Controls. Run 19 Nov from `artifacts/iter50-controls.sh` and `artifacts/iter50-drift-control.sh`, archived in
+  `docs/evidence/iter50-controls-2026-11-19.log.gz` and `docs/evidence/iter50-citation-drift-2026-11-19.log.gz`. (A)
+  Shipped bytes: 1 passed in 1.2 s, exit 0. (B) The negative control - the fix reverted to HEAD's interpolated message
+  - went red at `tests/e2e/chat-model-egress.spec.js:17` with the CDN URL in the received string. (C) The model-CDN
+  abort removed went red reading `Compact model ready · 157.1 KB weights · 0.2s load · experimental`, which is what
+  proves the abort rather than the page default creates the asserted state. (D) The discrimination control - only the
+  Overpass abort removed - stayed green in 1.5 s, so (C)'s redness is caused by the jsdelivr route alone. (E)
+  Inverting the metrics assertion to `!== undefined` went red. (F) After restore, `chat.js` and the spec match their
+  snapshots byte for byte (6387880d6d2fb4de and 0a8e9bc81012a8ce) and the case is green again in 1.5 s. (G) The drift
+  itself, replayed on disk: with two lines inserted the four guards shipped before this iteration read 20 passed, 0
+  failed while the new one reads 1 passed, 2 failed and prints all four moved pins. The 17 Nov incident that started
+  this class had a wrapper cut a citation in half; this one has a code edit move a citation to a neighbouring line,
+  and only the new guard sees either.
+
+Costs. The offline suite moves from 236 to 239 tests (the three new cases, one new file): 239 passed, 0 failed, 0
+  skipped, exit 0 in 39.7 s (`docs/evidence/iter50-npm-test-2026-11-19.log.gz`). `npx playwright test --list` moves
+  from 228 tests in 21 files to 232 tests in 22 files. The documentation guards move from 20 to 23 across five files.
+  The index header pair moves with the prose this subsection adds; the citation numbers inside the documentation
+  guards are floors rather than measurements, so this growth leaves every one of them where it is. One product line
+  changed, so the gate is re-run on these bytes: attempt 1 exited 1 in 28.0 m with 3 failed, 215 passed, 6 skipped and
+  8 did not run (`docs/evidence/iter50-gate-attempt1-2026-11-19.log.gz`). The 8 are the four downstream cases of the
+  serial group opened at `tests/e2e/chat-pest-context.spec.js:26` in each static project, and a serial group cannot
+  run its tail once its head fails, so they are cascade rather than evidence. All three failures read as live services
+  rather than as this change: `tests/e2e/chat-only-flow.spec.js:95` received the bundle's own "The external context
+  service could not respond (signal timed out)" where it requires `Answer ready|Step 4 is ready`, and both
+  `tests/e2e/chat-pest-context.spec.js:98` runs received "Fall armyworm in AU: Unavailable" where they require "Fall
+  armyworm in AU: Country records found". Running those two files alone on the same bytes returns 32 passed, 0 failed
+  in 59.4 s, exit 0, and attempt 2 on the same bytes returns 226 passed, 6 skipped, 0 failed, exit 0 in 28.3 m
+  (`docs/evidence/iter50-gate-2026-11-19.log.gz`) - and every case attempt 1 lost is green again in the same positions
+  in both static projects - 7 and 9 to 13 in static-desktop and 65 and 67 to 71 in static-mobile, ranges that cover
+  each failure together with the serial neighbours it blocked. The 6 skipped are the
+  `tests/e2e/chat-evidence-panel.spec.js` worker-transport skips this loop has already recorded, not new ones. The
+  census pair on the shipped tree is 779 archive citations and 436 file:line references over 216 prose files, with 156
+  path-ended lines, no resolving join and no doubled marker (`docs/evidence/iter50-census-2026-11-19.log.gz`). It is
+  the second census run: the first, taken before the handoff table rewrite landed, read 773 and 428, so the digits
+  quoted here are the ones the archived census reports against the bytes this commit carries. Against iteration 49's
+  763 and 389, the new spec comment, this subsection and the anchors guard are what added the difference. Because
+  `public/js/modules/chat.js` changed, `npm test` is re-run last on the byte-final tree and the archived pass is the
+  one whose every citation already resolved when it ran.
+
+Limits. The new case proves the degraded path on desktop Chromium with the host aborted; it does not show that
+  jsdelivr is reachable on a reviewer's network, and mobile, Safari and the audio paths stay unverified. The Overpass
+  aborts inside the case keep this one assertion off a shared service, but the assistant's server-side leg is still
+  uncached in Node (`server/context/client.js` has no base-URL override and `server/persistence.js` is
+  IndexedDB-only), so the gate as a whole is still not hermetic, and that coupling rather than this edit is what both
+  the two iteration-49 failures and the three here were. The mechanism is documented, not guessed:
+  `tests/e2e/chat-evidence-panel.spec.js:24-33` records that `dist/client` keeps the `worker` transport marker, so the
+  static projects make those calls inside `public/js/lib/core-worker.bundle.js`, which fetches the real upstreams
+  itself and is outside the reach of a page-level route - the Node projects can be stubbed, the static ones can only
+  be waited on. Intercepting the worker's own egress at the browser level, which page routes cannot do, is the queued
+  next step. The anchors guard pins 7 statements in 2 files, not the 436 `file:line` references this subsection's own
+  census counts: a drift in an unpinned file is still silent, which is why the answer here was a line-neutral fix plus
+  a floor, not a promise. The first chain of controls ran against the line-inserting draft and is not the archived
+  one; it is superseded, and its log stays under `/tmp` with this sentence saying so.

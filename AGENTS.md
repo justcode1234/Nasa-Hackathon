@@ -991,6 +991,38 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   stays open as the six skips at `chat-evidence-panel.spec.js:82,115,140`; the pairing counts at
   `:99,129,150` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
   untouched (`4a54fa3`).
+- **19 Nov, same branch: iteration 50 - the gate never blocked the model CDN, and a two-line fix silently moved 40
+  ledger citations.** `public/js/modules/chat.js:63` interpolated the raw worker exception into the panel, so with
+  the CDN aborted the status line read `Model unavailable: Failed to execute 'importScripts' on
+  'WorkerGlobalScope': The script at 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js' failed
+  to load.. Evidence chat still works.` - a host, an internal API and a doubled period. The wording already
+  existed on the sibling branch at `public/js/modules/chat.js:66`, and `scripts/firefox-validation.js:35` has
+  blocked that host since before this iteration, so the gap was in the Playwright gate only. The first draft of
+  the fix inserted two lines above line 13, which moves all 40 tracked citations of a `chat.js` line (`:15`,
+  `:96`, `:99`, `:108`, `:150-166`) off their statements while every shipped guard stayed green - executed on disk
+  in `docs/evidence/iter50-citation-drift-2026-11-19.log.gz`, where the four guards read 20 passed, 0 failed
+  against a tree whose `chat.js:99` no longer holds `answer.sources.push(...extra.sources)`. Shipped instead as
+  one line, `git diff --numstat` 1 added and 1 removed, file still 170 lines, so no citation moved.
+  `tests/e2e/chat-model-egress.spec.js` (new) aborts the model CDN and the Overpass hosts, requires the degraded
+  sentence, `#load-model` enabled, `#unload-model` disabled, `Answer ready` for a typed question and
+  `window.fieldshiftModelMetrics === undefined`, whose only writers are `public/js/modules/chat.js:59` and `:60`;
+  controls (A) green 1.2 s, (B) the fix reverted red with the CDN URL in the received string, (C) the abort
+  removed red reading `Compact model ready · 157.1 KB weights · 0.2s load · experimental`, (D) Overpass abort
+  alone removed green, (E) the metrics assertion inverted red, (F) restored byte-identical green
+  (`docs/evidence/iter50-controls-2026-11-19.log.gz`). `tests/documentation-citation-anchors.test.js` (new, 3
+  cases) pins the 7 most-quoted statements to the line numbers the ledger names, and `docs/validation.md:1685` is
+  repaired from `chat.js:15` to `:16`, which a comment block had already invalidated. The offline suite moves 236
+  to 239 (239 passed, 0 failed, exit 0, 52.7 s, `docs/evidence/iter50-npm-test-2026-11-19.log.gz`), `--list` moves
+  228 in 21 files to 232 in 22, the documentation guards 20 to 23. The Playwright gate on these bytes took two
+  attempts: attempt 1 exited 1 in 28.0 m with 3 failed, 215 passed, 6 skipped and 8 did not run
+  (`docs/evidence/iter50-gate-attempt1-2026-11-19.log.gz`), the three failures all cases reaching live third-party
+  services and the 8 the serial tail they blocked (`tests/e2e/chat-pest-context.spec.js:26`); those two files
+  alone on the same bytes return 32 passed, 0 failed in 59.4 s, exit 0, and attempt 2 is the gate this iteration
+  stands on at 226 passed, 6 skipped, 0 failed in 28.3 m (`docs/evidence/iter50-gate-2026-11-19.log.gz`). Limits:
+  the assistant's server-side leg is still uncached in Node (`server/context/client.js`, `server/persistence.js`),
+  so the gate is still not hermetic; the anchors cover 7 statements, not the 436 `file:line` citations in the
+  ledger; real phones, Safari, microphones and independent agronomy stay unverified. Nothing deployed; no NASA
+  portal edit; main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 49 - a citation cut by a line break was invisible to every scanner in the
   repository, and one had shipped.** Iteration 47's wrap split an archive citation in half and was caught only
   because the commands guard's archive regex cannot cross a newline, so it mistook the head half for an archive
@@ -1016,8 +1048,9 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   in 6.7 s, so the red is an upstream condition and not a result about this change; attempt 2 is the gate this
   iteration stands on at 222 passed, 6 skipped, 0 failed in 24.8 m (docs/evidence/iter49-gate-2026-11-19.log.gz).
   The offline suite moves from 232 to 236. One ledger correction: the iteration-48 handoff bullet quoted 739
-  archive citations and 387 references from a probe whose stdout was never archived; the live pair is 763 and 389
-  and both now cite an archived log. Nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
+  archive citations and 387 references from a probe whose stdout was never archived; the pair measured on those
+  bytes is 763 and 389 and both now cite an archived log. Nothing deployed; no NASA portal edit; main untouched
+  (`4a54fa3`).
 - **19 Nov, same branch: iteration 48 - the evidence index checked every claim it makes about individual files and
   none of the claim it makes about itself, so the first sentence a reviewer reads was the least checked line in
   the tree.** Iteration 47's control F made the edit every later pass has to make - start citing an indexed

@@ -60,7 +60,7 @@ export function initChat(getState, actions) {
       if (data.type === 'selection') { window.fieldshiftModelMetrics = data.metrics; window.fieldshiftModelSelections = (window.fieldshiftModelSelections ?? 0) + 1; selections.get(data.id)?.(data.index); selections.delete(data.id); }
       if (data.type === 'error') {
         if (data.id) { selections.get(data.id)?.(null); selections.delete(data.id); }
-        else { unload(); setStatus(`Model unavailable: ${data.message}. Evidence chat still works.`); }
+        else { unload(); setStatus('Model could not start on this device. Evidence chat still works.'); }
       }
     };
     worker.onerror = event => { event.preventDefault(); unload(); setStatus('Model could not start on this device. Evidence chat still works.'); };
