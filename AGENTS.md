@@ -1099,7 +1099,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `npm test` archived 248 tests / 246 pass / 2 fail in 38.6 s
   (`docs/evidence/iter53-line-shift-guard-2026-11-19.log.gz`); neither guard was relaxed. Three new cases -
   the injected-clock walk, the identity passthrough and the HTTP end-to-end pair - take the offline suite to
-  **248 tests / 248 pass / 0 fail in 42.3 s, exit 0**, re-run on the byte-final tree after the prose landed. Six negative controls each broke one claimed property
+  **248 tests / 248 pass / 0 fail / 0 skipped, exit 0**, re-measured on the shipped tree after the wording above landed and no duration claimed. Six negative controls each broke one claimed property
   (passthrough 3 failures, constant wait 2, future deadline 2, dropped spacing 2, citation drift 1 and test-file
   pin drift 1) and every restore hashed to its baseline (`docs/evidence/iter53-negative-control-2026-11-19.log.gz`,
   `docs/evidence/iter53-pin-control-2026-11-19.log.gz`). The insertion that added the three cases moved seven

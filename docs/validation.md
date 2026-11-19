@@ -4495,7 +4495,7 @@ that did not exist yet - and neither was relaxed: the first was fixed by rewriti
 second by shipping the archive. `npm run build` exited 0 and put the refusal in the worker bundle, where the
 minified catch reads `u instanceof g ? u : d`: `SOIL_FAIR_USE` appears once and "Soil service rate limit" zero
 times, so the static transport cannot drift from the Node one. `docs/evidence/iter53-offline-suite-2026-11-19.log.gz`
-is the byte-final tree, re-run once every word above had landed: **248 tests, 248 pass, 0 fail in 42.3 s, exit 0**, the five documentation guards included. The same 248 cases completed in 27.0 s on an earlier pass over quieter bytes, so the tally is the claim and the duration belongs to this run alone (host load average 7.9 when it started). The
+is the tree this iteration ships, measured after every word above had landed: **248 tests, 248 pass, 0 fail, 0 skipped, exit 0**, the five documentation guards included. No duration is claimed here, because the same 248 cases ranged from 27.0 s to 42.3 s with host load and the archived header carries this run's own reading. The
 `api-exit-parity`, `workflow`, `assistant`, `help-and-explanations` and `chat-only-flow` slice - `npx playwright test`
 `--list` counted 68 tests in 5 files before the run and the run executed **68 passed, 0 failed, 0 skipped in 3.0 m**,
 17 in each local project, after 11 load samples (`docs/evidence/iter53-browser-slice-2026-11-19.log.gz`).
