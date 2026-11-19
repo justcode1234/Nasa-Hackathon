@@ -40,6 +40,20 @@ const paragraphs=async page=>{const reply=last(page);await expect(reply.locator(
   return (await reply.locator(':scope > p').allTextContents()).map(text=>text.trim());};
 const links=page=>last(page).locator('details a').evaluateAll(nodes=>nodes.map(node=>node.href));
 const summary=page=>last(page).locator('details summary').innerText();
+// The printed count and the rendered chips can disagree silently: chat.js:108 prints the unique ids the
+// surviving reply blocks cite, while dom.js:16 resolves each id against the merged source list and drops
+// an id no entry carries, and dom.js:18 keys the separator off the loop index. The pest spec guards the
+// same panel with these two rules; pinning the pairing beside the pinned counts means a first-id shadow
+// (count printed over a chip that never rendered) or a separator regression fails here, not just offline.
+const sourcePanel=async page=>{const printed=Number((await summary(page)).match(/(\d+)/)[1]);
+  return {printed,...await last(page).locator('details p').first().evaluate(node=>({
+    entries:[...node.querySelectorAll('a,span')].length,
+    separators:[...node.childNodes].filter(child=>child.nodeType===3&&child.textContent===' · ').length,
+  }))};};
+const paired=panel=>{
+  expect(panel.entries,`Sources (${panel.printed}) was printed over ${panel.entries} rendered citations`).toBe(panel.printed);
+  expect(panel.separators,`${panel.entries} rendered citations carried ${panel.separators} separators`).toBe(panel.entries-1);
+};
 
 async function prepared(page,context){
   await context.route(fields,route=>route.abort('failed'));
@@ -83,6 +97,7 @@ test('a bare-rain question renders the measured rainfall paragraph with its own 
   // room for the limitation, which is what composeAnswerBlocks guarantees.
   expect(seen[1],`the reply dropped the answer's own limitation: ${JSON.stringify(seen)}`).toMatch(/^Rainfed: historical precipitation is context only/);
   expect(await summary(page)).toBe('Sources (2)');
+  paired(await sourcePanel(page));
   // Required behaviour, replacing what iteration 34 pinned as today's: the weather paragraph used to cite the
   // registry id `nasa-power` for its own request URL, public/js/modules/chat.js:99 appended that entry after the
   // reply's own, and public/js/lib/dom.js:16 keeps the first source for an id - so the chip opened the POWER
@@ -112,6 +127,7 @@ test('the SoilGrids advisory travels beside the estimate it qualifies in a mixed
   expect(seen[advisory-1],`the advisory must follow the estimate it qualifies: ${JSON.stringify(seen)}`).toMatch(/^pH in water: mean/);
   expect(seen[advisory]).toContain('no measured pH, drainage or soil-water capacity is inferred for this field');
   expect(await summary(page)).toBe('Sources (3)');
+  paired(await sourcePanel(page));
   // Three ids survive a mixed reply: the POWER documentation entry, the exact request beside it, and SoilGrids for
   // both the estimate and the advisory that qualifies it. The request URL is asserted here as well as in the bare
   // case because a busy reply is where the citation used to be lost - the context entries are appended after the
@@ -132,5 +148,7 @@ test('a compound modifier is not read as a weather topic and the answer keeps it
   expect(seen[0],`the answer's own first paragraph was displaced: ${seen[0]}`).toMatch(/^POWER precipitation for/);
   expect(seen.length).toBe(3);
   expect(await summary(page)).toBe('Sources (2)');
+  // This case pins no link hrefs, so the pairing above is the only structural check the panel gets here.
+  paired(await sourcePanel(page));
   expect(errors).toEqual([]);
 });

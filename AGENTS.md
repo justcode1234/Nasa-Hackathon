@@ -959,12 +959,12 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `docs/validation.md` was also brought current: its bullets now cite the 222 passed / 6 skipped gate on
   `10a6e47`, mark the pest half paid by iterations 37 and 40 to 42, and leave the `nasa-power` browser measurement
   and the worker-transport half open. (Repaired in iteration 44: that `nasa-power` sentence was stale - the
-  browser measurement with `state.inputs` set was already standing at `tests/e2e/chat-evidence-panel.spec.js:95`
-  and `:119`, and this bullet's open list below repeated it.) What stays open: within-file line drift is
+  browser measurement with `state.inputs` set was already standing at `tests/e2e/chat-evidence-panel.spec.js:110`
+  and `:135`, and this bullet's open list below repeated it.) What stays open: within-file line drift is
   still a reader's problem because
   the guard cannot prefer `:98` over `:96`; `docs/history` and files over 300 KB are outside the scan; a citation
   to an existing but unscanned target passes without a line check; the pairing is not yet applied to the three
-  counts in `chat-evidence-panel.spec.js:85,114,134`; and the `nasa-power` ledger sentence, which iteration 44
+  counts in `chat-evidence-panel.spec.js:99,129,150`; and the `nasa-power` ledger sentence, which iteration 44
   found stale and repaired. Emulated Chrome only; nothing deployed; no NASA portal edit; main untouched
   (`4a54fa3`).
 - **19 Nov, same branch: iteration 44 - the citation-collision guard read only the context side, while the reply's
@@ -988,13 +988,35 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged at 228 in 21 files, so the `10a6e47` gate remains the executed four-project evidence. The stale
   ledger sentence and subsection 41's limit (vi) are repaired in `docs/validation.md` subsection 43. What stays
   open: the matrix is eight families with one plan shape; titles are not compared; the worker-transport half
-  stays open as the six skips at `chat-evidence-panel.spec.js:68,100,124`; the pairing counts at
-  `:85,114,134` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
+  stays open as the six skips at `chat-evidence-panel.spec.js:82,115,140`; the pairing counts at
+  `:99,129,150` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
   untouched (`4a54fa3`).
+- **19 Nov, same branch: iteration 45 - the e2e panel cases printed a Sources count and pinned hrefs, but nothing
+  compared the count with the chips that rendered.** Coverage iteration, no production file changed. Case 3 of
+  `tests/e2e/chat-evidence-panel.spec.js` pinned no link targets at all, and no case compared the printed count
+  with the rendered chips, so a reply whose count outran its panel passed everything. `sourcePanel`/`paired` now
+  sit beside the three pinned counts (`:99`, `:129`, `:150`): entries must equal the printed count (dom.js:16
+  drops an id no source entry carries) and separators must equal entries minus one (dom.js:18 keys the ` · ` off
+  the loop index). Measured: the node-desktop slice passed **3 (3.3 s)**; control A dropped the fixture's
+  `power-resolution` entry and only the new entries rule failed - `Sources (2) was printed over 1 rendered
+  citations` - with every pre-existing assertion green; control B forced dom.js:18 to `if (true)` and only the
+  separator rule failed - `2 rendered citations carried 2 separators` - with the entries rule green at 2 == 2;
+  both reverted `cmp`-verified (`docs/evidence/iter45-control-fixture-drop-2026-11-19.log.gz`,
+  `docs/evidence/iter45-control-separator-regression-2026-11-19.log.gz`). The +14-line helper block re-pointed
+  twenty prose sites (eight bare `:N` tokens the guard cannot see) and corrected nine stale dom.js mentions (the
+  keying is dom.js:18, the span branch dom.js:23, sourceLinks spans dom.js:13-26). Offline **225/225, 0 skipped
+  (36.5 s)** on the final tree (`docs/evidence/iter45-npm-test-2026-11-19.log.gz`); the four-project gate on the
+  code-final tree **222 passed, 6 skipped, 0 failed (20.8 m)**, exit 0
+  (`docs/evidence/iter45-gate-2026-11-19.log.gz`), with docs and one pest-spec comment landing while it ran. The
+  suite also exposed a pre-existing race - `tests/deployment.test.js:7` rebuilds `public/licenses` while the
+  citation scanner walks them; one ENOENT crash observed, green on the surrounding runs
+  (`docs/evidence/iter45-offline-flake-2026-11-19.log.gz`). Nothing deployed; no NASA portal edit; main untouched
+  (`4a54fa3`).
+
 - **19 Nov, same branch: iteration 42 - the Sources panel's number and its list are produced by two different
   rules, and the whole suite was blind to a divergence between them.** Coverage iteration, no source change.
-  `chat.js:108` counts the ids the rendered paragraphs cite; `dom.js:13-27` emits an entry only for an id the
-  source list can match and `return`s silently for one it cannot, and `dom.js:19` keys the ` · ` separator off the
+  `chat.js:108` counts the ids the rendered paragraphs cite; `dom.js:13-26` emits an entry only for an id the
+  source list can match and `return`s silently for one it cannot, and `dom.js:18` keys the ` · ` separator off the
   id index rather than the entries rendered. Measured first, and the shipped data is clean:
   `artifacts/iter42-source-census.mjs` replays both page-side rules over every corpus and unexpected wording in
   two states (`docs/evidence/pest42-census-wordings-2026-11-19.log.gz`) - **62 of 88 wordings print a panel, 0
@@ -1024,14 +1046,14 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   case was added; the full four-project gate on this tree came out **222 passed, 6 skipped, 0 failed (25.6 m),
   `GATE EXIT=0`** (`docs/evidence/pest42-gate-2026-11-19.log.gz`) - 222 + 6 is the 228 that `--list` reports, and
   the 6 skips are the three pre-existing worker-transport sites in
-  `tests/e2e/chat-evidence-panel.spec.js:68,100,124` running once per static project, the same 6 as iteration 41,
+  `tests/e2e/chat-evidence-panel.spec.js:82,115,140` running once per static project, the same 6 as iteration 41,
   so nothing was skipped to make this pass. Two comment-only lines then landed in the spec, so the offline suite
   (**220/220**), the pest slice (**5 passed (14.2 s)**) and the census (**228 tests in 21 files**) were re-run
   together on the final tree (`docs/evidence/pest42-final-tree-2026-11-19.log.gz`); the two runs differ only in
   case line numbers, `:96` onward in the gate log against `:98` onward now. What stays open: the divergence is
   detected, not prevented - the honest fix (count only resolvable ids, or render a visible marker) was not made
   because no shipped wording reaches it; the same pairing is not yet applied to the three counts in
-  `chat-evidence-panel.spec.js:85,114,134`; the `dom.js:24` span branch and the orphan separator have never been
+  `chat-evidence-panel.spec.js:99,129,150`; the `dom.js:23` span branch and the orphan separator have never been
   seen by a measured render; and the `nasa-power` id collision this run surfaced twice
   (`server/nasa/power.js:85-87` puts the request url under that id, `public/js/lib/chat-context.js:53` the
   `documentationUrl`, `dom.js:16` keeps the first) is the next iteration's measurement. Emulated Chrome only;

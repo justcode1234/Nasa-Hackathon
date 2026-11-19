@@ -82,7 +82,7 @@ async function ask(page,text){await page.locator('#question').fill(text);await p
 // and docs/evidence/pest42-blind-browser-2026-11-19.log.gz hold that pass. The same build makes the two `paired()`
 // calls in the wordings that cite `nasa-power` fail - `Sources (5)` over 4 and `Sources (3)` over 2 - while the three
 // wordings that never cite it stay green, which is the precision the pairing buys: it fails where the divergence is,
-// not everywhere. The separators travel with the same contract: dom.js:19 keys the " · " off the id's
+// not everywhere. The separators travel with the same contract: dom.js:18 keys the " · " off the id's
 // index rather than the entries it rendered, so a dropped entry can also leave an orphan separator on screen.
 const sourcePanel=async page=>{const printed=Number((await summary(page)).match(/(\d+)/)[1]);
   return {printed,...await last(page).locator('details p').first().evaluate(node=>({

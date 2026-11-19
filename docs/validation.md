@@ -3111,7 +3111,7 @@ while a slot is free (`docs/evidence/pest39-budget-2026-11-18.log.gz`); register
 four that moved. (iii) All four browser assertions above come from desktop Chrome emulating mobile viewports; real
 phones, Safari/WebKit and touch were not exercised, as always. (iv) The red gate's 6 skips are not new ones: they are the three
 `chat-evidence-panel.spec.js` cases × the two static projects, excluded by the guard already recorded at
-`tests/e2e/chat-evidence-panel.spec.js:68,100,124` because the static build answers `/api` inside the worker bundle, and
+`tests/e2e/chat-evidence-panel.spec.js:82,115,140` because the static build answers `/api` inside the worker bundle, and
 the same three cases run and pass in both node projects.
 
 Executed cost: attribution **2 of 2 differing checks restored**; pointer-pin probe as quoted; blast radius **4 of 88,
@@ -3182,7 +3182,7 @@ the archived green gate's 1-4 s for the same three cases (`docs/evidence/pest40-
 full four-project gate on this tree came out **214 passed, 6 skipped, 0 failed (25.7 m)**, with **220** case lines listed before the run (`npx playwright
 test --list` → `Total: 220 tests in 21 files`; the browser census is unchanged because this iteration's test is an
 offline unit case) - 214 checks plus 6 skips is that census exactly (`docs/evidence/pest40-gate-green-2026-11-18.log.gz`).
-The 6 skips are the same three `chat-evidence-panel.spec.js:67/:99/:123` worker-transport cases in each of the two
+The 6 skips are the same three `chat-evidence-panel.spec.js:81/:114/:139` worker-transport cases in each of the two
 static projects that subsection 38's green gate skipped, so nothing was newly deselected. No exit code is quoted for
 this run: its launch line omitted the wrapper's `EXIT=` echo, so the pass rests on the summary lines plus 0 failure
 marks among the 220 case lines, and on all 12 `chat-pest-context.spec.js` lines - the spec's three cases run once in each of the four projects -
@@ -3298,9 +3298,9 @@ untouched and are the next coverage item in handoff §7.
 
 **Defect class: coverage, and the gap is real rather than theoretical.** `public/js/modules/chat.js:108` prints
 `Sources (N)` from `[...new Set(answer.blocks.flatMap(block => block.sourceIds))]` after composition, while
-`public/js/lib/dom.js:13-27` emits one entry per id only when `sources.find` matches and `return`s without emitting
+`public/js/lib/dom.js:13-26` emits one entry per id only when `sources.find` matches and `return`s without emitting
 anything - not a link, not a span, not a placeholder - for an id it cannot match. The count is therefore computed
-over the ids and the list over the resolvable ids, and a divergence is invisible on screen. `dom.js:19` has the same
+over the ids and the list over the resolvable ids, and a divergence is invisible on screen. `dom.js:18` has the same
 shape on the separator: `if (i) p.append(' · ')` keys off the id's index, not off the entries actually rendered, so
 a dropped entry can also leave a leading separator.
 
@@ -3352,7 +3352,7 @@ tree **5 passed (18.5 s)** (`docs/evidence/pest42-green-slice-2026-11-19.log.gz`
 tree came out **222 passed, 6 skipped, 0 failed (25.6 m), `GATE EXIT=0`**
 (`docs/evidence/pest42-gate-2026-11-19.log.gz`): 222 + 6 is exactly the 228 that `--list` reports, split 54 passed
 each over `static-desktop` and `static-mobile` and 57 each over `node-desktop` and `node-mobile`, and the 6 skips are
-the three pre-existing worker-transport `test.skip` sites in `tests/e2e/chat-evidence-panel.spec.js:68,100,124`
+the three pre-existing worker-transport `test.skip` sites in `tests/e2e/chat-evidence-panel.spec.js:82,115,140`
 running twice, once per static project - the same 6 that iteration 41's gate reported, so nothing was skipped to make
 this pass. Two comment-only lines landed in the spec after the gate launched, which is why the offline suite
 (**220/220**), the pest slice (**5 passed (14.2 s)**) and the census (**228 tests in 21 files**) were then run again
@@ -3379,9 +3379,9 @@ counting them.
 does not prevent it, and the smallest honest fix (count only resolvable ids at `chat.js:108`, or render a visible
 marker for an unresolvable one at `dom.js:17`) was deliberately not made because neither injection is reachable from
 the shipped data - 0 of 88 wordings show it. (ii) The pairing is now pinned for the five pest wordings only; the
-three counts in `tests/e2e/chat-evidence-panel.spec.js` (`Sources (2)`, `(3)`, `(2)` at `:85`, `:114`, `:134`) are
+three counts in `tests/e2e/chat-evidence-panel.spec.js` (`Sources (2)`, `(3)`, `(2)` at `:99`, `:129`, `:150`) are
 still read as numbers without their list being counted, and the helper above is written so that applying it there is
-a one-line change per case. (iii) The `spans` branch of `dom.js:24` - a matched source whose url is not http(s)
+a one-line change per case. (iii) The `spans` branch of `dom.js:23` - a matched source whose url is not http(s)
 renders as text - appeared in 0 of 88 offline wordings and 0 of 5 browser wordings, so `entries` counts it but no
 measured render exercises it. (iv) The separator assertion has never seen the failure it guards: an orphan ` · `
 needs the *first* counted id to drop, and no measured wording renders that. (v) The offline census and the browser
@@ -3392,7 +3392,7 @@ request url under that id while `public/js/lib/chat-context.js:53` pushes the `d
 `dom.js:16` keeps whichever comes first, and the print shows the panel rendering the documentation url. Which entry
 wins for which wording, and whether the exact request url ever reaches the panel, is the next iteration's
 measurement. (Repaired 19 Nov, iteration 44: the collision itself was already resolved by subsection 34's two-id
-paragraph and pinned in a browser at `tests/e2e/chat-evidence-panel.spec.js:95` and `:119` in the node projects,
+paragraph and pinned in a browser at `tests/e2e/chat-evidence-panel.spec.js:110` and `:135` in the node projects,
 so the sentence above described a superseded state when this limit was written; what this limit correctly left
 open - which entry wins for which wording across the real plan routing - subsection 43's offline guard now
 replays over the real handler.) (vii) Live-service movement still applies to every count quoted above: these are
@@ -3463,12 +3463,12 @@ point-in-time renders on 19 Nov (UTC), and only the pairing between number and l
   their `/api` traffic lives inside a dedicated worker that Playwright routes do not cover. Both are described in
   subsection 33 with the measured signatures. Status, brought current in iteration 44: the id collision was fixed
   by subsection 34's two-id paragraph and is pinned in a browser with `state.inputs` set at
-  `tests/e2e/chat-evidence-panel.spec.js:95` and `:119` in the node projects (the earlier status text here claimed
+  `tests/e2e/chat-evidence-panel.spec.js:110` and `:135` in the node projects (the earlier status text here claimed
   no such browser measurement existed - that sentence was stale and is repaired in subsection 43's records);
   subsection 43's offline guard now replays the real handler over eight plan-question families and refuses any
   composed reply that carries two different URLs under one id, and every rendered id still resolves. The
   worker-transport half stays open as the six standing skips in
-  `tests/e2e/chat-evidence-panel.spec.js:68,100,124`.
+  `tests/e2e/chat-evidence-panel.spec.js:82,115,140`.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the
@@ -3538,8 +3538,8 @@ with `sources.find` - the first entry under an id decides where the chip opens, 
 id is unrenderable dead weight. Nothing read the reply's own side: a producer pushing an id with a different URL
 than the registry - the exact shape subsection 34 fixed - would pass the existing guard silently. And the open-item
 ledger plus subsection 41's limit (vi) both said no browser state with `state.inputs` set had been measured; that
-was stale, because `tests/e2e/chat-evidence-panel.spec.js:67` and `:99` do exactly that in the node projects, with
-the two-id fix pinned at `:95` and `:119`, and iteration 43's AGENTS bullet carried the same sentence. Both are
+was stale, because `tests/e2e/chat-evidence-panel.spec.js:81` and `:114` do exactly that in the node projects, with
+the two-id fix pinned at `:110` and `:135`, and iteration 43's AGENTS bullet carried the same sentence. Both are
 repaired in this iteration's records.
 
 **Measured before anything was written.** A probe replayed the real `createApiHandler` (`server/api.js:24`) with
@@ -3575,8 +3575,58 @@ offline and cheap enough to run on every `npm test`.
 enumerate every wording the way subsection 41's census did, and a new producer route can appear that the matrix
 never asks for. (ii) Titles are not compared: a same-id, different-title drift renders the first title and passes.
 (iii) The static-worker transport half stays open as the six standing skips in
-`tests/e2e/chat-evidence-panel.spec.js:68,100,124`. (iv) The pairing for real plan replies is asserted offline
+`tests/e2e/chat-evidence-panel.spec.js:82,115,140`. (iv) The pairing for real plan replies is asserted offline
 only - no browser case renders a real plan reply, because the e2e fixtures bypass the handler entirely.
 (v) Real phones, Safari/WebKit, microphones, read-aloud quality and independent agronomic review remain unverified
 and untouched. Emulated Chrome was not used in this iteration; nothing deployed; no NASA portal edit; main
 untouched (`4a54fa3`).
+
+### 44. The e2e panel cases printed a Sources count and pinned link hrefs, but nothing compared the count with the chips that rendered
+
+The browser half of the panel had the same blindness subsection 41 fixed offline: chat.js:108 prints the unique ids
+the surviving reply blocks cite, dom.js:16 resolves each id against the merged source list and silently drops one no
+entry carries, and dom.js:18 keys the ` · ` separator off the loop index - so a reply whose count outran its rendered
+chips could pass every case, and the third case pinned no link hrefs at all (a regex on the first paragraph, a length
+and the count were its whole panel contract). The fixture behind these cases is the comparison reply itself: its first
+block carries the `POWER precipitation for` scope sentence citing `nasa-power` and `power-resolution`, the other two
+carry the caveats, and the bare-rain and mixed cases compose the context weather and soil blocks over it - which is
+why their printed counts are the context ids and case 3's are the fixture's own.
+Changed: `tests/e2e/chat-evidence-panel.spec.js` gains `sourcePanel`/`paired` beside its existing helpers - the
+printed count is read from the summary text, rendered entries counted as the first `details` paragraph's `a`/`span`
+children, separators as its ` · ` text nodes - and each of the three cases asserts `paired(await sourcePanel(page))`
+beside its pinned count: entries must equal the printed count and separators must equal entries minus one. Case 3
+gains its first structural check, noted in a one-line comment at the call.
+Measured on 94fb224 plus this spec change:
+- the node-desktop slice passed **3 (3.3 s)** (`docs/evidence/iter45-pairing-slice-2026-11-19.log.gz`), so the shipped
+panel satisfies both rules in all three cases - a widening, not a live-defect fix;
+- control A dropped the fixture's `power-resolution` source entry: cases 1 and 2 stayed green (their composed blocks
+never cite that id) and case 3 failed only the new entries rule with `Sources (2) was printed over 1 rendered
+citations`, every pre-existing assertion green before it
+(`docs/evidence/iter45-control-fixture-drop-2026-11-19.log.gz`);
+- control B forced the separator keying to `if (true)`: the entries rule stayed green (2 == 2) and the separator rule
+failed with `2 rendered citations carried 2 separators` - a count-only check cannot see it; serial mode stopped the
+remaining two cases (`2 did not run`, the hazard subsection 40 recorded), so B is demonstrated on case 1
+(`docs/evidence/iter45-control-separator-regression-2026-11-19.log.gz`);
+- both controls were reverted and `cmp`-verified byte-identical against HEAD (the fixture and `public/js/lib/dom.js`),
+and the restored tree's slice passed **3 (2.5 s)** (`docs/evidence/iter45-pairing-slice-green-2026-11-19.log.gz`).
+The +14-line helper block and three call sites shifted the spec, so every prose line citing it was re-pointed: twenty
+sites across this file, AGENTS.md and the handoff now carry the new numbers (skips `:82,115,140`, cases
+`:81/:114/:139`, counts `:99/:129/:150`, links `:110`/`:135`), eight of them bare `:N` tokens on three sites whose
+filename lives on another line - invisible to the citation guard, found by sweep. Nine stale dom.js mentions were
+corrected in the same pass: the separator keying lives at dom.js:18, not :19 (four sites, including the pest spec's
+own comment), the non-http span branch at dom.js:23, not :24 (two sites), and sourceLinks spans dom.js:13-26, not -27
+(three sites).
+Costs: offline **225/225, 0 failed, 0 skipped (36.5 s)** on the final tree
+(`docs/evidence/iter45-npm-test-2026-11-19.log.gz`); the four-project gate re-ran on the code-final tree: **222
+passed, 6 skipped, 0 failed (20.8 m)**, exit 0 (`docs/evidence/iter45-gate-2026-11-19.log.gz`) - the docs and one
+pest-spec comment line landed while it ran, none of them functional.
+Limits: (i) the pairing reads the last reply's first `details` paragraph, the same single-panel trust as the pest
+spec's helpers; (ii) control B is demonstrated on case 1 only, because serial mode stops after the first failure;
+(iii) the six worker-transport skips stand (`:82,115,140`) - the static projects still cannot render this panel under
+a stubbed transport; (iv) the rules count entries, they do not identify them - case 3's two link targets remain
+unpinned; (v) the offline suite carries a pre-existing in-suite race - `tests/deployment.test.js:7` rebuilds
+`public/licenses` while the citation scanner walks the same files - observed once today as an ENOENT crash of the
+scanner with the surrounding runs green (`docs/evidence/iter45-offline-flake-2026-11-19.log.gz`), and the atomic
+license write is the obvious next candidate; (vi) real phones, Safari/WebKit, microphones, read-aloud quality and
+independent agronomic review remain unverified and untouched. Emulated desktop Chrome only (the node-desktop project);
+nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
