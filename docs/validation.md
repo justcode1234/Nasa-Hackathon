@@ -3396,13 +3396,14 @@ on 19 Nov (UTC), and only the pairing between number and list is claimed to hold
 
 ### Not yet executed at the time of writing
 
-* A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
-  changed since (`chat.js`, `farms.js`, `client.js`, `workflow-assistant.js`), so 180/180 must not be
-  quoted for the current commit. No Playwright run had been launched on the device that wrote subsection
-  12, so at that time the suite was owed; it has since been run repeatedly on later tips, most recently
-  **196 passed, 0 failed (19.1 m)** on `acb6c96` (see subsection 21).
-  The chat-heavy slice that does cover the `data-choice-type` contract ran separately: **80 passed, 0 failed
-  (6.0 min)** across all four projects (`docs/evidence/e2e-chat-slice-choice-type-2026-11-18.log.gz`).
+* A clean full `npm run test:e2e` on the tip that carries subsections 41 and 42 - paid on 19 Nov: **222 passed,
+  6 skipped, 0 failed (25.6 m), `GATE EXIT=0`** on `10a6e47` with the widened pest spec in the tree
+  (`docs/evidence/pest42-gate-2026-11-19.log.gz`), 222 + 6 being exactly the 228 that `--list` reports, so the run
+  also covers the map, farm, terrain, evidence, print and accessibility cases that had not run whole since
+  `bb69aee`. History: the 180-case gate described `35a11b7` and was never quotable for later tips; the newest
+  full-gate evidence before today was **196 passed, 0 failed (19.1 m)** on `acb6c96` (subsection 21), and the
+  chat-heavy `data-choice-type` slice ran separately **80 passed, 0 failed (6.0 min)** across all four projects
+  (`docs/evidence/e2e-chat-slice-choice-type-2026-11-18.log.gz`).
 * The offline suite total on the tip that adds `tests/documentation-commands.test.js` and the
   `tests/deployment.test.js` assertions is now measured in subsection 12: **190/191 with one failure**
   before the fix (the guard read its own quoted error as a documented file) and **192/192, 0 failed,
@@ -3421,40 +3422,46 @@ on 19 Nov (UTC), and only the pairing between number and list is claimed to hold
   slice attempts were load-degraded in subsection 19, so those two degraded tallies stand as recorded
   but are no longer the best evidence for that tree.
 * The full gate belongs to `acb6c96`. Subsections 22 to 30 changed `public/js/lib/chat-context.js` and
-  `public/js/modules/workflow-assistant.js` afterwards, so the clean **196/196 (19.1 m)** line above must not be
-  quoted for the tip that carries the caveat budget, the crop-matched pest record, the species-name matcher, the
-  citation-id pairing, the soil word order, the month verbs, the decimal-comma pair, the hemisphere letters and the
-  comma-decimal pH until the suite is re-run there. On the subsection-22 tip only the 52-case chat slice and
-  `npm test` 202/202 are measured; on the subsection-23 tip `npm test` 203/203, `npm audit` and the 64-case four-spec
-  chat slice are measured; on the subsection-24/25 tip the offline suite (**205/205**) and the 64-case slice are
-  measured, that slice coming out **61 passed, 3 failed** with all three failures proven to be click-timeout load
-  effects by an isolated 3/3 re-run; on the subsection-26/27 tip the offline suite (**207/207**) and the same 64-case
-  slice are measured clean; on the subsection-28 tip the offline suite (**208/208**) is measured and the same slice
-  came out **61/3** with the same three click timeouts proven degraded by an isolated **3/3** re-run; on the
-  subsection-29 tip the offline suite (**209/209**) and the same slice are measured, that slice coming out **60/4**
-  with four `#chat-toggle` click timeouts and a prompt-level probe showing the parse itself unchanged on the QA set;
-  on the subsection-30 tip the offline suite (**210/210**) and the same slice are measured, the slice coming out
-  **64 passed, 0 failed**. The gate that covers most of that span ran during this last iteration: **195 passed,
-  1 failed (28.7 m)** on `bb69aee`, the tip carrying iterations 21 to 30
-  (`docs/evidence/e2e-gate-bb69aee-2026-11-18.log.gz`), where the lone failure is a select-option timeout on a host at
-  load 6 to 9 whose same case passes on all four projects in the slice just described. A clean full gate on the
-  current tip is still open, as are the 132 map, farm, terrain, evidence, print and accessibility cases on every tip
-  after `bb69aee`. On the subsection-31 tip the offline suite (**211/211**) and the same slice are measured; on the
-  subsection-32 tip **212/212** and **64/64**; on the subsection-33 tip **213/213**, **64/64** and the new panel file's
-  own **6 passed, 6 skipped**. `--list` became **208 tests in 20 files** at subsection 33, so the "196-case gate"
-  quoted above is the size of the suites that ran, not of the suite that is owed.
+  `public/js/modules/workflow-assistant.js` afterwards, so the clean **196/196 (19.1 m)** line above must not be quoted
+  for the tip that carries the caveat budget, the crop-matched pest record, the species-name matcher, the citation-id
+  pairing, the soil word order, the month verbs, the decimal-comma pair, the hemisphere letters and the comma-decimal pH
+  until the suite is re-run there. On the subsection-22 tip only the 52-case chat slice and `npm test` 202/202 are
+  measured; on the subsection-23 tip `npm test` 203/203, `npm audit` and the 64-case four-spec chat slice are measured;
+  on the subsection-24/25 tip the offline suite (**205/205**) and the 64-case slice are measured, that slice coming out
+  **61 passed, 3 failed** with all three failures proven to be click-timeout load effects by an isolated 3/3 re-run; on
+  the subsection-26/27 tip the offline suite (**207/207**) and the same 64-case slice are measured clean; on the
+  subsection-28 tip the offline suite (**208/208**) is measured and the same slice came out **61/3** with the same three
+  click timeouts proven degraded by an isolated **3/3** re-run; on the subsection-29 tip the offline suite (**209/209**)
+  and the same slice are measured, that slice coming out **60/4** with four `#chat-toggle` click timeouts and a
+  prompt-level probe showing the parse itself unchanged on the QA set; on the subsection-30 tip the offline suite
+  (**210/210**) and the same slice are measured, the slice coming out **64 passed, 0 failed**. The gate that covers most
+  of that span ran during this last iteration: **195 passed, 1 failed (28.7 m)** on `bb69aee`, the tip carrying
+  iterations 21 to 30 (`docs/evidence/e2e-gate-bb69aee-2026-11-18.log.gz`), where the lone failure is a select-option
+  timeout on a host at load 6 to 9 whose same case passes on all four projects in the slice just described. Both debts
+  are now paid by the gate on `10a6e47` recorded in the first bullet, which ran all 228 cases - the map, farm, terrain,
+  evidence, print and accessibility cases included - on the tree that carries subsections 22 to 42. On the subsection-31
+  tip the offline suite (**211/211**) and the same slice are measured; on the subsection-32 tip **212/212** and
+  **64/64**; on the subsection-33 tip **213/213**, **64/64** and the new panel file's own **6 passed, 6 skipped**.
+  `--list` became **208 tests in 20 files** at subsection 33, so the "196-case gate" quoted above is the size of the
+  suites that ran, not of the suite that was owed at the time.
 * The rendered panel for the two new selection rules. The weather-plus-soil half is paid: subsection 33 added
   `tests/e2e/chat-evidence-panel.spec.js`, which answers a bare-rain question and a mixed rain-and-pH question against
-  recorded POWER and SoilGrids payloads and sees the advisory beside the estimate on screen. The pest half is still
-  open - no browser case has a GBIF country context loaded beside a plan that names the crop a watchlist entry is
-  about, so the crop-matched pest record remains pinned by `tests/chat-context.test.js` and direct-module probes only.
-  A recorded pest payload exists at `artifacts/iter34-fixtures/` and is used by nothing.
+  recorded POWER and SoilGrids payloads and sees the advisory beside the estimate on screen. The pest half was still
+  open when this was written - no browser case had a GBIF country context loaded beside a plan that names the crop a
+  watchlist entry is about, so the crop-matched pest record remained pinned by `tests/chat-context.test.js` and
+  direct-module probes only, and a recorded pest payload existed at `artifacts/iter34-fixtures/` used by nothing.
+  Paid since then: iteration 37
+  rendered the live country pest paragraph in a browser, and subsections 40 to 42 widened that file to five cases whose
+  recorded payloads include the GBIF country context beside a plan naming the watchlist crop.
 * Two gaps subsection 33's own test surfaced and left open on purpose. The `nasa-power` citation id is used by both a
   reply and the weather paragraph with different URLs, and `public/js/lib/dom.js:16` keeps the first match, so the
   exact POWER request URL never reaches the panel; and the whole evidence panel is untestable against stubs in the
   two `static-*` projects because their `/api` traffic lives inside a dedicated worker that Playwright routes do not
-  cover. Both are described in subsection 33 with the measured signatures, and the first is the next iteration's
-  target.
+  cover. Both are described in subsection 33 with the measured signatures. Status: the id collision was measured
+  offline in subsection 41 - over every corpus and unexpected wording the reply's own `nasa-power` entry already
+  carries the documentation URL and no wording carries both lists - but no browser state with `state.inputs` set has
+  been measured, and nothing prevents the collision, so it stays open; the worker-transport half stays open as the
+  six standing skips in `tests/e2e/chat-evidence-panel.spec.js:68,100,124`.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the
@@ -3463,3 +3470,53 @@ on 19 Nov (UTC), and only the pairing between number and list is claimed to hold
 
 
 
+
+### 42. The two citation scanners stop at markdown, and every citation inside a code file's comments was readable by nothing
+
+**The defect class, committed twice by this loop.** `scripts/check-documentation.js` walks markdown links and
+`tests/documentation-commands.test.js` reads `AGENTS.md` and the fenced commands of `docs/*.md`, so a citation
+written inside a `.js` comment is checked by nothing. Iteration 41 committed two evidence-archive names in
+`tests/e2e/chat-pest-context.spec.js` comments that no shipped archive matched (a stale `-2026-11-18` date and a
+wildcard); iteration 42 then nearly repeated the shape with a line range - it drafted `:195-196` for lines that were
+`:153-154` in the tree it described - and caught it only by hand while re-verifying its own subsection.
+
+**Measured before any rule was written.** The first census script ran for minutes and was killed: an unbounded
+name token before a dot is quadratic on minified single-line bundle files, so the scan was re-scoped to
+prose-shaped tracked files (`.js/.mjs/.cjs/.md/.css/.py/.sh/.txt`, at most 300 KB, submission and build output
+excluded; 205 files). With corrected semantics - a line range fails only when past the end or entirely blank, and a
+bare basename that two tracked files share is reported as unresolvable instead of silently resolving to the first
+match - the census (`docs/evidence/doc43-census-2026-11-19.log.gz`) measured **399 evidence citations, 0
+unresolvable**, **321 file:line citations, 0 missing the line they name**, and exactly one ambiguous basename:
+`api.js`, shared by `public/js/lib/api.js` (42 lines) and `server/api.js` (63 lines), of which only the latter has a
+line 59 at all - so iteration 35's bare-`api.js` mention was unambiguous in fact, and the prose was repaired to
+`server/api.js:59` in this iteration.
+
+**The guard.** `tests/documentation-citations.test.js` adds four offline cases: every named evidence archive exists
+on disk; every `file:N` or `file:N-M` citation resolves to a scanned file, stays in bounds and is not wholly blank;
+no citation names a bare basename that two tracked files share; and the scan demonstrably reaches `AGENTS.md`,
+`docs/validation.md`, the pest spec, `dom.js` and `server/api.js`, with floors of 200 evidence citations and 150
+line citations so that a skip-list typo cannot silently empty the guard.
+
+**Negative controls, each reverted byte-identical.** Injecting, one at a time and then restoring (`cmp`-verified),
+a bogus archive name, a `:9999`, an ambiguous bare-basename `api.js` citation with a line number, and a blank-line
+target into `tests/chat-context.test.js` comments, each injection failed exactly the intended rule and printed the
+offending `file:line` (`docs/evidence/doc43-controls-2026-11-19.log.gz`); after the restore the guard is 4/4 green.
+On the final tree the suite was re-run once more and the guard flagged its own author: this subsection, the
+AGENTS.md bullet and the handoff bullet each quoted the ambiguity control as a literal bare-basename token with a
+line number, which the scan reads as a real citation; each quote was reworded to the un-hooked basename and the
+re-run went green, so quoting a `file:line` token in tracked prose now requires an unambiguous path.
+
+**Executed cost.** Guard standalone **4 passed (0.33 s)**; the offline suite with the guard included is
+**224/224, 0 failed, 0 skipped** (`docs/evidence/doc43-npm-test-2026-11-19.log.gz`), up from 220; the Playwright
+census is unchanged at **228 tests in 21 files** because no spec was added; `scripts/check-documentation.js` still
+reports **117 local links, 0 broken**.
+
+**Limits, stated as limits.** (i) The guard cannot tell a right line citation from a plausible one - `:96` and
+`:98` are both in bounds and non-blank - so within-file drift stays catchable only by a reader, which is why
+subsection 41's cases name themselves alongside their line numbers. (ii) Citations inside `docs/history` and any
+file over 300 KB are outside the scan. (iii) A citation to a file that exists but is not scanned (a bundle, a data
+fixture) passes without any line check. (iv) The guard counts lines by splitting, not by `wc`: a file that ends in a
+newline has one phantom empty split-line, and citing it is caught only because that line is blank. (v) The
+ambiguous-basename rule constrains `file:N` citations; a bare path mention without a line number stays unchecked.
+(vi) Real phones, Safari/WebKit, microphones, read-aloud quality and independent agronomic review remain unverified
+and untouched by this iteration.

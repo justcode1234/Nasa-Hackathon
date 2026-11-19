@@ -930,6 +930,38 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- - **19 Nov, same branch: iteration 43 - the citation guard: nothing read a citation that lived inside a code
+  file's comments.** Coverage iteration, no production file changed. `scripts/check-documentation.js` walks
+  markdown links and `tests/documentation-commands.test.js` reads `AGENTS.md` and the fenced commands of
+  `docs/*.md`, so a path inside a `.js` comment was checked by nothing - iteration 41 committed two unresolvable
+  archive names exactly there, and iteration 42 nearly committed a wrong line range in the same file. Measured
+  before any rule: the census `artifacts/iter43-citation-probe.mjs` over 205 prose-shaped tracked files measured
+  **399 evidence citations, 0 unresolvable; 321 file:line citations, 0 missing the line they name; one ambiguous
+  bare basename, `api.js`** (`docs/evidence/doc43-census-2026-11-19.log.gz`). The first census hung for minutes
+  and was killed - an unbounded name token before a dot is quadratic on minified single-line bundles - so the scan
+  caps files at 300 KB and skips build output and submission material; the ambiguity was harmless in fact because
+  `public/js/lib/api.js` has 42 lines, so only `server/api.js` can own a line 59, and iteration 35's mention was
+  repaired to `server/api.js:59`. `tests/documentation-citations.test.js` adds four offline cases: every named
+  evidence archive exists; every `file:N(-M)` citation resolves, stays in bounds and is not wholly blank; no
+  citation names a bare basename two tracked files share; and the scan demonstrably reaches the five files where
+  the defects lived, with 200-evidence and 150-line-citation floors so a skip-list typo cannot silently empty the
+  guard. Four negative controls - a bogus archive, `:9999`, an ambiguous bare-basename `api.js` citation and a
+  blank `:17` - were injected one at a time into `tests/chat-context.test.js` comments and `cmp`-reverted
+  byte-identical; each failed exactly the intended rule and printed the offending file:line
+  (`docs/evidence/doc43-controls-2026-11-19.log.gz`). On the final tree a re-run caught the guard flagging its own
+  author: three bullets quoted the ambiguity control as a literal bare-basename token with a line number, read by
+  the scan as a real citation; the quotes were reworded to the un-hooked basename and the re-run went green. Costs:
+  guard **4 passed (0.33 s)** standalone, offline suite
+  **224/224, 0 skipped** (`docs/evidence/doc43-npm-test-2026-11-19.log.gz`), up from 220; the Playwright census is
+  unchanged at **228 tests in 21 files** because no Playwright-covered file changed, so the full gate on `10a6e47`
+  recorded in iteration 42 remains the executed four-project evidence for this tree. The gate-debt ledger in
+  `docs/validation.md` was also brought current: its bullets now cite the 222 passed / 6 skipped gate on
+  `10a6e47`, mark the pest half paid by iterations 37 and 40 to 42, and leave the `nasa-power` browser measurement
+  and the worker-transport half open. What stays open: within-file line drift is still a reader's problem because
+  the guard cannot prefer `:98` over `:96`; `docs/history` and files over 300 KB are outside the scan; a citation
+  to an existing but unscanned target passes without a line check; the pairing is not yet applied to the three
+  counts in `chat-evidence-panel.spec.js:85,114,134`; and the `nasa-power` collision with `state.inputs` is the
+  next measurement. Emulated Chrome only; nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 42 - the Sources panel's number and its list are produced by two different
   rules, and the whole suite was blind to a divergence between them.** Coverage iteration, no source change.
   `chat.js:108` counts the ids the rendered paragraphs cite; `dom.js:13-27` emits an entry only for an id the
@@ -1150,7 +1182,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   (`…-pest-npm-test-…`), `--list` **216 tests in 21 files**, the documentation-guard re-run after this bullet and
   subsection landed **216/216 (36,088 ms)** (`…-pest-npm-test-final-…`), and the spec re-run after its header comment
   was corrected **8 passed (19.1 s)** (`…-pest-spec-comment-edit-…`) — the gate itself ran on the earlier wording, which
-  claimed only `api.js:59` leaves the composer flag unset; the corrected text is the measured eight sites plus
+  claimed only `server/api.js:59` leaves the composer flag unset; the corrected text is the measured eight sites plus
   `answers.js:84`, unreachable at 0 of 8. No production file changed; recorded in
   `docs/validation.md` subsection 36. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 - **19 Nov, same branch: iteration 36 — a coordinate copied as bare whole degrees was refused because nothing in it
