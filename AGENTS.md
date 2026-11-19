@@ -991,6 +991,26 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   stays open as the six skips at `chat-evidence-panel.spec.js:82,115,140`; the pairing counts at
   `:99,129,150` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
   untouched (`4a54fa3`).
+- **19 Nov, same branch: iteration 48 - the evidence index checked every claim it makes about individual files and
+  none of the claim it makes about itself, so the first sentence a reviewer reads was the least checked line in
+  the tree.** Iteration 47's control F made the edit every later pass has to make - start citing an indexed
+  archive and delete its row - and all four cases stayed green while the header of docs/evidence-index.md went on
+  claiming "158 of 486 files" over 157 rows. The row count, the file count and the byte total are all recomputable
+  from the index and the filesystem, and none of them was. The fix is a fifth case in
+  tests/documentation-evidence-index.test.js built on the scan that guard already runs: it reads the header with
+  two regexes, recomputes rows, files and the row byte sum and asserts they agree, pins rows against unreachable
+  so a stale row cannot sit quiet, and fails if the sentence stops stating its numbers at all - which turns
+  rewording from a quiet edit into one that has to be explained. Controls
+  (docs/evidence/iter48-controls-2026-11-19.log.gz): baseline 5 passed, then one mutation at a time with a
+  byte-identical restore after each - the header row count one low fails alone, the byte total one low fails
+  alone, a reworded header fails on the "no longer states" pin instead of passing quietly, the control-F replay
+  leaves cases 1-4 green and only the new case red, and shipping an archive with neither a citation nor a row
+  moves cases 2 and 5 together ("the header says 491 files under docs/evidence and the scan found 492"). Costs:
+  the offline suite moves from 231 to 232 and the three documentation guards from 15 to 16 tests; the guards are
+  green on the restored tree, and the full offline run on the byte-final tree is
+  docs/evidence/iter48-npm-test-2026-11-19.log.gz. The gate on these bytes is **222 passed, 6 skipped, 0 failed,
+  exit 0 in 20.9 m** on the first attempt (docs/evidence/iter48-gate-2026-11-19.log.gz). Recorded in
+  docs/validation.md subsection 48. Nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 47 - the evidence guards walked one way only, so 172 of 479 archives were
   unreachable by full path, and the scan that should have caught it could not express a nested path.** Measured
   with the same prose walk the citation guard uses: 172 files under docs/evidence are named by their full relative

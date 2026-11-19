@@ -25,6 +25,12 @@ const GENERATED = new Set(['public/js/lib/core-worker.bundle.js', 'public/vendor
   'public/vendor/maplibre/maplibre-gl-shared.mjs', 'public/vendor/transformers/transformers.min.js']);
 const INDEX = 'docs/evidence-index.md';
 const ROW = /^\* `(docs\/evidence\/[^`]+)` - ([\d,]+) bytes$/gm;
+// Iteration 48. The header sentence is what a reviewer reads first, and control F on 19 Nov measured that nothing
+// compared it with the rows underneath: citing an indexed archive and deleting its row left the header describing
+// the scan from before the edit - "158 of 486" printed over 157 rows - with all four cases green. The two regexes
+// below pin the three numbers in that sentence so the same edit has to move them.
+const HEAD_COUNTS = /^([\d,]+) of ([\d,]+) files under `docs\/evidence\/`/m;
+const HEAD_BYTES = /([\d,]+) bytes total\./;
 
 async function proseFiles(dir = '', collected = [], cap = 300 * 1024) {
   for (const entry of await readdir(path.join(ROOT, dir), { withFileTypes: true })) {
@@ -107,4 +113,26 @@ test('an index row goes stale the moment a document starts citing that file', as
   const text = [...bodies.values()].join('\n');
   const redundant = rows.filter(row => text.includes(row.relative)).map(row => row.relative);
   assert.deepEqual(redundant, [], `indexed files a document already cites:\n${redundant.join('\n')}`);
+});
+
+test('the index header states counts its own rows and the filesystem agree with', async () => {
+  const { evidence, rows, unreachable } = await scan();
+  const body = await readFile(path.join(ROOT, INDEX), 'utf8');
+  const counts = body.match(HEAD_COUNTS);
+  const bytes = body.match(HEAD_BYTES);
+  // Rewording the header away is a decision this case forces into the open rather than an edit that can pass
+  // quietly: the numbers a reviewer reads first would otherwise live in nothing but prose.
+  assert.ok(counts && bytes, `the index no longer states its row count, file count and byte total in the sentence ` +
+    'this case checks, so update the regexes and say why');
+  const number = text => Number(text.replace(/,/g, ''));
+  const rowBytes = rows.reduce((sum, row) => sum + row.bytes, 0);
+  assert.equal(number(counts[1]), rows.length,
+    `the header says ${counts[1]} of them are indexed and the index carries ${rows.length} rows`);
+  assert.equal(number(counts[2]), evidence.length,
+    `the header says ${counts[2]} files under docs/evidence and the scan found ${evidence.length}`);
+  assert.equal(number(bytes[1]), rowBytes,
+    `the header says ${bytes[1]} bytes total and the rows it sits over add up to ${rowBytes.toLocaleString('en-US')}`);
+  assert.equal(rows.length, unreachable.length,
+    `the header counts ${counts[1]} and the scan finds ${unreachable.length} uncited files: ${rows.length} rows ` +
+    'are between the two, so a row went stale or the prose started citing a file the header still counts');
 });

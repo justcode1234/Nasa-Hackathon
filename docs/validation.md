@@ -3885,3 +3885,49 @@ the inside of an archive. The row bytes are `stat`'d, but a title, command or ti
 text nothing checks, and that is how eight iteration-47 headers came to carry local times under a `Z` label without
 any case failing; (viii) real phones, Safari/WebKit, microphones, read-aloud quality and independent agronomic review
 remain unverified.
+
+### 48. The index header was the one number in this loop that nothing compared with the rows under it
+
+
+What was measured. Iteration 47's control F made the edit every future pass has to make - start citing an indexed
+archive and delete its row - and all four cases stayed green while the sentence at the top of `docs/evidence-index.md`
+went on claiming "158 of 486 files" over 157 rows. Three of the header's numbers are recomputable from the file itself
+and the filesystem: the row count, the file count and the byte total. None was. That is a defect of a specific shape:
+the guard policed every claim the index makes about individual files and none of the claim the index makes about
+itself, so the summary a reviewer reads first was the least checked sentence in the evidence tree.
+
+The fix is one offline case in `tests/documentation-evidence-index.test.js`, using the scan the guard already runs. It
+reads the header with two regexes, recomputes rows, files and the row byte sum, and asserts all three agree; a fourth
+assertion pins rows against unreachable so a row cannot go stale silently. It also fails if the header stops stating
+its numbers at all, which turns rewording the sentence from a quiet edit into one that has to be explained.
+
+Controls. Run 19 Nov from artifacts/iter48-controls.sh - gitignored scratch, so the next pass can re-run them - and
+archived in docs/evidence/iter48-controls-2026-11-19.log.gz. Baseline on the unmutated tree: 5 passed, 0 failed. Each
+mutation is followed by a restore from the snapshot taken at the top of the run, and each one asks the case to prove a
+different number. (A) The header row count one low fails alone: "the header says 157 of them are indexed and the index
+carries 158 rows". (B) The byte total one low: "the header says 25,570,807 bytes total and the rows it sits over add
+up to 25,570,808". (C) The sentence reworded so neither regex finds it - the case's other job - fails with "the index
+no longer states its row count, file count and byte total in the sentence this case checks, so update the regexes and
+say why" instead of passing quietly. (D) Iteration 47's control F replayed exactly: append a citation of an indexed
+archive to this file and delete that archive's row, and the log records the resulting state - 157 rows left while the
+live header line still reads "158 of 491 files" - then prints "cases 1-4, the ones iteration 47 shipped, still green
+on this mutation: 4" beside the new case's "the header says 158 of them are indexed and the index carries 157 rows".
+The gap is closed against the very edit that opened it. (E) An archive ships with neither a citation nor a row: cases
+2 and 5 both go red, the latter with "the header says 491 files under docs/evidence and the scan found 492", so adding
+a file to the tree has to move the header too. After all five, both mutated files match their snapshots byte for byte
+(docs/evidence-index.md live e21e70012b8ad44e snap e21e70012b8ad44e; docs/validation.md live 16addc5c5f4e0d50 snap
+16addc5c5f4e0d50) and the three documentation guards run together green on the restored tree at 16 passed, 0 failed.
+
+Costs. The offline suite moves from 231 to 232: this case only. The three documentation guards move from 15 to 16
+tests between them. Nothing shipped, so the gate is re-run to keep the pushed tip green: **222 passed, 6 skipped,
+0 failed, exit 0 in 20.9 m** over the 228 cases `npx playwright test --list` counts on the four projects, on the
+first attempt (docs/evidence/iter48-gate-2026-11-19.log.gz, whose header brackets that wall clock with the raw log's
+own birth and write times, 12:10:17Z to 12:31:13Z). The offline run on the byte-final tree is
+docs/evidence/iter48-npm-test-2026-11-19.log.gz and the controls are docs/evidence/iter48-controls-2026-11-19.log.gz.
+
+Limits. The case compares the header with the same scan the rest of the guard uses, so it inherits that scan's blind
+spots - the size cap, the extension list and the skip list - and it checks three numbers, not the English around them.
+A pass that regenerates the index re-derives them; a pass that edits the sentence by hand finds the case disagreeing,
+which is the point. One ordering limit is worth naming rather than hiding: the gate ran before a comment-only typo
+fix inside `tests/documentation-evidence-index.test.js`, a file no browser loads, and the offline suite was re-run
+after it so the archived run covers the bytes that ship.
