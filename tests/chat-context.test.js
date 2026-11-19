@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { contextBlocks, composeAnswerBlocks } from '../public/js/lib/chat-context.js';
 import { PESTS } from '../server/context/pests.js';
 import { catalog } from '../server/agronomy/catalog.js';
+import { createApiHandler } from '../server/api.js';
 
 // The labels and names below are short stand-ins that keep each series/property distinguishable inside this
 // file; they are deliberately NOT the strings the services return (POWER calls PRECTOTCORR "Precipitation
@@ -460,4 +462,49 @@ test('the weather paragraph cites the exact POWER request beside the documentati
   // it pushes, which is the rule the panel-link test above enforces and the reason a shared id cannot work here.
   const pushed = new Set(sources.map(source => source.id));
   weather.sourceIds.forEach(id => assert.ok(pushed.has(id), `${id} is cited by the weather paragraph but never pushed with it`));
+});
+
+// The registry-only check above sees what contextBlocks pushes, but the merge the panel actually renders is
+// public/js/modules/chat.js:99 - `answer.sources.push(...extra.sources)` after the answer's own list - and
+// public/js/lib/dom.js:16 resolves every id with `sources.find`, so the FIRST entry for an id decides where the
+// chip opens and any later entry under the same id is unrenderable dead weight. That is exactly how the exact
+// POWER request URL was silently lost before the two-id fix (subsection 34): nothing in either list refuses a
+// same-id collision. This case replays the real producers - the same /api/ask handler the worker and server run,
+// with only the POWER transport stubbed to the payload recorded on 18 Nov 2026 through this repository's own
+// adapter - over the question families that reach the plan answer with state.inputs set, and asserts what the
+// panel needs: no id may map to two different urls, and every id a rendered block cites must resolve somewhere.
+const recorded = JSON.parse(readFileSync(new URL('./e2e/fixtures/chat-evidence-observations.json', import.meta.url), 'utf8'));
+const recordedSoil = JSON.parse(readFileSync(new URL('./e2e/fixtures/chat-evidence-soil.json', import.meta.url), 'utf8'));
+const divergentIds = merged => {
+  const first = new Map(), bad = [];
+  for (const source of merged) {
+    if (!source?.id || typeof source.url !== 'string') continue;
+    const seen = first.get(source.id);
+    if (seen === undefined) first.set(source.id, source.url);
+    else if (seen !== source.url) bad.push(`${source.id} renders ${seen} while a later entry under the same id carries ${source.url}`);
+  }
+  return bad;
+};
+
+test('no composed plan reply carries two different urls under one citation id, and every rendered id resolves', async () => {
+  const handle = createApiHandler({ getObservations: async () => recorded });
+  const plan = { latitude: recorded.location.latitude, longitude: recorded.location.longitude,
+    referenceYear: 2024, planningYear: 2025, startMonth: 9, baseline: ['tomato', 'cabbage', 'onion'],
+    allowedCrops: ['tomato', 'cabbage', 'onion'], irrigation: 'rainfed', soil: 'loam', priority: 'climate' };
+  const state = { inputs: plan, country: '', observations: recorded, soil: recordedSoil, water, farm, pests };
+  for (const question of ['How much rain fell here last year?', 'Is rain-fed maize viable here?',
+    'How much rain fell here last year, and is the soil pH acidic?', 'Tell me about the soil pH here',
+    'How much water is used for irrigation in Australia?', 'Which pests affect wheat?',
+    'What does this field record say about pests?', 'Is rain-fed cabbage viable here?']) {
+    const answer = await handle({ method: 'POST', url: new URL('/api/ask', 'https://fieldshift.local'),
+      readJson: async () => ({ ...plan, question }) });
+    const extra = contextBlocks(question, state, answer);
+    const blocks = composeAnswerBlocks(answer.blocks, extra.blocks);
+    const sources = [...answer.sources, ...extra.sources];
+    assert.deepEqual(divergentIds(sources), [],
+      `${question} composes an id the panel would resolve to only one of two urls: ${JSON.stringify(divergentIds(sources))}`);
+    const ids = [...new Set(blocks.flatMap(block => block.sourceIds))];
+    for (const id of ids) assert.ok(sources.some(source => source.id === id),
+      `${question} renders a block citing ${id} but the merged source list never carries it`);
+  }
 });

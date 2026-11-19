@@ -950,18 +950,47 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   byte-identical; each failed exactly the intended rule and printed the offending file:line
   (`docs/evidence/doc43-controls-2026-11-19.log.gz`). On the final tree a re-run caught the guard flagging its own
   author: three bullets quoted the ambiguity control as a literal bare-basename token with a line number, read by
-  the scan as a real citation; the quotes were reworded to the un-hooked basename and the re-run went green. Costs:
+  the scan as a real citation; the quotes were reworded to the un-hooked basename and the re-run went green.
+  Costs:
   guard **4 passed (0.33 s)** standalone, offline suite
   **224/224, 0 skipped** (`docs/evidence/doc43-npm-test-2026-11-19.log.gz`), up from 220; the Playwright census is
   unchanged at **228 tests in 21 files** because no Playwright-covered file changed, so the full gate on `10a6e47`
   recorded in iteration 42 remains the executed four-project evidence for this tree. The gate-debt ledger in
   `docs/validation.md` was also brought current: its bullets now cite the 222 passed / 6 skipped gate on
   `10a6e47`, mark the pest half paid by iterations 37 and 40 to 42, and leave the `nasa-power` browser measurement
-  and the worker-transport half open. What stays open: within-file line drift is still a reader's problem because
+  and the worker-transport half open. (Repaired in iteration 44: that `nasa-power` sentence was stale - the
+  browser measurement with `state.inputs` set was already standing at `tests/e2e/chat-evidence-panel.spec.js:95`
+  and `:119`, and this bullet's open list below repeated it.) What stays open: within-file line drift is
+  still a reader's problem because
   the guard cannot prefer `:98` over `:96`; `docs/history` and files over 300 KB are outside the scan; a citation
   to an existing but unscanned target passes without a line check; the pairing is not yet applied to the three
-  counts in `chat-evidence-panel.spec.js:85,114,134`; and the `nasa-power` collision with `state.inputs` is the
-  next measurement. Emulated Chrome only; nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
+  counts in `chat-evidence-panel.spec.js:85,114,134`; and the `nasa-power` ledger sentence, which iteration 44
+  found stale and repaired. Emulated Chrome only; nothing deployed; no NASA portal edit; main untouched
+  (`4a54fa3`).
+- **19 Nov, same branch: iteration 44 - the citation-collision guard read only the context side, while the reply's
+  own source list was merged in first and never checked.** Coverage iteration, no source change.
+  `tests/chat-context.test.js:420` compared what `contextBlocks` pushes against `catalog.sources` for six fixed
+  wordings, but the merge the panel renders is `public/js/modules/chat.js:99` - the reply's own sources first -
+  and `public/js/lib/dom.js:16` resolves each id with `sources.find`, so the first entry under an id decides where
+  the chip opens and a later entry under the same id is unrenderable dead weight. A producer pushing an id with a
+  different URL than the registry (the exact shape subsection 34 fixed) would have passed silently. A probe
+  replayed the real `createApiHandler` (`server/api.js:24`) with only the POWER transport stubbed to the payload
+  recorded on 18 Nov through this repository's own adapter, over eight question families with a valid plan body:
+  the rain family composes `nasa-power` twice - registry and context copies agree on the documentation URL today,
+  so first-match opens the same target either way, which is why this is a guard and not a live defect
+  (`docs/evidence/plan44-probe-2026-11-19.log.gz`). `tests/chat-context.test.js:489` now replays the real handler
+  per question, composes exactly as `chat.js` does, and asserts no id maps to two different URLs in the merged
+  list and every id a rendered block cites resolves. Injection control: a divergent entry at the head of the
+  reply's own sources in `server/agronomy/rotation.js:220` failed the new case naming both URLs while the
+  registry-only case stayed green on the same tree, 19 passed 1 failed, `cmp`-reverted byte-identical
+  (`docs/evidence/plan44-controls-2026-11-19.log.gz`). Costs: guard **20/20 (0.16 s)** standalone, offline suite
+  **225/225, 0 skipped**, up from 224 (`docs/evidence/plan44-npm-test-2026-11-19.log.gz`); Playwright census
+  unchanged at 228 in 21 files, so the `10a6e47` gate remains the executed four-project evidence. The stale
+  ledger sentence and subsection 41's limit (vi) are repaired in `docs/validation.md` subsection 43. What stays
+  open: the matrix is eight families with one plan shape; titles are not compared; the worker-transport half
+  stays open as the six skips at `chat-evidence-panel.spec.js:68,100,124`; the pairing counts at
+  `:85,114,134` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
+  untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 42 - the Sources panel's number and its list are produced by two different
   rules, and the whole suite was blind to a divergence between them.** Coverage iteration, no source change.
   `chat.js:108` counts the ids the rendered paragraphs cite; `dom.js:13-27` emits an entry only for an id the

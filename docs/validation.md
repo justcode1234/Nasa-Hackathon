@@ -3391,8 +3391,12 @@ that `docs/handoff-2026-11-18.md` §7 already carries was not resolved here: `se
 request url under that id while `public/js/lib/chat-context.js:53` pushes the `documentationUrl` under the same id,
 `dom.js:16` keeps whichever comes first, and the print shows the panel rendering the documentation url. Which entry
 wins for which wording, and whether the exact request url ever reaches the panel, is the next iteration's
-measurement. (vii) Live-service movement still applies to every count quoted above: these are point-in-time renders
-on 19 Nov (UTC), and only the pairing between number and list is claimed to hold generally.
+measurement. (Repaired 19 Nov, iteration 44: the collision itself was already resolved by subsection 34's two-id
+paragraph and pinned in a browser at `tests/e2e/chat-evidence-panel.spec.js:95` and `:119` in the node projects,
+so the sentence above described a superseded state when this limit was written; what this limit correctly left
+open - which entry wins for which wording across the real plan routing - subsection 43's offline guard now
+replays over the real handler.) (vii) Live-service movement still applies to every count quoted above: these are
+point-in-time renders on 19 Nov (UTC), and only the pairing between number and list is claimed to hold generally.
 
 ### Not yet executed at the time of writing
 
@@ -3453,15 +3457,18 @@ on 19 Nov (UTC), and only the pairing between number and list is claimed to hold
   Paid since then: iteration 37
   rendered the live country pest paragraph in a browser, and subsections 40 to 42 widened that file to five cases whose
   recorded payloads include the GBIF country context beside a plan naming the watchlist crop.
-* Two gaps subsection 33's own test surfaced and left open on purpose. The `nasa-power` citation id is used by both a
-  reply and the weather paragraph with different URLs, and `public/js/lib/dom.js:16` keeps the first match, so the
-  exact POWER request URL never reaches the panel; and the whole evidence panel is untestable against stubs in the
-  two `static-*` projects because their `/api` traffic lives inside a dedicated worker that Playwright routes do not
-  cover. Both are described in subsection 33 with the measured signatures. Status: the id collision was measured
-  offline in subsection 41 - over every corpus and unexpected wording the reply's own `nasa-power` entry already
-  carries the documentation URL and no wording carries both lists - but no browser state with `state.inputs` set has
-  been measured, and nothing prevents the collision, so it stays open; the worker-transport half stays open as the
-  six standing skips in `tests/e2e/chat-evidence-panel.spec.js:68,100,124`.
+* Two gaps subsection 33's own test surfaced and left open on purpose. The `nasa-power` citation id used to be
+  pushed by both a reply and the weather paragraph with different URLs while `public/js/lib/dom.js:16` kept the
+  first match; and the whole evidence panel is untestable against stubs in the two `static-*` projects because
+  their `/api` traffic lives inside a dedicated worker that Playwright routes do not cover. Both are described in
+  subsection 33 with the measured signatures. Status, brought current in iteration 44: the id collision was fixed
+  by subsection 34's two-id paragraph and is pinned in a browser with `state.inputs` set at
+  `tests/e2e/chat-evidence-panel.spec.js:95` and `:119` in the node projects (the earlier status text here claimed
+  no such browser measurement existed - that sentence was stale and is repaired in subsection 43's records);
+  subsection 43's offline guard now replays the real handler over eight plan-question families and refuses any
+  composed reply that carries two different URLs under one id, and every rendered id still resolves. The
+  worker-transport half stays open as the six standing skips in
+  `tests/e2e/chat-evidence-panel.spec.js:68,100,124`.
 * Unchanged and still unverified: real phones and touch, Safari/WebKit, microphones and ambient noise,
   audible read-aloud quality, independent agronomic review, and live Overpass availability from a network
   that can actually reach it - the section 6 fix is measured against refused connections, which is the
@@ -3520,3 +3527,56 @@ newline has one phantom empty split-line, and citing it is caught only because t
 ambiguous-basename rule constrains `file:N` citations; a bare path mention without a line number stays unchecked.
 (vi) Real phones, Safari/WebKit, microphones, read-aloud quality and independent agronomic review remain unverified
 and untouched by this iteration.
+
+### 43. The collision guard read only the context side, while the reply's own source list was merged in first and never checked
+
+**Defect class: coverage, and the ledger carried a stale sentence alongside it.** The only guard over citation-id
+collisions was `const shadowed` (`tests/chat-context.test.js:420`): it compares what `contextBlocks` pushes against
+`catalog.sources` for six fixed wordings. The merge the panel actually renders is `public/js/modules/chat.js:99`,
+`answer.sources.push(...extra.sources)` after the reply's own list, and `public/js/lib/dom.js:16` resolves every id
+with `sources.find` - the first entry under an id decides where the chip opens, and any later entry under the same
+id is unrenderable dead weight. Nothing read the reply's own side: a producer pushing an id with a different URL
+than the registry - the exact shape subsection 34 fixed - would pass the existing guard silently. And the open-item
+ledger plus subsection 41's limit (vi) both said no browser state with `state.inputs` set had been measured; that
+was stale, because `tests/e2e/chat-evidence-panel.spec.js:67` and `:99` do exactly that in the node projects, with
+the two-id fix pinned at `:95` and `:119`, and iteration 43's AGENTS bullet carried the same sentence. Both are
+repaired in this iteration's records.
+
+**Measured before anything was written.** A probe replayed the real `createApiHandler` (`server/api.js:24`) with
+only the POWER transport stubbed to the payload recorded on 18 Nov 2026 through this repository's own adapter, over
+eight question families with a valid plan body (`docs/evidence/plan44-probe-2026-11-19.log.gz`). The rain family
+composes `nasa-power, power-resolution, nasa-power, nasa-power-request` - the registry copy and the context copy of
+`nasa-power` agree on the documentation URL today, so first-match opens the same target either way, which is why
+this is a guard and not a live defect. The mixed family adds `soilgrids`; the field-pest family carries five ids
+including `selected-field`; three families (compound maize, soil pH, irrigation water) clarify with no evidence at
+all, so the guard covers them cheaply.
+
+**What changed.** `tests/chat-context.test.js` gains one case at `:489` that replays the real handler per question
+with the recorded payloads, composes exactly as `chat.js` does - `contextBlocks`, `composeAnswerBlocks`, then
+`answer.sources.push(...extra.sources)` in that order - and asserts two things: no id in the merged list maps to
+two different URLs, and every id a rendered block cites resolves somewhere in that list. Nothing was invented: the
+plan body mirrors the shape the recorded fixture was built from (tomato, cabbage, onion, rainfed), and both payloads
+are the same files the browser cases serve.
+
+**Negative controls, each reverted byte-identical.** Injecting a divergent entry - `{ id: 'nasa-power',
+url: 'https://drift.invalid/power' }` at the head of the reply's own sources in `server/agronomy/rotation.js:220` -
+failed the new case on the first question, naming both URLs, while the registry-only case stayed green on the same
+tree: **19 passed, 1 failed**, the one failure being the new guard (`docs/evidence/plan44-controls-2026-11-19.log.gz`).
+The old guard's blindness to the reply side is measured, not argued.
+
+**Executed cost.** Guard standalone **20 passed, 0 failed (0.16 s)**; the offline suite with it included is
+**225/225, 0 failed, 0 skipped**, up from 224 (`docs/evidence/plan44-npm-test-2026-11-19.log.gz`); the Playwright
+census is unchanged at **228 tests in 21 files** because no Playwright-covered file changed, so the full gate on
+`10a6e47` recorded in iteration 42 (**222 passed, 6 skipped, 0 failed, 25.6 m, exit 0**) remains the executed
+four-project evidence for this tree; no browser was opened this iteration, which is the point - the check is
+offline and cheap enough to run on every `npm test`.
+
+**Limits, stated as limits.** (i) The matrix is eight hand-picked families with one plan shape; it does not
+enumerate every wording the way subsection 41's census did, and a new producer route can appear that the matrix
+never asks for. (ii) Titles are not compared: a same-id, different-title drift renders the first title and passes.
+(iii) The static-worker transport half stays open as the six standing skips in
+`tests/e2e/chat-evidence-panel.spec.js:68,100,124`. (iv) The pairing for real plan replies is asserted offline
+only - no browser case renders a real plan reply, because the e2e fixtures bypass the handler entirely.
+(v) Real phones, Safari/WebKit, microphones, read-aloud quality and independent agronomic review remain unverified
+and untouched. Emulated Chrome was not used in this iteration; nothing deployed; no NASA portal edit; main
+untouched (`4a54fa3`).
