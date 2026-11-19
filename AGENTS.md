@@ -930,6 +930,51 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 42 - the Sources panel's number and its list are produced by two different
+  rules, and the whole suite was blind to a divergence between them.** Coverage iteration, no source change.
+  `chat.js:108` counts the ids the rendered paragraphs cite; `dom.js:13-27` emits an entry only for an id the
+  source list can match and `return`s silently for one it cannot, and `dom.js:19` keys the ` · ` separator off the
+  id index rather than the entries rendered. Measured first, and the shipped data is clean:
+  `artifacts/iter42-source-census.mjs` replays both page-side rules over every corpus and unexpected wording in
+  two states (`docs/evidence/pest42-census-wordings-2026-11-19.log.gz`) - **62 of 88 wordings print a panel, 0
+  counted an id that renders nothing, 0 would show an orphan separator, 0 rendered a source as text not link** -
+  and a throwaway browser print of all five pest wordings (`docs/evidence/pest42-print-browser-2026-11-19.log.gz`,
+  spec deleted afterwards) came out `Sources (5)`, `(7)`, `(5)`, `(2)`, `(3)` each with entries equal to the count
+  and separators equal to count - 1. The gap was then proven by injection, both patches applied to `public/` and
+  restored byte-identical from `artifacts/iter42-chat-context.before.js` / `artifacts/iter42-chat.before.js`.
+  Dropping the `nasa-power` citation inside `contextBlocks` is caught today (**offline 220 tests / 218 pass / 2
+  fail**, plus `hrefs[1]` in the case now at `tests/e2e/chat-pest-context.spec.js:98`,
+  `docs/evidence/pest42-control-contextblocks-2026-11-19.log.gz`); dropping the same citation at the page layer
+  after the merge is not - **offline 220/220 and the committed spec 5 passed** on that build
+  (`docs/evidence/pest42-blind-offline-2026-11-19.log.gz`,
+  `docs/evidence/pest42-blind-browser-2026-11-19.log.gz`), because that id sits past every index the suite reads,
+  so the panel printed `Sources (5)` over four citations and nothing moved. `tests/e2e/chat-pest-context.spec.js`
+  gains `sourcePanel()` + `paired()` and all five cases now assert the pairing; against the same blind build the
+  widened file fails `Sources (5) was printed over 4 rendered citations` at `:98` and `Sources (3) was printed
+  over 2 rendered citations` at `:144` while the three wordings that never cite the dropped id pass alone
+  (`docs/evidence/pest42-control-patched-2026-11-19.log.gz`) - the serial abort hid them behind the first failure,
+  so they were grepped individually exactly as iteration 41 recorded. No count literal was added where the suite
+  did not already pin one, because those counts move with whichever paragraphs the live reply produces; the `:98`
+  case now enumerates its five citation titles, which closes iteration 41's first open item - `Sources (5)` is two
+  ids from the quoted country record, two from the reply's rotation paragraph and one from the weather sentence,
+  not an inference. Costs: restored-tree slice **5 passed (18.5 s)**
+  (`docs/evidence/pest42-green-slice-2026-11-19.log.gz`), offline **220/220**
+  (`docs/evidence/pest42-offline-2026-11-19.log.gz`), `--list` census still **228 tests in 21 files** since no
+  case was added; the full four-project gate on this tree came out **222 passed, 6 skipped, 0 failed (25.6 m),
+  `GATE EXIT=0`** (`docs/evidence/pest42-gate-2026-11-19.log.gz`) - 222 + 6 is the 228 that `--list` reports, and
+  the 6 skips are the three pre-existing worker-transport sites in
+  `tests/e2e/chat-evidence-panel.spec.js:68,100,124` running once per static project, the same 6 as iteration 41,
+  so nothing was skipped to make this pass. Two comment-only lines then landed in the spec, so the offline suite
+  (**220/220**), the pest slice (**5 passed (14.2 s)**) and the census (**228 tests in 21 files**) were re-run
+  together on the final tree (`docs/evidence/pest42-final-tree-2026-11-19.log.gz`); the two runs differ only in
+  case line numbers, `:96` onward in the gate log against `:98` onward now. What stays open: the divergence is
+  detected, not prevented - the honest fix (count only resolvable ids, or render a visible marker) was not made
+  because no shipped wording reaches it; the same pairing is not yet applied to the three counts in
+  `chat-evidence-panel.spec.js:85,114,134`; the `dom.js:24` span branch and the orphan separator have never been
+  seen by a measured render; and the `nasa-power` id collision this run surfaced twice
+  (`server/nasa/power.js:85-87` puts the request url under that id, `public/js/lib/chat-context.js:53` the
+  `documentationUrl`, `dom.js:16` keeps the first) is the next iteration's measurement. Emulated Chrome only;
+  nothing deployed; no NASA portal edit; main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 41 - iteration 40's rule had no browser witness, and this file's serial mode hid a
   second verdict.** Coverage iteration, no source change: two cases land in `tests/e2e/chat-pest-context.spec.js` for the
   two branches only an offline unit case could see. Both were run as **prints first** and their real rendered paragraphs

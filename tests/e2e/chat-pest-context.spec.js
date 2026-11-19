@@ -70,6 +70,31 @@ async function planned(page,context,withPestLookup,withComparison=true){
 async function ask(page,text){await page.locator('#question').fill(text);await page.locator('#ask').click();
   await expect(page.locator('#answer-status')).toContainText('Answer ready',{timeout:90_000});}
 
+// Why this helper exists: the panel's number and the panel's list are produced by two different rules on two
+// different lines. public/js/modules/chat.js:108 counts `[...new Set(blocks.flatMap(block => block.sourceIds))]`,
+// the ids the rendered paragraphs cite, while public/js/lib/dom.js:15-17 emits one entry only for an id the source
+// list can match and `return`s without emitting anything for one it cannot - no link, no text, no marker. So a
+// counted id can disappear from the screen while the summary keeps counting it. Measured on this tree, and the
+// reason the helper is here rather than a comment: dropping one citation (`nasa-power`) from the merged list at
+// public/js/modules/chat.js:99 left the whole offline suite at 220/220 and all five shipped cases in this file
+// green, because no assertion anywhere reads the list against the number - the existing hrefs are checked by
+// index, and an id past the last index the cases index is invisible. docs/evidence/pest42-blind-offline-2026-11-19.log.gz
+// and docs/evidence/pest42-blind-browser-2026-11-19.log.gz hold that pass. The same build makes the two `paired()`
+// calls in the wordings that cite `nasa-power` fail - `Sources (5)` over 4 and `Sources (3)` over 2 - while the three
+// wordings that never cite it stay green, which is the precision the pairing buys: it fails where the divergence is,
+// not everywhere. The separators travel with the same contract: dom.js:19 keys the " · " off the id's
+// index rather than the entries it rendered, so a dropped entry can also leave an orphan separator on screen.
+const sourcePanel=async page=>{const printed=Number((await summary(page)).match(/(\d+)/)[1]);
+  return {printed,...await last(page).locator('details p').first().evaluate(node=>({
+    entries:[...node.querySelectorAll('a,span')].length,
+    labels:[...node.querySelectorAll('a,span')].map(entry=>entry.textContent.trim()),
+    separators:[...node.childNodes].filter(child=>child.nodeType===3&&child.textContent===' · ').length,
+  }))};};
+const paired=panel=>{
+  expect(panel.entries,`Sources (${panel.printed}) was printed over ${panel.entries} rendered citations`).toBe(panel.printed);
+  expect(panel.separators,`${panel.entries} rendered citations carried ${panel.separators} separators`).toBe(panel.entries-1);
+};
+
 test('a plan naming a watchlist crop renders that country record with both of its citations',async({page,context})=>{
   test.setTimeout(240_000);
   const errors=await planned(page,context,true);
@@ -94,6 +119,20 @@ test('a plan naming a watchlist crop renders that country record with both of it
   // iteration 25/26 recorded. Asserting the hrefs rather than a count is deliberate - `Sources (N)` says how many
   // ids were cited, these two say that the country query and the host reference both reached the DOM.
   expect(await summary(page)).toBe('Sources (5)');
+  // The five are now enumerated instead of counted, which closes the derivation this case left open: two ids come
+  // from the quoted country record (the GBIF query and its host reference), two from the reply's own rotation
+  // paragraph (the UMN and Cornell extension pages) and one from the weather sentence the reply opens with
+  // (NASA POWER). Printed as measured in docs/evidence/pest42-print-browser-2026-11-19.log.gz; these are the app's
+  // own citation titles, not service output, so they do not move between runs.
+  const panel=await sourcePanel(page);
+  paired(panel);
+  expect(panel.labels,`the five counted ids rendered: ${JSON.stringify(panel.labels)}`).toEqual([
+    'GBIF Fall armyworm country query',
+    'IPPC / FAO: fall armyworm hosts',
+    'UMN Extension: healthy soil and plant families',
+    'Cornell Extension: rotating vegetables by family',
+    'NASA POWER Daily API',
+  ]);
   const hrefs=await links(page);
   expect(hrefs[0],`the first citation must be the GBIF country query: ${hrefs[0]}`).toContain('api.gbif.org/v1/occurrence/search');
   expect(hrefs[0]).toContain('country=AU');
@@ -113,6 +152,10 @@ test('a pest question without a loaded country context says it is not loaded ins
   expect(seen.filter(text=>/^Country pest context is not loaded/.test(text)),`the missing-context sentence is absent: ${JSON.stringify(seen)}`).toHaveLength(1);
   expect(seen.filter(text=>/^Country pest context is not loaded/.test(text))[0]).toContain('There are no pest observations for this farm in the app.');
   expect(seen.filter(text=>/armyworm|moth|occurrence records/i.test(text)),'a species or an occurrence count was quoted with no country context loaded').toEqual([]);
+  // Deliberately no literal count here: the print measured `Sources (3)` for this state
+  // (docs/evidence/pest42-print-browser-2026-11-19.log.gz), but every one of those ids comes from the reply's own
+  // live paragraphs, so only the pairing that must hold whatever they cite is pinned.
+  paired(await sourcePanel(page));
   expect(errors).toEqual([]);
 });
 
@@ -138,6 +181,7 @@ test('a species named outright reaches the loaded watchlist with no comparison r
   // The reply's own sentence survives: the record supplements a clarification, it does not replace it.
   expect(seen.findIndex(text=>/^I could not match that request/.test(text)),'the clarification the reply produced is missing').toBeGreaterThan(0);
   expect(await summary(page)).toBe('Sources (2)');
+  paired(await sourcePanel(page));
   const hrefs=await links(page);
   expect(hrefs[0],`the first citation must be the GBIF country query for the named species: ${hrefs[0]}`).toContain('api.gbif.org/v1/occurrence/search');
   expect(hrefs[0]).toContain('country=AU');
@@ -150,8 +194,9 @@ test('a species named outright reaches the loaded watchlist with no comparison r
 // until now nothing in a browser could see it - docs/evidence/pest40-blast-radius-2026-11-18.log.gz measured 0 of 88
 // QA wordings reaching the widened branch, so subsection 39's first open limit was that the rule was pinned only by
 // an offline unit case and an offline probe. Both wordings were first run as prints on this tree and their real
-// paragraphs read from that log (docs/evidence/pest41-measure-2026-11-18.log.gz) before a single shape below was
-// written; the counts those prints produced are what `docs/evidence/pest41-*-2026-11-18.log.gz` records as executed.
+// paragraphs read from that log (docs/evidence/pest41-measure-2026-11-19.log.gz) before a single shape below was
+// written; that archive holds the counts those prints produced, and iteration 42's own print
+// (docs/evidence/pest42-print-browser-2026-11-19.log.gz) re-measured the same wordings' citation lists.
 test('a pest reply spends its third slot on its own second paragraph rather than leaving it empty',async({page,context})=>{
   test.setTimeout(240_000);
   const errors=await planned(page,context,true);
@@ -170,6 +215,10 @@ test('a pest reply spends its third slot on its own second paragraph rather than
   // No live number is pinned anywhere above: the occurrence count in seen[0] comes from GBIF at request time, so this
   // case asserts the sentence that carries it and never its value.
   expect(seen.filter(text=>/Diamondback moth/.test(text)),'a record the plan does not name was quoted').toEqual([]);
+  // Three paragraphs and seven counted ids were the measured render (docs/evidence/pest42-print-browser-2026-11-19.log.gz).
+  // The count itself is not pinned - it moves with whichever paragraphs the live reply produces - but each id the
+  // panel counts has to appear under it, which is what iteration 40's slot-filling could otherwise break silently.
+  paired(await sourcePanel(page));
   expect(errors).toEqual([]);
 });
 test('a pest question naming a country the loaded watchlist is not explains the gap instead of quoting it',async({page,context})=>{
@@ -192,5 +241,12 @@ test('a pest question naming a country the loaded watchlist is not explains the 
   expect(seen).toHaveLength(3);
   expect(seen.some(text=>/^The saved FAOSTAT extract has no matching positive .* record for Brazil/.test(text)),
     `the reply's own evidence gap was displaced: ${JSON.stringify(seen)}`).toBe(true);
+  // The advisory is the composer declining to quote, so the ids it does not cite must not be counted either: the
+  // measured render printed `Sources (5)` with five entries and no GBIF link at all
+  // (docs/evidence/pest42-print-browser-2026-11-19.log.gz), and this is the pairing that keeps a declined
+  // citation from being counted while it is dropped from the list.
+  const panel=await sourcePanel(page);
+  paired(panel);
+  expect(panel.labels.filter(label=>/GBIF/.test(label)),'the watchlist citation was counted while the advisory declined to quote it').toEqual([]);
   expect(errors).toEqual([]);
 });

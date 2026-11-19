@@ -3294,6 +3294,106 @@ column of subsection 39 stands unchanged. (iv) Real phones, Safari/WebKit and to
 assertion here runs in emulated desktop Chrome. (v) The 6 `chat-evidence-panel.spec.js` worker-transport skips remain
 untouched and are the next coverage item in handoff §7.
 
+### 41. The panel's number and the panel's list were computed by two rules, and nothing anywhere compared them
+
+**Defect class: coverage, and the gap is real rather than theoretical.** `public/js/modules/chat.js:108` prints
+`Sources (N)` from `[...new Set(answer.blocks.flatMap(block => block.sourceIds))]` after composition, while
+`public/js/lib/dom.js:13-27` emits one entry per id only when `sources.find` matches and `return`s without emitting
+anything - not a link, not a span, not a placeholder - for an id it cannot match. The count is therefore computed
+over the ids and the list over the resolvable ids, and a divergence is invisible on screen. `dom.js:19` has the same
+shape on the separator: `if (i) p.append(' · ')` keys off the id's index, not off the entries actually rendered, so
+a dropped entry can also leave a leading separator.
+
+**Measured before anything was written, and the shipped data is clean.** `artifacts/iter42-source-census.mjs`
+replays both page-side rules offline over every corpus and unexpected wording in the two states that iteration 40
+and 41 established (`docs/evidence/pest42-census-wordings-2026-11-19.log.gz`): **62 of 88 wordings print a Sources
+panel and 26 print none; 0 wordings counted an id that renders nothing; 0 wordings would put a leading separator on
+screen; 0 wordings rendered a counted source as text rather than a link.** A throwaway browser print over all five
+pest wordings (`docs/evidence/pest42-print-browser-2026-11-19.log.gz`, the spec file was deleted after the run) came
+out `Sources (5)`, `(7)`, `(5)`, `(2)` and `(3)` with anchors equal to each count, separators equal to count - 1 and
+`spans=[]` every time. So this is not a live user-visible bug, and no source file was changed for it.
+
+**What was unpinned, proven by injection rather than argument.** Two control patches were applied and reverted on
+scratch copies (`artifacts/iter42-chat-context.before.js`, `artifacts/iter42-chat.before.js`). Dropping the
+`nasa-power` source inside `contextBlocks` (`chat-context.js:122`) *is* caught today: the offline suite came out
+**220 tests, 218 pass, 2 fail** - `a paragraph never cites a source the panel cannot link`
+(`tests/chat-context.test.js:350`) and the POWER-citation case - and the browser case at `:73` failed on its own
+`hrefs[1]` assertion (`docs/evidence/pest42-control-contextblocks-2026-11-19.log.gz`). Dropping the same citation
+one line later, at the page layer (`chat.js:99`, after the merge), is not: `npm test` came out **220/220, exit 0**
+and the committed pest spec came out **5 passed** on that build
+(`docs/evidence/pest42-blind-offline-2026-11-19.log.gz`,
+`docs/evidence/pest42-blind-browser-2026-11-19.log.gz`), because that id sits past every index the suite reads - the
+panel printed `Sources (5)` over four citations and every shipped assertion still held.
+
+**What changed.** `tests/e2e/chat-pest-context.spec.js` gains `sourcePanel(page)` and `paired(panel)`, and all five of
+its cases now assert the pairing: the number the summary prints equals the entries rendered, and the rendered entries
+carry exactly one fewer ` · ` separator. No count literal was added where the suite did not already pin one - the
+`Sources (7)` and `Sources (3)` shapes came from a single print and move with whichever paragraphs the live reply
+produces, so only the pairing is claimed to be stable. The first case (`a plan naming a watchlist crop renders that
+country record with both of its citations`, now at `tests/e2e/chat-pest-context.spec.js:98`) additionally enumerates
+its five citations by title, which closes the derivation `docs/validation.md` subsection 40 left open as its first
+limit: the two ids come from the quoted country record (the GBIF query and its host reference), two from the reply's
+rotation paragraph (the UMN and Cornell extension pages), and one from the weather sentence. `Sources (5)` is now
+explained instead of quoted. Nothing was weakened: every assertion that existed before this change is still in the
+file.
+
+**The widened spec detects the divergence the suite was blind to.** Against the same page-layer build that the
+committed spec passed 5/5, `docs/evidence/pest42-control-patched-2026-11-19.log.gz` records
+`Error: Sources (5) was printed over 4 rendered citations` in the case at `:98` and
+`Error: Sources (3) was printed over 2 rendered citations` in the case at `:144` - the two wordings that cite the
+dropped id - while the three wordings that never cite it (`:169`, `:200`, `:224`) each passed alone. Those three
+were run individually with `--grep` because the file is `mode: 'serial'` and the first failure otherwise reports
+`1 failed, 4 did not run`, the masking iteration 41 recorded.
+
+**Executed cost.** No source file changed, so the Playwright census is unchanged at **228 tests in 21 files** - this
+iteration widens assertions inside five existing cases rather than adding cases. Offline suite on the restored tree
+**220/220, 0 failed, 0 skipped** (`docs/evidence/pest42-offline-2026-11-19.log.gz`); pest spec slice on the restored
+tree **5 passed (18.5 s)** (`docs/evidence/pest42-green-slice-2026-11-19.log.gz`). The full four-project gate on this
+tree came out **222 passed, 6 skipped, 0 failed (25.6 m), `GATE EXIT=0`**
+(`docs/evidence/pest42-gate-2026-11-19.log.gz`): 222 + 6 is exactly the 228 that `--list` reports, split 54 passed
+each over `static-desktop` and `static-mobile` and 57 each over `node-desktop` and `node-mobile`, and the 6 skips are
+the three pre-existing worker-transport `test.skip` sites in `tests/e2e/chat-evidence-panel.spec.js:68,100,124`
+running twice, once per static project - the same 6 that iteration 41's gate reported, so nothing was skipped to make
+this pass. Two comment-only lines landed in the spec after the gate launched, which is why the offline suite
+(**220/220**), the pest slice (**5 passed (14.2 s)**) and the census (**228 tests in 21 files**) were then run again
+together on the final tree (`docs/evidence/pest42-final-tree-2026-11-19.log.gz`). The two runs differ in nothing but
+case line numbers: the gate log prints `:96`/`:142`/`:167`/`:197`/`:221` and the final-tree run prints
+`:98`/`:144`/`:169`/`:200`/`:224` for the same five cases.
+
+**A second, smaller defect this iteration's own citation check caught, and it was committed.** Verifying that every
+evidence path written above resolves turned up two citations in the comment above the third case (`a pest reply spends
+its third slot on its own second paragraph rather than leaving it empty`,
+`tests/e2e/chat-pest-context.spec.js:153-154` as iteration 41 committed it, now `:197` and `:199`) that named
+`pest41-measure-2026-11-18.log.gz` and a wildcard `pest41-*-2026-11-18.log.gz`; the shipped archives are `-2026-11-19`
+and no wildcard path exists. Both lines now name real files. The reason nothing complained:
+`tests/documentation-commands.test.js` validates citations in `AGENTS.md` and `docs/*.md`, and
+`scripts/check-documentation.js` walks markdown links (it reported **117 local links, 0 broken** here as well), so a
+backticked path inside a test file's comments is read by neither. The durable guard - the same citation scan applied
+to `tests/**/*.js` comments - is the next iteration's candidate, and this is the second bookkeeping class this loop
+has found in its own documentation rather than in the app. Line numbers drift the same way: this spec's five cases
+moved from `:73`/`:105`/`:126`/`:155`/`:175` to `:98`/`:144`/`:169`/`:200`/`:224` while iteration 42 was being
+written, purely from comment edits above them, so the numbers quoted in this subsection name the cases as well as
+counting them.
+
+**Limits, stated as limits.** (i) The divergence remains possible in the shipped app: this iteration detects it, it
+does not prevent it, and the smallest honest fix (count only resolvable ids at `chat.js:108`, or render a visible
+marker for an unresolvable one at `dom.js:17`) was deliberately not made because neither injection is reachable from
+the shipped data - 0 of 88 wordings show it. (ii) The pairing is now pinned for the five pest wordings only; the
+three counts in `tests/e2e/chat-evidence-panel.spec.js` (`Sources (2)`, `(3)`, `(2)` at `:85`, `:114`, `:134`) are
+still read as numbers without their list being counted, and the helper above is written so that applying it there is
+a one-line change per case. (iii) The `spans` branch of `dom.js:24` - a matched source whose url is not http(s)
+renders as text - appeared in 0 of 88 offline wordings and 0 of 5 browser wordings, so `entries` counts it but no
+measured render exercises it. (iv) The separator assertion has never seen the failure it guards: an orphan ` · `
+needs the *first* counted id to drop, and no measured wording renders that. (v) The offline census and the browser
+counts are not the same numbers and are not claimed to be - the census state has no `state.inputs`, which is what
+makes the browser's reply carry the plan's own weather and FAOSTAT paragraphs. (vi) The `nasa-power` id collision
+that `docs/handoff-2026-11-18.md` §7 already carries was not resolved here: `server/nasa/power.js:85-87` puts the
+request url under that id while `public/js/lib/chat-context.js:53` pushes the `documentationUrl` under the same id,
+`dom.js:16` keeps whichever comes first, and the print shows the panel rendering the documentation url. Which entry
+wins for which wording, and whether the exact request url ever reaches the panel, is the next iteration's
+measurement. (vii) Live-service movement still applies to every count quoted above: these are point-in-time renders
+on 19 Nov (UTC), and only the pairing between number and list is claimed to hold generally.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
