@@ -4,7 +4,7 @@
      and re-checking is the job of tests/documentation-evidence-index.test.js; the sizes below are read from the
      filesystem by that generator and re-asserted by that test, so a row cannot rot into a lie. -->
 
-158 of 521 files under `docs/evidence/` are named by no other tracked prose file:
+158 of 527 files under `docs/evidence/` are named by no other tracked prose file:
 no `docs/validation.md` subsection, no AGENTS.md bullet and no handoff sentence says what they are evidence
 for. They are listed here with the byte size each one has in this commit, because that is the only fact about
 them a reader can check without opening them. 25,570,808 bytes total.

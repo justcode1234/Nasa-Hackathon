@@ -3,13 +3,14 @@ import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import { createApp } from '../server/index.js';
 import { createPowerClient } from '../server/nasa/power.js';
-import { syntheticPower } from './fixtures.js';
+import { createSoilClient } from '../server/context/soil.js';
+import { syntheticPower, syntheticSoil } from './fixtures.js';
 
 const input = () => ({ latitude: -31.95, longitude: 115.86, referenceYear: 2025, planningYear: 2027,
   startMonth: 1, baseline: ['sweet-corn', 'pea', 'radish'], allowedCrops: ['sweet-corn', 'bush-bean', 'pea', 'radish'],
   priority: 'family', irrigation: 'rainfed', soil: 'unknown' });
-async function withApp(fn, fetchImpl = async () => ({ ok: true, json: async () => syntheticPower() })) {
-  const app = createApp({ getObservations: createPowerClient({ fetchImpl }) });
+async function withApp(fn, fetchImpl = async () => ({ ok: true, json: async () => syntheticPower() }), dependencies = {}) {
+  const app = createApp({ getObservations: createPowerClient({ fetchImpl }), ...dependencies });
   app.listen(0, '127.0.0.1');
   await once(app, 'listening');
   try { await fn(`http://127.0.0.1:${app.address().port}`); }
@@ -77,6 +78,29 @@ test('upstream failure surfaces honest error; server remains usable', async () =
     assert.match(body.error.message, /no substitute readings/);
     assert.equal((await fetch(base + '/api/health')).status, 200);
   }, async () => ({ ok: false, status: 503 }));
+});
+test('a soil lookup held back by the fair-use budget answers 429 with the local-limit sentence', async () => {
+  // server/index.js:69-71 forwards a non-500 AppError sentence verbatim, so this response body is what the page shows
+  // under the Node transport; the worker transport shows the same text because public/js/lib/api.js:56 keeps any
+  // message that arrives with a status. Before 20 Nov this request answered 502 "The external context service could
+  // not respond", naming a service that 0 requests had been sent to (artifacts/iter53-soil-throttle-probe.mjs).
+  let clock = 1_000, calls = 0;
+  const getSoil = createSoilClient({ now: () => new Date(clock), fetchImpl: async () => {
+    calls++; return { ok: true, status: 200, json: async () => syntheticSoil() };
+  } });
+  await withApp(async base => {
+    assert.equal((await fetch(`${base}/api/soil?latitude=9.1&longitude=7.5`)).status, 200);
+    clock += 6_200;
+    const response = await fetch(`${base}/api/soil?latitude=9.2&longitude=7.5`);
+    assert.equal(response.status, 429);
+    const body = await response.json();
+    assert.equal(body.error.code, 'SOIL_FAIR_USE');
+    assert.match(body.error.message, /nothing was sent/);
+    assert.match(body.error.message, /again in 6 seconds\./);
+    assert.ok(!/external context service/i.test(body.error.message), body.error.message);
+    assert.equal(calls, 1, 'the refused lookup contacted SoilGrids');
+    assert.equal((await fetch(`${base}/api/health`)).status, 200, 'a pause on one service must not take the server down');
+  }, undefined, { getSoil });
 });
 test('static file routing cannot expose project files, dependencies outside Leaflet, or directories', async () => {
   await withApp(async base => {

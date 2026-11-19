@@ -999,7 +999,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   condition produced 5 distinct sentences, one per shape, each interpolating the runtime's own wording - `(fetch
   failed)`, `(signal timed out)`, `(Load failed)`, `(HTTP 503)` and a parser fragment - and the probe counted 4 of
   the 5 as a detail no farmer can act on; the exception is `(HTTP 503)`, a status the service answered, which
-  `tests/context.test.js:173` keeps as machine-readable `answered` data instead of as text, while
+  `tests/context.test.js:223` keeps as machine-readable `answered` data instead of as text, while
   `server/nasa/power.js:116` still prints its own status number
   (`docs/evidence/iter51-error-shapes-2026-11-19.log.gz`). Three of those wordings already sit in this ledger as
   though they were three products, so the defect was on the record before it was named. The repository already had
@@ -1018,7 +1018,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   two cases written here; clean sentence with no `cause` -> red on the two `cause` assertions only, so the sink is
   load-bearing; `error.name` interpolated -> red on one assertion, and the re-run captured it: 1 of 12 in the
   context file, the exact sentence against `...could not respond (TypeError). No records were invented. Try again
-  later.`, and the case aborts at `tests/context.test.js:163` before the sentence count at `:168`; log line alone
+  later.`, and the case aborts at `tests/context.test.js:213` before the sentence count at `:218`; log line alone
   reverted -> reason lines 0; POWER's `{ cause: error }` removed -> 1 of 6 named `host unreachable lost the reason
   the server log needs`; that sentence leaking again -> 1 of 6 on `host unreachable sentence`, so leak and sink
   fail separately; the answered shape handed an invented cause -> 1 of 6 on `service answered 429 invents a reason
@@ -1039,7 +1039,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   captures exist, and a `context.route` re-measurement against the same worker request opens the next iteration.
 
 - **19 Nov, same branch: iteration 52 - a dropped request read as the runtime's own words, and one rule at the
-  page boundary now answers for both transports.** `tests/context.test.js:164` already bans a transport detail
+  page boundary now answers for both transports.** `tests/context.test.js:214` already bans a transport detail
   inside farmer-facing text and `tests/nasa.test.js:66` bans it for POWER, but both guards stop at the provider
   layer. `artifacts/iter52-farms-status.mjs` then performed one real action in Chromium on both builds - the
   mapped-field search with its upstreams aborted - and the worker transport rendered the authored 502 sentence
@@ -1076,8 +1076,41 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   and no farmer has read, one sentence now covers both a dead local server and a bug in this repository,
   `public/js/modules/map3d.js:36` still composes `${error.message}` from throws that never pass through the
   page's request layer, and Safari/WebKit and real phones stay untested. Next, measured: the rate limit at
-  `server/context/soil.js:28` makes 0 fetches and `server/context/client.js:40` still tells the farmer the
-  service "could not respond".
+  `server/context/soil.js:28` made 0 fetches while `server/context/client.js:40` told the farmer the service "could
+  not respond" - iteration 53 below is the pass that changed both lines and re-ran the census against them.
+
+- **19 Nov, same branch: iteration 53 - a soil lookup that sent no request blamed ISRIC, and the wait it named
+  was a constant.** `artifacts/iter53-soil-throttle-probe.mjs` drove five lookups through the real
+  `createSoilClient` with a `fetchImpl` that counts its own calls: the refused lookup made **0 upstream
+  requests** and still answered `502` / `CONTEXT_UNAVAILABLE` / "The external context service could not
+  respond…", because its `cause` was a plain `Error("Soil service rate limit: retry after 13 seconds")` and
+  `server/context/client.js:44` wraps anything that arrives without a status. The spacing was right - 12100 ms
+  measured 4.96 requests a minute against the five ISRIC publishes - and the wait was wrong: 6203 ms into a
+  window the sentence said 13 seconds with 5897 ms left
+  (`docs/evidence/iter53-soil-throttle-2026-11-19.log.gz`). Two single-statement edits, spacing untouched. The
+  refusal is a 429 `SOIL_FAIR_USE` `AppError` that names the limit, says nothing was sent and quotes the
+  computed wait beside a control that really exists: "Load regional soil estimates" is `public/index.html:131`,
+  which `public/js/modules/context.js:115` re-enables on the same failure. The wrapper now throws an authored
+  `AppError` unchanged. Window state became a deadline instead of a last-started stamp with `0` meaning "never",
+  because once a caller injects a clock epoch 0 refuses a fresh client's first lookup - the bug my own first
+  draft shipped and the new test caught. That `client.js` edit replaces a line rather than adding one: nine
+  citations name `server/context/client.js:40` and `:43`, and control 5 measured that inserting one line above
+  them turns `tests/documentation-citation-anchors.test.js` red. The first draft did exactly that and its
+  `npm test` archived 248 tests / 246 pass / 2 fail in 38.6 s
+  (`docs/evidence/iter53-line-shift-guard-2026-11-19.log.gz`); neither guard was relaxed. Three new cases -
+  the injected-clock walk, the identity passthrough and the HTTP end-to-end pair - take the offline suite to
+  **248 tests / 248 pass / 0 fail in 42.3 s, exit 0**, re-run on the byte-final tree after the prose landed. Six negative controls each broke one claimed property
+  (passthrough 3 failures, constant wait 2, future deadline 2, dropped spacing 2, citation drift 1 and test-file
+  pin drift 1) and every restore hashed to its baseline (`docs/evidence/iter53-negative-control-2026-11-19.log.gz`,
+  `docs/evidence/iter53-pin-control-2026-11-19.log.gz`). The insertion that added the three cases moved seven
+  statements out from under twelve prose lines, so all twelve are re-pointed and the anchor guard grew from 13 pins
+  to 16 and covers test files now. `npm run build` put the same compiled expression
+  in the worker bundle: `u instanceof g ? u : d`, `SOIL_FAIR_USE` once, the old sentence zero times. Browser:
+  68 passed / 0 failed / 0 skipped in 3.0 m, 17 in each of the four local projects. Left unverified: no browser
+  case drives the refusal through the service worker, no farmer has read the copy, and the live ISRIC limit was not
+  re-measured - the arithmetic and the sentence are what is tested here. Next, measured: P2 stands.
+  `server/context/client.js:42-43` still infers `answered` and `slow` from what a runtime calls its own failure, and
+  `server/nasa/power.js:116` still puts a status number in farmer-facing text.
 
 - **19 Nov, same branch: iteration 50 - the gate never blocked the model CDN, and a two-line fix silently moved 40
   ledger citations.** `public/js/modules/chat.js:63` interpolated the raw worker exception into the panel, so with

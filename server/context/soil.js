@@ -21,12 +21,24 @@ export function normalizeSoil(raw, position, sourceUrl, retrievedAt) {
       'Prediction intervals are supplied by the soil model, not invented crop-confidence percentages. Regional estimates are never auto-filled as measured farm inputs.'] };
 }
 
-export function createSoilClient({ fetchImpl = fetch, ...options } = {}) {
-  let lastStartedAt = 0;
+// ISRIC publishes five requests a minute for the public SoilGrids endpoint; 12.1 s between lookups stays under it.
+const FAIR_USE_WINDOW_MS = 12_100;
+function fairUseRefusal(remainingMs) {
+  const seconds = Math.max(1, Math.ceil(remainingMs / 1000));
+  return new AppError(`SoilGrids publishes five regional soil lookups a minute, and this app is holding to that limit, so nothing was sent to the service. Load regional soil estimates again in ${seconds} second${seconds === 1 ? '' : 's'}.`, 429, 'SOIL_FAIR_USE');
+}
+
+export function createSoilClient({ fetchImpl = fetch, now = () => new Date(), ...options } = {}) {
+  // The moment the next lookup may go out. 0 means none has gone out yet, so the first request is always allowed
+  // whatever clock is in use; a refusal never moves it, so it cannot push the window further away.
+  let nextAllowedAt = 0;
   const request = createCachedJson({ ...options, fetchImpl: async (url, init) => {
-    // SoilGrids' documented public fair-use limit is five requests per minute.
-    if (Date.now() - lastStartedAt < 12_100) throw new Error('Soil service rate limit: retry after 13 seconds');
-    lastStartedAt = Date.now();
+    // SoilGrids' documented public fair-use limit is five requests per minute, so this app spaces its own lookups.
+    // A lookup refused inside that window has contacted no service (measured 19 Nov: 0 upstream requests), which is a
+    // different fact from one that failed to answer, and the wait it quotes is the wait actually left.
+    const startedAt = now().getTime();
+    if (startedAt < nextAllowedAt) throw fairUseRefusal(nextAllowedAt - startedAt);
+    nextAllowedAt = startedAt + FAIR_USE_WINDOW_MS;
     return fetchImpl(url, init);
   } });
   return async input => {

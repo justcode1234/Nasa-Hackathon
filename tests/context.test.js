@@ -4,8 +4,10 @@ import { createFarmClient, createPlaceClient, normalizeFarms } from '../server/c
 import { createPestClient, PESTS } from '../server/context/pests.js';
 import { createCachedJson } from '../server/context/client.js';
 import { answerCatalogQuestion } from '../server/agronomy/answers.js';
-import { normalizeSoil } from '../server/context/soil.js';
+import { normalizeSoil, createSoilClient } from '../server/context/soil.js';
+import { AppError } from '../server/errors.js';
 import { getWaterContext } from '../server/context/water.js';
+import { syntheticSoil } from './fixtures.js';
 
 // DEMO / synthetic OSM/GBIF responses for offline contract checks only.
 const osm = () => ({ elements: [
@@ -136,6 +138,54 @@ test('soil model values use source unit factors, retain intervals and never beco
   assert.match(result.notices.join(' '), /advises against/);
   raw.properties.layers[0].unit_measure.d_factor = 1;
   assert.throws(() => normalizeSoil(raw, {}, '', ''), /unit conversion/);
+});
+test('the soil fair-use pause refuses as this app holding back, and quotes the wait actually left', async () => {
+  // Measured 19 Nov in artifacts/iter53-soil-throttle-probe.mjs (archived as docs/evidence/iter53-soil-throttle-2026-11-19.log.gz):
+  // a lookup refused inside the fair-use window made 0 upstream requests, yet the page read "The external context
+  // service could not respond…", and the reason quoted "retry after 13 seconds" 6.2 s into a 12.1 s window. The clock
+  // is injected so the window is walked, not slept through; no timeout or retry budget is involved.
+  let clock = 1_000, calls = 0;
+  const client = createSoilClient({ now: () => new Date(clock), fetchImpl: async () => {
+    calls++; return { ok: true, status: 200, json: async () => syntheticSoil() };
+  } });
+  // Different coordinates each time: the same point would be answered from the client cache and never reach the limit.
+  const allowed = await client({ latitude: 9.1, longitude: 7.5 }).then(() => 'answered', reason => reason);
+  assert.equal(allowed, 'answered');
+  assert.equal(calls, 1, 'a lookup inside the fair-use budget must reach SoilGrids exactly once');
+
+  clock += 6_200;
+  const refused = await client({ latitude: 9.2, longitude: 7.5 }).then(() => 'answered', reason => reason);
+  assert.notEqual(refused, 'answered');
+  assert.equal(calls, 1, 'a refused lookup contacted the very service it blamed');
+  assert.equal(refused.status, 429, 'a local pause is not an upstream failure');
+  assert.equal(refused.code, 'SOIL_FAIR_USE');
+  assert.match(refused.message, /five regional soil lookups a minute/, 'the sentence must name the limit it is holding to');
+  assert.match(refused.message, /nothing was sent/, 'the sentence must say the request never left this app');
+  assert.match(refused.message, /again in 6 seconds\./, 'the wait quoted must be the wait left, not a constant');
+  assert.ok(!/external context service|could not respond/i.test(refused.message), `a local limit read as an upstream failure: ${refused.message}`);
+
+  clock += 12_099 - 6_200;
+  const late = await client({ latitude: 9.3, longitude: 7.5 }).then(() => null, reason => reason);
+  assert.ok(late instanceof Error, 'a lookup one millisecond before the window closes cannot be allowed');
+  assert.match(late.message, /again in 1 second\./, 'one millisecond before the window closes it must still say 1 second');
+
+  clock += 1;
+  const recovered = await client({ latitude: 9.4, longitude: 7.5 }).then(() => 'answered', reason => reason);
+  assert.equal(recovered, 'answered', 'the limit is a delay, not a permanent refusal');
+  assert.equal(calls, 2);
+});
+test('a refusal this app authored is never relabelled as a service that failed to answer', async () => {
+  // The same catch that reports a dead service also swallowed the soil limit before 20 Nov, because it wrapped every
+  // throw. A sentence this app wrote already names its cause and carries a status server/index.js:71 forwards, so the
+  // wrapper must not overwrite it — while a real transport failure keeps the one sentence and the flags farms.js:78 reads.
+  const authored = new AppError('TEST limit: nothing was sent. Try again in 4 seconds.', 429, 'TEST_LOCAL_LIMIT');
+  const kept = await createCachedJson({ fetchImpl: async () => { throw authored; }, ttlMs: 1 })('https://example.invalid').then(() => null, reason => reason);
+  assert.equal(kept, authored, 'the authored refusal must reach the caller as itself');
+  assert.equal(kept.status, 429);
+  assert.match(kept.message, /nothing was sent/);
+  const upstream = await createCachedJson({ fetchImpl: async () => { throw new TypeError('fetch failed'); }, ttlMs: 1 })('https://example.invalid').then(() => null, reason => reason);
+  assert.equal(upstream.code, 'CONTEXT_UNAVAILABLE', 'a service that never answered is still reported as one');
+  assert.equal(upstream.answered, false, 'the farm hedge keeps the flag it reads');
 });
 test('Australian irrigation benchmark is a reproducible annual aggregate, never applied to other countries', () => {
   const au = getWaterContext({ country: 'AU' });

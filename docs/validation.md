@@ -4118,15 +4118,15 @@ What was measured. `server/context/client.js:36` at `9607565` wrapped every upst
   the parser fragment `(Unexpected token < in JSON at position 0)`
   (`docs/evidence/iter51-error-shapes-2026-11-19.log.gz`). The probe counted 4 of those 5 as a detail no farmer can
   act on; the exception is `(HTTP 503)`, a status the service really did answer, and the new case keeps it as
-  machine-readable `answered` data at `tests/context.test.js:173` rather than as text - `server/nasa/power.js:116` is
+  machine-readable `answered` data at `tests/context.test.js:223` rather than as text - `server/nasa/power.js:116` is
   the other half of that rule, and still prints `(HTTP ${response.status})`, because there the number is known to have
   come from the service. This ledger already carries three of those wordings as though they were three products -
   `tests/e2e/chat-evidence-panel.spec.js:31`, `docs/validation.md:3994` and `docs/validation.md:4078` - which is the
   defect showing up here as evidence rather than being inferred from the source. The shape of the fix came from the
   repository, not from taste: `server/nasa/power.js:116-120` already separates "answered with HTTP n" from "could not
   be reached or returned invalid JSON" in its own words, interpolates nothing into the second sentence, which is why
-  `tests/integration.test.js:77` can match `/no substitute readings/` against it - the only producer whose failure
-  text a test quoted at `9607565` apart from `server/context/farms.js:89`, whose counts `tests/context.test.js:51`
+  `tests/integration.test.js:78` can match `/no substitute readings/` against it - the only producer whose failure
+  text a test quoted at `9607565` apart from `server/context/farms.js:89`, whose counts `tests/context.test.js:53`
   matches, while the terrain case settled for `/remain unknown/` and the context sentence appeared in no assertion at
   all.
 
@@ -4175,7 +4175,7 @@ Controls. Ten, run 19 Nov. (A) to (D) are archived in `docs/evidence/iter51-cont
   external context service could not respond. No records were invented. Try again later.'` against `actual: 'The
   external context service could not respond (TypeError). No records were invented. Try again later.'`, both printed
   verbatim in the repeat log under the label `host unreachable` - the case asserts that equality at
-  `tests/context.test.js:163` before it counts distinct sentences at `:168`, so the set assertion never runs and no
+  `tests/context.test.js:213` before it counts distinct sentences at `:218`, so the set assertion never runs and no
   claim is made about it. (D) `server/index.js:70` alone put back to `status === 500`:
   `artifacts/iter51-502-probe.mjs` asks the running application for `/api/soil` and `/api/observations` with
   `globalThis.fetch` replaced, so no service is contacted, and reads both bodies - clean in both states - while
@@ -4262,7 +4262,7 @@ Limits. What iteration 51 covers is the four producers, and it covers them on bo
   fact differently, and that is measured here rather than assumed: `server/context/client.js:25` throws `HTTP
   ${response.status}` with `answered: true`, so the 503 is real data in the error, and iteration 51 chose to keep it
   in `cause.message` and in the flag but out of the sentence, while `server/nasa/power.js:116` prints its status
-  number straight into the text. `tests/nasa.test.js:74` and `tests/context.test.js:164` pin each side, so the
+  number straight into the text. `tests/nasa.test.js:74` and `tests/context.test.js:214` pin each side, so the
   difference is now a recorded rule instead of drift - but which sentence a farmer reads about a busy service still
   depends on which producer failed, and nothing yet forces the two to agree. The WebKit shape in the probe was
   constructed by hand, not executed on Safari, and real phones, Safari/WebKit, microphones and audio quality remain
@@ -4286,7 +4286,7 @@ The queued step, measured. Subsection 50 left "intercepting the worker's own egr
 
 ### 52. A dropped request read as the runtime's own words, and one rule now answers for both transports
 
-What was measured. `tests/context.test.js:164` forbids a transport detail inside farmer-facing text and
+What was measured. `tests/context.test.js:214` forbids a transport detail inside farmer-facing text and
   `tests/nasa.test.js:66` does the same for the POWER client, but both guards stop at the provider layer: nothing
   guarded the page's own request layer. Three censuses ran before anything was edited.
   `artifacts/iter52-statusless-census.mjs` drives every non-`AppError` throw site in `server/` once each - six
@@ -4402,12 +4402,121 @@ Limits. Real phones and Safari/WebKit stay unverified; the parity cases ran only
   `${error.message}` into its own sentence, so a runtime phrase could reappear from a throw that never passes
   through `public/js/lib/api.js` at all.
 
-The queued step, measured. `server/context/soil.js:28` refuses a second SoilGrids lookup for twelve seconds by
-  throwing a plain `Error`, so `server/context/client.js:40` wraps it into "The external context service could not
+The queued step, measured. `server/context/soil.js:28` refused a second SoilGrids lookup for twelve seconds by
+  throwing a plain `Error`, so `server/context/client.js:40` wrapped it into "The external context service could not
   respond. No records were invented. Try again later." - a sentence asserting a non-response from a service that was
-  never contacted. The census proved the mechanism rather than inferring it: the refused lookup made 0 fetches. The
-  choice for the next iteration is whether the rate limit becomes an `AppError` with its own honest sentence or the
-  wrapper stops speaking about an upstream it did not call. After that, the two items the queue has held open:
+  never contacted. The census proved the mechanism rather than inferring it: the refused lookup made 0 fetches. Both
+  branches of the choice left open here were settled the same day by subsection 53, which made the limit an `AppError`
+  with its own sentence and stopped the wrapper speaking for an upstream it did not call. Still open after that:
   `server/nasa/power.js:116` and the POWER `answered` flag still disagree about whether a busy service's status
   belongs in text or in data, and raw upstream captures are needed before the 6 `chat-evidence-panel.spec.js` skips
   can become real runs.
+
+### 53. A soil lookup that sent no request blamed ISRIC, and the wait it named was a constant
+
+What was measured. `artifacts/iter53-soil-throttle-probe.mjs` drives five lookups through the real
+`createSoilClient` with a `fetchImpl` that counts its own calls, so "did the refused lookup contact ISRIC?" is
+answered by a counter and not by reading the code. Transcript:
+`docs/evidence/iter53-soil-throttle-2026-11-19.log.gz`. Lookup 1 answered after 1 call. Lookup 2, a different
+coordinate 0 ms later, made **0 upstream requests** and still failed as `status = 502`,
+`code = CONTEXT_UNAVAILABLE`, message "The external context service could not respond. No records were invented.
+Try again later." - a sentence asserting a non-response from a service that had not been asked. Its `cause` was a
+plain `Error("Soil service rate limit: retry after 13 seconds")`, and a plain `Error` is exactly what
+`server/context/client.js:44` wraps. The limit itself was sound and stayed untouched: 12100 ms spacing measured
+4.96 requests a minute against the five a minute ISRIC publishes for this endpoint, and lookups 3 and 4 answered
+once the window closed. The quoted wait was not sound: lookup 5 was refused 6203 ms into a 12100 ms window and
+named 13 seconds with 5897 ms left. The harness's first attempt crashed instead of measuring - an unguarded
+`await` inside its own window - and is kept as
+`artifacts/iter53-soil-throttle-2026-11-19-attempt1-harness-crash.raw.log`.
+
+The fix. Two single-statement edits, no new dependency, spacing unchanged. `server/context/soil.js` refuses with an
+`AppError` of its own: status 429, code `SOIL_FAIR_USE`, and the sentence "SoilGrids publishes five regional soil
+lookups a minute, and this app is holding to that limit, so nothing was sent to the service. Load regional soil
+estimates again in N seconds." where N is `Math.max(1, Math.ceil(remainingMs / 1000))` measured from the real
+deadline, never from a constant, and "Load regional soil estimates" is the label of the button
+`public/index.html:131` re-enables in the same `finally` (`public/js/modules/context.js:115`) that renders the
+failure (`public/js/modules/context.js:114`) - so the recovery the sentence names is a control that exists.
+Window state became a deadline (`nextAllowedAt`) rather than a last-started timestamp using `0` for "never sent":
+once a caller injects a clock, epoch 0 is a real moment, and the first lookup of a fresh client was refused by it.
+`server/context/client.js:44` throws an authored `AppError` unchanged, because a sentence this app wrote already
+names its cause and carries the status `server/index.js:71` forwards to the page. That edit replaces a line
+instead of adding one: nine citations in `AGENTS.md`, `docs/validation.md` and `docs/handoff-2026-11-18.md` name
+`server/context/client.js:40` and `:43`, and control 5 below measured that inserting one line above them turns
+`tests/documentation-citation-anchors.test.js` red rather than silently moving the code off the ledger.
+
+Tests. Three cases, taking the offline suite from 245 to 248. `tests/context.test.js:142` walks the window on an
+injected clock: the first lookup reaches the stub exactly once; a refusal at +6200 ms leaves that count at 1 and
+answers 429 / `SOIL_FAIR_USE` / "nothing was sent" / "again in 6 seconds."; one millisecond before the window
+closes it still says 1 second instead of 0; one millisecond later the lookup is allowed.
+`tests/context.test.js:177` holds the wrapper honest from the other side - an authored `AppError` comes back by
+identity, while a raw `TypeError` still becomes `CONTEXT_UNAVAILABLE` with `answered = false`, so
+`server/context/farms.js:78` keeps the flags it reads. `tests/integration.test.js:82` drives the same pair over
+HTTP through `createApp`, asserts the response body carries the local-limit sentence and no "external context
+service" phrase, that the stub was called once, and that `/api/health` still answers 200 while one service is
+paused. `withApp` gained a third parameter so a case can hand the server a stubbed soil client without stubbing
+NASA.
+
+Controls. `artifacts/iter53-negative-control.sh` breaks one claimed property at a time, runs
+`tests/context.test.js` plus `tests/integration.test.js` (20 cases) and restores from a snapshot it verifies by
+hash - transcript `docs/evidence/iter53-negative-control-2026-11-19.log.gz`. Fixed tree 20 pass / 0 fail.
+Removing the passthrough at `client.js:44`: 17 pass / 3 fail. Replacing the computed wait with the old constant
+13: 18 / 2. Starting a fresh client with the deadline already in the future, the sentinel bug class the fix
+removes: 18 / 2. Dropping the spacing so nothing is held back: 18 / 2. Control 5 is the documentation control:
+one comment line inserted above the pinned statement makes `tests/documentation-citation-anchors.test.js` report
+2 pass / 1 fail, which is why the shipped edit is line-neutral. Final hashes equal the baseline for both files, so
+no control stacked onto the next. Control 6, `artifacts/iter53-pin-control.sh`, is the one this iteration had to add
+for itself: its transcript (`docs/evidence/iter53-pin-control-2026-11-19.log.gz`) reads 3 pass / 0 fail on the shipped
+tree, 2 pass / 1 fail with one comment line inserted above `tests/context.test.js:214`, and 3 pass / 0 fail again
+after the snapshot was restored and verified by hash. A pin that cannot fail is not a guard. The shell harness is
+itself a replacement - the first attempt,
+`artifacts/iter53-negative-control.mjs`, restored through in-process writes that never applied, printed
+`restored byte-identical: false` three times and left the tree mutated, so its three identical tallies are void
+and its log is kept as `artifacts/iter53-negative-control-2026-11-19-attempt1-line-shifting-client-edit.raw.log`.
+
+What the fix did to the ledger, and what the guards did not say. The three cases grew `tests/context.test.js` by 50
+lines and `tests/integration.test.js` by 24, and the seven statements the prose names by line moved with them:
+`context.test.js:50, 51, 163, 164, 168, 173` by 2 and 50, and `integration.test.js:77` by 1. Nothing reported it.
+The citations guard asks only whether the line a citation lands on is non-blank, and 50 lines below an assertion is
+another assertion; the pin table named producer files and no test file. So the drift was found by diffing each cited
+statement against `git show HEAD:<file>` by hand, not by a guard firing - which is the same silence iteration 50 hit
+in `client.js`, one layer down. Twelve prose lines across `docs/validation.md`, `AGENTS.md` and
+`docs/handoff-2026-11-18.md` now carry the re-pointed numbers (52, 53, 213, 214, 218, 223 and 78), the pin table
+grew from 13 to 16 entries and covers `tests/` for the first time, and control 6 above is the measurement that those
+three pins fail when a line moves. Two of the historical numbers were deliberately left alone: subsection 49 quotes
+"AGENTS.md:1665" twice as the text a guard printed on the day, and subsection 50 says the table pinned 7 statements,
+which was true then and is a record rather than a pointer. Nothing in `server/` moved: `soil.js` grew twelve lines
+but `:17` and `:28`, the two lines the ledger quotes there, were re-read and still hold the source id and the refusal
+respectively.
+
+Offline and browser. The first draft's `npm test` is archived at
+`docs/evidence/iter53-line-shift-guard-2026-11-19.log.gz`: 248 tests, 246 pass, 2 fail in 38.6 s. Both failures
+were the guards working - the pinned statement had moved to line 44, and this subsection cited an evidence file
+that did not exist yet - and neither was relaxed: the first was fixed by rewriting the edit line-neutrally, the
+second by shipping the archive. `npm run build` exited 0 and put the refusal in the worker bundle, where the
+minified catch reads `u instanceof g ? u : d`: `SOIL_FAIR_USE` appears once and "Soil service rate limit" zero
+times, so the static transport cannot drift from the Node one. `docs/evidence/iter53-offline-suite-2026-11-19.log.gz`
+is the byte-final tree, re-run once every word above had landed: **248 tests, 248 pass, 0 fail in 42.3 s, exit 0**, the five documentation guards included. The same 248 cases completed in 27.0 s on an earlier pass over quieter bytes, so the tally is the claim and the duration belongs to this run alone (host load average 7.9 when it started). The
+`api-exit-parity`, `workflow`, `assistant`, `help-and-explanations` and `chat-only-flow` slice - `npx playwright test`
+`--list` counted 68 tests in 5 files before the run and the run executed **68 passed, 0 failed, 0 skipped in 3.0 m**,
+17 in each local project, after 11 load samples (`docs/evidence/iter53-browser-slice-2026-11-19.log.gz`).
+
+Costs. The 429 sentence is UI copy this agent wrote and no farmer has read. It is two clauses longer than the
+sentence it replaces, and whether it still fits the small-screen status slot is unmeasured. A refusal this app
+authors now travels without `answered` or `slow`, so a future authored refusal inside a farmland lookup would
+stop the hedge rather than back off; today `server/context/soil.js` is the only author inside a `fetchImpl`, and
+`server/context/farms.js` throws its `AppError`s outside `request()`, where nothing wraps them.
+
+Limits. Real phones and Safari/WebKit stay unverified, and the slice ran only in desktop and emulated mobile
+Chromium through the pinned channel. No case drives the fair-use refusal through the service worker in a browser:
+the bundle grep above shows the same compiled expression as the Node path, which is evidence about the build, not
+about a rendered page. The ISRIC limit itself was not re-measured against the live service this iteration - the
+five-a-minute figure is the documented public fair-use number quoted in `server/context/soil.js` and the wait
+arithmetic is what is tested. Whether a farmer reading "Load regional soil estimates again in 6 seconds." taps
+that button or assumes the app is broken is unmeasured.
+
+The queued step, measured. P2 is unchanged and now has a precedent to copy: `server/context/client.js:42-43`
+still derives `answered` from a property only the transport sets and `slow` from a regular expression over error
+names and messages, and `server/nasa/power.js:116` still puts a busy service's status number into farmer-facing
+text. Making the soil refusal structured rather than textual is one instance of the same rule; the next iteration
+should carry it to the two remaining sites, then take the 6 `chat-evidence-panel.spec.js` skips, which still need
+raw upstream captures before they can assert anything.

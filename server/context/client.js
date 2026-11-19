@@ -41,7 +41,7 @@ export function createCachedJson({ fetchImpl = fetch, ttlMs = 86_400_000, maxEnt
         wrapped.cause = error;
         wrapped.answered = Boolean(error?.answered);
         wrapped.slow = /abort|timed?\s?out/i.test(`${error?.name ?? ''} ${error?.message ?? ''}`);
-        throw wrapped;
+        throw error instanceof AppError ? error : wrapped; // a refusal this app authored already names its cause and carries the status the page acts on; wrapping it blamed a service 0 requests were sent to
       }
     })();
     pending.set(key, task);

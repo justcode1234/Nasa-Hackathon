@@ -39,6 +39,13 @@ const PINS = [
   { file: 'server/nasa/power.js', line: 120, quote: 'throw Object.assign(new AppError(', citedBy: 'docs/validation.md subsection 51, The fix' },
   // 116 is quoted by this subsection's own Limits paragraph six times over, and the 16 Nov survey made it a top unpinned target.
   { file: 'server/nasa/power.js', line: 116, quote: 'NASA POWER is unavailable (HTTP ', citedBy: 'docs/validation.md subsection 51, Limits' },
+  // The three iteration-53 pins. Adding two cases at tests/context.test.js:142 inserted 48 lines and moved six
+  // ledger citations - context.test.js:163, :164, :168, :173 and integration.test.js:77 - and every shipped guard,
+  // including this one, stayed green, because a test file was never a pinned target. Iteration 53 re-pointed all
+  // six by comparing each cited statement against `git show HEAD:<file>`; these pins are what makes that drift loud.
+  { file: 'tests/context.test.js', line: 214, quote: 'leaked a transport detail into farmer-facing text', citedBy: 'docs/validation.md:4265 and 2 more' },
+  { file: 'tests/context.test.js', line: 223, quote: 'a service that answered 503 stays classifiable as having answered', citedBy: 'docs/validation.md:4121 and 3 more' },
+  { file: 'tests/integration.test.js', line: 78, quote: 'assert.match(body.error.message, /no substitute readings/)', citedBy: 'docs/validation.md:4128' },
 ];
 
 // The drift shape this guard exists to catch: line 15 is a comment and 16 is the code, so a citation that lands on a
@@ -66,7 +73,7 @@ test('every pinned ledger citation lands on the statement the ledger quotes', as
 });
 
 test('the pin table covers the citation targets the loop leans on and cannot be narrowed to pass', () => {
-  assert.ok(PINS.length >= 13, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, and to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target`);
+  assert.ok(PINS.length >= 16, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, and to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green`);
   const pinned = file => PINS.filter(pin => pin.file === file).map(pin => pin.line);
   for (const line of [16, 96, 99, 108]) {
     assert.ok(pinned('public/js/modules/chat.js').includes(line), `chat.js:${line} is one of the four most-cited targets and is no longer pinned`);
@@ -79,6 +86,10 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   }
   for (const [file, line] of [['server/context/client.js', 40], ['server/context/terrain.js', 59], ['server/nasa/power.js', 120], ['server/nasa/power.js', 116]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a producer line subsection 51 quotes and is no longer pinned`);
+  }
+  // Test files carry the assertions the ledger quotes too, and iteration 53 proved they drift the same way.
+  for (const [file, line] of [['tests/context.test.js', 214], ['tests/context.test.js', 223], ['tests/integration.test.js', 78]]) {
+    assert.ok(pinned(file).includes(line), `${file}:${line} is a test assertion the ledger quotes and is no longer pinned`);
   }
   for (const pin of PINS) {
     assert.ok(pin.quote.length >= 12, `${pin.file}:${pin.line} is pinned to a ${pin.quote.length}-character fragment, which a rewritten line can satisfy by accident`);
