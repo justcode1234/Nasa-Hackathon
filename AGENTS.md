@@ -1038,6 +1038,47 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   `tests/e2e/fixtures/` holds post-adapter payloads, so the 6 `chat-evidence-panel.spec.js` skips stay until raw
   captures exist, and a `context.route` re-measurement against the same worker request opens the next iteration.
 
+- **19 Nov, same branch: iteration 52 - a dropped request read as the runtime's own words, and one rule at the
+  page boundary now answers for both transports.** `tests/context.test.js:164` already bans a transport detail
+  inside farmer-facing text and `tests/nasa.test.js:66` bans it for POWER, but both guards stop at the provider
+  layer. `artifacts/iter52-farms-status.mjs` then performed one real action in Chromium on both builds - the
+  mapped-field search with its upstreams aborted - and the worker transport rendered the authored 502 sentence
+  while the Node transport rendered "Failed to fetch You can continue with the selected map point or coordinates
+  without field outlines.". Three censuses came back before any edit: every non-`AppError` throw site in
+  `server/` either surfaces as an `AppError` with identical text on both transports or stays inside the payload;
+  130 route cases through `createApiHandler` with nine stubbed providers produced 76 raw throws and every
+  message was the stub's own; 497 adversarial bodies through the pure code produced none. So the fix is the
+  rule, not a per-string patch: `public/js/lib/api.js:48` answers a status-less failure with one sentence and
+  keeps the reason on `cause` and in the console, applied at the two places a request can end
+  (`public/js/lib/api.js:9` and `:25`), and `public/js/lib/api.js:51` passes an `AbortError` through because
+  four callers branch on that name. `public/js/lib/core-worker-entry.js:9` now forwards `status` and still holds
+  ten lines, and the worker's `error.code` still has no consumer. The queue had aimed the rule at the worker
+  exit; measurement moved it, because a Node-side fetch rejection never reaches the worker.
+  `tests/e2e/api-exit-parity.spec.js` drives one failing action on both transports for one expected string, five
+  new cases take the offline suite to 245/245, and `tests/e2e/review-phase-b.spec.js:30` is rewritten stricter
+  rather than deleted: it used to accept `Failed to fetch|fetch failed|NetworkError`, three runtime spellings
+  for one condition. The four-project gate on these bytes executed 229 passed, 1 failed and 6 skipped in
+  24.9 m (`docs/evidence/iter52-gate-2026-11-19.log.gz`), and the red case is not this change: the
+  `tests/e2e/field-terrain.spec.js:4` case gave up inside the shared field helper at
+  `tests/e2e/live-fields.js:13` after two user retries. Its trace
+  (`docs/evidence/iter52-trace-census-2026-11-19.log.gz`) holds 83 network events over five hosts, 24 of them
+  Overpass calls across three mirrors and no terrain request at all - overpass-api.de answered HTTP 502 eight
+  times, maps.mail.ru HTTP 504 eight times, overpass.private.coffee never answered (6 aborts) - while the panel
+  showed the app's own "8 attempts across 3 services. No fields were invented." Retrying the field search is the
+  recovery the status line offered, and the helper is what took it. The same case run alone on the same bytes at
+  load 3.65 passed in 32.6 s (1 passed, 36.1 s, `docs/evidence/iter52-gate-isolated-rerun-2026-11-19.log.gz`), so
+  the services had recovered; the gate stays recorded as one red case and an isolation re-pass does not replace it.
+  Controls A-D each remove one part, and the counts reproduce
+  (`docs/evidence/iter52-controls-2026-11-19.log.gz`); a second harness re-ran A, C, D and the restored tree with
+  full transcripts (`docs/evidence/iter52-controls-named-2026-11-19.log.gz`), where control D shows
+  `tests/e2e/api-exit-parity.spec.js:20` failing because the authored 400 sentence is replaced by the generic one -
+  the guard catches the meaning, not the source token. Left unverified: the new sentence is copy this agent wrote
+  and no farmer has read, one sentence now covers both a dead local server and a bug in this repository,
+  `public/js/modules/map3d.js:36` still composes `${error.message}` from throws that never pass through the
+  page's request layer, and Safari/WebKit and real phones stay untested. Next, measured: the rate limit at
+  `server/context/soil.js:28` makes 0 fetches and `server/context/client.js:40` still tells the farmer the
+  service "could not respond".
+
 - **19 Nov, same branch: iteration 50 - the gate never blocked the model CDN, and a two-line fix silently moved 40
   ledger citations.** `public/js/modules/chat.js:63` interpolated the raw worker exception into the panel, so with
   the CDN aborted the status line read `Model unavailable: Failed to execute 'importScripts' on

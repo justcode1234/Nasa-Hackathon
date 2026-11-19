@@ -6,5 +6,5 @@ self.onmessage = async event => {
   try {
     const data = await handle({ method, url: new URL(path, 'https://fieldshift.local'), readJson: async () => body });
     self.postMessage({ id, data });
-  } catch (error) { self.postMessage({ id, error: error.message, code: error.code ?? 'CLIENT_ERROR' }); }
+  } catch (error) { self.postMessage({ id, error: error.message, code: error.code ?? 'CLIENT_ERROR', status: error.status }); }
 };

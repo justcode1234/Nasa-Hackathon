@@ -4283,3 +4283,131 @@ The queued step, measured. Subsection 50 left "intercepting the worker's own egr
   captures first and the 6 `chat-evidence-panel.spec.js` skips stay. Re-measuring `context.route` against that same
   worker request is the first thing the next iteration does, because the probe also showed Playwright reporting both
   requests as request events, and an event is not a route.
+
+### 52. A dropped request read as the runtime's own words, and one rule now answers for both transports
+
+What was measured. `tests/context.test.js:164` forbids a transport detail inside farmer-facing text and
+  `tests/nasa.test.js:66` does the same for the POWER client, but both guards stop at the provider layer: nothing
+  guarded the page's own request layer. Three censuses ran before anything was edited.
+  `artifacts/iter52-statusless-census.mjs` drives every non-`AppError` throw site in `server/` once each - six
+  surface as an `AppError` whose sentence is identical on both transports, `server/context/pests.js:22` is caught
+  into `records[].error`, the three per-layer throws in `server/context/gibs.js` only reach the payload as
+  `unavailable[].reason` and escape as the `AppError` at `server/context/gibs.js:37` when every layer fails, and
+  `server/index.js:63` is Node-only. `artifacts/iter52-raw-throw-census.mjs` drives 130 route cases through
+  `createApiHandler` with all nine providers stubbed: 25 returned a payload, 29 raised a deliberate `AppError` and
+  76 raised a raw error, and every one of those 76 messages is the stub's own text, so no router code throws without
+  a status today. `artifacts/iter52-pure-fuzz.mjs` sent 497 adversarial bodies through the pure code and produced
+  none either. The class is therefore latent inside the handlers and already reachable at the page boundary:
+  `artifacts/iter52-farms-status.mjs` performs one real action - the mapped-field search with its upstreams aborted
+  - in Chromium on both builds, and the same panel read "The field lookup services are busy or unavailable (3
+  attempts across 3 services). No fields were invented. Retry the field search." plus the module's own suffix on the
+  worker transport, and "Failed to fetch You can continue with the selected map point or coordinates without field
+  outlines." on the Node transport. `artifacts/iter52-dropped-request.mjs` then put one status-less call at both
+  exits: `api('https://[')` answered "Failed to construct 'URL': Invalid URL" on the worker and "Failed to execute
+  'fetch' on 'Window': Failed to parse URL from https://[" on Node, while the authored 400 sentence "Enter a
+  question of 1–500 characters." was identical on both.
+
+The fix. One rule at the shared choke point rather than one patch per string. `public/js/lib/api.js:48` owns it now:
+  a failure with no status behind it is answered with `NO_ANSWER` - "No answer came back for this request. Nothing
+  was invented in its place. Try again." - and the reason travels on `error.cause` and a `console.warn` so a real
+  fault stays diagnosable, which is what `server/index.js:70` does for the Node transport. It is applied at the two
+  places a request can end: the fetch rejection at `public/js/lib/api.js:9` and the worker reply at
+  `public/js/lib/api.js:25`. A `DOMException` named `AbortError` passes through untouched at
+  `public/js/lib/api.js:51`, because four callers branch on that name and a cancellation the app asked for is not a
+  failure. The worker forwards the field the rule needs: `public/js/lib/core-worker-entry.js:9` posts `status`
+  beside `error` and `code` and keeps its ten lines, and `error.code` still has no consumer. The queue had put the
+  rule at the worker exit; measurement moved it, because a Node-side fetch rejection never reaches the worker and a
+  rule there would have left the two transports disagreeing - which is the defect itself.
+
+Controls. Four, each removing one part, run on the same working tree the gate ran on and measured twice: once for
+  the counts (`docs/evidence/iter52-controls-2026-11-19.log.gz`) and once for the names, because the first harness
+  grepped only
+  the summary lines and so could not say which cases went red
+  (`docs/evidence/iter52-controls-named-2026-11-19.log.gz`). The counts agree on all four rounds the second harness
+  repeats. Control A defines the rule and applies it nowhere: the unit file 5 pass / 3 fail, and 2 of the 8 selected
+  browser cases passed - the `tests/e2e/review-phase-b.spec.js:26` field-request case on each static project, which
+  never needed the rule - while all four
+  `tests/e2e/api-exit-parity.spec.js:9` parity cases and both Node field-request cases went red. Control B leaves the
+  Node fetch rejection raw: 7 / 1 and 4 of 8. Control C leaves the worker reply raw: 7 / 1 and 6 of 8, and the reds
+  are the parity case on the two static projects reading `Failed to construct 'URL': Invalid URL` where
+  `tests/e2e/api-exit-parity.spec.js:19` asks for the sentence. Control D stops forwarding the status: 7 / 1 and 6 of
+  8, with the red one line deeper - at `tests/e2e/api-exit-parity.spec.js:20` a real 400 answer, expected as "Enter a
+  question of 1–500 characters.", came back as the generic no-status sentence, so the guard fails on the semantic
+  loss and not merely on a missing source token. Re-applying the rule returns 8 / 0 in the unit file and 8 of 8 in
+  the browser. The offline suite is 245 of 245, 0 failed and 0 skipped in 27.6 s
+  (`docs/evidence/iter52-npm-test-2026-11-19.log.gz`), with five new cases at
+  `tests/api-transport.test.js:61-97`, and `tests/e2e/api-exit-parity.spec.js` adds one case to each of the four
+  projects: 236 tests in 23 files where `npx playwright test --list` counted 232 in 22 before. One existing
+  assertion was rewritten because it is superseded, and it got stricter: `tests/e2e/review-phase-b.spec.js:30` used
+  to accept `/No fields were invented|Failed to fetch|fetch failed|NetworkError/`, which tolerated three runtime
+  spellings for one condition, and now accepts only the two authored sentences. That edit is line-neutral in a way
+  that can be checked: `git diff --numstat` on the file reports one line for one line, and it still holds 112 lines
+  both here and at `HEAD`, so nothing cited by line number moved. The older phrasing here counted "13 citations"
+  and "10 citations" of two lines in that spec, and no census reproduces either number: grepping the 43 tracked
+  Markdown files for the literal `review-phase-b.spec.js:44` and `review-phase-b.spec.js:26` gives 4 and 1
+  occurrences at this revision. Those figures are therefore withdrawn, and the line-neutrality evidence above is
+  used instead.
+
+The gate. The four-project run on these bytes executed **229 passed, 1 failed, 6 skipped in 24.9 m**
+  (`docs/evidence/iter52-gate-2026-11-19.log.gz`) and this iteration does not report it as green. The red case is
+  `tests/e2e/field-terrain.spec.js:4` in `static-desktop`, and it died before any terrain assertion: the shared
+  field helper polled, took the retry the panel itself offers twice, and failed its own bound at
+  `tests/e2e/live-fields.js:13` with `real fields were still unavailable after two user retries`. The trace taken
+  from that run answers what the ledger had been guessing at. It carries 83 network records over five hosts - 27 of
+  them the app's own files from the loopback origin, 32 map tiles from `tile.openstreetmap.org`, the rest the three
+  Overpass mirrors - and none of them is a terrain provider, while 24 Overpass events fill the window:
+  `overpass-api.de` answered HTTP 502 eight times,
+  `maps.mail.ru` HTTP 504 eight times, and `overpass.private.coffee` was cancelled 6 times without answering
+  (`docs/evidence/iter52-trace-census-2026-11-19.log.gz`). The 502 body is an upstream capacity notice, not a
+  timeout inside this repository: "This Overpass API server is currently at capacity. All query workers are busy
+  and the request queue is full." The panel meanwhile showed the app's own "8 attempts across 3 services. No
+  fields were invented." with the retry control enabled - the authored sentence reaching the farmer for a real
+  upstream outage, which is the behaviour, not the defect. Re-running that one case alone on the same bytes 49
+  minutes later, at load average 3.65, gave **1 passed (36.1 s)** with the case itself taking 32.6 s
+  (`docs/evidence/iter52-gate-isolated-rerun-2026-11-19.log.gz`), so the services had recovered. This spec has
+  two recorded reds in this ledger and they are different failures: the `c659a59` one really was the terrain
+  fetch - that archive prints `Terrain data is unavailable (fetch failed)` where the panel should have named
+  elevation (`docs/evidence/e2e-gate-c659a59-2026-11-18.log.gz`) - while this one never reached terrain. So
+  calling a `field-terrain.spec.js:4` red "the terrain fetch" is only sometimes true, and a red here has to be
+  read from its own assertion line rather than from the file name. The gate stands recorded as one red case; an
+  isolation re-pass is not a substitute for it, and no timeout, retry or assertion was changed for either run.
+
+Mistakes in this iteration's own process, recorded because they cost runs. The first control script was launched
+  with a trailing `&` inside a backgrounded tool call, so it kept mutating `public/` after the tool had reported
+  completion, and its final `restore()` overwrote the fix with a snapshot taken mid-control; four rounds then
+  reported numbers for the wrong bytes and the log was discarded. The rewritten script refuses to snapshot unless
+  the rule is present in all three places, and it runs in the foreground. Separately, a comment claimed five callers
+  branch on `AbortError` where the count is four - `public/js/modules/chat.js:149`, `public/js/app.js:236`,
+  `public/js/app.js:296` and `public/js/modules/workflow-assistant.js:404` - and the gate was restarted rather than
+  left running on bytes that a later edit would change. Three more cost time after the gate. The trace reader
+  first reported 0 Overpass requests, because Playwright wraps every record in a `resource-snapshot` object and
+  the reader asked the wrapper for its request URL - an absence of evidence that was one sentence from being
+  written here as "the browser made no attempts". The control harness grepped its browser summary with
+  `tail -3`, which keeps the failing case names and the passed count but drops the failed count, so its first
+  log could not state how many cases went red and the round was re-run with the counts captured. And the first
+  draft of the paragraph above asserted that this ledger had misblamed an older red on terrain; opening
+  `docs/evidence/e2e-gate-c659a59-2026-11-18.log.gz` showed that one genuinely was the terrain fetch, so the
+  correction was deleted and the two reds are now distinguished instead. A count is also not a name: the repaired
+  harness still grepped, so this section would have named red cases on evidence that only counted them. A third
+  round ran controls A, C, D and the restored tree with the whole transcript kept, which repeats every count and
+  supplies the assertion lines quoted above - and it caught that the Controls paragraph had claimed those runs were
+  on "the committed bytes" while the fix was still only in the working tree.
+
+Limits. Real phones and Safari/WebKit stay unverified; the parity cases ran only in desktop Chromium through the
+  pinned channel, and the worker half of the rule is exercised in the browser only by a call the shipped UI cannot
+  make. The new sentence is UI copy that this agent wrote and no one else has read: whether a farmer can act on it
+  is unmeasured. One sentence now covers two different conditions on the Node transport - a local server that died
+  and a bug inside this repository's own handler - because a browser cannot tell those apart from a rejected fetch;
+  that buys one string for one class and costs the cause. `public/js/modules/map3d.js:36` still composes
+  `${error.message}` into its own sentence, so a runtime phrase could reappear from a throw that never passes
+  through `public/js/lib/api.js` at all.
+
+The queued step, measured. `server/context/soil.js:28` refuses a second SoilGrids lookup for twelve seconds by
+  throwing a plain `Error`, so `server/context/client.js:40` wraps it into "The external context service could not
+  respond. No records were invented. Try again later." - a sentence asserting a non-response from a service that was
+  never contacted. The census proved the mechanism rather than inferring it: the refused lookup made 0 fetches. The
+  choice for the next iteration is whether the rate limit becomes an `AppError` with its own honest sentence or the
+  wrapper stops speaking about an upstream it did not call. After that, the two items the queue has held open:
+  `server/nasa/power.js:116` and the POWER `answered` flag still disagree about whether a busy service's status
+  belongs in text or in data, and raw upstream captures are needed before the 6 `chat-evidence-panel.spec.js` skips
+  can become real runs.

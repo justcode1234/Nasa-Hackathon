@@ -27,7 +27,7 @@ test('a failed field request has a reachable retry and still permits a point-bas
   await context.route(/overpass-api\.de|overpass\.private\.coffee|maps\.mail\.ru|\/api\/farms\?/,r=>r.abort('failed'));
   await page.goto('/',{waitUntil:'domcontentloaded'});await openExample(page);
   await expect(page.locator('#farms-status')).toHaveClass(/error/);
-  await expect(page.locator('#farms-status')).toContainText(/No fields were invented|Failed to fetch|fetch failed|NetworkError/);
+  await expect(page.locator('#farms-status')).toContainText(/No fields were invented|No answer came back for this request/);
   await expect(page.getByRole('button',{name:'Retry mapped field search',exact:true})).toBeEnabled();
   await expect(page.getByRole('combobox',{name:'Mapped field',exact:true})).toBeDisabled();
   await expect(page.locator('.scenario')).toHaveCount(0);

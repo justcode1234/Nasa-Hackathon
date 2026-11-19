@@ -6,7 +6,7 @@ export function getTransport() {
 
 async function httpApi(path, { method, body, signal }) {
   const response = await fetch(path, { method, signal,
-    ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) });
+    ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }).catch(reason => { throw unlabelled(reason); });
   let data;
   try { data = await response.json(); }
   catch { throw new Error('The Node.js API returned an unreadable response. Check the local server.'); }
@@ -22,7 +22,7 @@ export function api(path, { method = 'GET', body, signal } = {}) {
       const task = pending.get(event.data.id);
       if (!task) return;
       pending.delete(event.data.id);
-      if (event.data.error) task.reject(new Error(event.data.error)); else task.resolve(event.data.data);
+      if (event.data.error) task.reject(workerFailure(event.data)); else task.resolve(event.data.data);
     };
     worker.onerror = event => {
       event.preventDefault();
@@ -39,4 +39,19 @@ export function api(path, { method = 'GET', body, signal } = {}) {
     pending.set(id, { resolve: data => { cleanup(); resolve(data); }, reject: error => { cleanup(); reject(error); } });
     worker.postMessage({ id, path, method, body });
   });
+}
+
+// A failure with no HTTP status behind it has no authored sentence, so neither transport may forward the
+// runtime's own words: server/index.js:71 replaces a 500 the same way, and tests/context.test.js:164 already
+// bans a transport detail one layer down. The reason stays on `cause` and in the console, and every AppError
+// sentence (a 400 validation, a 502/503 upstream) carries a status and passes through untouched.
+export const NO_ANSWER = 'No answer came back for this request. Nothing was invented in its place. Try again.';
+function unlabelled(reason) {
+  // Four callers branch on the name, so a cancellation the app asked for must keep travelling as itself.
+  if (reason?.name === 'AbortError') return reason;
+  console.warn('[fieldshift] request ended with no status:', reason?.message ?? reason);
+  return new Error(NO_ANSWER, { cause: reason instanceof Error ? reason : new Error(String(reason?.message ?? reason)) });
+}
+function workerFailure(data) {
+  return typeof data.status === 'number' ? new Error(data.error) : unlabelled(new Error(data.error));
 }
