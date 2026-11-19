@@ -930,6 +930,33 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged from before the edit), so the failures are host starvation rather than this change; exactly those four
   cases re-run alone finished **4 passed (20.3 s)** (`docs/evidence/workflow-hemisphere-labels-e2e-isolated-2026-11-18.log.gz`),
   and the shipped tree's offline suite is **209/209 (37,936 ms)**. Nothing was deployed, main is untouched (`4a54fa3`), no NASA portal edit.
+- **19 Nov, same branch: iteration 40 - the paragraph window was capped at one even when two slots were free, so a
+  reply lost its own second sentence.** This closes iteration 39's surviving limit. Measured before any edit from
+  `docs/evidence/pest39-budget-2026-11-18.log.gz`: "What pests affect sweet corn?" rendered **2/3 with
+  `room_left_unfilled=YES` and the AU FAOSTAT `country context` sentence dropped**, and "What pests affect sweet corn
+  in Brazil?" rendered **2/3 with its `evidence gap` sentence dropped** - the reply admitting its own missing data,
+  cut by `facts.slice(0, 1)`. `public/js/lib/chat-context.js:138-143` now reserves a caveat slot only when the reply
+  actually has a caveat (`Math.max(1, 3 - context.length - (replyCaveats.length ? 1 : 0))`), so a caveat-free reply
+  spends the free slot on its own second paragraph while the three-paragraph bound and iteration 39's reservation both
+  hold. Re-running the same probe on this tree gives **`rendered=3/3 room_left_unfilled=no dropped=0` for both** rows
+  with the other five wordings unchanged (`docs/evidence/pest40-budget-after-2026-11-18.log.gz`). The QA corpus cannot
+  show it: **of 88 wording runs, 26 carry 2+ reply paragraphs, 6 attach any context block, 0 meet the widening
+  precondition and 0 render differently** (`docs/evidence/pest40-blast-radius-2026-11-18.log.gz`), because all six that
+  reach the budget code are `topic=evidence` replies that *do* carry a `limitation` and so take the reserved branch.
+  Negative control on `tests/chat-context.test.js` (`docs/evidence/pest40-cap-control-2026-11-18.log.gz`): **19 tests,
+  18 passed, 1 failed** against the previous composer (`not ok 9 - a reply paragraph takes the free third slot rather
+  than being cut to one`, diff = the missing `country context`) and **19/19** against this one; no assertion pinned the
+  old cap, so nothing was rewritten or skipped. Costs: that file is now **19 tests**, the offline suite **220/220, 0
+  failed** (`docs/evidence/pest40-offline-2026-11-18.log.gz`), the rebuilt app carries the rule (`grep -n replyFacts
+  dist/client/js/lib/chat-context.js` → :138 and :143, `docs/evidence/pest40-build-2026-11-18.log.gz`), the pest-context
+  spec alone is **3 passed (9.7 s)** with `Sources (5)` unchanged
+  (`docs/evidence/pest40-spec-slice-2026-11-18.log.gz`) and the full gate came out **214 passed, 6 skipped, 0 failed (25.7 m)** - 214 checks + 6 skips
+  is the 220-case census exactly, the 6 skips being the same worker-transport evidence-panel cases the previous green gate
+  skipped, and no exit code is quoted because this launch omitted the wrapper's `EXIT=` echo
+  (`docs/evidence/pest40-gate-green-2026-11-18.log.gz`). Limits that stay open: no browser case asserts the filled
+  third slot (the gate is no-regression evidence here, the unit case and probe are the proof), and the reason
+  `tests/e2e/chat-pest-context.spec.js:73` keeps `Sources (5)` is inferred from the reserved-caveat branch rather than
+  measured in the comparison state. Nothing was deployed, no NASA portal edit, main untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 39 - the composer caveat iteration 38 added deleted the reply's own honesty
   sentence, and the red gate is what proved it.** Subsection 37 registered that displacement as an open limit; the gate
   run on that tree answered it in a browser: `tests/e2e/assistant.spec.js:6:1` failed only on Q10, with exactly one check

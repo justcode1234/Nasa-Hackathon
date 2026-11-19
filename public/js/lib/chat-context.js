@@ -134,8 +134,13 @@ export function composeAnswerBlocks(answerBlocks, extraBlocks) {
   // keeps two paragraphs and leaves the third for the crop facts.
   const replaces = extraBlocks.some(block => block.kind === 'historical weather evidence' || block.kind === 'regional soil model');
   const context = extraBlocks.slice(0, replaces ? 3 : 2);
-  const facts = replaces ? [] : answerBlocks.filter(block => block.kind !== 'limitation').slice(0, 1);
   const replyCaveats = answerBlocks.filter(block => block.kind === 'limitation');
+  const replyFacts = answerBlocks.filter(block => block.kind !== 'limitation');
+  // Both loss wordings measured on 18 Nov (UTC) attach exactly one descriptive block to a reply that carries no
+  // limitation of its own ("What pests affect sweet corn?" = crop facts + country context, "…in Brazil?" = crop facts
+  // + evidence gap), so the third slot stayed empty while a reply paragraph waited in the cut tail. A caveat slot is
+  // therefore reserved only when the reply actually has a caveat, and one reply paragraph always keeps its place.
+  const facts = replaces ? [] : replyFacts.slice(0, Math.max(1, 3 - context.length - (replyCaveats.length ? 1 : 0)));
   // A composer caveat must not silence the reply's own. Measured on 18 Nov (UTC) through the real route, the
   // not-loaded pest pointer left corpus U19 with one paragraph instead of the two it had before: `facts` only takes
   // non-limitation blocks, so when both of the reply's blocks were limits the pointer's `context.some(limitation)`

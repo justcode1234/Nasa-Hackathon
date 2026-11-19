@@ -179,6 +179,26 @@ test('a context caveat does not evict the reply own limitation while a slot rema
   assert.equal(composeAnswerBlocks(cropAnswer, [block('limitation', 'Country pest context is not loaded.'), block('mapped field record', 'Field 7.')]).length, 3);
 });
 
+// Why this case exists: the case above closed the caveat half of the composition defect and named the cap it left
+// behind. Measured in the same evidence as that limit (`docs/evidence/pest39-budget-2026-11-18.log.gz`), one context
+// block attached to a reply of two paragraphs rendered 2 of 3 with the third slot empty and cut the tail: "What pests
+// affect sweet corn?" lost its `country context` FAOSTAT production-record sentence and "What pests affect sweet corn
+// in Brazil?" lost its `evidence gap` sentence. Neither reply carries a `limitation`, which is why the spare slot now
+// goes to the reply's own paragraph; a reply that does carry one keeps a slot for it, and the three-paragraph bound
+// every case above pins is unchanged. No assertion here or above pinned the old cap of one paragraph.
+test('a reply paragraph takes the free third slot rather than being cut to one', () => {
+  const faostat = [block('sourced crop facts', 'Sweet corn belongs to Poaceae…'), block('country context', 'Australia has a 2024 FAOSTAT production record for Green corn (maize)…')];
+  assert.deepEqual(composeAnswerBlocks(faostat, [block('country occurrence context', 'Fall armyworm in AU: Country records found…')]).map(b => b.kind),
+    ['country occurrence context', 'sourced crop facts', 'country context']);
+  const mismatch = [block('sourced crop facts', 'Sweet corn belongs to Poaceae…'), block('evidence gap', 'The saved FAOSTAT extract has no matching positive Green corn (maize) record for Brazil…')];
+  assert.deepEqual(composeAnswerBlocks(mismatch, [block('limitation', 'The country pest watchlist loaded here covers AU; this answer is about BR…')]).map(b => b.kind),
+    ['limitation', 'sourced crop facts', 'evidence gap']);
+  // A reply carrying its own caveat still gets it, and two context blocks still leave the reply one paragraph.
+  assert.deepEqual(composeAnswerBlocks(cropAnswer, [block('country occurrence context', 'Helicoverpa in Australia.')]).map(b => b.kind),
+    ['country occurrence context', 'sourced crop facts', 'limitation']);
+  assert.equal(composeAnswerBlocks(cropAnswer, [block('country occurrence context', 'Helicoverpa in Australia.'), block('mapped field record', 'Field 7.')]).length, 3);
+});
+
 test('a frost question quotes the minimum air temperature, not the mean', () => {  const { blocks } = contextBlocks('Show me frost evidence', { observations }, { topic: 'weather' });
   assert.equal(blocks.length, 1);
   assert.match(blocks[0].text, /^Minimum air temperature/);

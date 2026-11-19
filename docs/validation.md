@@ -3125,6 +3125,93 @@ case above; the rebuilt static bundle carries the rule (`grep -c "replyCaveats.s
 `chat-pest-context.spec.js` cases appear **12** times in it (3 cases × 4 projects) and all pass, including `:105`, the
 pointer case that the rejected conditional-pointer repair would have broken.
 
+### 39. The reply's second paragraph was cut while the third slot stayed empty
+
+Subsection 38 closed the caveat half of the composition defect and named this as its open limit (i). This iteration
+changes the other half of the same expression and adds the unit case that proves it; nothing else in the composer is
+touched.
+
+**What was true before, attributed before any edit.** The budget probe archived as
+`docs/evidence/pest39-budget-2026-11-18.log.gz` renders seven pest/rainfall/crop wordings through the real
+`server/api.js` handler plus the composer of that tree, and two of them reported a free slot alongside a cut
+paragraph. "What pests affect sweet corn?" was `own=2 [sourced crop facts, country context]`, `attached=1 [country
+occurrence context]`, `rendered=2/3 room_left_unfilled=YES dropped=1`, and the dropped block is the AU FAOSTAT
+production-record sentence (`Australia has a 2024 FAOSTAT production record for Green corn (maize)…`). "What pests
+affect sweet corn in Brazil?" was `own=2 [sourced crop facts, evidence gap]`, `attached=1 [limitation]`,
+`rendered=2/3 room_left_unfilled=YES dropped=1`, dropping the sentence that admits the extract has no Brazil record -
+the reply's own statement of its missing data. Neither dropped block is a `limitation`, so subsection 38's rule could
+not reach either one.
+
+**Why it happened.** `public/js/lib/chat-context.js:137` capped the reply at one non-`limitation` paragraph
+unconditionally (`facts.slice(0, 1)`). With one descriptive context block attached, `context` took one slot and
+`facts` took one, so the third slot was only ever filled from `replyCaveats`; a reply with two facts and no caveat of
+its own lost the second fact to `[...context, ...facts, ...caveat].slice(0, 3)`.
+
+**What changed.** The cap now depends on whether a caveat slot is actually needed
+(`public/js/lib/chat-context.js:138-143`): `facts` takes `Math.max(1, 3 - context.length - (replyCaveats.length ? 1 : 0))`
+paragraphs on the descriptive route. A reply that carries a limitation still has one reserved for it and its fact
+window stays at one - which is what keeps subsection 38's cases intact - while a reply with no limitation spends the
+spare slot on its own second paragraph. The floor of `1` means two context blocks can never squeeze the reply out
+altogether, and the three-paragraph bound every earlier case pins is unchanged.
+
+**Blast radius, measured rather than assumed.** Re-running the same probe on this tree
+(`docs/evidence/pest40-budget-after-2026-11-18.log.gz`) turns both loss rows into
+`rendered=3/3 room_left_unfilled=no dropped=0` and leaves the other five wordings at the counts they had before
+(the three clarification-shaped pest replies stay `2/3 dropped=0` because their reply holds one paragraph, and
+"Tell me about cabbage in Australia" stays `2/3` because it attaches no context and takes the early return). The QA
+corpus cannot exhibit the change: the shape probe in `docs/evidence/pest40-blast-radius-2026-11-18.log.gz` replays
+44 wordings × 2 states and reports **88 wording runs: 26 carry 2+ reply paragraphs, 6 attach at least one context
+block, 0 meet the drafted rule's widening precondition, 0 render differently** - all six that reach the budget code
+are `topic=evidence` replies carrying a `limitation`, so they take the reserved-caveat branch and stay byte-identical.
+That is why the corpus column reads 0 where subsection 38's probe found two losses: the corpus states never produce the
+"two reply paragraphs + one descriptive block, no caveat" shape that the pest-lookup state does.
+
+**Negative control.** One test file, two composers (`docs/evidence/pest40-cap-control-2026-11-18.log.gz`): against the
+composer of the commit before this one, **19 tests, 18 passed, 1 failed** - `not ok 9 - a reply paragraph takes the
+free third slot rather than being cut to one`, whose diff is exactly the missing `country context` element. Against
+this composer, **19 tests, 19 passed, 0 failed**. The new case is `tests/chat-context.test.js:189`; no existing
+assertion pinned the cap of one, so nothing was rewritten to accommodate the change and no case was skipped or
+weakened.
+
+**Executed cost.** Control pair **18/1 + 19/0**; the file goes from 18 to **19 tests**; the whole offline suite **220/220, 0 failed, 0 skipped**
+(`docs/evidence/pest40-offline-2026-11-18.log.gz`), one more than subsection 38's 219 because of that case; the rebuilt
+static app carries the rule (`grep -n "replyFacts" dist/client/js/lib/chat-context.js` hits the declaration at :138 and
+the window at :143, `docs/evidence/pest40-build-2026-11-18.log.gz`); the pest-context spec re-run alone on
+`static-desktop` came out **3 passed (9.7 s)** with `Sources (5)` unchanged at `:73`, whose per-case durations match
+the archived green gate's 1-4 s for the same three cases (`docs/evidence/pest40-spec-slice-2026-11-18.log.gz`); and the
+full four-project gate on this tree came out **214 passed, 6 skipped, 0 failed (25.7 m)**, with **220** case lines listed before the run (`npx playwright
+test --list` → `Total: 220 tests in 21 files`; the browser census is unchanged because this iteration's test is an
+offline unit case) - 214 checks plus 6 skips is that census exactly (`docs/evidence/pest40-gate-green-2026-11-18.log.gz`).
+The 6 skips are the same three `chat-evidence-panel.spec.js:67/:99/:123` worker-transport cases in each of the two
+static projects that subsection 38's green gate skipped, so nothing was newly deselected. No exit code is quoted for
+this run: its launch line omitted the wrapper's `EXIT=` echo, so the pass rests on the summary lines plus 0 failure
+marks among the 220 case lines, and on all 12 `chat-pest-context.spec.js` lines - the spec's three cases run once in each of the four projects -
+being checks rather than skips.
+
+**One gate attempt was destroyed by how it was launched, and is kept as such.** The first run on this tree printed
+**50** case lines, **0** of them failures, stopped after case **34** of `static-desktop` and never printed a summary
+(`docs/evidence/iter40-gate-torn-down-2026-11-18.log.gz`). The cause is not the app and not the host: the run was
+started with a trailing `&` inside a tool call that returned after 45 s, so when that call was reaped the runner went
+with it while its two `scripts/playwright-server.js` children survived - reparented to `launchd`, still holding
+127.0.0.1:4180/4181, verified as this repository's own by `lsof -d cwd` (`…/80eab783/Nasa-Hackathon`) and a start time
+of 05:25:12 against a log last written at 05:29. Those two orphans were killed and the gate relaunched detached under
+`caffeinate -is`, which is what the tally above comes from. This is the second interrupted-gate record in this
+document (the first is `docs/evidence/e2e-gate-6db7742-interrupted-2026-11-18.log.gz`), and the reusable difference
+between the two is that this one has a named cause: liveness was established from log mtime plus which listeners were
+still bound, not from the absence of a summary. An interrupted run is never quoted as a result, and no case was
+deselected, skipped or re-ordered to make the retry cheaper.
+
+**Limits that stay open, recorded rather than hidden.** (i) No browser case asserts the filled third slot. The pinned
+proof of this rule is `tests/chat-context.test.js:189` plus the probe above; the gate is a no-regression run for it,
+not a demonstration. (ii) The reason `tests/e2e/chat-pest-context.spec.js:73` still reports `Sources (5)` is inferred
+from the composer's branch - the comparison-state reply carries a `limitation`, so the caveat reservation keeps its
+fact window at one - and was not measured for that state; the probe's `own=` columns cover the no-comparison states.
+A comparison-state `own=`/`rendered=` measurement is the cheapest way to close both this and (i), and it is the shape
+the drafted advisory case at `artifacts/iter41-advisory-case.js` needs anyway. (iii) All browser assertions here run in
+desktop Chrome emulating mobile viewports; real phones, Safari/WebKit and touch stay unexercised. (iv) The gate's
+6 skips remain the `chat-evidence-panel.spec.js` worker-transport guard recorded in subsection 38 (iv), which this
+change does not touch.
+
 ### Not yet executed at the time of writing
 
 * A clean full `npm run test:e2e` on this tip. The 180-case gate above describes `35a11b7`; the app has
