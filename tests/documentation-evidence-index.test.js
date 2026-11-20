@@ -591,10 +591,159 @@ const TALLIES = [
       'PRODUCT_SHA 103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89  public/js/modules/chat.js',
       'ITER60_OFFLINE_SHIPPED_START'],
     absent: ['ℹ fail 1', 'OFFLINE_EXIT=1'] },
+  // Iteration 61. The red that started the pass: the two browser cases existed, the fix did not, and the run stopped on
+  // the sentence the app invented instead of the one the ledger promises.
+  { archive: 'docs/evidence/iter61-browser-red-2026-11-20.log.gz',
+    lines: ['CMD npx playwright test place-list-refused --project=node-desktop',
+      'HEAD 92fdf2cbdfe09b7eebf93b33476c86bb8f189e42', 'NODE v26.13.1 /opt/homebrew/bin/node',
+      '1 failed', '1 passed (1.0m)', 'EXIT=1'],
+    phrases: ['Running 2 tests using 1 worker', 'place-list-refused.spec.js:36:3',
+      'Received string:  "Choose a region from the current country list."'],
+    absent: ['8 passed', 'EXIT=0'], marks: 1 },
+  // The same spec after the fix, all four projects, one worker, with the four product/spec hashes it was gated on.
+  { archive: 'docs/evidence/iter61-browser-gate-2026-11-20.log.gz',
+    lines: ['CMD npx playwright test place-list-refused --workers=1', '8 passed (7.7s)', 'EXIT=0',
+      'SHA api=aa5a4c2789f5be26a229f5e7418e3fc4 wa=cf52b64bb5ab8cf23d598a37add6ad11 ctx=454f3be7d958957e999e37dd5ba2bcec spec=c39051f1efa35a2b0e1f6ab1b2b6849a'],
+    phrases: ['Running 8 tests using 1 worker', '[node-desktop] › tests/e2e/place-list-refused.spec.js:36:3',
+      '[static-mobile] › tests/e2e/place-list-refused.spec.js:100:3'],
+    absent: ['1 failed', '2 failed', 'EXIT=1'], marks: 0 },
+  // The four-way control ladder: shipped bytes green, both pre-fix files reverted red on two cases, the identity
+  // stripped red on the schema case only, the re-read stripped red on the retry case only, and a hash check that the
+  // tree came back byte-identical.
+  { archive: 'docs/evidence/iter61-controls-2026-11-20.log.gz',
+    lines: ['2 passed (1.7s)', '2 failed', '1 passed (1.7s)', '1 passed (1.0m)', '1 failed',
+      'RESTORE_OK three product files byte-identical to the manifest taken before the control set'],
+    phrases: ['=== CONTROL FIXED revert= ===',
+      '=== CONTROL ORIGINAL_DEFECT revert=public/js/modules/workflow-assistant.js public/js/lib/api.js ===',
+      '=== CONTROL NO_IDENTITY revert=public/js/lib/api.js ===',
+      '=== CONTROL NO_REREAD revert=public/js/modules/context.js ===',
+      'No towns are listed for India in this saved place list'],
+    absent: ['8 passed', 'RESTORE_MISMATCH'], marks: 4 },
+  // The offline suite on the finished-tree-except-the-rows-below, which is where 262 became 268.
+  { archive: 'docs/evidence/iter61-offline-2026-11-20.log.gz',
+    lines: ['ℹ tests 268', 'ℹ pass 268', 'ℹ fail 0', 'ℹ skipped 0', 'EXIT 0'],
+    phrases: ['CMD npm test  (iteration 61 offline suite)', 'HEAD 92fdf2cbdfe09b7eebf93b33476c86bb8f189e42',
+      'ℹ duration_ms 24405.868209', 'Built static browser app in dist/client.'],
+    absent: ['ℹ fail 1', 'ℹ tests 262'] },
+  // The instrument that measures the drift this pass had to repair, kept because its own blind spot is part of the
+  // record: 53 HEAD-coordinate pointers moved, and `--head` is the only mode that can see them.
+  { archive: 'docs/evidence/iter61-citation-drift-head-2026-11-20.log.gz',
+    lines: ['HEAD CITED_LINES_CHECKED 307 DRIFTED 53 INSIDE_DIFF_HUNKS 0',
+      'FILES_WITH_EDITS public/js/lib/api.js public/js/modules/context.js public/js/modules/workflow-assistant.js tests/api-transport.test.js tests/workflow-place-choices.test.js'],
+    phrases: ["CMD node scripts/citation-drift.mjs --head  (repair list, 20 Nov)",
+      'DRIFT docs/validation.md:1007 public/js/modules/workflow-assistant.js:222',
+      'warning: in the working copy of \'public/licenses/playwright-apache-2.0.txt\', CRLF will be replaced by LF'],
+    absent: ['DRIFTED 0', 'INSIDE_DIFF_HUNKS 3'] },
+  // The control for the guard this pass wrote after finding its own defect: repairing a label without its `#LNNN`
+  // anchor is a red the citation scan cannot see, so the anchor case reads both and this proves it moves.
+  { archive: 'docs/evidence/iter61-anchor-control-2026-11-20.log.gz',
+    lines: ['STALE_ANCHOR_EXIT=1', 'RESTORED_EXIT=1', 'RESTORE_OK docs/validation.md byte-identical',
+      'VALIDATION_MD5_BEFORE 5fa0d5e968ab6663ab085f3e638ad297',
+      'VALIDATION_MD5_AFTER 5fa0d5e968ab6663ab085f3e638ad297',
+      'docs/validation.md:1007 labels workflow-assistant.js:235-241 but its anchor lands on line 222'],
+    phrases: ['CONTROL_TARGET tests/documentation-citations.test.js against docs/validation.md:1007',
+      'NODE v26.13.1 /opt/homebrew/Cellar/node/26.13.1_2/bin/node'],
+    // The restored round is 5 pass / 1 fail, not green: the fail is the docs-guards archive this pass cites before it
+    // can exist, which is the bootstrap asymmetry subsection 57 records rather than a suppressed red.
+    absent: ['RESTORE_MISMATCH', 'ℹ fail 0'] },
+  { archive: 'docs/evidence/iter61-docsguards-bootstrap-red-2026-11-20.log.gz',
+    lines: ['GUARD_TABLE_ROWS 69', 'ℹ tests 28', 'ℹ pass 26', 'ℹ fail 2', 'GUARD_EXIT=1',
+      'DOCSGUARDS_SUMMARY tests 28 | pass 26 | fail 2 | skipped 0'],
+    phrases: ['the guard set on the tree that cites its own green docsguards archive one run before that archive can exist',
+      'NODE v26.13.1 /opt/homebrew/Cellar/node/26.13.1_2/bin/node',
+      'docs/validation.md -> docs/evidence/iter61-docsguards-2026-11-20.log.gz'],
+    // The two reds are the pair of existence guards, and nothing else: subsection 57's bootstrap asymmetry again, this
+    // time the archive that documents it being the one whose absence turns them red.
+    absent: ['ℹ pass 28', 'GUARD_EXIT=0'], marks: 0,
+    onlyReds: ['every docs/evidence archive named anywhere in prose exists on disk',
+      'every archived evidence file a doc points at exists'] },
+  { archive: 'docs/evidence/iter61-docsguards-2026-11-20.log.gz',
+    lines: ['GUARD_TABLE_ROWS 70', 'ℹ tests 28', 'ℹ pass 28', 'ℹ fail 0', 'ℹ skipped 0', 'GUARD_EXIT=0',
+      'DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0'],
+    phrases: ['the guard set on the tree whose placeholder docsguards archive is the cited green run',
+      'NODE v26.13.1 /opt/homebrew/Cellar/node/26.13.1_2/bin/node'],
+    absent: ['ℹ fail 2', 'GUARD_EXIT=1'], marks: 0 },
+  { archive: 'docs/evidence/iter61-docsguards-final-2026-11-20.log.gz',
+    lines: ['GUARD_TABLE_ROWS 71', 'ℹ tests 28', 'ℹ pass 28', 'ℹ fail 0', 'GUARD_EXIT=0',
+      'DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0'],
+    phrases: ['run after both docsguards archives above were real bytes and their rows were on the table'],
+    absent: ['ℹ fail 2', 'GUARD_EXIT=1'], marks: 0 },
+  { archive: 'docs/evidence/iter61-offline-shipped-2026-11-20.log.gz',
+    lines: ['OFFLINE_CMD npm test (tally table 73 rows, index regenerated)', 'ℹ tests 269', 'ℹ pass 269',
+      'ℹ fail 0', 'ℹ skipped 0', 'EXIT 0'],
+    phrases: ['CMD npm test  (iteration 61 offline suite on the finished documentation tree)',
+      'NODE v26.13.1 /opt/homebrew/Cellar/node/26.13.1_2/bin/node'],
+    absent: ['ℹ fail 1', '✖ failing tests:'], marks: 0 },
+  // The four-project gate on the finished iteration-61 tree, kept as the red run it was. Five `static-desktop` cases
+  // waited out a live service: NASA POWER stalled to its own 25 s client timeout, GIBS stalled twice its budget and
+  // Overpass refused until the shared live-fields helper spent its two user retries. The same five specs are green on
+  // the other three projects in this very log, on identical delivered bytes, so the archive carries both sides.
+  // No timeout was raised, no case was re-run inside the gate and the run was never restarted to harvest a green.
+  { archive: 'docs/evidence/iter61-gate-2026-11-20.log.gz',
+    lines: ['ITER61_GATE_START 2026-11-20T07:49:50Z',
+      'GIT_HEAD 92fdf2cbdfe09b7eebf93b33476c86bb8f189e42',
+      'Running 268 tests using 1 worker', '5 failed', '263 passed (25.4m)', 'GATE_EXIT=1',
+      'ITER61_GATE_DONE 2026-11-20T08:15:15Z'],
+    phrases: ['MD5 api=aa5a4c2789f5be26a229f5e7418e3fc4 ctx=454f3be7d958957e999e37dd5ba2bcec',
+      'Received string:    "AssistantNASA evidence could not be loaded. The app has not generated a comparison. ' +
+      'Check the error in step 2 and retry.RetryRead aloud"',
+      'real fields were still unavailable after two user retries',
+      '✓   87 [static-mobile] › tests/e2e/city-state-chat-flow.spec.js:13:1',
+      '✓   94 [static-mobile] › tests/e2e/gibs.spec.js:37:1',
+      'LOAD_AT_END { 4.03 3.87 3.92 }'],
+    absent: ['268 passed', 'GATE_EXIT=0'], marks: 5 },
+  // The census the handoff's suite-size cell now leads with. It is read from `--list` on this tip rather than inferred
+  // from the gate's own opening line, because the "+8 over iteration 60" the cell claims is a statement about which
+  // cases exist: the eight needles below are exactly `place-list-refused.spec.js`'s two cases in each of four projects.
+  { archive: 'docs/evidence/iter61-census-2026-11-20.log.gz',
+    lines: ['CENSUS_CMD npx playwright test --list (iteration-61 tip, four projects)',
+      'HEAD 92fdf2cbdfe09b7eebf93b33476c86bb8f189e42', 'Total: 268 tests in 26 files', 'CENSUS_EXIT=0'],
+    phrases: ['[static-desktop] › place-list-refused.spec.js:36:3', '[static-desktop] › place-list-refused.spec.js:100:3',
+      '[static-mobile] › place-list-refused.spec.js:36:3', '[static-mobile] › place-list-refused.spec.js:100:3',
+      '[node-desktop] › place-list-refused.spec.js:36:3', '[node-desktop] › place-list-refused.spec.js:100:3',
+      '[node-mobile] › place-list-refused.spec.js:36:3', '[node-mobile] › place-list-refused.spec.js:100:3'],
+    marks: 0, absent: ['test.skip', 'fixme('] },
+  // The one informative isolated check the programme allows after a live-service red: the three spec files the gate
+  // failed, on the bytes that gate executed, nothing widened and nothing re-run inside the gate itself. Note the
+  // header's `chat=` field hashes `public/js/modules/chat.js`, whereas the same label in the gate archive above hashes
+  // `public/js/lib/chat-context.js`; the api/ctx/wa hashes are the files the two runs share, and they are equal.
+  { archive: 'docs/evidence/iter61-isolated-check-2026-11-20.log.gz',
+    lines: ['ITER61_ISOLATED_START 2026-11-20T08:20:40Z',
+      'GIT_HEAD 92fdf2cbdfe09b7eebf93b33476c86bb8f189e42',
+      'CMD npx playwright test city-state-chat-flow field-terrain gibs --workers=1 ' +
+      '--output=artifacts/playwright/iter61-isolated-check',
+      'Running 24 tests using 1 worker', '24 passed (3.8m)', 'ISOLATED_EXIT=0',
+      'ITER61_ISOLATED_DONE 2026-11-20T08:24:27Z'],
+    phrases: ['MD5 api=aa5a4c2789f5be26a229f5e7418e3fc4 ctx=454f3be7d958957e999e37dd5ba2bcec ' +
+      'wa=cf52b64bb5ab8cf23d598a37add6ad11',
+      '✓   1 [static-desktop] › tests/e2e/city-state-chat-flow.spec.js:13:1',
+      '✓   3 [static-desktop] › tests/e2e/field-terrain.spec.js:4:1',
+      '✓   6 [static-desktop] › tests/e2e/gibs.spec.js:37:1'],
+    marks: 0, absent: ['✘', 'test.skip'] },
+  // The two runs that certify the tree after the gate/census/isolated rows above joined it: the offline suite and the
+  // five guard files, both captured with the process status read straight off the command (no pipe, so no `tail`
+  // exit masquerading as the runner's). Their headers say 76 rows because that is the table they executed against;
+  // the two rows you are reading are the 77th and 78th, which is subsection 57's asymmetry stated instead of hidden.
+  { archive: 'docs/evidence/iter61-offline-tally76-2026-11-20.log.gz',
+    lines: ['OFFLINE_CMD node --test tests/*.test.js (iteration 61, tally table 76 rows, index regenerated)',
+      'HEAD 92fdf2cbdfe09b7eebf93b33476c86bb8f189e42', 'ℹ tests 269', 'ℹ pass 269', 'ℹ fail 0', 'ℹ skipped 0',
+      'OFFLINE_EXIT=0'],
+    phrases: ['a saved list that could not be read says so, keeps the country and re-asks instead of caching the failure',
+      'a list that arrives unreadable reports its own reason and offers no retry that cannot help',
+      'an answered empty list keeps its wording and a cancelled read is never answered as data'],
+    marks: 0, absent: ['✘', 'not ok', 'test.skip'] },
+  { archive: 'docs/evidence/iter61-docsguards-tally76-2026-11-20.log.gz',
+    lines: ['DOCSGUARDS_CMD node scripts/docs-guards.mjs (iteration 61, tally table 76 rows, index regenerated)',
+      'GUARD_FILES 5', 'ℹ tests 28', 'ℹ pass 28', 'ℹ fail 0',
+      'DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0', 'DOCSGUARDS_CHILD_EXIT 0', 'DOCSGUARDS_EXIT=0'],
+    phrases: ['the tally of every archived run is printed by that archive, not by the prose quoting it',
+      'every shipped evidence file is named by a document or carried by the index',
+      'the committed index is what the shipped generator prints, line for line'],
+    marks: 0, absent: ['✘', 'not ok'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 63, `the table carries ${TALLIES.length} archives; subsections 57 through 60 quote more runs than ` +
+  assert.ok(TALLIES.length >= 78, `the table carries ${TALLIES.length} archives; subsections 57 through 60 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -613,7 +762,15 @@ test('the tally of every archived run is printed by that archive, not by the pro
     '57 when the four-project gate on the shipped tree joined it, 59 when that tree\'s offline suite and its guard ' +
     're-run joined it, 60 when the five attacks on this pass\'s own rows joined it, 61 the ladder that ran them, 62 the ' +
     'red that bundling that ladder into its own subject caused and 63 the offline suite re-run once every row above it ' +
-    'had landed.');
+    'had landed, and 69 when iteration 61 archived the refused-place-list red, the eight-case four-project gate, the ' +
+    'four-way control ladder, the 268-case offline suite, the 53-pointer drift reading and the control that proved the ' +
+    'deep-link anchor case detects a label repaired without its anchor; 72 with this pass\'s three docsguards logs, 73 ' +
+    'with the offline suite re-run after they landed and 74 with the four-project gate that ended red on five ' +
+    'live-service cases and was archived as it finished, not as a re-run would have made it, and 75 with the `--list` ' +
+    'census whose eight place-list needles are what the handoff\'s "+8 over iteration 60" rests on, and 76 with the ' +
+    'isolated four-project re-check of the five cases that gate lost, and 78 with the offline suite and the guard set ' +
+    'that executed against a 76-row table and exited under their own process status rather than a pipeline\'s last ' +
+    'command.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

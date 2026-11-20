@@ -122,3 +122,38 @@ test('the size cap drops only the named generated or vendored files, never handw
   assert.ok(unsighted.length === 0, `files the cap dropped with no review: ${unsighted.join(', ')}`);
   assert.ok(stale.length === 0, `GENERATED lists files the cap no longer drops: ${stale.join(', ')}`);
 });
+
+// A markdown deep link carries the same coordinate twice: the label a reader reads (`path/file.js:235-241`) and the
+// `#LNNN` anchor a click lands on. Iteration 61's citation repair rewrote three labels in docs/validation.md and left
+// their anchors on the pre-fix numbers, so the prose named the right line and the click jumped thirteen lines away.
+// Nothing else could see it: LINE_REF only reads labels, and the pins check code content, not URLs. This case reads both.
+const ANCHORED = /\((file:\/\/\/[^)\s]*?)#L(\d+)(?:-\d+)?\)/g;
+
+test('a deep link anchor jumps to the line its own label names', async () => {
+  const { text } = await scannedTree();
+  const mismatched = [];
+  let checked = 0;
+  for (const [file, lines] of text) lines.forEach((line, index) => {
+    if (line.length > 2000) return;
+    for (const anchorMatch of line.matchAll(ANCHORED)) {
+      const base = anchorMatch[1].split('/').pop();
+      const labelStart = line.lastIndexOf('[', anchorMatch.index);
+      if (labelStart < 0) continue; // an anchor with no link text before it is not a labelled pointer
+      const labelBands = [...line.slice(labelStart + 1, anchorMatch.index)
+        .matchAll(new RegExp(`[\\w./-]*${base.replace(/\./g, '\\.')}:(\\d+)(?:-(\\d+))?`, 'g'))]
+        .map(match => [Number(match[1]), Number(match[2] ?? match[1])]);
+      if (labelBands.length === 0) continue;
+      checked++;
+      const at = Number(anchorMatch[2]);
+      // A link to a band may legitimately anchor on any line inside it; anything outside is a stale anchor.
+      if (!labelBands.some(([from, to]) => at >= from && at <= to)) {
+        mismatched.push(`${file}:${index + 1} labels ${labelBands.map(([f, t]) => `${base}:${f}${t > f ? `-${t}` : ''}`).join(', ')} ` +
+          `but its anchor lands on line ${at}`);
+      }
+    }
+  });
+  // The floor is the point, not an afterthought: three links is all the prose had on 20 Nov, and a scan that saw none
+  // of them would otherwise report the same clean list as a scan that saw all three.
+  assert.ok(checked >= 3, `the anchor scan saw ${checked} labelled deep links; the ledger has had at least three since iteration 51`);
+  assert.ok(mismatched.length === 0, `deep links whose click disagrees with their prose:\n${mismatched.join('\n')}`);
+});

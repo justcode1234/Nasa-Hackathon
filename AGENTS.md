@@ -2,11 +2,11 @@
 
 > Instructions for Codex. Read this file before writing code. Preserve user decisions, inspect the actual implementation, and distinguish verified behavior from proposed work.
 
-> **Start here:** section 10 and
-> **docs/plans/2026-11-15-merged-release.md** contain the current state and later
-> user decisions. The user approved one merged main branch and deployment after
-> all release checks pass. Preserve the dated Phase A materials; never edit the
-> NASA portal. Sections 11-12 and older review reports are historical plans.
+> **Start here:** section 13 is the current goal, limits, tools and ordered backlog.
+> Section 10 and **docs/handoff-2026-11-18.md** hold dated evidence; verify current code.
+> Work and push only to **fix/chat-flow-and-answers**. Never main, merge or deploy.
+> Preserve other worktrees and dated Phase A materials; never edit the NASA portal.
+> Older release permissions and sections 11-12 are historical, not current authority.
 
 ## 1. Mission and product rules
 
@@ -1824,7 +1824,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   for and what lets the two falsified ledger lines be repaired instead of argued about. The defect was P2's last
   browser-side instance: `public/js/lib/api.js:54` decided a failed request was a cancellation by reading
   `reason?.name === 'AbortError'`, and four consumers (`public/js/app.js:236`, `public/js/app.js:296`,
-  `public/js/modules/chat.js:154`, `public/js/modules/workflow-assistant.js:412`) made the same test, so any
+  `public/js/modules/chat.js:154`, `public/js/modules/workflow-assistant.js:432`) made the same test, so any
   `AbortError` the runtime raised on its own - a dropped frame, an abort the page never requested - silenced the
   evidence status, hid `#retry-evidence`, and left the farmer with no sentence and no next step. The fix is one
   structured fact: `cancellation()` at `public/js/lib/api.js:49` sets `cancelled = true` where this app asked for
@@ -1944,10 +1944,10 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `0 mapped fields were returned.` A refused lookup and an empty area produce the same words, so the app told a farmer
   that no mapped fields exist near their point on the strength of a request that never answered. Root cause is two
   layers of swallowed state: `public/js/modules/context.js` returned an empty list on every failure path, and
-  `public/js/modules/workflow-assistant.js:295` mapped any resolution at all onto its `done` branch. The fix makes the
+  `public/js/modules/workflow-assistant.js:308` mapped any resolution at all onto its `done` branch. The fix makes the
   outcome structured rather than inferred - `public/js/modules/context.js:123` returns `reason: 'no-location'`,
   `:130` `superseded`, `:138` `{ ok: true, count }` and `:144` `lookup-failed`, and only `ok === false` reaches
-  `fieldsFailed` at `public/js/modules/workflow-assistant.js:309`, which both chat and the guided panel route through
+  `fieldsFailed` at `public/js/modules/workflow-assistant.js:322`, which both chat and the guided panel route through
   (`:459` and `:510`). The replacement sentence names the failure, keeps the selected point and offers the retry:
   `The community field lookup did not complete, so this app cannot say whether any mapped fields exist near this point.`
   **Executed numbers.** `tests/e2e/field-service-failure.spec.js:21` reproduces it: on the pre-fix bytes
@@ -2009,7 +2009,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `server/api.js:55` with zero network requests, the 400 at `server/api.js:46` is unreachable by typing because the
   composer's own `maxlength="500"` agrees with the handler's 1-500 rule, and an evidence question with every external
   host cut issues no request at all until a place is selected. What a farmer actually hits is the guided plan that
-  names its own coordinates: `public/js/modules/workflow-assistant.js:431` awaits the reverse lookup with no branch
+  names its own coordinates: `public/js/modules/workflow-assistant.js:451` awaits the reverse lookup with no branch
   around it, so a refusal there rejects straight out of `workflow.respond`. **Executed numbers.**
   `tests/e2e/chat-refused-ask-keeps-question.spec.js:26` reproduces it and then re-sends *without retyping*;
   `:76` types a different sentence into the composer while a lookup is held open for 2.5 s. Against the previous
@@ -2045,7 +2045,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `docs/evidence/iter59-offline-index-red-2026-11-20.log.gz`). Two instruments were strengthened on the way. The citation-anchors
   guard gained a fourth case that shifts the line a pin names by ±1 in memory and fails if the pin still matches, i.e.
   if it cannot report a one-line drift; run against the then-current 88 pins it found one real offender,
-  `public/js/modules/workflow-assistant.js:510`, whose quote was a fragment shared with the line above it, and that pin
+  `public/js/modules/workflow-assistant.js:530`, whose quote was a fragment shared with the line above it, and that pin
   now quotes text unique to its own line
   (`tests/documentation-citation-anchors.test.js`). The evidence-index guard can now cite a run that stopped before its
   tally: the new `noTally` shape requires the stop-shaped basename, evidence that a run actually started and zero tally
@@ -2112,6 +2112,33 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   the local SoilGrids throttle as an upstream failure (P1 untouched); the P0 19 Nov field-discovery red stays
   undiagnosed. Safari/WebKit, real phones, microphones, audio quality and independent agronomy stay UNVERIFIED. Nothing
   was deployed, main is untouched, no NASA portal edit.
+
+- **20 Nov, same branch: iteration 61 - a refused place list answered "no towns are listed", and the recovery that
+  sentence promised died on a stale dropdown** (subsection 61 of `docs/validation.md` carries the measurements).
+  `catch { listed = null; }` in HEAD became `{ regions: [], places: [] }` one line later, so a country whose
+  saved rows were unreachable was described to the farmer as a country with no towns, the region filter kept its
+  `List unavailable` placeholder, and the same bare catch answered a cancellation as data for a session the
+  farmer had left. `placeListFailure` now splits the three classes on the status and code goal 2 preserved, an
+  unreadable schema says asking again cannot change a source format, a read that did not come back offers a
+  retry, and the read rethrows a cancellation. The retry the sentence names was then proved pressable rather
+  than assumed: `public/js/modules/context.js` asks the picker for the country's rows before validating a tapped
+  region, which is the half a browser run found and reading the code did not. The shipped spec
+  `tests/e2e/place-list-refused.spec.js` covers two cases in each of the four projects and fails on each
+  repair individually (`FIXED` / `ORIGINAL_DEFECT` / `NO_IDENTITY` / `NO_REREAD` / `RESTORE_OK`).
+  The census is `Total: 268 tests in 26 files`, `npm test` reads 269 / 269 pass and the guard set 28 / 28;
+  the pin table grew 88 to 106, the drift instrument read 53 stale pointers and 32 were re-pointed, and a sixth
+  case in `tests/documentation-citations.test.js` now refuses a deep link whose `#LNNN` anchor falls outside the
+  band its own label names - a defect this pass's own repair created. **The four-project gate on this tree is
+  red and is archived as red**: `5 failed` / `263 passed (25.4m)` / `GATE_EXIT=1`, all five in
+  `[static-desktop]`, one NASA POWER request open for 25 010 ms then `net::ERR_ABORTED`, three GIBS cases a
+  minute and the Ames field case refusing twice. One isolated re-run of exactly those three files on exactly
+  those bytes - no widened timeout, no re-run inside the gate, no skipped case - reads `24 passed (3.8m)`, so
+  the branch has no case that has not passed and iteration 61 does not claim a green gate. Still open and now
+  named: `pendingChoice`, consumed at `public/js/modules/chat.js:93`, is not restored with the sentence, and
+  this pass's own re-read makes a tapped region button able to throw, so the next pass measures that before
+  touching it; `server/context/client.js:44` still rethrows the local SoilGrids throttle as an upstream failure;
+  the P0 19 Nov field-discovery red stays undiagnosed. Safari/WebKit, real phones, microphones, audio quality
+  and independent agronomy stay UNVERIFIED. Nothing was deployed, main is untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -2215,3 +2242,273 @@ showed the project as an unsubmitted draft with empty references fields.
 shows it beats the rules. Field lookup depends on shared public Overpass services;
 report busy-service failures as failures with their cause. Real phones, Safari, real
 microphones and audible read-aloud remain unverified.
+
+## 13. Standing goal, the tools that prove it, and what counts as achieved (set 20 Nov 2026)
+
+This section states the goal an autonomous agent is working to on `fix/chat-flow-and-answers`,
+the commands that constitute proof here, and the line between verified and unverified. It
+overrides any older sentence in this file that permits a release, a second branch or a
+deployment. The original programme brief is outside the clone in the parent workspace;
+its starting-state paragraph is historical. This section is the repository-local restart
+contract. A review request pauses implementation, commits and pushes until the user restarts it.
+
+**The goal, in one sentence.** A reproducibly verified branch where the farmer journey —
+place, constraints, evidence, compared rotations, and the chat that drives them — behaves the
+same over the static-worker and Node-HTTP transports; where a failure says what actually
+happened, keeps the farmer's inputs and offers a recovery that works; where cancellation,
+stale responses, caching, rate limits and optional-model failures cannot silently corrupt a
+result; where a regression test detects what it claims to detect; and where every reported
+number traces to an executed run and its source revision.
+
+**What "achieved" means — six checks a reader can run, not a feeling.**
+
+1. A clone of the branch tip passes `npm test` with no skip, and `npm run test:e2e` passes in
+   all four projects (static-desktop, static-mobile, node-desktop, node-mobile).
+2. For each transport-dependent claim there is a case that executes on *both* transports, so
+   "parity" is measured rather than asserted. The six panel cases that used to skip on the
+   static builds are the precedent for how that is done.
+3. For every failure family a test separates three facts: the service refused, the service
+   answered with nothing, and the answer arrived after the farmer had moved on. A refusal may
+   never be worded as a finding about the data.
+4. Every failure path preserves what the farmer typed or tapped, and the recovery it names
+   exists as a control they can press.
+5. No number in `docs/validation.md`, `AGENTS.md` or `docs/handoff-2026-11-18.md` is quoted
+   without an archive under `docs/evidence/` that prints it, and a red run is kept as a red run.
+6. The blockers and the UNVERIFIED list below are stated in the same place as the successes.
+
+**Repository verification tools.** Read `package.json` before using a command; run from the
+repository root, one browser suite at a time. A command's existence is not proof it passed.
+
+| Command | Scope and limitation |
+| --- | --- |
+| `npm test` | Offline server, agronomy, transport, chat and docs cases; includes a static build |
+| `npm run build` | Builds the worker bundle and `dist/client`; does not exercise the UI |
+| `npm run test:e2e` | Four Chrome projects, both transports; includes live-service dependencies |
+| `npm run test:release` | Runs offline then browser suites; despite its name, deploys nothing |
+| `node scripts/docs-guards.mjs` | Runs the complete documentation guard set; checks its file inventory |
+| `node scripts/citation-drift.mjs` | Compares cited lines in changed source files; not a semantic audit |
+| `node scripts/evidence-index-generator.mjs` | Regenerates the evidence index; `--stdout` prints without writing |
+| `npm run test:chat-matrix` | Browser walk over supported country/place flows |
+| `npm run test:place-audit` | Deep offline place-matching audit |
+| `npx playwright test --list` | Discovers cases without running them; census only |
+| `npm run start` / `npm run start:node` | Local static-worker / Node-HTTP previews for browser checks |
+
+Historical baseline, not a fresh review gate: iteration 60 archived 262 offline passes in
+27.3 s at `docs/evidence/iter60-offline-shipped-2026-11-20.log.gz`, and 260 browser passes,
+zero failures/skips in 20.1 min at `docs/evidence/iter60-gate-2026-11-20.log.gz`.
+The gate header names e3982cd plus that iteration's work; the review tip is 92fdf2c, with no
+application or e2e-file difference between them. Re-measure counts rather than freezing them
+as targets. There is no `.github/workflows` directory on this tip; CI has not been set up.
+
+**Agent tools exposed in this session, not promises about a future host.**
+
+- `Read`, `Grep`, `Glob`, `Edit`, `Write`: inspect and change local files; prefer targeted reads.
+- `Bash`: git, Node/npm, local probes, gzip archives and process inspection. Long runs use its
+  supported background mode, their own logs and preserved exit status, not an untracked shell job.
+- `SearchWorkspace`: cross-file discovery when needed; validate its findings against source.
+- `mcp_list`, `mcp_get`, `mcp_call`: discover and inspect actual MCP schemas before invocation.
+  Prefer the exposed `remote-browser-use` connector for interactive browser work. Repository
+  Playwright uses the installed local Chrome; a remote browser cannot be assumed to see localhost.
+- `Skill`: load applicable, actually listed guidance. A skill's presence proves no device or
+  runtime worked. Do not install extensions, browsers or packages merely because a skill names them.
+- `GetGoal`, `CreateGoal`, `UpdateGoal`: inspect/register/complete an explicitly requested goal.
+  Do not create a duplicate or resume execution during a review. A stopped goal needs user restart.
+- `gh` and git: read remote state and publish only when authorised. Never print tokens, alter git
+  configuration, force-push or bypass a denied tool. No subagent delegation; keep progress in prose
+  when task tools are unavailable or blocked. Do not switch mechanisms to evade a hook denial.
+
+Probe measurements may enter the ledger too, but only with the executed command, archived
+source/output, runtime and source hashes. Tool summaries and completion notifications alone
+are not evidence. No independent subagent review is claimed.
+
+**Hard limits, restated because they are the ones an agent is tempted to cross.** Work and push
+only to `fix/chat-flow-and-answers`; never `main`, never merge, never deploy, never touch the
+NASA portal, never edit the frozen `public/submission/phase-a` or another worktree. Add no
+dependencies and do not re-architect. Never invent data, confidence, yields or savings. Never
+weaken, skip or narrow a test to get green, and never raise a timeout or add a retry to hide a
+failure — rewrite a superseded assertion stronger and say why. If docs checks fail, fix the
+prose, not the guard. If an external service blocks a full gate, report *local verification
+complete; live integration blocked* rather than a pass. A newer human request to pause, review
+or plan takes precedence over any standing goal.
+
+**UNVERIFIED, stated rather than inferred.** Real phones and tablets, Safari and any WebKit
+build (the suite runs the installed Chrome channel only; no Firefox or Gecko engine is
+installed on this machine either, so `npm run test:firefox` cannot run here), physical
+microphones and the audible quality of read-aloud, and any independent agronomic review of the
+rotation advice. These stay UNVERIFIED until separately authorised and actually tested; a green
+gate does not cover them.
+
+**Reconciled starting state, 20 Nov 2026, review tip 92fdf2c.** Later queue bullets are not
+necessarily more accurate than earlier code or logs. The original P0-P3 must not be re-opened
+merely because stale prose repeats them:
+
+- P0's failed gate remains failed: 229 passed, one failed, six skipped, 24.9 min in
+  `docs/evidence/iter52-gate-2026-11-19.log.gz`. The trace census records Overpass HTTP
+  502/504 responses and unanswered requests, with no terrain request; it does not prove why
+  those remote services failed. The isolated re-pass is separate evidence, not a repaired gate.
+  Read `docs/evidence/iter52-trace-census-2026-11-19.log.gz` and
+  `docs/evidence/iter52-gate-isolated-rerun-2026-11-19.log.gz`. The reconciliation exists;
+  remote-service reliability remains outside this app's guarantee. Do not call capacity proven.
+- P1's local-throttle wording fix landed in iteration 53: `server/context/soil.js:28` creates
+  `SOIL_FAIR_USE`, and `server/context/client.js:44` passes that AppError through unchanged.
+  Later prose saying the wrapper still converts it to an upstream failure is stale. Browser
+  coverage of the distinction is a remaining task, not another reason to rewrite the same fix.
+- P2's provider classification landed in iteration 54, and caller-owned cancellation in 56.
+  Metadata preservation at the page boundary and cancellation during body reading remain open.
+- P3's six skipped panel executions were replaced in iteration 57. Preserve those deterministic
+  cases and the live checks; do not describe the old skips as current.
+
+**Closed 20 Nov: the refused saved list (goals 2-5).** The bare catch that turned a refusal into "No towns are
+listed" is gone from `public/js/modules/workflow-assistant.js:357`, which now rethrows a cancellation and leaves the
+read a failure; `public/js/modules/workflow-assistant.js:224` answers an unavailable read and an unreadable source
+shape with the two different sentences their recovery needs, and no layer caches a failed read, so the retry re-asks.
+The offline probe that first measured it is still
+`docs/evidence/review-goals-place-list-2026-11-20.log.gz` and
+`docs/evidence/review-goals-place-list-2026-11-20.mjs.gz`; extract the source and run it with
+Node from the repository root; its imports resolve from that working directory. Reproduced since in both transports by
+`tests/e2e/place-list-refused.spec.js`, with validation.md subsection 61 carrying the gate, the single-file revert
+controls and the second defect the browser run exposed at `public/js/modules/context.js:245`: the region the refusal
+tells the farmer to pick was validated against a step-1 dropdown still holding the older failure.
+Goal 2's half is shipped too — `public/js/lib/api.js:13` and `public/js/lib/api.js:70` carry the status and code each
+transport reported beside the sentence, and `public/js/lib/api.js:54` keeps a runtime exception with no status behind it
+from borrowing an authored identity. Raw runtime exceptions are never displayed.
+
+**Next in the same family, unfixed.** `public/js/modules/workflow-assistant.js:340` asks the saved list whether a
+spelling is a local place name and treats a refusal as `null`, which is read as "not a local name" — so with the list
+unreachable, a message naming a town inside another country's name moves the whole plan to that country instead of
+saying the check could not be made. The honest error already exists at `server/context/locations.js:20`; successful
+responses publish `available` at `server/context/locations.js:27`. Keep loading failure separate from
+an answered empty list, preserving `tests/matrix-coverage.test.js:65`.
+
+The pending-choice loss is a candidate with narrower reach than the old queue suggests:
+`public/js/modules/chat.js:93` consumes it, while `public/js/modules/chat.js:156` restores
+only text. The reviewed location/field actions normally resolve; the missing-catalog throw
+at `public/js/app.js:174` needs a real UI reproduction before changing retry state. Restoring
+an old town choice after a country change would itself be a wrong-location defect.
+
+The optional-model error branch at `public/js/modules/chat.js:63` drops the worker's message
+and blames the device. Give only an observed, safe reason; do not restore the old raw-error
+leak. The earlier CDN interruption and recovery are archived in
+`docs/evidence/iter56-dns-trace-census-2026-11-19.log.gz`; deterministic failure coverage and
+live model-loading coverage must remain distinct. Superseded evidence replies and body-read
+cancellation are candidates to reproduce, not already-proven defects.
+
+### 13.1. Next 50 goals, in priority order
+
+This is a proposed execution backlog, not 50 discovered bugs or 50 mandatory code changes.
+Start with 1-5, then select the highest-impact unblocked item. A goal closes as VERIFIED FIX,
+VERIFIED SOUND or BLOCKED with evidence and an unblock condition; do not manufacture a change
+when existing behaviour is sound. No goal is marked executed merely by appearing here.
+
+**Failure truthfulness and recovery**
+
+1. Reconcile current handoff summaries with the closed P0-P3 work; preserve dated red records. CLOSED 20 Nov:
+   the reconciliation entry is the last block of `docs/handoff-2026-11-18.md` §7, and this pass kept its own red run
+   (`docs/evidence/iter61-browser-red-2026-11-20.log.gz`) rather than archiving only the green one.
+2. Preserve authored error status/code across HTTP and worker transports without leaking internals. CLOSED 20 Nov
+   as VERIFIED FIX: `tests/e2e/place-list-refused.spec.js` could not classify either failure class until it shipped, and
+   `docs/evidence/iter61-controls-2026-11-20.log.gz` shows the spec going red when `public/js/lib/api.js` is reverted.
+3. Reproduce the saved-list refusal in both browser transports; replace false empty-data claims. CLOSED 20 Nov as
+   VERIFIED FIX: validation.md subsection 61, `tests/e2e/place-list-refused.spec.js:36`, 8/8 in four projects.
+4. Separate invalid saved-list schema, unavailable reads and genuinely empty lists in recovery tests. CLOSED 20 Nov
+   as VERIFIED FIX: `public/js/modules/workflow-assistant.js:225` branches on the code, `:357` rethrows a cancellation,
+   and `tests/e2e/place-list-refused.spec.js:100` plus the three cases in `tests/workflow-place-choices.test.js` hold the
+   three classes apart.
+5. Exercise list retry after recovery; keep the country and never cache a failed read as an empty list. CLOSED 20 Nov
+   as VERIFIED FIX: the case refuses twice, counts the re-ask, then taps a recovered region; that tap found the second
+   defect (`public/js/modules/context.js:245`) and is asserted at `tests/e2e/place-list-refused.spec.js:92`.
+6. Reproduce pending-choice loss through a reachable UI failure, or close the candidate as sound.
+7. If reachable, retain the exact tapped identity on retry without overwriting a newer typed draft.
+8. Invalidate retained choices after location changes, cancellation or a different message.
+9. Replace unsupported device blame on model-load failure with safe, observable failure wording.
+10. Prove model refusal/unload/reload leaves deterministic chat and planning usable, with no fake success.
+
+**Cancellation, late replies and worker lifecycle**
+
+11. Test caller cancellation while HTTP response JSON is still being read.
+12. Test cancelled worker requests and late replies without claiming upstream work was cancelled.
+13. Verify unexpected AbortError failures still surface instead of being treated as user cancellation.
+14. Verify worker-start and synchronous postMessage failures settle callers and allow recovery.
+15. Verify worker crash/restart clears pending work and prevents duplicate or stale answers.
+16. Reverse response order for successive countries; old crop/town lists must never win.
+17. Reverse order for successive regions, towns and place searches; selection stays with the latest action.
+18. Change location during a field lookup; old outlines and field counts must not attach to the new point.
+19. Change location during evidence loading; supersession must not appear as a NASA service failure.
+20. Edit constraints during comparison; results and chat must not describe the abandoned plan as current.
+
+**Location and farmer-input integrity**
+
+21. Cross-check dropdown, map, search, coordinate and chat selections for the same stored location.
+22. Verify same-country town/field changes preserve valid crop choices without reusing stale evidence.
+23. Verify cross-country changes clear incompatible choices explicitly, never silently substituting crops.
+24. Check duplicate town names select the exact offered row, including same-name/same-region collisions.
+25. Recheck country-name, region-less and list-less flows against the existing full-matrix invariants.
+26. Audit decimal commas, hemisphere tags and agronomy numbers for unintended coordinate selection.
+27. Verify unknown soil/irrigation remains unknown and never becomes an inferred farm measurement.
+28. Verify planting month, year and priority survive retries and back/forward workflow navigation.
+29. Verify unsupported crops and insufficient coverage explain the block while preserving farmer inputs.
+30. Test keyboard focus, visible error/retry controls and small viewports for the newly changed paths.
+
+**Evidence and comparison integrity**
+
+31. Verify source date, retrieval date, units and spatial support stay attached to displayed measurements.
+32. Verify missing values and incomplete periods cannot become zero rainfall or false complete coverage.
+33. Check chat, tables and charts agree on the same measured series, location and aggregation period.
+34. Verify temperature-unit switches and crop-window selection do not alter underlying scientific inputs.
+35. Check country pest records cannot be presented as current field presence or the wrong country's evidence.
+36. Check regional soil estimates remain separate from user-supplied soil and carry their uncertainty notice.
+37. Recheck citation identity, source count and link targets after composition and paragraph truncation.
+38. Verify comparisons retain the farmer's baseline and use equal horizons and explicit screening criteria.
+39. Check alternatives honour allowed crops, explicit approval and stated constraints without invented benefits.
+40. Preserve clarification, missing-evidence and limitation sentences when richer context is composed into chat.
+
+**Reproducibility and sustainable execution**
+
+41. Complete browser coverage of local SoilGrids refusal versus upstream failure; count actual upstream calls.
+42. Audit cache keys, expiry and in-flight deduplication across locations and failed/cancelled requests.
+43. Cover optional-model startup deterministically without removing the existing live CDN/model checks.
+44. Add or strengthen deterministic field-service failure coverage while retaining real-field integration checks.
+45. Prove interceptors matched; add unhandled-egress checks and guard against cached or stale-build false greens.
+46. Make each new regression fail on the original defect and plausible half-fixes; verify byte restoration.
+47. Keep one concise current queue and one run record per execution; avoid recursive evidence-only iterations.
+48. Re-run shipped setup and verification commands from an isolated clean branch copy without touching worktrees.
+49. Run final offline and four-project browser gates on identified frozen bytes; retain every failed attempt.
+50. Deliver the branch-only handoff: coverage, limits, blocker/unblock conditions and exact next action.
+
+### 13.2. Execution cycle, setbacks and finish criteria
+
+For a confirmed defect: reproduce before fixing, make the smallest change, challenge the test,
+restore byte-identically, rebuild the static output, run focused/offline/browser checks and
+review the diff. Archive commands, source hashes, interpreter, actual results and failures.
+Update `docs/validation.md`, the dated section-10 entry, the current handoff and evidence index
+for executed iterations. This review itself is documentation/research, not a shipped iteration.
+
+Keep the control set finite and tied to a claimed behaviour: baseline plus relevant half-fixes
+and a verified restore. If the harness is faulty, invalidate affected results and repair it;
+do not start an endless sequence whose sole purpose is to archive its predecessor. Keep the
+last confirmation's provenance explicit without claiming it validated its own later-written log.
+
+Use one browser suite at a time. During it, freeze application files, e2e specs, configuration
+and generated assets. Both `npm test` and `npm run build` rewrite served output; never run them
+mid-gate. Use a unique log/output directory and record the child's real exit code. Wait for
+background completion, then read the log itself; no busy polling or notification-only verdicts.
+
+On a quiet run, inspect the owned process, active case, elapsed time and load before declaring
+it stuck. Never kill another workload. On a live outage, preserve the trace/status and run one
+informative isolated check, not repeated full gates seeking green. Continue independent work
+or record a precise unblock condition. A permission denial stops that operation; it is not a
+reason to switch tools, identities or channels. Never raise timeouts or retries to hide a fault.
+
+When review/implementation is resumed explicitly, inspect existing changes and running jobs
+before touching them. Commit only the reviewed work when authorised, stage explicit paths,
+exclude unrelated licence normalization, and verify remote main with `git ls-remote` before
+any authorised push. Push only the named feature branch, never force. Preserve verified local
+work if publication is blocked. Do not commit or push as part of this review request.
+
+The local milestone is achieved when all applicable backlog goals have evidence-backed
+outcomes, no known high-impact input-loss/wrong-location/unsupported-claim defect remains,
+regressions are sensitive to the defects they cover, and offline plus both-transport browser
+verification and evidence reconciliation pass on the delivered bytes. Blocked required live
+checks mean partial completion, never overall success. External devices/audio/agronomy retain
+their explicit UNVERIFIED status. Do not inflate scope or invent fifty changes to stay busy;
+continue only with demonstrated improvements, and always obey a newer pause or review request.

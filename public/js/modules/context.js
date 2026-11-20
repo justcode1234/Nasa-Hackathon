@@ -235,8 +235,15 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
       return locationChanged({ countryCode: country, ...options });
     },
     async chooseRegion(regionCode, options = {}) {
-      if (![...$('place-region').options].some(option => option.value === regionCode && option.value !== '__all__')) throw new Error('Choose a region from the current country list.');
       const countryCode = $('pest-country').value;
+      if (!countryCode) throw new Error('Choose a country before selecting a region.');
+      // The Region list is what this check reads, and it is filled asynchronously: after a saved-list read that
+      // failed it keeps its `List unavailable` placeholder until the country is reselected, so a region the chat
+      // just recovered would be refused by a form still holding the older failure. Ask this country's rows of the
+      // picker first — it caches a body only on a successful read, so that is a real re-check after a failure and
+      // costs nothing on a healthy list — and then the sentence below means what it says.
+      await picker.setCountry(countryCode, { regionCode });
+      if (![...$('place-region').options].some(option => option.value === regionCode && option.value !== '__all__')) throw new Error('Choose a region from the current country list.');
       onCountrySelection(options);
       return locationChanged({ countryCode, regionCode, ...options });
     } };

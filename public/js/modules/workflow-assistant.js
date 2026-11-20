@@ -216,6 +216,19 @@ export function typedPlace(places, question, { countryName, regionCode = null, a
   return matched.length || !regionCode ? matched : listedPlaces(places, { phrase, countryName, allowEponymous, regionCode: null });
 }
 // Buttons mirror the first three rows of the visible step 1 Town list, in list order.
+// A saved place list that could not be read answers no question about the places it holds, and the two ways it can
+// fail need different sentences: `LOCATIONS_SCHEMA` means rows arrived in a shape this app refuses to guess at, which
+// a second request cannot repair, while any other failure means no answer came back, which the farmer may ask for
+// again. The retry is real because neither cache keeps a failure — `getLocationList` below stores only a resolved
+// body, and server/context/locations.js caches only a successful read.
+function placeListFailure(countryName, error) {
+  const unreadable = error?.code === 'LOCATIONS_SCHEMA';
+  return reply(`${unreadable
+    ? `The saved place list for ${countryName} arrived in a shape this app cannot read, so no region or town could be checked against it, and asking again cannot change a source format`
+    : `The saved place list for ${countryName} could not be read just now, so this assistant cannot say which regions or towns it lists. Nothing was selected and nothing was invented`}. You can still search a place by name, select a field on the map or enter your farm coordinates in step 1; a whole-country overview needs none of these.`,
+    unreadable ? [next(`Whole ${countryName}`, `Whole ${countryName}`)]
+      : [next('Try the place list again', 'A specific area'), next(`Whole ${countryName}`, `Whole ${countryName}`)]);
+}
 function townButtons(places, regionCode = null) {
   return (places?.places ?? []).filter(place => !regionCode || place.regionCode === regionCode).slice(0, 3)
     .map(place => ({ label: place.name, question: `Use ${place.name}`, workflowChoice: { type: 'town', id: place.id } }));
@@ -335,10 +348,15 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     if (!state.country) { actions.showStep('location'); return reply('Which country should we look at? Then we can explore the whole country or a particular area.'); }
     const countryName = COUNTRY_NAMES.of(state.country);
     // The saved place list for the selected country decides whether a short reply names
-    // a place. A failed list request leaves the message unclaimed rather than guessing.
-    let listed = null;
-    try { listed = await getLocationList(state.country); guard(); } catch { listed = null; }
+    // a place. A failed list request leaves the message unclaimed rather than guessing — and it stays a failure,
+    // because a read that never completed is not a finding about what the list holds. Measured 20 Nov: the bare
+    // catch turned a refusal into "No towns are listed for <country>" for a list holding every town in the country,
+    // and a cancellation into the same sentence while also replying for a session the farmer had left.
+    let listed = null, listFailed = null;
+    try { listed = await getLocationList(state.country); guard(); }
+    catch (error) { if (error.cancelled === true) throw error; listFailed = error; }
     const places = listed ?? { regions: [], places: [] };
+    const listFailureReply = () => placeListFailure(countryName, listFailed);
     const mentionsPlace = placeMentions(question, parsed.countries);
     // A region spelled exactly like the country is dropped from the suggestion lists, but only when
     // the spelling is identical: Réunion’s single saved region is ASCII “Reunion”, and excluding it
@@ -385,6 +403,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     // the generic assistant cannot name a town, so silence here strands the pending plan.
     const placeRecovery = () => {
       actions.showStep('location');
+      if (listFailed) return listFailureReply();
       const regionName = places.regions.find(region => region.id === (areaRegion ?? state.regionCode))?.name;
       return reply(`No town by that name is in the saved place list for ${countryName}${regionName ? ` in ${regionName}` : ''}. Tap one of the towns below, choose any town in the step 1 Town list, search a place or enter your farm coordinates. I will not guess a similar name.`,
         [...townButtons(places, areaRegion ?? state.regionCode ?? null), next(`Whole ${countryName}`, `Whole ${countryName}`)]);
@@ -395,6 +414,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     // the farmer had never chosen.
     const regionRecovery = () => {
       actions.showStep('location');
+      if (listFailed) return listFailureReply();
       const prompt = areaPrompt(countryName, null, places);
       const whole = next(`Whole ${countryName}`, `Whole ${countryName}`);
       const followUps = prompt.followUps.some(choice => choice.label === whole.label) ? prompt.followUps : [...prompt.followUps, whole];
@@ -421,7 +441,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       // A national request must not retain a field point or its NASA comparison.
       if (state.location || state.farm || state.regionCode) { await run('chooseCountry', state.country); state = getState(); }
     }
-    if (parsed.specificArea) { const previousScope = scope; scope = 'area'; await keepInputs(); actions.showStep('location'); guard(); return areaPrompt(countryName, null, places, { regionCode: areaRegion, wholeEscape: previousScope !== 'country' }); }
+    if (parsed.specificArea) { const previousScope = scope; scope = 'area'; await keepInputs(); actions.showStep('location'); guard(); return areaPrompt(countryName, null, places, { regionCode: areaRegion, wholeEscape: previousScope !== 'country', listFailed }); }
     const explicitPoint = parsed.location || parsed.farmId || parsed.farmIndex || (!parsed.wholeCountry && (parsed.usePoint || parsed.useFarm)) || choice?.type === 'farm' || choice?.type === 'town';
     if (parsed.wholeCountry && !explicitPoint) { await keepInputs(); return countryOverview(getState(), inputsInForm); }
     if (parsed.location) {
@@ -540,6 +560,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
           : namedRegions.slice(0, 3).map(region => next(region.name, region.name, { type: 'region', id: region.id }))),
           next(`Whole ${countryName}`, `Whole ${countryName}`)];
         actions.showStep('location');
+        if (listFailed) return listFailureReply();
         if (!namedRegions.length && !places.places.length) return reply(`“${countryName}” is the country, and its saved place list holds no towns or regions to choose from. Choose Whole ${countryName} for the country overview, or give your farm coordinates. Nothing was selected.`, options);
         const level = regionName ? `a town in ${regionName}` : namedRegions.length ? 'one of its regions' : 'one of its towns';
         return reply(`“${countryName}” is the country, not ${level}. Tap a ${forTowns ? 'town' : 'region'} below, type its name here, or choose Whole ${countryName} for the country overview. Nothing was selected.`, options);
@@ -547,7 +568,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       await keepInputs();
       actions.showStep('location');
       if (scope === 'country' && !explicitPoint && !placeMention) return countryOverview(getState(), inputsInForm);
-      if (scope === 'area' || selectedRegion) return areaPrompt(countryName, places.regions.find(region => region.id === selectedRegion)?.name, places, { regionCode: selectedRegion, wholeEscape: scope !== 'country' });
+      if (scope === 'area' || selectedRegion) return areaPrompt(countryName, places.regions.find(region => region.id === selectedRegion)?.name, places, { regionCode: selectedRegion, wholeEscape: scope !== 'country', listFailed });
       // Neutral on purpose: an empty list can be an uninhabited code or a list that did not load, and
       // only the second path can tell them apart. Both buttons work — “A specific area” states the gap.
       return reply(`Which part of ${countryName} should we focus on, or would you like an overview of the whole country?`,
@@ -627,7 +648,11 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     return regions.length === 1 ? { type: 'region', id: regions[0].id } : null;
   }
   function areaPrompt(countryName, regionName, places, options = {}) {
-    const { regionCode = null, wholeEscape = true } = options;
+    const { regionCode = null, wholeEscape = true, listFailed = null } = options;
+    // Every sentence below reads `places` as what the country's list holds, so a list that could not be read is
+    // answered before them: "no towns are listed" is a fact about a list that answered with nothing, and a guess
+    // about a lookup that never answered.
+    if (listFailed) return placeListFailure(countryName, listFailed);
     const named = (places?.regions ?? []).filter(region => region.name && normalizeName(region.name) !== normalizeName(countryName));
     const shortcuts = [];
     if (!regionName && named.length) {

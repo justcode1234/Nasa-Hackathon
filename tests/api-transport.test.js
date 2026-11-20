@@ -126,3 +126,41 @@ test('the worker forwards the status that lets the page tell authored text from 
   assert.match(await readFile('public/js/lib/core-worker-entry.js', 'utf8'), /status: error\.status/,
     'without the status field every worker failure looks unlabelled');
 });
+
+// Measured 20 Nov: `if (!response.ok) throw new Error(data?.error?.message ?? …)` kept the sentence and threw the two
+// facts that say what to do next away with it. The server ships `{ error: { code, message } }` (server/index.js:71)
+// and the worker posts `{ error, code, status }` (public/js/lib/core-worker-entry.js:9), so both halves of the
+// identity are already on the wire — a page that cannot see them has to guess between "the list could not be read"
+// and "the list arrived unreadable", which is the difference between offering a retry and offering a dead end.
+test('an authored HTTP failure keeps the status and code the server sent beside its sentence', async t => {
+  nodeMode(t);
+  t.mock.method(globalThis, 'fetch', async () => ({ ok: false, status: 503,
+    json: async () => ({ error: { code: 'LOCATIONS_UNAVAILABLE', message: 'The saved town list could not load. Retry the country selection, search a place or use the map.' } }) }));
+  const error = await rejected(api('/api/locations?country=PH'));
+  assert.equal(error.message, 'The saved town list could not load. Retry the country selection, search a place or use the map.');
+  assert.equal(error.status, 503, 'the page has to be able to tell a refusal from a success');
+  assert.equal(error.code, 'LOCATIONS_UNAVAILABLE', 'and which authored refusal it was');
+});
+
+test('an authored worker failure keeps the same two facts the HTTP transport carries', async t => {
+  workerMode(t);
+  workerReply = { error: 'The saved town list has an invalid source format. Use place search or coordinates.',
+    status: 503, code: 'LOCATIONS_SCHEMA' };
+  const error = await rejected(api('/api/locations?country=PH'));
+  assert.equal(error.message, 'The saved town list has an invalid source format. Use place search or coordinates.');
+  assert.equal(error.status, 503);
+  assert.equal(error.code, 'LOCATIONS_SCHEMA', 'a code the page may branch on has to arrive on both transports or neither');
+});
+
+test('a failure with no status behind it borrows no authored identity', async t => {
+  const warnings = captureWarnings(t);
+  workerMode(t);
+  // This is what a throw that is not an AppError looks like out of the worker: the entry labels it CLIENT_ERROR and
+  // there is no status, so accepting the code would dress a runtime exception in an app-authored case name.
+  workerReply = { error: "Cannot read properties of undefined (reading 'places')", code: 'CLIENT_ERROR' };
+  const error = await rejected(api('/api/locations?country=PH'));
+  assert.equal(error.message, NO_ANSWER);
+  assert.equal(error.status, undefined, 'no status was observed, so none may be claimed');
+  assert.equal(error.code, undefined, 'an unlabelled failure must not read as a coded one');
+  assert.match(warnings.join('\n'), /request ended with no status/);
+});

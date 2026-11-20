@@ -10,7 +10,7 @@ async function httpApi(path, { method, body, signal }) {
   let data;
   try { data = await response.json(); }
   catch { throw new Error('The Node.js API returned an unreadable response. Check the local server.'); }
-  if (!response.ok) throw new Error(data?.error?.message ?? `The Node.js API returned HTTP ${response.status}.`);
+  if (!response.ok) throw identified(new Error(data?.error?.message ?? `The Node.js API returned HTTP ${response.status}.`), response.status, data?.error?.code);
   return data;
 }
 
@@ -57,6 +57,15 @@ function unlabelled(reason, signal) {
   console.warn('[fieldshift] request ended with no status:', reason?.message ?? reason);
   return new Error(NO_ANSWER, { cause: reason instanceof Error ? reason : new Error(String(reason?.message ?? reason)) });
 }
+function identified(error, status, code) {
+  // Both halves travel together or not at all. A status is what says the sentence came from this app rather than
+  // from a runtime, and the code says which authored case it was — a 503 whose list could not be read is retried,
+  // a 503 whose format is unreadable is not. A failure with no status is unlabelled, so it borrows no code.
+  if (typeof status !== 'number') return error;
+  error.status = status;
+  if (typeof code === 'string') error.code = code;
+  return error;
+}
 function workerFailure(data) {
-  return typeof data.status === 'number' ? new Error(data.error) : unlabelled(new Error(data.error));
+  return typeof data.status === 'number' ? identified(new Error(data.error), data.status, data.code) : unlabelled(new Error(data.error));
 }

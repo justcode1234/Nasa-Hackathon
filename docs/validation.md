@@ -1004,7 +1004,7 @@ region row San Marino (SM) and **Türkmenistan** in Ahal (TM). `allowEponymousTo
 `namedRegions.length === 0`, so in every list that *has* regions the country spelling stayed excluded
 from the town matches even after the plan was asking "which town". The farmer could see the town in
 step 1's list, tap it if a button offered it, but could not type it. The rule now also allows it while a
-region is selected ([public/js/modules/workflow-assistant.js:222-228](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L222)),
+region is selected ([public/js/modules/workflow-assistant.js:235-241](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L235)),
 because the pending question at that point is a town question and the country overview is already
 reachable through the `Whole <country>` button.
 
@@ -1018,7 +1018,7 @@ At "Which state or region of France?", typing "France" matched nothing: the repl
 same area prompt, so the chat asked itself the same thing with nothing new to tap. The long official
 spellings reached it too ("South Georgia & South Sandwich Islands" is past the short-reply limit, so the
 first attempt only fixed the short ones). The rule now compares the whole reply in the same canonical
-shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:394-405](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L394)):
+shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:413-425](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L413)):
 it names the level still missing ("a town in Nampula", "one of its regions"), offers that level's real
 rows plus `Whole <country>`, and ends with "Nothing was selected." A saved row that really does carry
 the country's spelling is matched earlier and still selects itself, so Guadeloupe and Martinique keep
@@ -1032,7 +1032,7 @@ the specific field; the town itself is not farmland."** - the chat picked a plac
 because the country's own spelling *contains* the town's spelling and `typedPlace` matched that prefix.
 Defect 11's honest reply could not fire: it only ran when nothing matched at all. The narrowing rule now
 requires the reply to equal a saved row's whole canonical spelling before a country-name reply may select
-anything ([public/js/modules/workflow-assistant.js:250-257](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L250));
+anything ([public/js/modules/workflow-assistant.js:263-270](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L263));
 otherwise the mentions are dropped and the honest reply answers instead. A town genuinely called "São
 Tomé" stays typeable by that name, and the two lists whose rows really do carry the country spelling
 (Guadeloupe, Martinique) still select themselves.
@@ -4385,7 +4385,7 @@ Mistakes in this iteration's own process, recorded because they cost runs. The f
   reported numbers for the wrong bytes and the log was discarded. The rewritten script refuses to snapshot unless
   the rule is present in all three places, and it runs in the foreground. Separately, a comment claimed five callers
   branch on `AbortError` where the count is four - `public/js/modules/chat.js:154`, `public/js/app.js:236`,
-  `public/js/app.js:296` and `public/js/modules/workflow-assistant.js:412` - and the gate was restarted rather than
+  `public/js/app.js:296` and `public/js/modules/workflow-assistant.js:432` - and the gate was restarted rather than
   left running on bytes that a later edit would change. Three more cost time after the gate. The trace reader
   first reported 0 Overpass requests, because Playwright wraps every record in a `resource-snapshot` object and
   the reader asked the wrapper for its request URL - an absence of evidence that was one sentence from being
@@ -4832,7 +4832,7 @@ response, and until this iteration its helper decided what to do with that rejec
 `reason?.name === 'AbortError'`. The same name decided four farmer surfaces: `public/js/app.js:236` (the
 evidence status line and the `#retry-evidence` button), `public/js/app.js:296` (the comparison status),
 `public/js/modules/chat.js:149` (the answer the farmer is waiting for) and
-`public/js/modules/workflow-assistant.js:412` (the inputs a guided plan keeps). A name is not a fact about this
+`public/js/modules/workflow-assistant.js:432` (the inputs a guided plan keeps). A name is not a fact about this
 app. Chromium raises `AbortError` by itself for reasons the page never asked for - a navigation, a discarded
 frame, a backend it decided to drop - and every one of those made four surfaces go silent at once: no status
 line, no retry control, no announced answer, and no console trace. The farmer was left staring at a spinner that
@@ -4843,7 +4843,7 @@ The fix, five lines of behaviour. `public/js/lib/api.js:49` exports `cancellatio
 asked for. `public/js/lib/api.js:56` now decides on `signal?.aborted === true` - the caller's own controller, a
 structured fact - so a foreign `AbortError` falls through to `NO_ANSWER` and is announced, and
 `public/js/lib/api.js:35` routes the worker's cancellation through the same helper so both transports mark it the
-same way. `public/js/modules/workflow-assistant.js:279` uses `cancellation('Planning context changed')` for the
+same way. `public/js/modules/workflow-assistant.js:292` uses `cancellation('Planning context changed')` for the
 stop the assistant asks for itself, and the four consumers read `error.cancelled`. `tests/workflow-assistant.test.js:331`
 pins the name, so `cancellation()` keeps it; the flag is additive. Nothing else in the app sets `cancelled`.
 
@@ -5198,7 +5198,7 @@ measure the transports disagreeing about a scenario rather than about a sentence
 `public/js/modules/context.js:123` returns `{ok: false, reason: 'no-location'}`, `:130` `{ok: false,
 reason: 'superseded'}` where it used to `return;` with no value at all, `:138` `{ok: true, count: farms.length}` and
 `:144` `{ok: false, reason: 'lookup-failed'}` - and the chat classifies on the shape rather than on the words:
-`public/js/modules/workflow-assistant.js:295` maps a `result?.ok === false` to `'failed'` inside the same race that
+`public/js/modules/workflow-assistant.js:308` maps a `result?.ok === false` to `'failed'` inside the same race that
 already produced `'waiting'`, and the new `fieldsFailed` at `:309` is reached from both of the sites that ask for
 fields, `:459` (a point the farmer already selected) and `:510` (a town tap). Nothing in those lines forwards the
 runtime's own error text: the refusal sentence names the lookup that failed, states that no field list is shown and
@@ -5436,7 +5436,7 @@ fail on the network at all: `server/api.js:55` answers it from bundled crop data
 for one. The 400 for a malformed question at `server/api.js:46` cannot be reached by typing, because the composer's own
 `maxlength="500"` agrees with the handler's 1-500 rule. An evidence question with every external host cut never issues a
 request while no place is selected, so there is nothing to fail. What a farmer does hit is the guided plan that names its
-own coordinates: `public/js/modules/workflow-assistant.js:431` awaits the reverse lookup with no branch around it, and a
+own coordinates: `public/js/modules/workflow-assistant.js:451` awaits the reverse lookup with no branch around it, and a
 refusal there rejects out of `workflow.respond` into the path above. That is the failure the case reproduces, triggered
 locally by intercepting one regex so both transports answer the same way.
 
@@ -5725,3 +5725,147 @@ Whether a reviewer on another machine can rebuild `docs/evidence-index.md` from 
 host, where the generator's stdout already matches the committed bytes. Real phones, Safari/WebKit, microphones, audio
 quality, independent agronomy and anything deployed stay UNVERIFIED, as does every claim about farmer behaviour this pass
 does not execute in a browser.
+
+### 61. A refused place list answered "no towns are listed", and the recovery that sentence promised died on a stale dropdown
+
+**Asked for.** `AGENTS.md` §13.1 goals 3, 4 and 5: reproduce the saved-list refusal in both browser transports, replace
+the false empty-data claims, keep an unreadable schema apart from an unavailable read and from a genuinely empty list,
+and exercise a retry that actually gets through. Goal 2's shipped half (`public/js/lib/api.js:13`, `:60`, `:70`) is the
+precondition: until the client carried the status and code the server sent, the two classes were one sentence.
+
+**What was observed before any change.** `public/js/modules/workflow-assistant.js:355` in HEAD was
+`try { listed = await getLocationList(state.country); guard(); } catch { listed = null; }`, and the line below it turned
+that `null` into `{ regions: [], places: [] }`. A refusal therefore did not read as a refusal: the assistant answered
+"No towns are listed for …" and "there are no named regions" about a saved list holding every town in the country, the
+region filter stayed disabled with its `List unavailable` placeholder, and the same bare catch also swallowed a
+cancellation the farmer had asked for and answered it as data for a session they had left. The candidate the ledger had
+queued was real, and it was reachable from an ordinary message ("Help me plan a rotation in India") the moment the place
+list could not be read.
+
+**The fix, in the three places it had to be.** `placeListFailure` at `public/js/modules/workflow-assistant.js:224`
+splits the classes on the code goal 2 preserved: an unavailable read is reported as a read that "could not be read just
+now" with a retry offered, and `public/js/modules/workflow-assistant.js:225`'s `LOCATIONS_SCHEMA` test answers as rows
+that "arrived in a shape this app cannot read, so … asking again cannot change a source format", with no retry the app
+has ruled out. Both keep the country selected, leave the point unset and invent no regions. The read at
+`public/js/modules/workflow-assistant.js:357` now rethrows a cancellation instead of answering for it, and the four
+sites that used to fall through to the empty-list wording (`:406`, `:417`, `:563` and the whole-country escape through
+`public/js/modules/workflow-assistant.js:655`) return the failure reply instead. Nothing caches a failure: the
+assistant's `locationLists`, `public/js/modules/location-picker.js:30` and the server-side read all store on success
+only, which is what makes the retry in the reproducing case a real re-ask rather than a replay.
+
+**The second defect, found by running it in a browser and not by reading the code.** The refusal sentence tells the
+farmer to use the region list, so the spec tapped an offered region after the list recovered — and on the first run of
+`tests/e2e/place-list-refused.spec.js` that tap produced no reply at all: `#answer-status` read "Choose a region from
+the current country list." `public/js/modules/context.js:246` validates the region against `#place-region`'s options,
+which the picker fills asynchronously and which still held its `List unavailable` placeholder from the failed read; the
+assistant's own retry refreshed only the assistant's cache. A recovery the app names has to be pressable, so
+`public/js/modules/context.js:245` now asks the picker for that country's rows before validating, which costs nothing on
+a healthy list because failures were never cached. The failed run is kept red on purpose:
+`docs/evidence/iter61-browser-red-2026-11-20.log.gz` is the record of it, and the same case now asserts
+`tests/e2e/place-list-refused.spec.js:92` as well as the reply.
+
+**What covers it.** Six offline cases: `an authored HTTP failure keeps the status and code the server sent beside its
+sentence`, `an authored worker failure keeps the same two facts the HTTP transport carries` and
+`a failure with no status behind it borrows no authored identity` in `tests/api-transport.test.js` (goal 2's half), and
+`a saved list that could not be read says so, keeps the country and re-asks instead of caching the failure`,
+`a list that arrives unreadable reports its own reason and offers no retry that cannot help` and
+`an answered empty list keeps its wording and a cancelled read is never answered as data` in
+`tests/workflow-place-choices.test.js`. Two browser cases in `tests/e2e/place-list-refused.spec.js:36` and
+`tests/e2e/place-list-refused.spec.js:100` cut the same failure at each transport's real boundary: the static worker
+fetches `/data/locations/IN.json` directly, so the route aborts; the Node transport reads the file inside
+`/api/locations`, so its 503 body is the one `server/context/locations.js` produces, built at run time by
+`tests/e2e/place-list-refused.spec.js:28` from the shipped adapter rather than restated in the spec.
+
+**Gate.** `docs/evidence/iter61-browser-gate-2026-11-20.log.gz` runs the new spec across all four projects — 8 passed,
+0 failed, one suite at a time on bytes frozen after the last build, header carrying `HEAD`, `node -v` and the spec's
+md5. The offline suite after the documentation half of this pass is
+`docs/evidence/iter61-offline-2026-11-20.log.gz`: **268 passed / 0 failed / 0 skipped**, exit 0, from 262 at the
+iteration-60 tip plus the three transport cases and the three list cases above.
+
+**Regression sensitivity.** `docs/evidence/iter61-controls-2026-11-20.log.gz` reverts one file at a time from a sha256
+snapshot and re-runs the browser spec: `FIXED` 2 passed, `ORIGINAL_DEFECT` (no catch, no classification) 2 failed,
+`NO_IDENTITY` (`public/js/lib/api.js` back to the status-dropping throw) 1 failed, `NO_REREAD`
+(`public/js/modules/context.js` back to the synchronous validate) 1 failed, then `RESTORE_OK` with both manifests
+identical. Every shipped half is individually load-bearing, and no control passes by skipping.
+
+**Citation drift, measured rather than assumed.** This pass inserted 13 lines above four cited bands and moved 9 pins
+with every guard green but the pin table. `scripts/citation-drift.mjs --head` named 53 stale pointers (40 into
+`public/js/modules/workflow-assistant.js`, 13 into `public/js/lib/api.js`) and is archived as
+`docs/evidence/iter61-citation-drift-head-2026-11-20.log.gz`; 32 numbers were re-pointed from the diff's own hunk
+deltas, each cross-checked against a unique content match of the quoted statement, and 26 were left alone because they
+sit inside an intentional edit and only the prose can say whether it still fits. What the tool cannot see is worth
+recording: without `--head` it compares each cited line with the HEAD line the diff maps it to, which is the same
+physical line by construction, so `DRIFTED 0` after a repair confirms the mapping and is not evidence that the prose
+still names the right statement. The one real pointer of that shape was found by hand and re-pointed —
+`docs/handoff-2026-11-18.md:19` cited the ±1 pin-shift test at `tests/documentation-citation-anchors.test.js:339`,
+which this pass moved to `tests/documentation-citation-anchors.test.js:380` (the deep-link pins and the ledger-replay
+rewrite landed above it after that first re-pointing) — and the semantic load stays where it was after iteration 58: the
+pin table, grown from 88 entries to 106 here, is what carries it, and the floor case below is
+what stops it being narrowed. The repair then produced a defect of its own, which is the part worth keeping. Three deep
+links in this ledger — `docs/validation.md:1007`, `docs/validation.md:1021` and `docs/validation.md:1035` — had their
+labels re-pointed and their `#L222`-style anchors left at the pre-fix numbers, so the sentence named the right line and
+the click landed thirteen lines away. Nothing read both halves: `LINE_REF` parses labels and the pins check code text,
+so a sixth case in `tests/documentation-citations.test.js` now walks every `file:///…#LNNN` link and refuses one whose
+anchor falls outside the band its own label names, with a floor of three links so a scan that saw none reports
+differently from a scan that saw all. It was proved against the mistake it was written for
+(`docs/evidence/iter61-anchor-control-2026-11-20.log.gz`: that case alone went red with the sentence
+`but its anchor lands on line 222` on a re-stale anchor, and green again with the file byte-identical to the md5 taken
+before the control). The guard set with that case in it reads
+`docs/evidence/iter61-docsguards-2026-11-20.log.gz` at 28 passed / 0 failed, one case more than iteration 60's 27.
+That green run could not exist while this pass cited it, which is subsection 57's asymmetry in its purest form: the
+archive named above is the run that turns the two existence guards green, so the run immediately before it is red on
+exactly those two and nothing else (`docs/evidence/iter61-docsguards-bootstrap-red-2026-11-20.log.gz`: 28 cases, 26
+pass / 2 fail, exit 1, over the 69-row tally table). The green itself then ran while a placeholder sat at that path,
+so its bytes cannot show the table size that later checked them; the confirming run on the shipped archives is
+`docs/evidence/iter61-docsguards-final-2026-11-20.log.gz` prints 28 passed / 0 failed over the 71-row table, and
+all three sit on the tally table, where a number has to be answered out of the gzip rather than out of this prose.
+**Finished tree.** With the deep-link case added to `tests/documentation-citations.test.js` the offline suite reads
+**269 passed / 0 failed / 0 skipped**, exit 0 - one case above the 268 quoted in the gate paragraph - in
+`docs/evidence/iter61-offline-shipped-2026-11-20.log.gz`, whose `OFFLINE_CMD` header names the 73-row tally table it
+executed against and whose wall time is the `duration_ms` line in that log rather than a number restated here.
+
+**The four-project gate on this tree is red, and is archived as red.** `docs/evidence/iter61-gate-2026-11-20.log.gz`
+ran 268 cases in one worker from HEAD `92fdf2c`, 07:49:50Z to 08:15:15Z, and prints `5 failed` /
+**`263 passed (25.4m)`** / `GATE_EXIT=1`. All five sit in `[static-desktop]`: `tests/e2e/city-state-chat-flow.spec.js:13`,
+`tests/e2e/field-terrain.spec.js:4` and `tests/e2e/gibs.spec.js:10`, `:28`, `:37`. Each one is a live service that did
+not answer in time, not a behaviour that changed. The city-state case failed on
+`Expected substring: "Step 4 is ready"` against the honest refusal this pass made step 4 say, and its network snapshot
+holds exactly one NASA POWER request: it was open for `25010.31` ms and closed as `net::ERR_ABORTED`, which is the
+25 000 ms `AbortSignal.timeout` budget `server/nasa/power.js:95` passes at `:115`. The field case ended inside the
+shared live-fields helper with `real fields were still unavailable after two user retries` - Overpass refusing both
+times. The three GIBS cases each spent about a minute on the imagery host. Against that, the same five specs are green
+later in the same log on the same delivered bytes (`✓ 87 [static-mobile] › tests/e2e/city-state-chat-flow.spec.js:13:1`,
+`✓ 94 [static-mobile] › tests/e2e/gibs.spec.js:37:1`, and their node counterparts), the run's own load average went
+`{ 3.63 3.64 4.11 }` to `{ 4.03 3.87 3.92 }` on a host also holding an 18 GB model resident on its GPU, and one
+isolated `curl` of the identical POWER URL after the run answered HTTP 200 in 1.11 s. No timeout was raised, no case
+was skipped or narrowed, and the gate was not restarted to harvest a green: the ledger records iteration 61 as
+**five live-service reds on an otherwise-green 268-case run**, and the app half of the contract held as far as that run
+could see it: the reply that replaced `Step 4 is ready` names the service that failed, points at step 2, says the app
+generated no comparison and offers `Retry` in the same message. What this run cannot show is the Retry being pressed,
+because the case asserts the success path and stops before it.
+
+**One isolated check, not a second gate.** The programme allows one informative re-look at a live outage, so the three
+spec files the gate lost were re-run alone on the bytes that gate executed, no case widened and no timeout raised:
+`docs/evidence/iter61-isolated-check-2026-11-20.log.gz` prints `Running 24 tests using 1 worker`,
+**`24 passed (3.8m)`**, `ISOLATED_EXIT=0`, and its `MD5` line carries the same `api`/`ctx`/`wa` hashes as the gate log
+(`aa5a4c27…`/`454f3be7…`/`cf52b64b…`) - the one thing to read carefully in that pair is that `chat=` means
+`public/js/modules/chat.js` in this file and `public/js/lib/chat-context.js` in the gate's script, so only the three
+shared hashes establish "same bytes". All five former reds passed: the city-state case in 2.0 s against the 40.8 s it
+burned in the gate, the three GIBS cases in 14.5 s / 4.0 s / 4.1 s against a minute each, and the Ames field case in
+50.1 s rather than refusing twice. That is the distinction worth keeping: the services were still slow - the field case
+used five times the wall time the healthy host gives it - but they answered, and every one of the 268 cases on this
+tree has now passed once on these bytes. What remains UNVERIFIED is therefore not whether the app behaves on this tip,
+but whether it behaves when the services are quick and the host is idle at the same time; the next gate answers that.
+
+**Two offline runs, and the exit status taken from the process that did the work.** After the gate, census and isolated
+check joined the tally table - which grew the floor to 76 rows - the suite and the guard set ran again on the same
+frozen tree: `docs/evidence/iter61-offline-tally76-2026-11-20.log.gz` prints `ℹ tests 269` / `ℹ pass 269` /
+`ℹ fail 0` / `OFFLINE_EXIT=0`, and `docs/evidence/iter61-docsguards-tally76-2026-11-20.log.gz` prints
+`GUARD_FILES 5`,
+`DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0` and `DOCSGUARDS_CHILD_EXIT 0`. Both are captured without a
+pipe on purpose. The first version of the offline capture ended `... | tail -3` and then echoed `${PIPESTATUS[0]}`, and
+on this shell that expression is empty - zsh numbers its status array from 1 - so the fallback wrote down `tail`'s
+status, which is zero whether or not the suite failed. The numbers in those two archives are real; the mistake was in the
+line that would have certified them, and it is the same trap the census archive hit in subsection 61's first capture.
+These two runs executed against a 76-row table, so the two rows that pin them are 77 and 78 and their headers say 76 -
+subsection 57's asymmetry again, stated rather than hidden.

@@ -23,8 +23,8 @@ const indiaLocations = { regions: [{ id: '16', name: 'Maharashtra' }, { id: '27'
     { id: 'p2', name: 'Nagpur', regionCode: '16', latitude: 21.1458, longitude: 79.0082 },
     { id: 'p3', name: 'Ratnagiri', regionCode: '27', latitude: 16.9905, longitude: 73.3003 }] };
 
-function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGraceMs, fieldsNeverAnswer = false, fieldsRefused = false } = {}) {
-  const calls = [];
+function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGraceMs, fieldsNeverAnswer = false, fieldsRefused = false, listFailure = null } = {}) {
+  const calls = []; let listAsked = 0, pendingFailure = listFailure;
   const state = { country, catalog, countryCrops: getCountryCrops({ country }), farm: null, farms: [],
     regionCode: null, location: null, observations: null,
     planning: { baseline: ['', '', ''], allowedCrops: getCountryCrops({ country }).screeningCropIds, irrigation: 'unknown', soil: 'unknown', startMonth: 1, planningYear: 2026, referenceYear: 2025 } };
@@ -54,9 +54,9 @@ function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGrace
   };
   const assistant = createWorkflowAssistant({ getState: () => state, actions, fieldsGraceMs,
     request: async path => { const url = new URL(path, 'https://test.invalid');
-      if (url.pathname === '/api/locations') return locations;
+      if (url.pathname === '/api/locations') { listAsked++; if (pendingFailure) { const error = new Error(pendingFailure.message); Object.assign(error, pendingFailure); throw error; } return locations; }
       throw new Error('unexpected test request ' + path); } });
-  return { assistant, calls, state };
+  return { assistant, calls, state, listAsked: () => listAsked, failList: failure => { pendingFailure = failure; } };
 }
 const text = answer => (answer?.blocks ?? []).map(block => block.text).join(' ');
 const towns = answer => (answer?.followUps ?? []).filter(choice => choice.workflowChoice?.type === 'town');
@@ -515,4 +515,74 @@ test('a town tap whose field lookup was refused reports a failure, keeps a retry
   const done = await click(answered.assistant, area, area.followUps.findIndex(choice => choice.workflowChoice?.type === 'town'));
   assert.match(text(done), /0 mapped fields were returned/, 'an answered empty lookup reports its count');
   assert.doesNotMatch(text(done), /did not complete/, 'an answered lookup is not reported as a failure');
+});
+
+// Measured 20 Nov by an offline walk of the shipped assistant over the shipped location adapter
+// (docs/evidence/review-goals-place-list-2026-11-20.log.gz): a saved list whose read threw landed in
+// `catch { listed = null }`, and every sentence below it reads `places` as the country's contents — so a refusal
+// answered "No towns are listed for <country> in this saved place list", the same country-normalized wording a list
+// that genuinely answered with nothing produces, for a list that in production holds every town of the country.
+// Iteration 58 recorded that exact class for the field lookup (validation.md subsection 58); this is the place half.
+const UNAVAILABLE = { message: 'The saved town list could not load. Retry the country selection, search a place or use the map.',
+  status: 503, code: 'LOCATIONS_UNAVAILABLE' };
+const SCHEMA = { message: 'The saved town list has an invalid source format. Use place search or coordinates.',
+  status: 503, code: 'LOCATIONS_SCHEMA' };
+
+test('a saved list that could not be read says so, keeps the country and re-asks instead of caching the failure', async () => {
+  const { assistant, state, listAsked, failList } = setup({ country: 'IN', locations: indiaLocations, listFailure: UNAVAILABLE });
+  await assistant.respond('Help me plan a rotation in India. Crops: tomato, cabbage, bulb onion.');
+  const asked = listAsked();
+  assert.ok(asked > 0, 'the guided plan reads the saved list before it answers a place question');
+  const area = await assistant.respond('A specific area');
+  const sentence = text(area), labels = area.followUps.map(choice => choice.label);
+  assert.match(sentence, /could not be read just now/, `a refusal must name the lookup that failed: ${sentence}`);
+  assert.match(sentence, /cannot say which regions or towns it lists/, 'no conclusion about the list contents may be drawn');
+  assert.match(sentence, /Nothing was selected and nothing was invented/);
+  for (const claim of ['No towns are listed', 'no towns to choose from', 'no named regions', 'is in the saved place list'])
+    assert.ok(!sentence.includes(claim), `a read that never completed is reported as a fact about the data: ${sentence}`);
+  assert.equal(state.country, 'IN', 'the country the farmer chose stays selected through a failed read');
+  assert.equal(state.location, null, 'a failed read must not select a place');
+  assert.ok(labels.includes('Try the place list again') && labels.includes('Whole India'),
+    `the refusal must offer the retry and the route that needs no list: ${labels.join(' | ')}`);
+  // Tapping the retry has to send a second request: neither cache may keep a failure, or the button replays the
+  // refusal it is supposed to clear.
+  const retryIndex = area.followUps.findIndex(choice => choice.label === 'Try the place list again');
+  const again = await click(assistant, area, retryIndex);
+  assert.ok(listAsked() > asked, 'the retry did not re-read the saved list — a failure was kept as though it were a result');
+  assert.match(text(again), /could not be read just now/, 'a second refusal reads the same way');
+  // And once the read answers, the same tap path offers the farmer the real rows.
+  failList(null);
+  const healthy = await click(assistant, again, again.followUps.findIndex(choice => choice.label === 'Try the place list again'));
+  const towns = healthy.followUps.filter(choice => choice.workflowChoice?.type === 'region').map(choice => choice.label);
+  assert.ok(towns.includes('Maharashtra'), `a recovered list offers its saved regions again: ${towns.join(' | ')}`);
+  assert.doesNotMatch(text(healthy), /could not be read/);
+});
+
+test('a list that arrives unreadable reports its own reason and offers no retry that cannot help', async () => {
+  const { assistant, listAsked } = setup({ country: 'IN', locations: indiaLocations, listFailure: SCHEMA });
+  await assistant.respond('Help me plan a rotation in India. Crops: tomato, cabbage, bulb onion.');
+  const asked = listAsked();
+  const area = await assistant.respond('A specific area');
+  const sentence = text(area), labels = area.followUps.map(choice => choice.label);
+  assert.match(sentence, /arrived in a shape this app cannot read/);
+  assert.match(sentence, /asking again cannot change a source format/);
+  assert.ok(!sentence.includes('No towns are listed'), `an unreadable shape is still not a finding about the towns: ${sentence}`);
+  assert.ok(!labels.includes('Try the place list again'), `a retry the reply has just ruled out is offered anyway: ${labels.join(' | ')}`);
+  assert.ok(labels.includes('Whole India'), 'the route that needs no saved list stays available');
+  assert.equal(listAsked(), asked + 1, 'one read per ask, and no second read to compose the reply');
+});
+
+// The pair that makes the branch above a classification and not a blanket refusal: a list that answered with no
+// rows keeps the wording that is true of it, and a cancellation is not a failed read at all.
+test('an answered empty list keeps its wording and a cancelled read is never answered as data', async () => {
+  const empty = setup({ country: 'IN', locations: { regions: [], places: [] } });
+  await empty.assistant.respond('Help me plan a rotation in India. Crops: tomato, cabbage, bulb onion.');
+  const area = await empty.assistant.respond('A specific area');
+  assert.match(text(area), /No towns are listed/, 'a list that answered with nothing may say so');
+  assert.doesNotMatch(text(area), /could not be read/);
+  const cancelled = setup({ country: 'IN', locations: indiaLocations, listFailure: { message: 'Planning context changed', name: 'AbortError', cancelled: true } });
+  await assert.rejects(cancelled.assistant.respond('Help me plan a rotation in India. Crops: tomato, cabbage, bulb onion.'),
+    error => error.cancelled === true && error.name === 'AbortError',
+    'a stop the page asked for must settle as a stop, not as a reply about the farmer\'s country');
+  assert.equal(cancelled.state.location, null, 'a cancelled read must select nothing on the way out');
 });
