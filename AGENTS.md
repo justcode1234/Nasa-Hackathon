@@ -2057,7 +2057,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   this tree, and what runs them is now `scripts/docs-guards.mjs` instead of a hand-typed list: a list with two names
   that do not exist ran 15 of the 25 cases, printed `ℹ tests 15` with nothing failing and gave no sign of the gap, so
   the runner refuses to start unless all five paths are on disk and exits with the child's status. What is still
-  broken is upstream of that: the ledger tells a reader to run `node artifacts/iter47-index-generator.mjs`, and
+  broken is upstream of that: the ledger tells a reader to run `artifacts/iter47-index-generator.mjs`, and
   `artifacts/` is gitignored with 108 distinct paths under it named in tracked prose, so a fresh clone cannot rebuild
   the index the guards read - promoting those instruments into `scripts/`, as iteration 58 promoted
   `scripts/citation-drift.mjs`, and failing a documented command that points at ignored scratch, is the next pass's
@@ -2068,6 +2068,50 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   undiagnosed and intermittent. Safari/WebKit, real phones, microphones, audio quality, whether restoring the composer
   is the right behaviour for every farmer and independent agronomy stay UNVERIFIED. Nothing was deployed, main is
   untouched (`4a54fa3`), no NASA portal edit.
+- **20 Nov, same branch: iteration 60 - three instruments the ledger told a reader to run sat in a gitignored
+  directory, and the guard that should have caught it read only fenced blocks.** Of the 67 runnable command mentions in
+  tracked prose, **56 were never examined** by any guard
+  (`docs/evidence/iter60-negative-controls-2026-11-20.log.gz`, whose split copy prints
+  `{"files":34,"fence":11,"inline":56,"total":67}`), and the commands guard's inventory at
+  `tests/documentation-commands.test.js:30` accepts only `scripts/`, `tests/`, `server/` and `notebooks/` while its
+  `SKIP_DIRS` at `tests/documentation-commands.test.js:13` drops `artifacts` from the walk, so a sentence naming a
+  script there was invisible twice over. `scripts/evidence-index-generator.mjs`, `scripts/ledger-census.py` and
+  `scripts/chat-coordinate-probe.mjs` are tracked now, the generator answers `--stdout` so a case can compare the
+  committed `docs/evidence-index.md` with a fresh scan instead of trusting it, and
+  `tests/documentation-commands.test.js:136` rejects a documented command whose target sits under a prefix read out of
+  `.gitignore:4` - even while its bytes are on this machine - with its two injected-fake exemptions guarded at
+  `tests/documentation-commands.test.js:165` and `tests/documentation-commands.test.js:168`. Three findings came from
+  the instruments rather than the intent. The first version of that case checked disk presence and went green with all
+  three unshipped instruments standing
+  (`docs/evidence/iter60-red-invalid-guard-checked-disk-not-ship-2026-11-20.log.gz`, `ℹ pass 13` / `ℹ fail 1`, the one
+  red being the index case that could not start while its generator lived in scratch). The widened scan then rejected
+  two sentences this pass had itself written - **26 pass / 1 fail** at 05:43Z
+  (`docs/evidence/iter60-guard-caught-its-own-author-2026-11-20.log.gz`) - so a dated bullet above had its wording
+  edited to name the old path without an interpreter, which is recorded in `docs/validation.md` subsection 60 rather
+  than left in the diff. And bundling the Python control ladder into the log its own tally row judges put a forbidden
+  string inside the bytes being judged, which went red at **6 pass / 1 fail**, exit 1
+  (`docs/evidence/iter60-bundle-red-2026-11-20.log.gz`); the ladder ships separately as
+  `docs/evidence/iter60-tally-controls-ladder-2026-11-20.py.gz`. Controls: four detections in
+  `docs/evidence/iter60-negative-controls-2026-11-20.log.gz` and five in
+  `docs/evidence/iter60-tally-controls-2026-11-20.log.gz` (`CONTROLS_RAN 5 CONTROLS_DETECTED 5 CONTROLS_RED 5`), which
+  put `tests/documentation-evidence-index.test.js` back byte-identically as at the head of that log
+  (`RESTORE_CHECK before=60cd2bd207442eb5 now=60cd2bd207442eb5`) and re-runs green. No application byte moved, so this
+  pass's costs are documentation and tooling and the gate re-runs to confirm the branch rather than to test a fix:
+  **260 passed / 0 failed / 0 skipped (20.1 m)**, exit 0, `Running 260 tests using 1 worker` on HEAD `e3982cd` with
+  neither `CONTEXT_UNAVAILABLE` nor `cdn.jsdelivr.net` anywhere in the log
+  (`docs/evidence/iter60-gate-2026-11-20.log.gz`); `npm test` **262 / 262 pass / 0 fail / 0 skipped**
+  (`docs/evidence/iter60-offline-shipped-2026-11-20.log.gz`); the five guard files **27 pass / 0 fail**
+  (`docs/evidence/iter60-docsguards-final-2026-11-20.log.gz`); and the archived-tally table rose from 51 rows to 63
+  with its floor. What stays UNVERIFIED is the limit of the new case: it proves a named command is *shipped*, not that
+  it still does what the sentence says it does, and the guard run that confirms the reprinted index is quoted here
+  rather than archived, because reprinting changes the tree the archive certifies. Behaviour is untouched and still
+  open: `pendingChoice`, consumed at `public/js/modules/chat.js:93`, is not restored with the sentence by the catch at
+  `public/js/modules/chat.js:156`, while `public/js/modules/chat.js:129` sets it and writes the tapped sentence into
+  the composer, so the retry silently takes the free-text path; `public/js/lib/api.js:13` keeps only
+  `data?.error?.message` from a posted error body and discards its `code`; `server/context/client.js:44` still rethrows
+  the local SoilGrids throttle as an upstream failure (P1 untouched); the P0 19 Nov field-discovery red stays
+  undiagnosed. Safari/WebKit, real phones, microphones, audio quality and independent agronomy stay UNVERIFIED. Nothing
+  was deployed, main is untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

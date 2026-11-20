@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
+import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 
 // METHOD: docs/evidence holds the archives this loop ships, and two guards already read that tree in one
@@ -468,10 +469,132 @@ const TALLIES = [
       'PROVENANCE_DONE 8 shipped hashes'],
     phrases: ['GIT_REMOTE_MAIN 4a54fa3fbd75f4b1ccaae238b00d439accf1d0d4'],
     absent: ['PROVENANCE_DONE 7 shipped hashes'] },
+  // Iteration 60. The guard that passed on the bug: on this tree three documented instruments still lived under the
+  // gitignored `artifacts/`, and the prose-command case reported them as satisfied because it only asked whether the
+  // bytes were on disk. `fail 1` is the index case failing for an unrelated reason - the generator was not in
+  // `scripts/` yet, so the case could not spawn it - and both facts matter to the paragraph, which says the invalid
+  // run's single red was never the shipped-ness check.
+  { archive: 'docs/evidence/iter60-red-invalid-guard-checked-disk-not-ship-2026-11-20.log.gz',
+    lines: ['ITER60_RED_START 2026-11-20T05:15:51Z', 'ℹ tests 14', 'ℹ pass 13', 'ℹ fail 1',
+      '✔ a command named inside a sentence is a file the repository ships, not one only this machine has (4.92075ms)'],
+    phrases: ['scripts/evidence-index-generator.mjs exited 1'],
+    absent: ['under the ignored artifacts/', 'ℹ fail 0'] },
+  // The two sides of the run that did describe the defect, archived together because a red quoted without the green
+  // that followed it cannot be told apart from a red that was never fixed. Six distinct rejections are printed, over
+  // eight raw mentions, and the green half is the 14 cases of both guard files on the shipped tree.
+  { archive: 'docs/evidence/iter60-two-guards-red-then-green-2026-11-20.log.gz',
+    lines: ['ITER60_RED_START 2026-11-20T05:17:07Z', 'ℹ pass 12', 'ℹ fail 2', 'RED_EXIT=1',
+      'AGENTS.md -> artifacts/iter47-index-generator.mjs (under the ignored artifacts/)',
+      'docs/validation.md -> artifacts/iter49-census.py (under the ignored artifacts/)',
+      'ITER60_GREEN_TWOGUARDS 2026-11-20T05:22:04Z HEAD e3982cd425da0daf9fef718ff79ef94ce2442c6d',
+      'ℹ pass 14', 'ℹ fail 0', 'EXIT=0'],
+    phrases: ['(under the ignored artifacts/)', 'scripts/evidence-index-generator.mjs exited 1'],
+    absent: ['ℹ fail 1', 'ℹ fail 3'] },
+  // All three instruments run from the paths the repository now ships, which is the only reading that shows the move
+  // did not break them. The census counts are the ones subsection 60 quotes, and the generator's byte count is what the
+  // reproduction case compares against the committed index.
+  { archive: 'docs/evidence/iter60-instruments-after-move-2026-11-20.log.gz',
+    lines: ['ITER60_INSTRUMENTS 2026-11-20T05:18:36Z HEAD e3982cd425da0daf9fef718ff79ef94ce2442c6d',
+      '27/27 as expected · 19/27 produced a location · module public/', 'prose files in scope : 225',
+      'archive citations    : read as-is 1109, newline-joined 1109',
+      'file:line references : read as-is 905, newline-joined 905',
+      'split archive citations (0):', 'split file:line references (0):',
+      'lines ending in a path-shaped token : 160', '11580'],
+    absent: ['Traceback', 'ERR_MODULE_NOT_FOUND', 'no such file'] },
+  // Four controls, an older control that separates the new index case from the three it sits beside, and the measurement
+  // that sized the scan floor - concatenated, with each control's full transcript behind the summary that names it, so a
+  // reader can check the floor against the same bytes the controls ran on. `CONTROL_1` is absent on purpose: the first
+  // draft's ignore-prefix control was dropped as redundant with the real red above, and a count of four in the ledger
+  // has to stay four.
+  { archive: 'docs/evidence/iter60-negative-controls-2026-11-20.log.gz',
+    lines: ['ITER60_CONTROLS 2026-11-20T05:30:18Z HEAD e3982cd425da0daf9fef718ff79ef94ce2442c6d',
+      'CONTROLS_RAN 4 CONTROLS_DETECTED 4 CONTROLS_RED 4', 'CONTROL_EXITS c2=1 c3=1 c4=1 c5=1',
+      'RESTORE_CHECK census_on_disk=yes', 'ℹ pass 4', 'ℹ fail 3',
+      '{"files":34,"fence":11,"inline":56,"total":67,"inlineOnlyFromFilesWithNoFencedHits":55}',
+      'FLOOR_RAISE_EXIT=1', 'SPLIT_RESTORE_VERIFIED floor back to 60'],
+    phrases: ['RESTORE_CHECK commands_sha_before=63700dd9a2bd5294', 'RESTORE_CHECK commands_sha_now=63700dd9a2bd5294',
+      'RESTORE_CHECK index_sha_before=f29cb1b5fe1dfd3217', 'RESTORE_CHECK index_sha_now=f29cb1b5fe1dfd3217',
+      'found 67', 'First differing line is 194', 'First differing line is 15'],
+    absent: ['CONTROL_1', 'ℹ fail 0'] },
+  // The new case rejecting a sentence its own author had just written. Subsection 60 explains why the wording moved
+  // instead of the guard: `ℹ fail 1` here is the whole five-file documentation suite, and the one red is the case whose
+  // comment says a documented command must be a file the repository ships.
+  { archive: 'docs/evidence/iter60-guard-caught-its-own-author-2026-11-20.log.gz',
+    lines: ['ℹ tests 27', 'ℹ pass 26', 'ℹ fail 1', 'GUARD_EXIT=1'],
+    phrases: ['docs/validation.md -> artifacts/iter47-index-generator.mjs (under the ignored artifacts/)',
+      'ITER60_AUTHOR_RED 2026-11-20T05:43:46Z HEAD e3982cd425da0daf9fef718ff79ef94ce2442c6d'],
+    absent: ['ℹ pass 27', 'GUARD_EXIT=0'] },
+  // The four-project gate on the tree that ships the three instruments. It proves the branch still behaves, not this
+  // pass's own change: no application byte moved, which is why the archive stamps the product directories unchanged
+  // since the iteration-59 commit rather than re-measuring a fix.
+  { archive: 'docs/evidence/iter60-gate-2026-11-20.log.gz',
+    lines: ['ITER60_GATE_START 2026-11-20T05:31:31Z',
+      'GIT_HEAD e3982cd425da0daf9fef718ff79ef94ce2442c6d',
+      'Running 260 tests using 1 worker', '260 passed (20.1m)', 'GATE_EXIT=0',
+      'ITER60_GATE_DONE 2026-11-20T05:51:41Z'],
+    phrases: ['PRODUCT_BYTES public/js server tests-e2e unchanged since HEAD e3982cd',
+      '✓   18 [static-desktop] › tests/e2e/chat-refused-ask-keeps-question.spec.js:26:1',
+      '✓  214 [node-mobile] › tests/e2e/chat-refused-ask-keeps-question.spec.js:76:1'],
+    marks: 0,
+    absent: ['✘', 'skipped', 'CONTEXT_UNAVAILABLE'] },
+  // The offline suite on the tree at 57 rows, re-run at 62 as iter60-offline-shipped below. Its header names the table
+  // size it executed against, and the rows beneath it were written after it ran, which is the same self-reference
+  // subsection 58 records rather than something this table can fix.
+  { archive: 'docs/evidence/iter60-offline-final-2026-11-20.log.gz',
+    lines: ['ℹ tests 262', 'ℹ pass 262', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0',
+      '✔ a command named inside a sentence is a file the repository ships, not one only this machine has (19.70925ms)'],
+    phrases: ['OFFLINE_CMD npm test (tally table 57 rows, index regenerated)', 'ℹ duration_ms 26160.451375',
+      'PRODUCT_SHA 103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89  public/js/modules/chat.js'],
+    absent: ['ℹ fail 2', 'OFFLINE_EXIT=1'] },
+  // The five documentation guard files alone, on the same tree as the run above. No bootstrap red happened this
+  // iteration because the generated index was reprinted before either run started, so this archive is the only guard
+  // reading the pass ships.
+  { archive: 'docs/evidence/iter60-docsguards-final-2026-11-20.log.gz',
+    lines: ['DOCSGUARDS_START 2026-11-20T05:53:46Z', 'ℹ tests 27', 'ℹ pass 27', 'ℹ fail 0', 'ℹ skipped 0',
+      'DOCSGUARDS_SUMMARY tests 27 | pass 27 | fail 0 | skipped 0', 'DOCSGUARDS_CHILD_EXIT 0', 'GUARD_EXIT=0'],
+    phrases: ['GUARD_TABLE_ROWS 57',
+      'GUARD_CMD node scripts/docs-guards.mjs (five documentation guard files, tally table 57 rows)'],
+    absent: ['ℹ fail 1', 'GUARD_EXIT=1', 'DOCSGUARDS_ABORT'] },
+  // Five attacks on the rows this pass wrote, so the gate/offline/guard numbers above are known to be load-bearing
+  // rather than decorative.
+  { archive: 'docs/evidence/iter60-tally-controls-2026-11-20.log.gz',
+    lines: ['CONTROL_TARGET_SHA_BEFORE 60cd2bd207442eb5',
+      'CONTROLS_RAN 5 CONTROLS_DETECTED 5 CONTROLS_RED 5',
+      'RESTORE_CHECK before=60cd2bd207442eb5 now=60cd2bd207442eb5',
+      'AFTER_RESTORE exit=0 tests_fails=0',
+      'AFTER_RESTORE_SUMMARY ℹ tests 7 ℹ pass 7 ℹ fail 0', 'LADDER_EXIT=0'],
+    phrases: ['ATTACK a1-gate-wall-time exit=1 fail_lines=1 names_target=True DETECTED=yes',
+      'ATTACK a3-guard-child-exit exit=1 fail_lines=1 names_target=True DETECTED=yes',
+      'ATTACK a4-floor exit=1 fail_lines=1 names_target=True DETECTED=yes',
+      'ATTACK a5-absent-needle exit=1 fail_lines=1 names_target=True DETECTED=yes',
+      'GIT_HEAD e3982cd425da0daf9fef718ff79ef94ce2442c6d'],
+    absent: ['GREEN - CONTROL FAILED', 'REFUSED pattern'] },
+  // The ladder that produced the run above, shipped as bytes so a reader can re-run it. Its row pins the floor value
+  // the attack was written against, which is how a later pass can tell this archive from a stale one.
+  { archive: 'docs/evidence/iter60-tally-controls-ladder-2026-11-20.py.gz',
+    lines: ["('a4-floor', 'TALLIES.length >= 59', 'TALLIES.length >= 1005',",
+      "TARGET = 'tests/documentation-evidence-index.test.js'", "SUITE = ['node', '--test', TARGET]"],
+    phrases: ['def run_suite():', 'if original.count(old) != 1:',
+      "print(f'CONTROLS_RAN {len(ATTACKS)} CONTROLS_DETECTED {detected} CONTROLS_RED {detected}')"] },
+  // Kept because bundling the ladder into the log it was attacking made that log contain the string its own row
+  // forbids, and the guard said so: an archive and its source are two different pieces of evidence.
+  { archive: 'docs/evidence/iter60-bundle-red-2026-11-20.log.gz',
+    lines: ['ℹ tests 7', 'ℹ pass 6', 'ℹ fail 1', 'RED_EXIT=1'],
+    phrases: ['contains "GREEN - CONTROL FAILED", which the ledger states that archive does not print',
+      'ITER60_BUNDLE_RED_START'],
+    absent: ['ℹ pass 7', 'RED_EXIT=0'] },
+  // The offline suite re-run once every row above had landed, so the tally the ledger reports as shipped is the tally of
+  // the tree the ledger ships. Its header names a 62-row table because this row is the 63rd.
+  { archive: 'docs/evidence/iter60-offline-shipped-2026-11-20.log.gz',
+    lines: ['ℹ tests 262', 'ℹ pass 262', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0'],
+    phrases: ['OFFLINE_CMD npm test (tally table 62 rows, index regenerated)', 'ℹ duration_ms 27318.48525',
+      'PRODUCT_SHA 103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89  public/js/modules/chat.js',
+      'ITER60_OFFLINE_SHIPPED_START'],
+    absent: ['ℹ fail 1', 'OFFLINE_EXIT=1'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 50, `the table carries ${TALLIES.length} archives; subsections 57, 58 and 59 quote more runs than ` +
+  assert.ok(TALLIES.length >= 63, `the table carries ${TALLIES.length} archives; subsections 57 through 60 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -483,7 +606,14 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'red, both attacks, the green, the offline suite, the neighbour slice and the gate attempt it stopped on purpose, ' +
     '48 when the four-project gate, the `--list` census and the bootstrap index red it expected joined it, and 49 when ' +
     'the offline run that printed its own summary after that red joined it, 50 when the five guard files re-run on ' +
-    'their own joined it and 51 when the provenance snapshot that carries the hashes subsection 59 quotes joined it.');
+    'their own joined it and 51 when the provenance snapshot that carries the hashes subsection 59 quotes joined it, ' +
+    '52 when iteration 60 archived the guard that went green with the defect still standing, 53 the red/green pair ' +
+    'that named eight unshipped mentions across three documents, 54 the three instruments re-run from `scripts/`, 55 ' +
+    'the four-control bundle and 56 the run where the guard rejected this ledger quoting its own gitignored path, ' +
+    '57 when the four-project gate on the shipped tree joined it, 59 when that tree\'s offline suite and its guard ' +
+    're-run joined it, 60 when the five attacks on this pass\'s own rows joined it, 61 the ladder that ran them, 62 the ' +
+    'red that bundling that ladder into its own subject caused and 63 the offline suite re-run once every row above it ' +
+    'had landed.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }
@@ -527,4 +657,21 @@ test('the tally of every archived run is printed by that archive, not by the pro
     if (!partial && !noTally) assert.doesNotMatch(path.basename(archive), /-interrupted-|-partial-|-stopped-/,
       `${archive} is named as a run that stopped before its tally, and its row states no check that it printed none`);
   }
+});
+
+test('the committed index is what the shipped generator prints, line for line', async () => {
+  // Every case above judges the index row by row against the archive a row names, so none of them could see the scan
+  // that produces the document drift away from the file: until iteration 60 the generator lived under the gitignored
+  // `artifacts/` directory, the committed snapshot was reproducible only on the machine that wrote it, and a row added
+  // by hand satisfied every other case. `--stdout` prints the document without writing it, so the judge cannot overwrite
+  // what it is judging.
+  const generator = 'scripts/evidence-index-generator.mjs';
+  const run = spawnSync(process.execPath, [generator, '--stdout'], { cwd: ROOT, encoding: 'utf8' });
+  assert.equal(run.status, 0, `${generator} exited ${run.status}: ${(run.stderr || run.stdout).split('\n').slice(0, 2).join(' / ')}`);
+  const [committed, produced] = [await readFile(path.join(ROOT, INDEX), 'utf8'), run.stdout];
+  if (committed === produced) return;
+  const before = committed.split('\n'), after = produced.split('\n');
+  const first = before.findIndex((line, index) => line !== after[index]);
+  assert.fail(`${INDEX} is not what ${generator} prints. First differing line is ${first + 1}: committed ${JSON.stringify(before[first])} `
+    + `against generated ${JSON.stringify(after[first])} (${before.length} committed lines against ${after.length} generated)`);
 });

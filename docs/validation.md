@@ -2807,9 +2807,9 @@ where the same 208-case run came out 201 passed, 1 failed, 6 skipped and the lon
 isolation (subsection 34), and the second clean 208-case gate after `02fb867`'s 202 passed, 6 skipped, 0 failed. The 6
 skips are the documented `worker`-transport cases, unchanged.
 
-The reproduction is one command (`node artifacts/iter36-coordinate-probe.mjs`, whose corpus is reproduced verbatim in
-the archived log; `artifacts/` is gitignored and the documentation guard deliberately skips it, so the log rather than
-the script is the durable record), and the measurement costs seconds against the minutes a gate costs. **The habit that
+The reproduction is one command (`node scripts/chat-coordinate-probe.mjs`, whose corpus is reproduced verbatim in
+the archived log; iteration 36 ran it from the gitignored `artifacts/` and iteration 60 shipped it, so the script is a
+durable record beside the log), and the measurement costs seconds against the minutes a gate costs. **The habit that
 made this fixable is: when the requirement is a boolean that a legitimate writing style cannot satisfy, do not widen
 it before measuring what the domain vocabulary does with the loosened rule.** Here the tempting one-line change
 (`part || part` → nothing) was the single most damaging candidate of the three, and the corpus probe existed before
@@ -4231,7 +4231,7 @@ Costs. Two gate runs on these bytes, both archived. Attempt 1
   `documentation-reflow` 4, `-citations` 5, `-commands` 6 and `-citation-anchors` 3 for 18 green, plus
   `documentation-evidence-index` 5 green once `docs/evidence-index.md` is regenerated; the generator reports 515
   evidence files of which 158 are named by no other tracked prose file, over 216 prose files, and it is stable at two
-  consecutive runs. `python3 artifacts/iter49-census.py` on the final ledger reads 216 prose files, 805 archive
+  consecutive runs. `python3 scripts/ledger-census.py` on the final ledger reads 216 prose files, 805 archive
   citations and 539 `file:line` references with as-is equal to newline-joined and no split citations, against 779 and
   436 on iteration 50's bytes. What the fix costs at run time is nothing measurable: no new dependency, fetch, timer
   or retry, three properties added to errors that were already being thrown, and one log call that now fires for every
@@ -5287,7 +5287,7 @@ archives were shelved but before the index was regenerated: `ℹ tests 259`, `�
 (`docs/evidence/iter58-offline-index-red-2026-11-20.log.gz`), and the single red is that archive's own recorded
 property - `onlyReds` in the guard's table lists exactly
 `the index header states counts its own rows and the filesystem agree with` and nothing else, because the newly
-shelved citation-drift log was not yet indexed. After `node artifacts/iter47-index-generator.mjs` the same command is
+shelved citation-drift log was not yet indexed. After `node scripts/evidence-index-generator.mjs` the same command is
 green on the same 259 cases: `ℹ tests 259`, `ℹ pass 259`, `ℹ fail 0`, `OFFLINE_EXIT=0`
 (`docs/evidence/iter58-offline-prefinal-2026-11-20.log.gz`), and the same command run once more against the tree this
 subsection leaves behind - after the census, controls, pre-final and provenance rows joined the guard's table and its
@@ -5566,17 +5566,17 @@ agronomy and anything deployed.
 
 **The publication chain still tells a reader to run a file no clone has.** `grep` over the tracked prose names 108
 distinct paths under `artifacts/`, and `git ls-files artifacts` returns nothing because `.gitignore:4` ignores the
-whole directory - so two of those mentions are commands a fresh checkout cannot execute:
-`node artifacts/iter47-index-generator.mjs`, the tool this subsection's own index regeneration depends on and the one
-cited above, and `node artifacts/iter36-coordinate-probe.mjs`. The guards cannot see this:
-`tests/documentation-commands.test.js` skips
-`artifacts` when it builds its inventory and the citation guards `stat()` the working tree, which has the files because
-this machine wrote them. A reviewer therefore has to trust that the ledger's index was produced by the generator the
-ledger names. Promoting both instruments into `scripts/` the way iteration 58 promoted `scripts/citation-drift.mjs`, and
-adding a case that fails on a documented `node artifacts/…` command, is the next pass's first job.
+whole directory - so eight commands a fresh checkout cannot execute name three instruments there, which is what the
+scan iteration 60 added measures; this paragraph said "two" and so understated its own finding. Iteration 60 ships all
+three: `artifacts/iter47-index-generator.mjs`, the tool this subsection's own index regeneration depends on and the one
+cited above, `artifacts/iter36-coordinate-probe.mjs`, and `artifacts/iter49-census.py`. The guards could not see this:
+`tests/documentation-commands.test.js` skipped
+`artifacts` when it built its inventory and the citation guards `stat()` the working tree, which has the files because
+this machine wrote them. A reviewer therefore had to trust that the ledger's index was produced by the generator the
+ledger names, which is why the index is now reproduced by a tracked tool and judged by a case of its own.
 
-**Next.** First the two instruments the ledger tells a reader to run, which are gitignored today; they cost one commit
-and they are what every provenance claim in these subsections rests on. Then the `pendingChoice` gap above, which is now
+**Next.** The instruments above are shipped, the index is printed by a tracked generator and the guards that read both
+are counted in section 60, so this queue starts with the `pendingChoice` gap below, which is now
 a mechanism rather than a suspicion, because the two lines are one
 action: `public/js/modules/chat.js:129` sets `pendingChoice` *and* writes the button's own sentence into the composer
 before it submits, so the sentence this iteration restores is precisely the sentence that carried a guided-step choice.
@@ -5587,3 +5587,141 @@ retry must still reach the guided branch, plus the negative control that restore
 over the box (which would attach a stale level to a new sentence). `public/js/lib/api.js:13` and `:61` remain the
 structured-fact half of P2: neither carries the posted `error.code`, so nothing downstream can tell one refusal from
 another without matching words.
+
+### 60. Three instruments the ledger told a reader to run sat in a gitignored directory, and the guard that should have caught it read only fenced blocks
+
+The commands guard read fenced blocks, so everything a farmer-facing document told a person to run *inside a sentence*
+was never examined. Its file inventory is built by `tests/documentation-commands.test.js:30`, which recognises only
+`scripts/`, `tests/`, `server/` and `notebooks/`, so even a fenced call of a script under `artifacts/` matched nothing,
+and its `SKIP_DIRS` at `tests/documentation-commands.test.js:13` drops any `artifacts` directory from the document walk
+too. A line naming `artifacts/iter47-index-generator.mjs` was invisible twice over: prose rather than a fence, then a
+directory the guard is configured not to look at. Iteration 59 measured the consequence and named it as the next pass's
+first job; this is that pass.
+
+`docs/evidence/iter60-negative-controls-2026-11-20.log.gz` prints how big the blind spot was. The shipped scan finds
+**67** runnable command mentions across the tracked prose, and a copy of it that keeps the two sources apart prints
+`{"files":34,"fence":11,"inline":56,"total":67}` - 56 of the 67 sat in the half nothing checked, and 55 of them live in a
+file that has no fenced command at all (`inlineOnlyFromFilesWithNoFencedHits`), so the fence-scan saw nothing in those
+documents whatsoever. The 67 comes from the guard and not from the copy: asking it for a floor above what it finds makes
+it print `found 67` and fail, and the file comes back byte-identically
+(`SPLIT_RESTORE_CHECK before=63700dd9a2bd5294 now=63700dd9a2bd5294`). The floor the case now
+carries is 60 (`tests/documentation-commands.test.js:162`), which a fenced-only regression cannot clear because
+fenced-only is 11.
+
+Three instruments moved into `scripts/`: `scripts/evidence-index-generator.mjs`, which prints
+`docs/evidence-index.md`; `scripts/ledger-census.py`, which prints the citation counts this ledger quotes; and
+`scripts/chat-coordinate-probe.mjs`, which subsection 36 calls one command. Each header names the iteration that wrote
+it and the one that shipped it, because iteration 47 recorded the opposite decision on purpose - the guard, not the
+generator, is what the repository commits to - and that decision is overturned here with its reason: a committed
+generated file no clone can regenerate is not a measurement a reviewer can check. The generator gained `--stdout` at
+`scripts/evidence-index-generator.mjs:92` so the guard can compare the committed index against a fresh scan without
+overwriting the file it is judging.
+
+`tests/documentation-commands.test.js:136` is the case that closes the class. It reads its ignore list out of
+`.gitignore:4` (`tests/documentation-commands.test.js:145`) rather than from a constant of its own, so a new scratch
+directory cannot become a place to hide an instrument, and it checks two independent halves: a target under an ignored
+prefix is rejected even while its bytes sit on disk, and a target that is absent is rejected too. Two paths stay exempt
+because the ledger cites them as deliberate fakes injected to prove a guard goes red, and the exemption itself is
+guarded - `tests/documentation-commands.test.js:165` fails if either stops being cited in prose, and
+`tests/documentation-commands.test.js:168` fails if either ever exists. Widening the scan then caught two sentences
+written by this very pass. The dated section-10 bullet that reported the defect told a reader to run the generator at
+`artifacts/iter47-index-generator.mjs`, and the first draft of the paragraph above repeated the same command while
+describing it, so `node scripts/docs-guards.mjs` read **26 pass / 1 fail** on
+`docs/validation.md -> artifacts/iter47-index-generator.mjs (under the ignored artifacts/)` at 05:43Z, and
+`docs/evidence/iter60-guard-caught-its-own-author-2026-11-20.log.gz` prints that pair by name. The same five files read
+**27 pass / 0 fail** in the guard archive the Verification paragraph below quotes. Both sentences now name the path
+without an interpreter in front of it, which keeps the historical fact - the instrument lived in a directory no clone
+receives - and stops promising a command nobody can run. The wording of a dated entry was edited to get there, so it is
+recorded here rather than left for a reader to find in the diff.
+
+The first version of that case tested disk presence and nothing else, and it went green with the defect standing:
+`docs/evidence/iter60-red-invalid-guard-checked-disk-not-ship-2026-11-20.log.gz` prints
+`✔ a command named inside a sentence is a file the repository ships, not one only this machine has` beside `ℹ pass 13`
+and `ℹ fail 1` on a tree where three documented instruments still pointed into a directory no clone receives. Its one
+red is the index case, which could not even start while the generator lived in the scratch directory
+(`scripts/evidence-index-generator.mjs exited 1`). That log is archived rather than deleted, because a guard that passes
+on the bug is itself the finding.
+`docs/evidence/iter60-two-guards-red-then-green-2026-11-20.log.gz` then carries both sides of the run that did describe
+the defect: `ℹ pass 12` and `ℹ fail 2` before the move, with six distinct rejections of the form
+`AGENTS.md -> artifacts/iter47-index-generator.mjs (under the ignored artifacts/)` - eight raw mentions across
+`AGENTS.md`, the handoff and this ledger, naming the generator, the probe and the census - and `ℹ pass 14` and
+`ℹ fail 0` after it. So the ignore-prefix half needed no synthetic edit: real prose commands were caught by it while
+their bytes sat on this machine.
+
+Four controls, one log, four detections: `CONTROLS_RAN 4 CONTROLS_DETECTED 4 CONTROLS_RED 4`, each suite exiting 1.
+Delete `scripts/ledger-census.py` while the prose still names it and two cases go red, the fenced one and the new one.
+Create `scripts/no-such-probe.js`, a path the ledger cites as an injected fake, and only the new case goes red. Append an
+entry to the exemption list that no document cites: red. Reword a sentence of `docs/evidence-index.md` that no row check
+reads and exactly one case goes red, printing `First differing line is 194` - that is what separates the new index case
+from the three older ones, because a control in the same archive that changes one byte count in a row turns three of the
+seven red (`ℹ pass 4` / `ℹ fail 3`, `First differing line is 15`). Both touched files came back to the sha256 recorded
+at the head of that log (`63700dd9…` for the test, `f29cb1b5…` for the index).
+
+`docs/evidence/iter60-instruments-after-move-2026-11-20.log.gz` runs all three instruments from their new paths. The
+probe reports `27/27 as expected · 19/27 produced a location · module public/`. The census reports
+`prose files in scope : 225`, 1109 archive citations and 905 file:line references read as-is against identical
+newline-joined counts - no citation splits across a line boundary on these bytes - and `lines ending in a path-shaped
+token : 160`. The generator printed `11580` bytes to stdout, and the case that compares those bytes with the committed
+file is one of the 14 passes in the red-then-green archive above, so the index the ledger has been quoting was always
+honest; what was missing was anybody's ability to check it.
+
+Costs. No application byte changed in this pass: `public/` and `server/` are untouched, so the gate below re-runs to
+confirm the branch rather than to test a fix, and this iteration's own numbers are documentation and tooling numbers.
+The rule is git-free on purpose - no case in the offline suite invokes `git`, and a source tarball with no `.git`
+directory would turn a working guarantee into a false red. The hole that leaves is a documented command naming a file
+that exists on disk inside a *tracked* directory but was never added: that is a review mistake, not a documentation
+mistake, and nothing in this repository catches it.
+
+**Verification.** `docs/evidence/iter60-gate-2026-11-20.log.gz` is the four-project gate on this tree: `Running 260
+tests using 1 worker`, `260 passed (20.1m)`, `GATE_EXIT=0`, started `ITER60_GATE_START 2026-11-20T05:31:31Z` and
+finished at `2026-11-20T05:51:41Z` on HEAD `e3982cd…` - the iteration-59 commit - under a header line that records
+`PRODUCT_BYTES public/js server tests-e2e unchanged since HEAD e3982cd`. Neither the string `CONTEXT_UNAVAILABLE` nor
+the string `cdn.jsdelivr.net` appears anywhere in those bytes, so this gate absorbed no live refusal and reached no
+content delivery network, and the refused-ask spec written by iteration 59 executed in all four projects with
+`✓  214 [node-mobile] › tests/e2e/chat-refused-ask-keeps-question.spec.js:76:1` its last appearance. A pass that
+changes only tooling still has to prove the branch behaves, and this is that proof.
+`docs/evidence/iter60-offline-final-2026-11-20.log.gz` reads `ℹ tests 262`, `ℹ pass 262`, `ℹ fail 0`, `ℹ skipped 0`
+and `OFFLINE_EXIT=0` in `26160.45` ms, and its header states the table size that run executed against -
+`OFFLINE_CMD npm test (tally table 57 rows, index regenerated)` - because the rows pinning its own two archives were
+written after it ran, which is the self-reference subsection 58 records rather than something this table can fix. Its
+`PRODUCT_SHA` line prints the same `103dede5…` for `public/js/modules/chat.js` that iteration 59 committed, which is
+how the offline number and the gate number are pinned to one application tree. Unlike iterations 58 and 59 there was no
+bootstrap red: the generated index was reprinted after the gate archive was shelved and before the suite started.
+`docs/evidence/iter60-docsguards-final-2026-11-20.log.gz` reads `ℹ tests 27`, `ℹ pass 27`, `ℹ fail 0`,
+`DOCSGUARDS_SUMMARY tests 27 | pass 27 | fail 0 | skipped 0`, `DOCSGUARDS_CHILD_EXIT 0` and `GUARD_EXIT=0` under
+`GUARD_TABLE_ROWS 57`. Both of those archives are now rows in `tests/documentation-evidence-index.test.js`, and the
+floor that case asserts rose with them to 63, so the run that checks those rows is a later guard run whose
+bytes cannot be archived: reprinting the index to carry a new archive changes the tree the archive certifies, so the
+final re-run after the reprint prints the same 27 and is deliberately left out of the shelf rather than quoted as
+evidence of itself. The offline suite closes the same gap by running twice instead of leaving it open:
+`docs/evidence/iter60-offline-shipped-2026-11-20.log.gz` repeats the reading on the finished tree - `ℹ tests 262`,
+`ℹ pass 262`, `ℹ fail 0`, `ℹ skipped 0`, `OFFLINE_EXIT=0` in `27318.49` ms against a table that then carried 62 rows -
+because the archive above it predates five of its own rows, so the tally this ledger reports as shipped is the tally of
+the tree the ledger ships.
+`docs/evidence/iter60-tally-controls-2026-11-20.log.gz` is what makes the new rows more than
+decoration: five mutations of them - the gate's wall time, the offline count, the guard runner's child exit, the floor
+itself raised to 1005 and one `absent:` needle pointed at a line the archive really prints - each take the case red
+with the right archive named in the message, and the log closes `CONTROLS_RAN 5 CONTROLS_DETECTED 5 CONTROLS_RED 5`,
+`RESTORE_CHECK before=60cd2bd207442eb5 now=60cd2bd207442eb5` and `AFTER_RESTORE_SUMMARY ℹ tests 7 ℹ pass 7 ℹ fail 0`.
+The Python ladder that ran them sits beside it as
+`docs/evidence/iter60-tally-controls-ladder-2026-11-20.py.gz`, because a control a reader cannot re-run is a claim -
+and the first attempt to publish it proved the point from the other side. Putting its source bytes inside the log that
+row judges wrote the string `GREEN - CONTROL FAILED`, which that row forbids, into the very archive being checked, and
+the tally case went red saying so; `docs/evidence/iter60-bundle-red-2026-11-20.log.gz` keeps that run
+(`ℹ tests 7`, `ℹ pass 6`, `ℹ fail 1`, `RED_EXIT=1`). An archive and the program that produced it are two different
+pieces of evidence, which is the second time in this pass the guard caught something the author had written rather
+than something the author went looking for. `node scripts/citation-drift.mjs` on the finished tree prints
+`TREE CITED_LINES_CHECKED 11 DRIFTED 0 INSIDE_DIFF_HUNKS 12`, the eleven cited lines being the ones in the two guard
+files this pass edited. The run that confirms all of the above - `docs/evidence` untouched, index unchanged,
+`DOCSGUARDS_SUMMARY tests 27 | pass 27 | fail 0 | skipped 0` and `npm test` at `ℹ tests 262 / ℹ pass 262 / ℹ fail 0 /
+ℹ skipped 0` - was executed on this tree from `2026-11-20T06:09:41Z` and re-executed after every word of this
+subsection had settled, each time printing the same three readings on HEAD `e3982cd…`. It is quoted from the terminal
+and carries no archive of its own, for the reason already given: it is the run that certifies the tree that
+carries the archived runs above it.
+
+**Unverified.** The controls prove what the new cases reject, not that the ledger is now complete: 56 inline command
+mentions are scanned for shipped-ness, and nothing checks whether each still does the thing the sentence says it does.
+Whether a reviewer on another machine can rebuild `docs/evidence-index.md` from a fresh clone is proved only for this
+host, where the generator's stdout already matches the committed bytes. Real phones, Safari/WebKit, microphones, audio
+quality, independent agronomy and anything deployed stay UNVERIFIED, as does every claim about farmer behaviour this pass
+does not execute in a browser.

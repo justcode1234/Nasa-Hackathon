@@ -121,3 +121,50 @@ test('every archived evidence file a doc points at exists', async () => {
   assert.ok(seen.size >= 20, `expected the scan to find cited evidence files, found ${seen.size}`);
   assert.deepEqual(missing, [], `these cited evidence files are not in the repository:\n${missing.join('\n')}`);
 });
+
+// Two paths the ledger quotes as deliberate fakes, injected to prove a guard goes red. They must stay missing, so the
+// scan below names them instead of skipping every command that happens to be absent.
+const INJECTED_FAKES = ['scripts/no-such-probe.js', 'scripts/iteration13-missing-probe.js'];
+
+async function ignoredDirs() {
+  // Read from the file the repository actually ignores with, so a new scratch directory cannot become a place to hide
+  // an instrument that the docs tell a person to run.
+  const gitignore = await readFile(path.join(ROOT, '.gitignore'), 'utf8');
+  return gitignore.split('\n').map(line => line.trim()).filter(line => line.endsWith('/')).map(line => line.replace(/^\//, ''));
+}
+
+test('a command named inside a sentence is a file the repository ships, not one only this machine has', async () => {
+  // The two existence checks above read fenced blocks, so a command written inside a sentence was never examined and
+  // the file it named could live anywhere. Measured 20 Nov over the same file set: prose named three instruments under
+  // the gitignored `artifacts/` directory - the generator that prints the evidence index these guards read, the census
+  // behind the counts quoted in validation.md, and the coordinate probe validation.md calls "one command" - and a
+  // device with only this repository has none of them. Presence on disk proved nothing: this machine holds the whole
+  // scratch directory, which is why the ignore rules are checked as well as the bytes. With all three shipped the same
+  // scan counts 67 runnable command mentions across the tracked prose, 56 of them inside sentences and 11 in fenced
+  // blocks, so the floor below is set at 60: a regression to fenced-only scanning lands at 11 and cannot clear it.
+  const skipped = await ignoredDirs();
+  const files = ['AGENTS.md', 'README.md', ...(await markdownFiles('docs'))];
+  const missing = [], ignored = [], seen = [], fakes = [];
+  for (const file of files) {
+    const text = await readFile(path.join(ROOT, file), 'utf8');
+    const spans = [...text.matchAll(/`([^`\n]+)`/g)].map(match => match[1]).concat(fencedLines(text));
+    for (const span of spans) {
+      const match = span.match(/\b(?:node|python3|bash|sh|npx)\s+(?:--\S+\s+)*((?:scripts|tests|docs|public|server|notebooks|artifacts)\/[A-Za-z0-9_./-]+\.(?:m?js|cjs|js|py|sh))\b/);
+      if (!match) continue;
+      const target = match[1];
+      if (INJECTED_FAKES.includes(target)) { fakes.push(target); continue; }
+      seen.push(`${file} -> ${target}`);
+      const hiddenBy = skipped.find(prefix => target.startsWith(prefix));
+      if (hiddenBy) { ignored.push(`${file} -> ${target} (under the ignored ${hiddenBy})`); continue; }
+      try { await readFile(path.join(ROOT, target), 'utf8'); } catch { missing.push(`${file} -> ${target}`); }
+    }
+  }
+  assert.ok(seen.length >= 60, `expected the scan to find runnable commands in prose, found ${seen.length}`);
+  assert.deepEqual(ignored, [], `these commands are named in prose and no clone has the file:\n${[...new Set(ignored)].join('\n')}`);
+  assert.deepEqual(missing, [], `these commands are named in prose and the file is not on disk:\n${[...new Set(missing)].join('\n')}`);
+  assert.deepEqual([...new Set(fakes)].sort(), [...INJECTED_FAKES].sort(),
+    'the exempted paths must each still be cited in prose, and no other path may join them silently');
+  for (const fake of INJECTED_FAKES) {
+    await assert.rejects(readFile(path.join(ROOT, fake)), `${fake} is cited as an injected fake and must stay out of the tree`);
+  }
+});
