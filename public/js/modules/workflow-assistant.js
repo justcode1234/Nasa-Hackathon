@@ -229,6 +229,20 @@ function placeListFailure(countryName, error) {
     unreadable ? [next(`Whole ${countryName}`, `Whole ${countryName}`)]
       : [next('Try the place list again', 'A specific area'), next(`Whole ${countryName}`, `Whole ${countryName}`)]);
 }
+// A typed point is checked against the saved list before it is accepted, so when that read refused the sentence can
+// neither accept the point nor pretend the check passed. Two facts it may still state come from reads that did
+// complete: the reverse lookup that put the point in this country, and the country the sentence selected. Unlike the
+// area-path failure above, the country really did move here, so nothing may claim "nothing was selected".
+function coordinateListUnreadable(countryName, latitude, longitude, question, error) {
+  const unreadable = error?.code === 'LOCATIONS_SCHEMA';
+  return reply(`The saved place list for ${countryName} ${unreadable
+    ? `arrived in a shape this app cannot read, so the point ${latitude}, ${longitude} could not be cross-checked against the regions or towns it lists, and asking again cannot change a source format`
+    : `could not be read just now, so this assistant could not cross-check the point ${latitude}, ${longitude} against the regions or towns it lists`}. The reverse lookup did place that point in ${countryName}, and ${countryName} is the country this plan is in, but the point was not accepted and no region or town was assumed from a list this app never saw. ${unreadable
+      ? 'Select the spot on the map in step 1 or search a place by name instead.'
+      : 'Ask again in a moment, select the spot on the map in step 1, or take the whole-country overview.'}`,
+    unreadable ? [next(`Whole ${countryName}`, `Whole ${countryName}`)]
+      : [next('Ask that again', question), next(`Whole ${countryName}`, `Whole ${countryName}`)]);
+}
 function townButtons(places, regionCode = null) {
   return (places?.places ?? []).filter(place => !regionCode || place.regionCode === regionCode).slice(0, 3)
     .map(place => ({ label: place.name, question: `Use ${place.name}`, workflowChoice: { type: 'town', id: place.id } }));
@@ -451,8 +465,12 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       const result = await request(`/api/places?${new URLSearchParams({...parsed.location,detail:'region'})}`); guard();
       const foundCountry = result.places[0]?.countryCode;
       if (!foundCountry || foundCountry !== state.country) return reply(`Those coordinates ${foundCountry ? `were identified in ${COUNTRY_NAMES.of(foundCountry)}` : 'could not be assigned to a country'}. Please correct the point or country before I continue.`);
-      let list = locationLists.get(state.country);
-      if (!list) { list = await request(`/api/locations?country=${state.country}`); guard(); locationLists.set(state.country,list); while(locationLists.size>4)locationLists.delete(locationLists.keys().next().value); }
+      // One saved-list read per sentence: `getLocationList` above caches the body it resolved, so a cache miss here
+      // can only mean that read failed — and asking again outside any try/catch let the refusal escape respond() as a
+      // raw error after `chooseCountry` had already moved the plan. The body the guarded read returned is the only
+      // source these two cross-checks use.
+      if (listFailed) return coordinateListUnreadable(countryName, latitude, longitude, question, listFailed);
+      const list = listed;
       const q = normalizeName(question);
       const regions = list.regions.filter(region=>normalizeName(region.name)!==normalizeName(countryName) && (` ${q} `).includes(` ${normalizeName(region.name)} `));
       const fold = value=>normalizeName(value).normalize('NFD').replace(/\p{M}/gu,'');

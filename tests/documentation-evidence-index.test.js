@@ -1032,10 +1032,175 @@ const TALLIES = [
     phrases: ['ITER64_SPEC_DONE 2026-11-20T12:33:50Z exit=0', 'ac19cc29c44b8f14f1a6c9cdb6b9456c',
       'dccb577c480dc3224afacd393b88ccf1'],
     marks: 0, absent: ['✘', 'did not run'] },
+  // The probe that walked the shipped module over the shipped location adapter, both arms.
+  { archive: 'docs/evidence/iter65-f5-coord-refused-recheck-2026-11-20.log.gz',
+   phrases: ['PROBE iter65-recheck WHAT=F5 coordinate sentence against a refused saved list HEAD=e32ec0a NODE=',
+       '--- listRefused=false', '--- listRefused=true',
+       'outcome: {"threw":"Error: The saved place list could not load.","cancelled":false}',
+       'state: {"country":"IN","location":null}', 'SyntaxError: Invalid or unexpected token'],
+    marks: 0 },
+  // Five of the six coordinate cases against the module as `e32ec0a` shipped it.
+  { archive: 'docs/evidence/iter65-offline-cases-red-3-2026-11-20.log.gz',
+   lines: ['ℹ tests 42', 'ℹ pass 39', 'ℹ fail 3'],
+   phrases: ['SOURCE_MD5=89d6666e1f567185c2bcf2b7ee2e4bda'],
+   onlyReds: ['a coordinate sentence whose saved list refused answers instead of throwing out of respond()',
+       'a coordinate sentence against an unreadable list shape reports its own reason and offers no retry',
+       'the coordinate sentence sets the point as soon as the saved list answers again'],
+    marks: 0 },
+  // The whole file after a harness rename left the old counter name dangling.
+  { archive: 'docs/evidence/iter65-offline-harness-rename-37-2026-11-20.log.gz',
+   lines: ['ℹ tests 42', 'ℹ pass 5', 'ℹ fail 37'],
+   phrases: ['SOURCE_MD5=166c93504f3d0bc817c02ccb3cd8c6a6'],
+    marks: 0 },
+  // The 43-case green on a revision of the test file edited again before delivery.
+  { archive: 'docs/evidence/iter65-offline-cases-green-43-earlier-test-bytes-2026-11-20.log.gz',
+   lines: ['ℹ tests 43', 'ℹ pass 43', 'ℹ fail 0'],
+   phrases: ['TEST_MD5=965600d1e6c4714379c8b2e800e0cde6'],
+    marks: 0 },
+  // The six coordinate cases against the pre-fix module, same superseded revision.
+  { archive: 'docs/evidence/iter65-offline-revert-control-earlier-test-bytes-2026-11-20.log.gz',
+   lines: ['ℹ tests 6', 'ℹ pass 2', 'ℹ fail 4'],
+   phrases: ['REVERTED_MD5=89d6666e1f567185c2bcf2b7ee2e4bda', 'TEST_MD5=965600d1e6c4714379c8b2e800e0cde6'],
+    marks: 0 },
+  // The second mutant ladder, same superseded revision, printed as the script emitted it.
+  { archive: 'docs/evidence/iter65-offline-controls-earlier-test-bytes-2026-11-20.log.gz',
+   phrases: ['module_md5 166c93504f3d0bc817c02ccb3cd8c6a6', 'TEST_MD5=965600d1e6c4714379c8b2e800e0cde6',
+       'guard-after-duplicate-read tests 6 fail 4 restore_ok True',
+       'swallow-cancellation tests 6 fail 1 restore_ok True'],
+    marks: 0 },
+  // The first ladder, whose own restore flag was computed before the restore write.
+  { archive: 'docs/evidence/iter65-offline-controls-superseded-2026-11-20.log.gz',
+   phrases: ['"restore_ok": false', '"control": "guard-after-duplicate-read"', '"tests": "6"'],
+    marks: 0 },
+  // The whole offline suite before any ledger or pin repair.
+  { archive: 'docs/evidence/iter65-offline-docguards-red-2026-11-20.log.gz',
+   lines: ['ℹ tests 286', 'ℹ pass 283', 'ℹ fail 3'],
+   phrases: ['TEST_MD5=965600d1e6c4714379c8b2e800e0cde6'],
+   onlyReds: ['every pinned ledger citation lands on the statement the ledger quotes',
+       'every docs/evidence archive named anywhere in prose exists on disk',
+       'every file:line citation resolves and names a line that exists and is not blank'],
+    marks: 0 },
+  // The build that put the delivered module into `dist/client`.
+  { archive: 'docs/evidence/iter65-build-witness-2026-11-20.log.gz',
+   lines: ['BUILD_EXIT=0'],
+   phrases: ['MODULE_BEFORE=166c93504f3d0bc817c02ccb3cd8c6a6', 'Built static browser app in dist/client.'],
+    marks: 0 },
+  // The new page case, focused, on the node transport.
+  { archive: 'docs/evidence/iter65-browser-focused-green-node-2026-11-20.log.gz',
+   lines: ['Running 1 test using 1 worker', 'FOCUS_EXIT=0'],
+   phrases: ['1 passed', '--project=node-desktop'],
+   absent: ['✘'],
+    marks: 0 },
+  // The same case, focused, on the static transport.
+  { archive: 'docs/evidence/iter65-browser-focused-green-static-2026-11-20.log.gz',
+   lines: ['Running 1 test using 1 worker', 'FOCUS_EXIT=0'],
+   phrases: ['1 passed', '--project=static-desktop'],
+   absent: ['✘'],
+    marks: 0 },
+  // The delivered file, 43 cases, on the delivered module and test bytes.
+  { archive: 'docs/evidence/iter65-offline-cases-green-43-2026-11-20.log.gz',
+   lines: ['ℹ tests 43', 'ℹ pass 43', 'ℹ fail 0', 'ℹ skipped 0'],
+   phrases: ['TEST_MD5=a8ec8622d9f61ed295285e251cf5cd63', 'OFL_EXIT=0 utc=2026-11-20T15:26:31Z'],
+    marks: 0 },
+  // The delivered file against the module as HEAD ships it.
+  { archive: 'docs/evidence/iter65-offline-revert-delivered-2026-11-20.log.gz',
+   lines: ['ℹ tests 43', 'ℹ pass 39', 'ℹ fail 4'],
+   phrases: ['TEST_MD5=a8ec8622d9f61ed295285e251cf5cd63'],
+   onlyReds: ['a coordinate sentence whose saved list refused answers instead of throwing out of respond()',
+       'a coordinate sentence against an unreadable list shape reports its own reason and offers no retry',
+       'a coordinate sentence that moved the plan into a country whose list refused reports the half-moved state',
+       'the coordinate sentence sets the point as soon as the saved list answers again'],
+    marks: 0 },
+  // The five mutants re-run on the delivered test bytes.
+  { archive: 'docs/evidence/iter65-offline-controls-2026-11-20.log.gz',
+   lines: ['MODULE_AFTER=166c93504f3d0bc817c02ccb3cd8c6a6'],
+   phrases: ['TEST_MD5=a8ec8622d9f61ed295285e251cf5cd63', 'restore_ok=true', 'OFL_EXIT=0 utc=2026-11-20T15:26:42Z',
+       'guard-after-duplicate-read', 'swallow-cancellation'],
+    marks: 0 },
+  // The witnessed page control: revert, build, fail both transports, restore, build, pass both.
+  { archive: 'docs/evidence/iter65-browser-controls-restore-2026-11-20.log.gz',
+   lines: ['BUILD_REVERTED_EXIT=0', 'BUILD_RESTORE_EXIT=0'],
+   phrases: ['module=89d6666e1f567185c2bcf2b7ee2e4bda dist=89d6666e1f567185c2bcf2b7ee2e4bda unreadable_in_dist=0',
+       'module=166c93504f3d0bc817c02ccb3cd8c6a6 dist=166c93504f3d0bc817c02ccb3cd8c6a6 unreadable_in_dist=2',
+       '121 × locator resolved', 'PLAYWRIGHT_EXIT rc=1 project=node-desktop',
+       'PLAYWRIGHT_EXIT rc=1 project=static-desktop', 'PLAYWRIGHT_EXIT rc=0 project=node-desktop',
+       'PLAYWRIGHT_EXIT rc=0 project=static-desktop', '1 passed (1.3s)'],
+    marks: 2 },
+  // The four-project gate on the delivered bytes, before any ledger moved.
+  { archive: 'docs/evidence/iter65-gate-2026-11-20.log.gz',
+   lines: ['Running 300 tests using 1 worker', '300 passed (26.2m)', 'GATE_EXIT=0'],
+   phrases: ['ITER65_GATE_START 2026-11-20T14:59:17Z', 'ITER65_GATE_DONE 2026-11-20T15:25:28Z',
+       'ITER65_FROZEN assistant=166c93504f3d0bc817c02ccb3cd8c6a6',
+       'spec=92d37f54fa118cdca30d31f1867647d8 placetest=a8ec8622d9f61ed295285e251cf5cd63'],
+   absent: ['✘', 'did not run', 'skipped'],
+    marks: 0 },
+  // The `--list` census on the same tree.
+  { archive: 'docs/evidence/iter65-census-2026-11-20.log.gz',
+   lines: ['Total: 300 tests in 27 files'],
+   phrases: ['chat-refused-ask-keeps-question.spec.js:113:1'],
+   absent: ['✘'],
+    marks: 0 },
+  // The whole offline suite on delivered bytes with the pins still naming the pre-fix lines.
+  { archive: 'docs/evidence/iter65-offline-pins-red-2026-11-20.log.gz',
+   lines: ['ℹ tests 286', 'ℹ pass 282', 'ℹ fail 4'],
+   onlyReds: ['every pinned ledger citation lands on the statement the ledger quotes',
+       'inserting a line above a pinned statement turns this guard red rather than leaving it green',
+       'every file:line citation resolves and names a line that exists and is not blank',
+       'every docs/evidence archive named anywhere in prose exists on disk'],
+    marks: 0 },
+  // The pin scout over the repaired ledger, before the table was re-pointed.
+  { archive: 'docs/evidence/iter65-pins-drift-13-2026-11-20.log.gz',
+   lines: ['pins=106 drifting=13'],
+    marks: 0 },
+  // The re-point pass itself and the anchor guard re-run after it.
+  { archive: 'docs/evidence/iter65-pins-repoint-green-2026-11-20.log.gz',
+   lines: ['repointed=4 inserted=11 at_line=304 plus_one_case_moved=392->403', 'ANCHORS_EXIT 0', 'ℹ tests 4',
+       'ℹ pass 4', 'ℹ fail 0'],
+    marks: 0 },
+  // The scripted prose re-point, full capture.
+  { archive: 'docs/evidence/iter65-docs-repoint-moves-2026-11-20.log.gz',
+   lines: ['changed_sources=3 moves=78 ambiguous=0 unmatched=1'],
+    marks: 0 },
+  // The same re-point grouped by the prose line holding each move.
+  { archive: 'docs/evidence/iter65-docs-repoint-sites-2026-11-20.log.gz',
+   lines: ['sites=18'],
+   phrases: ['AGENTS.md:1970  tests/workflow-place-choices.test.js  621->627'],
+    marks: 0 },
+  // The citation scout in both modes after every pointer moved.
+  { archive: 'docs/evidence/iter65-docs-drift-scout-2026-11-20.log.gz',
+   lines: ['TREE CITED_LINES_CHECKED 229 DRIFTED 0 INSIDE_DIFF_HUNKS 0',
+       'HEAD CITED_LINES_CHECKED 229 DRIFTED 84 INSIDE_DIFF_HUNKS 0'],
+   phrases: ['--- head mode ---', 'DRIFT_EXIT=0'],
+    marks: 0 },
+  // The static half of the same control from an earlier pass, with no build digest.
+  { archive: 'docs/evidence/iter65-browser-control-static-unwitnessed-2026-11-20.log.gz',
+   lines: ['1 failed'],
+   phrases: ['122 × locator resolved'],
+   absent: ['WITNESS'],
+    marks: 1 },
+  // The whole offline suite on the delivered bytes after every repair, the reading row 19 of the handoff quotes.
+  { archive: 'docs/evidence/iter65-offline-final-2026-11-20.log.gz',
+   lines: ['ℹ tests 286', 'ℹ pass 286', 'ℹ fail 0', 'ℹ skipped 0'],
+   phrases: ['MODULE_MD5=166c93504f3d0bc817c02ccb3cd8c6a6', 'TEST_MD5=a8ec8622d9f61ed295285e251cf5cd63',
+       'OFL_EXIT=0'],
+   absent: ['✘'],
+    marks: 0 },
+  // The five documentation guard files together on the same tree.
+  { archive: 'docs/evidence/iter65-docguards-final-2026-11-20.log.gz',
+   lines: ['ℹ tests 28', 'ℹ pass 28', 'ℹ fail 0'],
+   phrases: ['CMD node scripts/docs-guards.mjs', 'DG_EXIT=0'],
+   absent: ['✘'],
+    marks: 0 },
+  // The citation scout over the finished ledger, both modes, with the exit statuses it measured.
+  { archive: 'docs/evidence/iter65-docs-drift-final-2026-11-20.log.gz',
+   lines: ['TREE CITED_LINES_CHECKED 242 DRIFTED 0 INSIDE_DIFF_HUNKS 18', '--- head mode ---',
+       'HEAD CITED_LINES_CHECKED 230 DRIFTED 84 INSIDE_DIFF_HUNKS 0'],
+   phrases: ['DRIFT_TREE_EXIT=0 DRIFT_HEAD_EXIT=0'],
+    marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 126, `the table carries ${TALLIES.length} archives; subsections 57 through 64 quote more runs than ` +
+  assert.ok(TALLIES.length >= 153, `the table carries ${TALLIES.length} archives; subsections 57 through 65 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -1088,7 +1253,18 @@ test('the tally of every archived run is printed by that archive, not by the pro
     + 'passed (23.4m) with exit 0, the `--list` census counted the same 296 in 27 files, and the focused spec ran once '
     + 'more after a comment line in it was re-pointed from a gitignored scratch path to the shelf file that now holds '
     + 'those bytes, and 126 when the complete capture of that offline suite joined it beside the filtered one, six case '
-    + 'titles against 280.');
+    + 'titles against 280, and 150 when iteration 65 archived the F5 coordinate-sentence fix with the 43-case '
+    + 'green on its delivered bytes, the control that ran those same cases against the module as `e32ec0a` '
+    + 'shipped it and printed four of them red, the five mutants re-run on the delivered test bytes, the four- '
+    + 'project gate at 300 passed (26.2m) and the census that counted the same 300 in 27 files, the build that '
+    + 'carried the fix into `dist/client`, the browser control that watched both transports fail and both pass, '
+    + 'the 13-pin repair and the 78-site prose re-point around it, and the superseded runs an earlier draft of '
+    + 'this pass published instead, and 152 when the two closing readings joined it: the whole offline suite at '
+    + '286 passed / 0 failed / 0 skipped and the guard set at 28, both on the delivered bytes, whose own two rows '
+    + 'are the only ones in this pass that no archived run of this pass executed, and 153 when the citation scout '
+    + 'over the finished ledger joined it with the reading nothing else in this pass could print - 242 pointers '
+    + 'checked against the tree, 0 drifted and 18 skipped for sitting inside this pass\'s own diff hunks - '
+    + 'because the scout runs outside the guard set the offline suite executes.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

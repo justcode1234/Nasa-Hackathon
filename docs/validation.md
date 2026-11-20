@@ -1004,7 +1004,7 @@ region row San Marino (SM) and **Türkmenistan** in Ahal (TM). `allowEponymousTo
 `namedRegions.length === 0`, so in every list that *has* regions the country spelling stayed excluded
 from the town matches even after the plan was asking "which town". The farmer could see the town in
 step 1's list, tap it if a button offered it, but could not type it. The rule now also allows it while a
-region is selected ([public/js/modules/workflow-assistant.js:235-241](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L235)),
+region is selected ([public/js/modules/workflow-assistant.js:249-255](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L249)),
 because the pending question at that point is a town question and the country overview is already
 reachable through the `Whole <country>` button.
 
@@ -1018,7 +1018,7 @@ At "Which state or region of France?", typing "France" matched nothing: the repl
 same area prompt, so the chat asked itself the same thing with nothing new to tap. The long official
 spellings reached it too ("South Georgia & South Sandwich Islands" is past the short-reply limit, so the
 first attempt only fixed the short ones). The rule now compares the whole reply in the same canonical
-shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:413-425](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L413)):
+shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:427-439](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L427)):
 it names the level still missing ("a town in Nampula", "one of its regions"), offers that level's real
 rows plus `Whole <country>`, and ends with "Nothing was selected." A saved row that really does carry
 the country's spelling is matched earlier and still selects itself, so Guadeloupe and Martinique keep
@@ -1032,7 +1032,7 @@ the specific field; the town itself is not farmland."** - the chat picked a plac
 because the country's own spelling *contains* the town's spelling and `typedPlace` matched that prefix.
 Defect 11's honest reply could not fire: it only ran when nothing matched at all. The narrowing rule now
 requires the reply to equal a saved row's whole canonical spelling before a country-name reply may select
-anything ([public/js/modules/workflow-assistant.js:263-270](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L263));
+anything ([public/js/modules/workflow-assistant.js:277-284](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L277));
 otherwise the mentions are dropped and the honest reply answers instead. A town genuinely called "São
 Tomé" stays typeable by that name, and the two lists whose rows really do carry the country spelling
 (Guadeloupe, Martinique) still select themselves.
@@ -4843,7 +4843,7 @@ The fix, five lines of behaviour. `public/js/lib/api.js:49` exports `cancellatio
 asked for. `public/js/lib/api.js:56` now decides on `signal?.aborted === true` - the caller's own controller, a
 structured fact - so a foreign `AbortError` falls through to `NO_ANSWER` and is announced, and
 `public/js/lib/api.js:35` routes the worker's cancellation through the same helper so both transports mark it the
-same way. `public/js/modules/workflow-assistant.js:292` uses `cancellation('Planning context changed')` for the
+same way. `public/js/modules/workflow-assistant.js:306` uses `cancellation('Planning context changed')` for the
 stop the assistant asks for itself, and the four consumers read `error.cancelled`. `tests/workflow-assistant.test.js:331`
 pins the name, so `cancellation()` keeps it; the flag is additive. Nothing else in the app sets `cancelled`.
 
@@ -5265,7 +5265,7 @@ They were rewritten rather than skipped or narrowed. The accessibility spec now 
 `toEqual(['Use selected point', 'Show mapped fields'])`, and because its retry walk needs the empty-count prompt -
 which only a lookup that actually answered can reach - a `mode='answered'` scan was added at
 `tests/e2e/guided-chat-accessibility.spec.js:59` so the same assertions run against services that replied. One
-offline case was added, `tests/workflow-place-choices.test.js:621`, which drives a town tap whose lookup was refused
+offline case was added, `tests/workflow-place-choices.test.js:627`, which drives a town tap whose lookup was refused
 and asserts the location is preserved, no farm is invented, the failure sentence appears, `doesNotMatch` the count
 claim, both way-ons are present and a second tap re-asks. All of it is green inside the gate below, so the stricter
 assertions were not traded against coverage.
@@ -5733,7 +5733,7 @@ the false empty-data claims, keep an unreadable schema apart from an unavailable
 and exercise a retry that actually gets through. Goal 2's shipped half (`public/js/lib/api.js:13`, `:60`, `:70`) is the
 precondition: until the client carried the status and code the server sent, the two classes were one sentence.
 
-**What was observed before any change.** `public/js/modules/workflow-assistant.js:355` in HEAD was
+**What was observed before any change.** `public/js/modules/workflow-assistant.js:369` in HEAD was
 `try { listed = await getLocationList(state.country); guard(); } catch { listed = null; }`, and the line below it turned
 that `null` into `{ regions: [], places: [] }`. A refusal therefore did not read as a refusal: the assistant answered
 "No towns are listed for …" and "there are no named regions" about a saved list holding every town in the country, the
@@ -5749,7 +5749,7 @@ that "arrived in a shape this app cannot read, so … asking again cannot change
 has ruled out. Both keep the country selected, leave the point unset and invent no regions. The read at
 `public/js/modules/workflow-assistant.js:357` now rethrows a cancellation instead of answering for it, and the four
 sites that used to fall through to the empty-list wording (`:406`, `:417`, `:563` and the whole-country escape through
-`public/js/modules/workflow-assistant.js:655`) return the failure reply instead. Nothing caches a failure: the
+`public/js/modules/workflow-assistant.js:673`) return the failure reply instead. Nothing caches a failure: the
 assistant's `locationLists`, `public/js/modules/location-picker.js:33` and the server-side read all store on success
 only, which is what makes the retry in the reproducing case a real re-ask rather than a replay.
 
@@ -6255,8 +6255,9 @@ which only goes false at `workflow-assistant.js:611`. F2: the worker-side list c
 request counters blind on the static transport. F3: the `Ask that again` recovery re-selects the region and leaves the
 town unselected, so the reply promising that nothing was changed is followed by a replay that changes one thing — the
 new case asserts the region select is untouched by the refusal, and says nothing about the replay. F4:
-`workflow-assistant.js:279` still swallows a list refusal inside `exactPlaceRow` with `.catch(() => null)`. F5: the
-coordinate sentence reads `/api/locations` outside any try/catch at `workflow-assistant.js:455`, and
+`workflow-assistant.js:293` (the line `e32ec0a` shipped at `:279`) still swallows a list refusal inside `exactPlaceRow`
+with `.catch(() => null)`. F5: the
+coordinate sentence reads `/api/locations` outside any try/catch at `workflow-assistant.js:455` as `e32ec0a` shipped it, and
 `docs/evidence/iter64-coord-list-refused-probe-2026-11-20.log.gz` shows what that costs: after `chooseCountry` has
 already moved the plan to India with its location cleared (`{"country":"IN","location":null}`), `respond()` throws
 `Error: The saved place list could not load.` and the farmer's sentence dies at the top level in `chat.js:149` instead
@@ -6289,3 +6290,229 @@ a node harness, so no live GeoNames outage was reproduced and none is claimed; t
 and mobile over two transports, which leaves Safari, WebKit and real phones outside every number above; microphones
 and audio quality stay out of scope; and the agronomy in the compared rotations still has no independent expert
 review.
+
+### 65. A sentence with coordinates asked the saved place list a second time, outside any guard, and the refusal escaped the assistant
+
+Queue item F5, the last of the five the iteration-64 entry handed over, and the one that threw. A sentence that names
+coordinates cross-checks them against the country's saved list — `public/js/modules/workflow-assistant.js:473` reads the
+list it was handed, but until this pass the coordinate branch fetched one itself: it asked
+`/api/locations?country=<the country just selected>` with no `try` around it, and the body it got back was the only thing
+those two checks had ever looked at. The read was also unreachable except as a retry of a refusal, which is why no green
+run ever exercised it: `getLocationList` (`public/js/modules/workflow-assistant.js:632`) stores the body a successful
+read returned, so the branch's cache is warm whenever the guarded shared read above it
+(`public/js/modules/workflow-assistant.js:370-371`) succeeded. A miss there means the shared read failed just before, and
+the second request met the same refusal — this time with nobody to classify it.
+`docs/evidence/iter65-f5-coord-refused-recheck-2026-11-20.log.gz` walks the shipped module over the shipped location
+adapter on the iteration-64 tip and records what the farmer's own sentence did, in both arms. With the list answering:
+two requests (`/api/locationsIN`, `/api/places`) and the point lands at `18.52, 73.85`. With the list refusing: three
+requests (`/api/locationsIN`, `/api/places`, `/api/locationsIN` — the third is the duplicate read), calls
+`["country"]`, state `{"country":"IN","location":null}` and outcome
+`{"threw":"Error: The saved place list could not load.", "cancelled":false}`. The country had moved, the point was gone,
+and there was no reply. That capture opens with a failed `node -e` line of my own quoting, before the probe ran; the
+error is the wrapper's, not the module's. The probe itself was an inline `node -e` whose text I did not keep, so its two
+readings stand corroborated rather than alone: `docs/evidence/iter64-coord-list-refused-probe-2026-11-20.log.gz` reaches
+the same rejection through a different harness, and the offline cases below pin the request count in a file that ships.
+
+The second read is gone rather than wrapped, so the sentence has one saved-list source again, and the refusal the guarded
+read already carried answers it. `coordinateListUnreadable` (`public/js/modules/workflow-assistant.js:236`) is the reply,
+reached from the guard at `public/js/modules/workflow-assistant.js:472`. It states only what its own completed reads
+support: the saved list for the country could not be read, so the point could not be cross-checked against the regions or
+towns it lists; the reverse lookup *did* place that point in the country
+(`public/js/modules/workflow-assistant.js:465`); and the country is what the plan is now in — which is why the sentence
+cannot borrow `placeListFailure`'s `Nothing was selected and nothing was invented`, true on the area path and false here.
+What it withholds is the point: no `chooseLocation`, so `state.location` stays null and the rows the branch reads from
+`public/js/modules/workflow-assistant.js:475` onward never reach a list this app never saw. Four limits come with it,
+each with a case of its own. A refusal offers the replay (`Ask that again`) and the whole-country overview, because
+neither needs the saved list. A list that arrives in a shape the module cannot read (`LOCATIONS_SCHEMA`) says so and
+offers no replay, because asking again would ask for the same broken payload. A read the runtime cancelled is still
+rethrown at `public/js/modules/workflow-assistant.js:371` rather than answered, so the fix is not a blanket catch. And
+once the list answers, the same sentence sets the point it could not check before — the refusal is never kept as though
+it were the country's contents.
+
+Six offline cases carry that, all in `tests/workflow-place-choices.test.js`, and they went red before they went green.
+Five of the six existed when the pre-fix run was taken: `docs/evidence/iter65-offline-cases-red-3-2026-11-20.log.gz`
+runs the file at 42 cases against the module as `e32ec0a` shipped it and reads 39 pass / 3 fail — the refusal case, the
+unreadable-shape case and the point-lands-when-the-list-answers case, each on the escaped `Error` whose stack frame names
+`respond` in `public/js/modules/workflow-assistant.js` at `:455`, the line the duplicate read occupied before this pass
+removed it. The two that stayed green are the ones pinning behaviour this fix must not change: the read-count case at
+`tests/workflow-place-choices.test.js:829` and the cancellation case at `tests/workflow-place-choices.test.js:843`.
+Reaching that state needed the harness to model two
+things it had never been asked for: the reverse lookup (`/api/places`, opt-in, so a test that never speaks coordinates
+still fails loudly on an unmodelled request) and a saved list that refuses for one country and answers for another, which
+is what a sentence that *moves* the plan and names a point actually does.
+`docs/evidence/iter65-offline-cases-green-43-2026-11-20.log.gz` is the file complete at 43 cases, all passing, on the
+bytes this pass delivers. Two of my own faults are on the shelf rather than edited out. The first case as written
+asserted `calls` deep-equals `["country"]`, and after the fix that case went red on its own assertion: its fixture starts
+the plan already in India, so nothing moves and `calls` is empty — the probe's `["country"]` came from a different
+starting country. The expectation was wrong, not the module; it now reads `deepEqual(calls, [])`, in the delivered file,
+and a sixth case was added for the shape the probe recorded, where the country really does move and the reply has to
+survive saying so. No capture of that intermediate red survives in scratch, so it is recorded here as the fault it was
+and cited to nothing. The second: renaming the list counter to per-country asks left the old name dangling and
+`docs/evidence/iter65-offline-harness-rename-37-2026-11-20.log.gz` fell over with 37 failures in one go, which is what
+the whole-file run is for — a filtered run had been green ninety seconds earlier and proved nothing about the harness.
+
+Five mutations then tried to prove those cases vacuous, each run against the six coordinate cases: keeping the guard but
+leaving the duplicate read in place (4 red — the counts are the point, not just the reply), deleting the guard and
+defaulting to an empty list so the point is accepted from a list nobody read (4 red), copying
+`Nothing was selected and nothing was invented` into this reply (1 red, and only the half-moved case
+`tests/workflow-place-choices.test.js:855` notices), dropping the `LOCATIONS_SCHEMA` classification so every refusal
+offers a replay (1, the unreadable-shape case at `tests/workflow-place-choices.test.js:799`), and swallowing the
+cancellation rethrow (1, `tests/workflow-place-choices.test.js:843`). Every control restored the tree byte-identically
+(`restore_ok=true` on all five) and the module hash after the ladder is the delivered hash,
+`166c93504f3d0bc817c02ccb3cd8c6a6`. Because the delivered test file hashes `a8ec8622d9f61ed295285e251cf5cd63` and every
+run above that number stamped an earlier revision, the 43-case green, the whole-file revert control and the five-mutant
+ladder were re-run after the gate against the delivered bytes: the green is `43 tests / 43 pass / 0 fail`, the revert is
+`43 tests / 39 pass / 4 fail` with the four reds naming themselves as the coordinate cases
+(`docs/evidence/iter65-offline-revert-delivered-2026-11-20.log.gz`), and the ladder is `6 tests` per control with
+`4 / 4 / 1 / 1 / 1` failures, `module_md5` equal to the delivered module and `restore_ok=true` five times
+(`docs/evidence/iter65-offline-controls-2026-11-20.log.gz`). The superseded first passes stay on the shelf rather than
+being deleted — the first ladder under `docs/evidence/iter65-offline-controls-superseded-2026-11-20.log.gz`, where its
+own script reported `restore_ok=false` for all five because the flag was computed from the mutant's bytes before the
+restore write, so that column described the harness rather than the tree. Three more captures were superseded by a
+cause of their own: the test file was edited again after them, so they stamp `965600d1e6c4714379c8b2e800e0cde6` rather
+than the delivered bytes — the 43-case green
+(`docs/evidence/iter65-offline-cases-green-43-earlier-test-bytes-2026-11-20.log.gz`), the six coordinate cases against
+the pre-fix module at HEAD, `6 tests / 2 pass / 4 fail`
+(`docs/evidence/iter65-offline-revert-control-earlier-test-bytes-2026-11-20.log.gz`), and the ladder that ran after the
+first one, which already printed `fail 4 / 4 / 1 / 1 / 1` with `restore_ok True` five times
+(`docs/evidence/iter65-offline-controls-earlier-test-bytes-2026-11-20.log.gz`). They are kept as the runs they were and
+re-run above rather than corrected in place. A fourth sits with them:
+`docs/evidence/iter65-offline-docguards-red-2026-11-20.log.gz` is the whole offline suite before any ledger or pin
+repair, reading **286 tests / 283 pass / 3 fail** with the three reds naming the anchor, archive-existence and
+`file:line` guards — the same publication guards the pins-red run below widens to four.
+
+The page-level case is `tests/e2e/chat-refused-ask-keeps-question.spec.js:113`, in the file that already owns the
+coordinate sentence and already answers the place service from contract bodies, so the refusal below it is the only
+failure in the ask and no live geocoder is trusted with the result. It sends the plan to India with the saved list cut,
+types `Use my point 18.52, 73.85 to plan a rotation in India`, and asserts state rather than wording: the status line
+does not report a failed send, the last message in the history is the assistant's and names the read that failed, the
+coordinates come back quoted in the reply, `#latitude` and `#longitude` stay empty, the offers include the replay; then
+the list is allowed again, the replay button is tapped with its own request counted, and the point lands as `18.52` /
+`73.85`. `docs/evidence/iter65-build-witness-2026-11-20.log.gz` is the build that put the delivered module into
+`dist/client`, with the module digest printed before it, and
+`docs/evidence/iter65-browser-focused-green-node-2026-11-20.log.gz` and
+`docs/evidence/iter65-browser-focused-green-static-2026-11-20.log.gz` each read `1 passed` on that tree.
+
+The control is one witnessed capture, `docs/evidence/iter65-browser-controls-restore-2026-11-20.log.gz`: the module
+reverted to its `e32ec0a` bytes (`89d6666e1f567185c2bcf2b7ee2e4bda`), `npm run build`, a `WITNESS` line naming the module
+digest, the `dist` digest and the count of `coordinateListUnreadable` occurrences in `dist` (`unreadable_in_dist=0`,
+against `=2` on the delivered build), the focused case run on each transport, then the delivered bytes restored, rebuilt,
+witnessed again and re-run green on both (`1 passed (1.3s)` each way). The two transports fail differently, which is
+worth more than one shared sentence. On node the case fails in 518 ms on the `#answer-status` assertion at
+`tests/e2e/chat-refused-ask-keeps-question.spec.js:139`, whose requirement is `a saved-list refusal at the coordinate
+branch must answer, not fail the send` and whose received string is the page's catch-all sentence in the status line —
+`No answer came back for this request. Nothing was invented in its place. Try again.` On static the same
+case waits out the readiness helper's sixty seconds and fails on `#answer-status`, which the log shows resolved 121 times
+to `The saved town list could not load. Retry the cou…`: the status line stayed on the *earlier* switch refusal, because
+the coordinate sentence threw before `respond()` returned anything for the worker to report. Either way the farmer gets a
+message about a service, never an answer about their farm. The static half is why this capture is witnessed at all:
+`docs/evidence/iter65-browser-control-static-unwitnessed-2026-11-20.log.gz` records the same red from an earlier pass but
+prints no build digest, so it cannot show which bytes `dist/client` held, and a page-side counter is separately blind to
+the worker's own list cache (`server/context/locations.js:9-34`).
+
+The gate ran on the delivered bytes before any of the ledger moved: `Running 300 tests using 1 worker` to
+`300 passed (26.2m)` over `GATE_EXIT=0`, `ITER65_GATE_START 2026-11-20T14:59:17Z` to
+`ITER65_GATE_DONE 2026-11-20T15:25:28Z` on HEAD `e32ec0afc55ac03fd85ee608b99a0e129407db39` and node `v26.13.1`. The
+frozen-tree line names the three digests it checked — `assistant=166c93504f3d0bc817c02ccb3cd8c6a6`,
+`spec=92d37f54fa118cdca30d31f1867647d8`, `placetest=a8ec8622d9f61ed295285e251cf5cd63` and `dist=2` occurrences of the
+helper in the built module — in `docs/evidence/iter65-gate-2026-11-20.log.gz`, and the companion census reads
+`Total: 300 tests in 27 files` (`docs/evidence/iter65-census-2026-11-20.log.gz`). The new case is green in all four
+projects. One live `CONTEXT_UNAVAILABLE` refusal landed inside `tests/e2e/review-phase-a.spec.js:34` on node-desktop,
+which still passed in 3.1m; it is the same upstream capacity reading subsection 64 recorded, not a new one.
+
+This pass changed a shipped module's line count, so the ledger's pointers moved with it rather than being relaxed. The
+scripted re-point prints `changed_sources=3 moves=78 ambiguous=0 unmatched=1` in its full capture
+(`docs/evidence/iter65-docs-repoint-moves-2026-11-20.log.gz`) and `sites=18`, carrying 59 move arrows, in the capture
+that groups those moves by the prose line holding them (`docs/evidence/iter65-docs-repoint-sites-2026-11-20.log.gz`).
+The two are not reconciled to one another here: the site grouping came from an inline pipeline whose text I did not
+retain, so each capture is quoted only for the figures it prints itself. It also found one
+statement gone outright — the handoff's quote of the duplicated read at
+`public/js/modules/workflow-assistant.js:455` as `e32ec0a` shipped it, which that file's own iteration-65 note rewords
+instead of re-pointing. Two more sites survived the script and were caught by the guard, as the next paragraph records, so
+the repair totals twenty sites on twenty lines: nine in `AGENTS.md`, four in `docs/handoff-2026-11-18.md` and seven here,
+with `git diff --numstat` showing equal additions and deletions on all three files for that stage. Two lines came
+after it, one in `AGENTS.md` and one in subsection 64 above, for the bare-basename cites the next paragraph names, and
+this subsection grew again while its own account was corrected against the witnessed control capture. None of that can
+move a pointer: the highest `docs/validation.md` line cited anywhere in the tracked tree is `:5268`, a pin entry four
+subsections above every edit this pass makes here, so nothing below it is read by line number. In the pin guard, the
+drift scout reads `pins=106 drifting=13` before the repair
+(`docs/evidence/iter65-pins-drift-13-2026-11-20.log.gz`) and the repair pass prints `repointed=4 inserted=11
+at_line=304 plus_one_case_moved=392->403` with the anchor guard green 4/4/0 after it
+(`docs/evidence/iter65-pins-repoint-green-2026-11-20.log.gz`). The table itself counts 106 rows at HEAD and 115 now, and
+this pass does not reconcile that 9-row growth to the `inserted=11` the script prints: the two count different units and
+neither capture names the mapping. The guard's own ±1 case sits at `:403` where it was `:380` — a self-citation the
+table carries by number — and the three re-worded deep-link labels are checked by that guard rather than stamped by any
+capture. The guard was allowed to do that work in public:
+`docs/evidence/iter65-offline-pins-red-2026-11-20.log.gz` is the whole offline suite on the delivered module and
+delivered test bytes with the pointers still naming the pre-fix lines, reading
+**286 tests / 282 pass / 4 fail**, and the four reds are publication guards rather than anything about the farmer
+journey: `every pinned ledger citation lands on the statement the ledger quotes`, its own insertion-replay case
+`inserting a line above a pinned statement turns this guard red rather than leaving it green`,
+`every file:line citation resolves and names a line that exists and is not blank`, and
+`every docs/evidence archive named anywhere in prose exists on disk` — that last one red only because this section names
+archives it is writing alongside. `docs/evidence/iter65-offline-final-2026-11-20.log.gz` is the same command after the
+repair - **286 tests / 286 pass / 0 fail / 0 skipped**, `OFL_EXIT=0` - and
+`docs/evidence/iter65-docguards-final-2026-11-20.log.gz` is `node scripts/docs-guards.mjs` on the same tree, **28 / 28 /
+0**. Both banners stamp `TALLY_ROWS=153`, the table as those two runs found it: the row below was inserted first.
+
+Neither of those readings is taken on faith by this ledger: every capture this section quotes now carries a row in
+`tests/documentation-evidence-index.test.js`, which grew from 126 rows at `e32ec0a` to 153 here, 27 of them naming an
+`iter65-` archive - one per capture on the shelf. A row states the lines its own gunzipped archive prints after trimming
+(`lines`), the substrings it must contain (`phrases`), the strings it must not (`absent`), the number of `✘` case marks
+it must equal (`marks`) and, for a run that went red, the exact set of red case titles (`onlyReds`); the guard refuses a
+row whose archive never printed one of those strings, so no figure in this section is quoted from memory. The rows were
+emitted by `artifacts/scratch/iter65/tally65.py`, which validates each candidate against the archive on disk before
+printing it and refuses to emit an apostrophe or a line wider than 118 characters; `artifacts/scratch/iter65/shelf.py`
+decides what reaches the shelf and `artifacts/scratch/iter65/final.sh` takes the two closing readings, all three under
+the `.gitignore:4` limitation subsection 58 records - a reviewer checking out this branch cannot run them, only
+re-derive their output from the guard that ships. The shelving script had two defects of the kind this programme keeps
+meeting, both found by reading its own output rather than by a test. Its prose-cite extractor stripped the `iter65-`
+prefix that the shelf entry names carry, so a dry run reported 22 real archives as uncited; and before that was fixed it
+asserted nothing about how many cites it had found, so a checker that extracted nothing would have passed for the wrong
+reason. It now refuses to shelve when the extractor finds fewer than 20 archives and checks both directions - a prose
+cite with no shelf entry, and a shelf entry no prose cites - which is how four superseded runs that this section had
+stopped naming were found and re-named above.
+
+Three instrument findings came out of the repair, all left open deliberately. `scripts/citation-drift.mjs` in tree mode
+printed `TREE CITED_LINES_CHECKED 214 DRIFTED 0` over the ledger while two prose sites still pointed at line 621 of
+`tests/workflow-place-choices.test.js` after that case moved to `:627`. The citations guard named both
+(`docs/handoff-2026-11-18.md:831` and `docs/validation.md:5268`), and a third site of the same shape in that document's
+own §1 table was re-pointed by this pass, which is also why this sentence writes `line 621` instead of the
+`file:line` form: the guard reads a citation about a stale citation as a live one, and no instrument distinguishes the
+two. Reading the comparison explains the miss
+(`scripts/citation-drift.mjs:76-78`): it compares the tree line with the HEAD line at the resolved position and stays
+silent when both trim to the empty string, so a pointer that has slid onto a blank line is exactly the case it cannot
+see. `docs/evidence/iter65-docs-drift-scout-2026-11-20.log.gz` runs the scout in both modes on the repaired ledger —
+`TREE CITED_LINES_CHECKED 229 DRIFTED 0` and `HEAD CITED_LINES_CHECKED 229 DRIFTED 84` — and the head-mode figure is not
+a failure count: it lists every prose line whose own text moved since `e32ec0a`, which is what a pass that re-points
+twenty sites and thirteen pins necessarily produces. So F6 is a scout gap, not a guard gap: the guard's blank-line rule
+caught what
+the scout is structurally blind to, which is the division of labour the ledger already documents.
+`docs/evidence/iter65-docs-drift-final-2026-11-20.log.gz` re-runs both modes over the finished ledger, after every
+edit above: `TREE CITED_LINES_CHECKED 242 DRIFTED 0 INSIDE_DIFF_HUNKS 18` and `HEAD CITED_LINES_CHECKED 230 DRIFTED 84`,
+stamped `DRIFT_TREE_EXIT=0 DRIFT_HEAD_EXIT=0` and `TALLY_ROWS=153` - the table once this section's own row for the
+capture joined it, which is also why the two closing readings above were re-taken against that tree instead of left
+stamping 152. Tree mode counts 13 more pointers than the reading above because this section cites 13 more,
+and head mode reads the committed prose, so its 230 is a different population rather than a smaller one. The 18 inside-hunk pointers
+are the honest limit on that `DRIFTED 0`: `scripts/citation-drift.mjs:57` returns null for a pointer whose target line sits in a hunk
+this branch rewrote and `scripts/citation-drift.mjs:74` counts it and moves on, so it is never compared.
+`artifacts/scratch/iter65/drift-skipped.mjs`, which walks the same diff and prints what the shipped tool only counts, names all 18:
+5 into `public/js/modules/workflow-assistant.js`, 5 into `tests/e2e/chat-refused-ask-keeps-question.spec.js` and 8 into
+`tests/workflow-place-choices.test.js`. Every one of them points at code this pass wrote, where only the prose can say whether the line
+still means what the sentence claims, and several are pinned by quote in the anchor table rather than left to a line number. The first
+attempt at this capture printed `DRIFT_EXIT=0` taken from the `head -3` that ended a pipeline rather than from the scout, so that file
+is discarded in the scratch directory and the archived one reports the two exit statuses it actually measured - the mistake iteration 61
+already recorded for a suite whose status came from its pipeline's last command. F7 is the same shape one
+step out: the scripted re-point's cite pattern requires a `public/`, `server/` or `tests/` prefix, so a citation written
+as a bare basename is not a candidate at all (pointers into `docs/` are outside its scope too, and those only matter when
+a prose surface changes length, which this ledger's line-neutral rule exists to prevent).
+Two such cites survived into the iteration-64 bullet in `AGENTS.md` and subsection 64 above, both naming
+`workflow-assistant.js` lines this pass moved, and both stayed green under the non-blank rule because the lines they now
+land on hold unrelated code; they are reworded here to name the revision they describe rather than the current file.
+Whether the pattern should widen, and what it would then cost in false positives, is the open question this item leaves.
+F2 is unchanged and
+still makes a page-side counter blind on the static transport, and F4's malformed-resolved-body risk in the rows read
+from `public/js/modules/workflow-assistant.js:475` onward stays open. Every refusal in these runs is simulated by route
+interception or a stub; no live GeoNames outage was reproduced and none is claimed. Real phones, Safari/WebKit,
+microphones, audio quality and independent agronomy stay UNVERIFIED. Nothing was deployed, `main` is untouched, and no
+NASA portal edit was made.

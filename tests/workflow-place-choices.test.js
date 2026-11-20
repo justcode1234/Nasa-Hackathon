@@ -23,8 +23,8 @@ const indiaLocations = { regions: [{ id: '16', name: 'Maharashtra' }, { id: '27'
     { id: 'p2', name: 'Nagpur', regionCode: '16', latitude: 21.1458, longitude: 79.0082 },
     { id: 'p3', name: 'Ratnagiri', regionCode: '27', latitude: 16.9905, longitude: 73.3003 }] };
 
-function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGraceMs, fieldsNeverAnswer = false, fieldsRefused = false, listFailure = null } = {}) {
-  const calls = []; let listAsked = 0, pendingFailure = listFailure;
+function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGraceMs, fieldsNeverAnswer = false, fieldsRefused = false, listFailure = null, reverse = null } = {}) {
+  const calls = []; const listAsks = []; let pendingFailure = listFailure; const reverseAsked = [];
   const state = { country, catalog, countryCrops: getCountryCrops({ country }), farm: null, farms: [],
     regionCode: null, location: null, observations: null,
     planning: { baseline: ['', '', ''], allowedCrops: getCountryCrops({ country }).screeningCropIds, irrigation: 'unknown', soil: 'unknown', startMonth: 1, planningYear: 2026, referenceYear: 2025 } };
@@ -55,9 +55,15 @@ function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGrace
   const assistant = createWorkflowAssistant({ getState: () => state, actions, fieldsGraceMs,
     request: async path => { const url = new URL(path, 'https://test.invalid');
       // `locations` may be a function of the requested country so a test can hold a different saved list per country.
-      if (url.pathname === '/api/locations') { listAsked++; if (pendingFailure) { const error = new Error(pendingFailure.message); Object.assign(error, pendingFailure); throw error; } return typeof locations === 'function' ? locations(url.searchParams.get('country')) : locations; }
+      if (url.pathname === '/api/locations') { const country = url.searchParams.get('country'); listAsks.push(country);
+        const failure = typeof pendingFailure === 'function' ? pendingFailure(country) : pendingFailure;
+        if (failure) { const error = new Error(failure.message); Object.assign(error, failure); throw error; } return typeof locations === 'function' ? locations(country) : locations; }
+      // A typed point is reverse-geocoded before the saved list is consulted; `reverse` is opt-in so a test that
+      // never speaks coordinates still fails loudly on any request it has not modelled.
+      if (url.pathname === '/api/places') { if (!reverse) throw new Error('unexpected test request ' + path); reverseAsked.push(url.searchParams.get('detail')); return typeof reverse === 'function' ? reverse(url.searchParams) : reverse; }
       throw new Error('unexpected test request ' + path); } });
-  return { assistant, calls, state, listAsked: () => listAsked, failList: failure => { pendingFailure = failure; } };
+  return { assistant, calls, state, listAsked: () => listAsks.length, listAsks: () => listAsks.slice(),
+    reverseAsked: () => reverseAsked, failList: failure => { pendingFailure = failure; } };
 }
 const text = answer => (answer?.blocks ?? []).map(block => block.text).join(' ');
 const towns = answer => (answer?.followUps ?? []).filter(choice => choice.workflowChoice?.type === 'town');
@@ -753,4 +759,112 @@ test('a tapped place choice answers without re-reading the list, whatever the pl
     assert.ok(answer, 'a tapped place choice answered');
     assert.doesNotMatch(text(answer), /could not be read|did not complete/, 'a tap that needed no read is not reported as a failed one');
   }
+});
+
+// Iteration 65, queue item F5. A sentence that names coordinates reads the saved list a second time to cross-check
+// them, and until this iteration that second read sat outside any try/catch. It was also unreachable except as a
+// retry of a refusal: `getLocationList` stores the body a successful read returned, so the only way the coordinate
+// branch met a cache miss is the guarded shared read having failed just above it. The farmer then met the refusal
+// twice in one sentence, and the second one escaped `respond()` as a raw error after `chooseCountry` had already
+// moved the plan. Measured on the iteration-64 tip by
+// docs/evidence/iter65-f5-coord-refused-recheck-2026-11-20.log.gz, which walked the shipped module over the shipped
+// adapter and recorded asks `/api/locationsIN`, `/api/places`, `/api/locationsIN`, calls `["country"]`,
+// state `{"country":"IN","location":null}` and outcome `{"threw":"Error: The saved place list could not
+// load.","cancelled":false}`.
+const COORD = 'Help me plan a rotation in India at 18.52, 73.85. Crops: rice, wheat, beans. Rainfed';
+const MAHARASHTRA_REVERSE = { places: [{ countryCode: 'IN', region: 'Maharashtra' }] };
+
+test('a coordinate sentence whose saved list refused answers instead of throwing out of respond()', async () => {
+  const { assistant, calls, state, listAsked, reverseAsked } = setup({ country: 'IN', locations: indiaLocations, listFailure: UNAVAILABLE, reverse: MAHARASHTRA_REVERSE });
+  let thrown = null, answer = null;
+  try { answer = await assistant.respond(COORD); } catch (error) { thrown = error; }
+  assert.equal(thrown, null, `a refused saved list left the farmer a raw error instead of a reply: ${thrown?.message}`);
+  const sentence = text(answer), labels = answer.followUps.map(choice => choice.label);
+  assert.match(sentence, /saved place list for India could not be read just now/, `the reply must name the read that failed: ${sentence}`);
+  assert.match(sentence, /18\.52, 73\.85/, 'the coordinates the farmer typed have to be quoted back, not silently dropped');
+  assert.match(sentence, /India is the country this plan is in/, 'the country the sentence moved the plan to is a fact the reply may keep');
+  assert.ok(reverseAsked().length, 'the reply is only honest about the country if the reverse lookup really ran');
+  for (const claim of ['is selected', 'No towns are listed', 'no towns to choose from', 'verified'])
+    assert.ok(!sentence.includes(claim), `a read that never completed became a finding about the list: ${sentence}`);
+  assert.equal(state.location, null, 'a point this app could not cross-check was accepted anyway');
+  assert.equal(state.country, 'IN');
+  assert.deepEqual(calls, [], `a refusal this early in the sentence may select nothing at all: ${calls.join(' → ')}`);
+  assert.equal(listAsked(), 1, 'the refusal was asked twice inside one sentence');
+  assert.ok(labels.includes('Ask that again'), `the sentence has to be replayable once the list answers: ${labels.join(' | ')}`);
+  assert.ok(labels.includes('Whole India'), 'the route that needs no saved list stays offered');
+});
+
+// The same branch reached by a list whose rows arrived unreadable: a second request cannot fix a source format, so
+// this arm keeps the reason and drops the retry, exactly as placeListFailure does for the area path.
+test('a coordinate sentence against an unreadable list shape reports its own reason and offers no retry', async () => {
+  const { assistant, state, listAsked } = setup({ country: 'IN', locations: indiaLocations, listFailure: SCHEMA, reverse: MAHARASHTRA_REVERSE });
+  let thrown = null, answer = null;
+  try { answer = await assistant.respond(COORD); } catch (error) { thrown = error; }
+  assert.equal(thrown, null, 'an unreadable shape is a reportable failure, not an exception');
+  const sentence = text(answer), labels = answer.followUps.map(choice => choice.label);
+  assert.match(sentence, /arrived in a shape this app cannot read/);
+  assert.match(sentence, /asking again cannot change a source format/);
+  assert.ok(!labels.includes('Ask that again'), `a retry the reply has just ruled out is offered anyway: ${labels.join(' | ')}`);
+  assert.equal(state.location, null);
+  assert.equal(listAsked(), 1, 'one read per sentence, whatever the failure');
+});
+
+// The pair that makes the reply above a report and not a dead end: with the list answering again, the same sentence
+// sets the same point. A refusal may never be kept as though it were the country's contents.
+test('the coordinate sentence sets the point as soon as the saved list answers again', async () => {
+  const { assistant, state, listAsked, failList } = setup({ country: 'IN', locations: indiaLocations, listFailure: UNAVAILABLE, reverse: MAHARASHTRA_REVERSE });
+  const refused = await assistant.respond(COORD);
+  assert.match(text(refused), /could not be read just now/);
+  failList(null);
+  const answer = await assistant.respond(COORD);
+  assert.ok(state.location, 'the replayed sentence still found no point');
+  assert.equal(state.location.latitude, 18.52);
+  assert.equal(state.location.longitude, 73.85);
+  assert.doesNotMatch(text(answer), /could not be read/, 'a read that answered is not reported as a failure');
+  assert.equal(listAsked(), 2, 'each sentence reads the saved list once: ' + listAsked());
+});
+
+// Held across the fix: a sentence that names a point a readable list can cross-check keeps working, and the readable
+// list is read once per sentence rather than once per branch.
+test('a coordinate sentence reads the saved list once and sets the point it cross-checked', async () => {
+  const { assistant, calls, state, listAsked } = setup({ country: 'IN', locations: indiaLocations, reverse: MAHARASHTRA_REVERSE });
+  const answer = await assistant.respond(COORD);
+  assert.equal(listAsked(), 1, 'the coordinate branch re-read a list this sentence already read');
+  assert.ok(state.location);
+  assert.equal(state.location.latitude, 18.52);
+  assert.equal(state.location.longitude, 73.85);
+  assert.equal(state.location.placeId, undefined, 'a typed point stays a point, not the nearest saved row');
+  assert.doesNotMatch(text(answer), /could not be read|arrived in a shape/);
+  assert.ok(calls.includes('location'), 'the cross-checked point is the selection the plan carries');
+});
+
+// And a cancellation stays a cancellation: the fix must not swallow the stop the page asked for into a reply about
+// the farmer's own coordinates.
+test('a coordinate sentence cancelled during the list read stops as a cancellation', async () => {
+  const { assistant, state, listAsked } = setup({ country: 'IN', locations: indiaLocations,
+    listFailure: { message: 'Planning context changed', name: 'AbortError', cancelled: true }, reverse: MAHARASHTRA_REVERSE });
+  await assert.rejects(assistant.respond(COORD), error => error.cancelled === true && error.name === 'AbortError',
+    'a stopped sentence must settle as a stop, not as an answer');
+  assert.equal(state.location, null, 'a cancelled read must select no point on the way out');
+  assert.equal(listAsked(), 1, 'a cancelled read was retried inside the same sentence');
+});
+
+// The journey shape the probe recorded: one sentence moves the plan into another country and names a point there, and
+// the country it moves into is the one whose list refuses. `chooseCountry` has already run by then, so the reply keeps
+// that fact, states that the point was not accepted, and cannot say nothing was selected.
+test('a coordinate sentence that moved the plan into a country whose list refused reports the half-moved state', async () => {
+  const { assistant, calls, state, listAsks } = setup({ country: 'SG',
+    locations: code => code === 'IN' ? indiaLocations : sgLocations,
+    listFailure: code => code === 'IN' ? UNAVAILABLE : null, reverse: MAHARASHTRA_REVERSE });
+  let thrown = null, answer = null;
+  try { answer = await assistant.respond(COORD); } catch (error) { thrown = error; }
+  assert.equal(thrown, null, `the plan was left half-moved with no answer: ${thrown?.message}`);
+  const sentence = text(answer);
+  assert.match(sentence, /saved place list for India could not be read just now/, sentence);
+  assert.match(sentence, /India is the country this plan is in/, 'the move that did happen has to be stated, not hidden');
+  assert.ok(!sentence.includes('Nothing was selected'), `a country really did change: ${sentence}`);
+  assert.equal(state.country, 'IN', 'the country the farmer named stays where the sentence moved it');
+  assert.equal(state.location, null, 'only the point is withheld, because only the point could not be cross-checked');
+  assert.deepEqual(calls, ['country'], 'the sentence may change the country and nothing else: ' + calls.join(' → '));
+  assert.deepEqual(listAsks(), ['SG', 'IN'], 'the switch check and the shared read, one each: ' + listAsks().join(','));
 });

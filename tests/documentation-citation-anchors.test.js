@@ -121,10 +121,10 @@ const PINS = [
   { file: 'public/js/modules/context.js', line: 213, quote: 'record.scientificName', citedBy: 'docs/handoff-2026-11-18.md:549 (re-pointed by 58)' },
   { file: 'public/js/modules/context.js', line: 215, quote: 'GBIF country query', citedBy: 'docs/handoff-2026-11-18.md:553 (re-pointed by 58)' },
   { file: 'public/js/modules/context.js', line: 225, quote: "$('pest-country').addEventListener", citedBy: 'docs/handoff-2026-11-18.md:507 (re-pointed by 58)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 373, quote: 'verifies that point (checked above)', citedBy: 'docs/handoff-2026-11-18.md:1156 (re-pointed by 58, moved by the 58 queue bullet) (re-pointed by 61)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 413, quote: 'claimed a town question was pending', citedBy: 'docs/validation.md:1021 (re-pointed by 58) (re-pointed by 61)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 425, quote: 'silence would leave the farmer nothing to tap', citedBy: 'docs/validation.md:1021 (re-pointed by 58) (re-pointed by 61)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 432, quote: 'if (error.cancelled === true) throw error', citedBy: 'docs/validation.md:4388 and :4835, AGENTS.md:1827 (re-pointed by 58) (re-pointed by 61)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 387, quote: 'verifies that point (checked above)', citedBy: 'docs/handoff-2026-11-18.md:1156 (re-pointed by 58, moved by the 58 queue bullet) (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 427, quote: 'claimed a town question was pending', citedBy: 'docs/validation.md:1021 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 439, quote: 'silence would leave the farmer nothing to tap', citedBy: 'docs/validation.md:1021 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 446, quote: 'if (error.cancelled === true) throw error', citedBy: 'docs/validation.md:4388 and :4835, AGENTS.md:1827 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
   { file: 'tests/e2e/chat-only-flow.spec.js', line: 86, quote: "'Step 4 is ready'", citedBy: 'docs/validation.md:3998 (re-pointed by 58)' },
   { file: 'tests/e2e/chat-only-flow.spec.js', line: 100, quote: 'one typed message with coordinates reaches step 4', citedBy: 'docs/validation.md:4084, docs/handoff-2026-11-18.md:18 (re-pointed by 58)' },
   // The fourteen lines subsection 58 names while changing them, which is the lesson iteration 57 recorded and this
@@ -133,13 +133,13 @@ const PINS = [
   { file: 'public/js/modules/context.js', line: 130, quote: "reason: 'superseded'", citedBy: 'docs/validation.md subsection 58, The fix' },
   { file: 'public/js/modules/context.js', line: 138, quote: 'return { ok: true, count: farms.length };', citedBy: 'docs/validation.md subsection 58, The fix' },
   { file: 'public/js/modules/context.js', line: 144, quote: "reason: 'lookup-failed'", citedBy: 'docs/validation.md subsection 58, The fix' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 308, quote: "result?.ok === false ? 'failed' : 'done'", citedBy: 'docs/validation.md subsection 58, The fix (re-pointed by 61)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 322, quote: 'const fieldsFailed = message => reply', citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 479, quote: "fieldsFailed('Your selected point is still in place.')", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 530, quote: "if (fields === 'failed') return fieldsFailed(", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 322, quote: "result?.ok === false ? 'failed' : 'done'", citedBy: 'docs/validation.md subsection 58, The fix (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 336, quote: 'const fieldsFailed = message => reply', citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 497, quote: "fieldsFailed('Your selected point is still in place.')", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 548, quote: "if (fields === 'failed') return fieldsFailed(", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
   { file: 'tests/e2e/field-service-failure.spec.js', line: 21, quote: 'a refused field lookup is reported as a failure', citedBy: 'docs/validation.md subsection 58, The reproducing case' },
   { file: 'tests/e2e/field-service-failure.spec.js', line: 77, quote: '0 mapped fields were returned', citedBy: 'docs/validation.md subsection 58, The third phase' },
-  { file: 'tests/workflow-place-choices.test.js', line: 621, quote: 'a town tap whose field lookup was refused reports a failure', citedBy: 'docs/validation.md subsection 58, Tests (moved 488 -> 584 -> 621 by iteration 64)' },
+  { file: 'tests/workflow-place-choices.test.js', line: 627, quote: 'a town tap whose field lookup was refused reports a failure', citedBy: 'docs/validation.md subsection 58, Tests (moved 488 -> 584 -> 621 by iteration 64) (re-pointed by 65)' },
   { file: 'tests/e2e/guided-chat-accessibility.spec.js', line: 52, quote: 'field lookup did not complete', citedBy: 'docs/validation.md subsection 58, superseded assertions' },
   { file: 'server/context/client.js', line: 5, quote: 'ttlMs = 86_400_000', citedBy: 'docs/validation.md subsection 58, the cache law' },
   { file: 'server/context/client.js', line: 13, quote: 'readCached(key, ttlMs)', citedBy: 'docs/validation.md subsection 58, the cache law' },
@@ -157,7 +157,7 @@ const PINS = [
   { file: 'public/js/modules/chat.js', line: 155, quote: 'announce(error.message);', citedBy: 'docs/validation.md subsection 59, What was wrong' },
   { file: 'public/js/modules/chat.js', line: 156, quote: "$('question').value === ''", citedBy: 'docs/validation.md subsection 59, The fix is one statement' },
   { file: 'public/js/modules/chat.js', line: 159, quote: "finally { if (version === revision && serial === messageSerial)", citedBy: 'docs/validation.md subsection 59, What was wrong' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 451, quote: 'const result = await request(`/api/places?', citedBy: 'docs/validation.md subsection 59, How it was found (re-pointed by 61)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 465, quote: 'const result = await request(`/api/places?', citedBy: 'docs/validation.md subsection 59, How it was found (re-pointed by 61) (re-pointed by 65)' },
   { file: 'server/api.js', line: 46, quote: 'body.question.length > 500', citedBy: 'docs/validation.md subsection 59, How it was found' },
   { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 26, quote: 'a refused ask leaves the message in the composer', citedBy: 'docs/validation.md subsection 59, The cases that cover it' },
   { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 54, quote: 'the refused message must still be in the composer', citedBy: 'docs/validation.md subsection 59, The cases that cover it' },
@@ -170,9 +170,9 @@ const PINS = [
   // adapter rather than restated in the spec.
   { file: 'public/js/modules/workflow-assistant.js', line: 224, quote: 'function placeListFailure(countryName, error) {', citedBy: 'docs/validation.md subsection 61, The fix' },
   { file: 'public/js/modules/workflow-assistant.js', line: 225, quote: "const unreadable = error?.code === 'LOCATIONS_SCHEMA'", citedBy: 'docs/validation.md subsection 61, the two failure classes' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 357, quote: 'catch (error) { if (error.cancelled === true) throw error; listFailed = error;', citedBy: 'docs/validation.md subsection 61, What was wrong' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 498, quote: 'is selected. Now choose a town in the Town list in step 1', citedBy: 'docs/validation.md subsection 61, The recovery the refusal promises' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 655, quote: 'if (listFailed) return placeListFailure(countryName, listFailed);', citedBy: 'docs/validation.md subsection 61, The whole-country escape' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 371, quote: 'catch (error) { if (error.cancelled === true) throw error; listFailed = error;', citedBy: 'docs/validation.md subsection 61, What was wrong (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 516, quote: 'is selected. Now choose a town in the Town list in step 1', citedBy: 'docs/validation.md subsection 61, The recovery the refusal promises (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 673, quote: 'if (listFailed) return placeListFailure(countryName, listFailed);', citedBy: 'docs/validation.md subsection 61, The whole-country escape (re-pointed by 65)' },
   { file: 'public/js/modules/context.js', line: 248, quote: "const read = await picker.setCountry(countryCode, { regionCode });", citedBy: 'docs/validation.md subsection 61, the second defect the browser run found' },
   { file: 'public/js/modules/context.js', line: 250, quote: 'Choose a region from the current country list.', citedBy: 'docs/validation.md subsection 61, the sentence the stale dropdown threw' },
   { file: 'public/js/lib/api.js', line: 13, quote: 'if (!response.ok) throw identified(new Error(data?.error?.message', citedBy: 'docs/validation.md subsection 60, and AGENTS.md §13 queue (both re-pointed by 61)' },
@@ -185,12 +185,24 @@ const PINS = [
   // The three links this pass re-pointed by tool. Their labels moved and their `#LNNN` anchors did not, which is the
   // defect the anchor case in tests/documentation-citations.test.js was written for; pinning the label text is what
   // stops a later repair repeating it, because a pin that quotes the number goes red when the number is moved alone.
-  { file: 'docs/validation.md', line: 1007, quote: 'region is selected ([public/js/modules/workflow-assistant.js:235-241]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
-  { file: 'docs/validation.md', line: 1021, quote: 'answers honestly instead ([public/js/modules/workflow-assistant.js:413-425]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
-  { file: 'docs/validation.md', line: 1035, quote: '([public/js/modules/workflow-assistant.js:263-270]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
+  { file: 'docs/validation.md', line: 1007, quote: 'region is selected ([public/js/modules/workflow-assistant.js:249-255]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
+  { file: 'docs/validation.md', line: 1021, quote: 'answers honestly instead ([public/js/modules/workflow-assistant.js:427-439]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
+  { file: 'docs/validation.md', line: 1035, quote: '([public/js/modules/workflow-assistant.js:277-284]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
   // The guard quoting its own case, because the handoff header names this file by line and four lines added above the
   // case below moved it while every other guard stayed green.
-  { file: 'tests/documentation-citation-anchors.test.js', line: 380, quote: "test('no pin is satisfied by the statement above or below the line it names'", citedBy: 'docs/handoff-2026-11-18.md:19 and docs/validation.md subsection 61' },
+  { file: 'tests/documentation-citation-anchors.test.js', line: 403, quote: "test('no pin is satisfied by the statement above or below the line it names'", citedBy: 'docs/handoff-2026-11-18.md:19 and docs/validation.md subsection 61 (re-pointed by 65)' },
+  // Iteration 65 is the same shape again: the F5 fix put a fourteen-line helper above every line the coordinate
+  // branch cites and added six cases to an offline file the ledger cites, so the helper, the guard that reaches
+  // it, the single read the branch now shares and the cases and page spec that pin the request count are pinned.
+  { file: 'public/js/modules/workflow-assistant.js', line: 236, quote: 'function coordinateListUnreadable(countryName, latitude', citedBy: 'docs/validation.md subsection 65, The reply and AGENTS.md iteration-65 bullet' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 472, quote: 'if (listFailed) return coordinateListUnreadable(countryName', citedBy: 'docs/validation.md subsection 65, The fix' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 473, quote: 'const list = listed;', citedBy: 'docs/validation.md subsection 65, one quantity one source' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 632, quote: 'async function getLocationList(country)', citedBy: 'docs/validation.md subsection 65, why the read was unreachable' },
+  { file: 'tests/workflow-place-choices.test.js', line: 777, quote: 'a coordinate sentence whose saved list refused answers instead of throwing', citedBy: 'docs/validation.md subsection 65, Tests' },
+  { file: 'tests/workflow-place-choices.test.js', line: 829, quote: 'a coordinate sentence reads the saved list once', citedBy: 'docs/validation.md subsection 65, Tests' },
+  { file: 'tests/workflow-place-choices.test.js', line: 855, quote: 'a coordinate sentence that moved the plan into a country whose list refused', citedBy: 'docs/validation.md subsection 65, Tests' },
+  { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 113, quote: 'a coordinate sentence whose saved list refused is answered', citedBy: 'docs/validation.md subsection 65, the page case and AGENTS.md iteration-65 bullet' },
+  { file: 'server/context/locations.js', line: 9, quote: 'const cache = new Map();', citedBy: 'docs/validation.md subsection 65, F2 left as it was' },
 ];
 
 // The drift shape this guard exists to catch: line 15 is a comment and 16 is the code, so a citation that lands on a
@@ -218,7 +230,7 @@ test('every pinned ledger citation lands on the statement the ledger quotes', as
 });
 
 test('the pin table covers the citation targets the loop leans on and cannot be narrowed to pass', () => {
-  assert.ok(PINS.length >= 106, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green, to 22 by iteration 54 for the six lines its own subsection names while editing them in place, to 25 by iteration 55 because it inserted 4 lines above cited code in two files that held no pin at all, to 29 by iteration 57 because replacing a Playwright spec silently moved two pointers in the header of the file that replaced it - one onto a blank line, one onto a neighbouring live line - to 30 when that iteration's catch-all quoted the client's own no-answer sentence as the reason its route ordering matters, to 34 when the same iteration's own prose insertions moved two ledger self-citations seven lines down inside docs/validation.md, which had never been a pinned surface although the ledger cites itself by absolute line, to 36 when the same drift ran the other way - four lines added to AGENTS.md moved a target the ledger names there, and the paragraph that quoted it had also quoted two file lengths as "before and after" that belonged to the previous commit - and to 42 when the ledger paragraph that reports all of that started naming six lines of the rewritten spec itself, to 44 when the repair of that spec's state.inputs falsehood quoted the two public/js/app.js lines that are the only reason an /api/ask body carries inputs at all, to 46 when it started quoting the shared stub list the catch-all is built from, to 72 by iteration 58: that fix inserted 5, 10 and 7 lines into three shipped files and moved 26 cited lines over 15 prose sites with every guard green, so both the twelve endpoints it had to re-point and the fourteen lines subsection 58 names while changing them are pinned, and to 88 by iteration 59: the ask-failure fix grew chat.js's catch block from one statement into a guard plus a restore, moved that block's own lines, and its prose cites ten chat.js lines, the reverse-lookup call site, the /api/ask length rule and four lines of the spec that reproduces it, and to 102 by iteration 61: the refused-place-list fix inserted 13 lines above four cited bands and moved 9 pins with every guard green but the one that reads quoted text, so both failure classes, the picker re-read that makes the recovery pressable, the identity carrier both transports share and four lines of its own spec are pinned, and to 106 when it added the three re-pointed deep links whose labels moved and whose anchors did not, plus the ±1 case of this very file that the handoff header quotes by number`);
+  assert.ok(PINS.length >= 115, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green, to 22 by iteration 54 for the six lines its own subsection names while editing them in place, to 25 by iteration 55 because it inserted 4 lines above cited code in two files that held no pin at all, to 29 by iteration 57 because replacing a Playwright spec silently moved two pointers in the header of the file that replaced it - one onto a blank line, one onto a neighbouring live line - to 30 when that iteration's catch-all quoted the client's own no-answer sentence as the reason its route ordering matters, to 34 when the same iteration's own prose insertions moved two ledger self-citations seven lines down inside docs/validation.md, which had never been a pinned surface although the ledger cites itself by absolute line, to 36 when the same drift ran the other way - four lines added to AGENTS.md moved a target the ledger names there, and the paragraph that quoted it had also quoted two file lengths as "before and after" that belonged to the previous commit - and to 42 when the ledger paragraph that reports all of that started naming six lines of the rewritten spec itself, to 44 when the repair of that spec's state.inputs falsehood quoted the two public/js/app.js lines that are the only reason an /api/ask body carries inputs at all, to 46 when it started quoting the shared stub list the catch-all is built from, to 72 by iteration 58: that fix inserted 5, 10 and 7 lines into three shipped files and moved 26 cited lines over 15 prose sites with every guard green, so both the twelve endpoints it had to re-point and the fourteen lines subsection 58 names while changing them are pinned, and to 88 by iteration 59: the ask-failure fix grew chat.js's catch block from one statement into a guard plus a restore, moved that block's own lines, and its prose cites ten chat.js lines, the reverse-lookup call site, the /api/ask length rule and four lines of the spec that reproduces it, and to 102 by iteration 61: the refused-place-list fix inserted 13 lines above four cited bands and moved 9 pins with every guard green but the one that reads quoted text, so both failure classes, the picker re-read that makes the recovery pressable, the identity carrier both transports share and four lines of its own spec are pinned, and to 106 when it added the three re-pointed deep links whose labels moved and whose anchors did not, and to 115 by iteration 65: the F5 fix added fourteen lines to public/js/modules/workflow-assistant.js above every line the coordinate branch cites and six cases to tests/workflow-place-choices.test.js, which moved 13 pins and the three deep-link labels this table quotes, so the helper, the guard that reaches it, the single read it shares, three of the six offline cases, the page case and the worker-side cache F2 leaves in place are all pinned`);
   const pinned = file => PINS.filter(pin => pin.file === file).map(pin => pin.line);
   for (const line of [33]) {
     assert.ok(pinned('public/js/lib/chat-context.js').includes(line), `chat-context.js:${line} is the composer gate every location-suppression citation in the ledger depends on and is no longer pinned`);
@@ -276,19 +288,30 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   // inserting above it, so a future rewrite of this block that drops any of them has to be a decision made here.
   for (const [file, line] of [['public/js/modules/chat.js', 91], ['public/js/modules/chat.js', 149], ['public/js/modules/chat.js', 154],
     ['public/js/modules/chat.js', 155], ['public/js/modules/chat.js', 156], ['public/js/modules/chat.js', 159],
-    ['public/js/modules/workflow-assistant.js', 451], ['server/api.js', 46]]) {
+    ['public/js/modules/workflow-assistant.js', 465], ['server/api.js', 46]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 59 quotes while changing it and is no longer pinned`);
   }
   for (const line of [26, 54, 76, 97]) {
     assert.ok(pinned('tests/e2e/chat-refused-ask-keeps-question.spec.js').includes(line), `chat-refused-ask-keeps-question.spec.js:${line} is a line subsection 59 quotes as its evidence and is no longer pinned`);
   }
   // Subsection 61's own eight numbers plus the ±1 repair band this iteration re-pointed by tool rather than by hand.
-  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 224], ['public/js/modules/workflow-assistant.js', 357],
-    ['public/js/modules/workflow-assistant.js', 498], ['public/js/modules/workflow-assistant.js', 655],
+  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 224], ['public/js/modules/workflow-assistant.js', 371],
+    ['public/js/modules/workflow-assistant.js', 516], ['public/js/modules/workflow-assistant.js', 673],
     ['public/js/modules/context.js', 248], ['public/js/modules/context.js', 250],
-    ['public/js/lib/api.js', 13], ['tests/e2e/place-list-refused.spec.js', 36], ['tests/e2e/place-list-refused.spec.js', 100], ['docs/validation.md', 1007], ['docs/validation.md', 1021], ['docs/validation.md', 1035], ['tests/documentation-citation-anchors.test.js', 380]]) {
+    ['public/js/lib/api.js', 13], ['tests/e2e/place-list-refused.spec.js', 36], ['tests/e2e/place-list-refused.spec.js', 100], ['docs/validation.md', 1007], ['docs/validation.md', 1021], ['docs/validation.md', 1035], ['tests/documentation-citation-anchors.test.js', 403]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 61 quotes while changing it and is no longer pinned`);
   }
+  // Subsection 65 deletes a line out of the coordinate branch it then quotes, so the helper the branch answers
+  // through, the guard that reaches it, the single read it now shares, the cache that keeps that read warm, three
+  // of its six offline cases and its page case are named here too: a later narrowing has to decide so here.
+  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 236],
+    ['public/js/modules/workflow-assistant.js', 472], ['public/js/modules/workflow-assistant.js', 473],
+    ['public/js/modules/workflow-assistant.js', 632], ['tests/workflow-place-choices.test.js', 777],
+    ['tests/workflow-place-choices.test.js', 829], ['tests/workflow-place-choices.test.js', 855],
+    ['tests/e2e/chat-refused-ask-keeps-question.spec.js', 113], ['server/context/locations.js', 9]]) {
+    assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 65 quotes while changing it and is no longer pinned`);
+  }
+
   for (const pin of PINS) {
     assert.ok(pin.quote.length >= 12, `${pin.file}:${pin.line} is pinned to a ${pin.quote.length}-character fragment, which a rewritten line can satisfy by accident`);
     assert.ok(pin.citedBy.length > 0, `${pin.file}:${pin.line} has no citation to explain it`);

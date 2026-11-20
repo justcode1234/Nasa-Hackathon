@@ -99,3 +99,65 @@ test('a message written into the composer while the ask was in flight is not pas
   expect(errors,'page errors while the place lookup was held open and then refused').toEqual([]);
   await info.attach('Refusal against a composer already in use',{body:Buffer.from(JSON.stringify({asked,typed,status:await page.locator('#answer-status').textContent()},null,2)),contentType:'application/json'});
 });
+
+// Iteration 65, queue item F5. The same kind of sentence reaches a second saved-list read, the one that cross-checks
+// the typed point against the country's regions and towns - and that read sat outside any try/catch, where a refusal
+// escaped the handler instead of answering. It is only ever reached as a retry of a refusal, because the shared read
+// above it caches what a successful read returned. On the page that meant the guided plan moved to the country the
+// farmer named, the point was dropped, and the ask settled as a failed send with the sentence waiting in the composer
+// (public/js/modules/chat.js:149, the path this file's first case exists for). This is the same coordinate sentence
+// over both transports, with the place service answered from the contract bodies above so the saved-list refusal is
+// the only failure in it and no live geocoder is trusted with the result.
+const lists=/\/api\/locations\?|\/data\/locations\//;
+const coord='Use my point 18.52, 73.85 to plan a rotation in India';
+test('a coordinate sentence whose saved list refused is answered, and its point is taken on the replay',async({page},info)=>{
+  test.setTimeout(180_000);
+  const errors=[],counts={listRefused:0,listAnswered:0,places:0};let mode='refused';
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.context().route(places,async route=>{
+    counts.places++;
+    if(route.request().url().includes('/api/places?')) return route.fulfill({status:200,contentType:'application/json',
+      body:JSON.stringify({schemaVersion:1,places:[{name:'Pune',latitude:18.52,longitude:73.85,countryCode:'IN',
+        country:'India',region:'Maharashtra'}],source:{title:'OpenStreetMap / Nominatim',url:'https://www.openstreetmap.org/copyright'},
+        retrievedAt:'2026-11-20T00:00:00.000Z'})});
+    return route.fulfill({status:200,contentType:'application/json',
+      body:JSON.stringify({address:{country_code:'in',country:'India',state:'Maharashtra'},display_name:'Pune, Maharashtra',lat:'18.52',lon:'73.85'})});
+  });
+  await page.context().route(lists,async route=>{
+    if(mode==='refused'){counts.listRefused++;return route.abort('failed');}
+    counts.listAnswered++;return route.continue();
+  });
+  await page.goto('/',{waitUntil:'domcontentloaded'});
+  await expect(page.locator('#catalog-status')).toContainText('Choose a country');
+  await page.getByRole('button',{name:'Open FieldShift assistant',exact:true}).click();
+  await send(page,'Help me plan a rotation in India');
+  expect(counts.listRefused,'the plan is open in a country whose saved list has refused').toBeGreaterThan(0);
+
+  await send(page,coord);
+  expect(counts.places,'the typed point was put to the place service, so the refusal below is the list read and not a lookup').toBeGreaterThan(0);
+  const status=await page.locator('#answer-status').textContent();
+  expect(status,`a saved-list refusal at the coordinate branch must answer, not fail the send: ${status}`).not.toMatch(/could not respond|no answer came back/i);
+  expect(await speaker(page),'the assistant replies instead of leaving the farmer own message last').toBe('Assistant');
+  const spoken=await replyText(page);
+  expect(spoken,'the reply names the read that failed').toMatch(/saved place list for India could not be read just now/i);
+  expect(spoken,'the coordinates the farmer typed are quoted back').toMatch(/18\.52, 73\.85/);
+  expect(spoken,'the country the sentence moved the plan into is a fact it may state').toMatch(/India is the country this plan is in/i);
+  for(const claim of ['is selected','No towns are listed','no towns to choose from'])
+    expect(spoken,`a read that never completed became a finding about the data: ${spoken}`).not.toContain(claim);
+  expect(await page.locator('#latitude').inputValue(),'a point this app could not cross-check must not be set').toBe('');
+  expect(await page.locator('#longitude').inputValue(),'a point this app could not cross-check must not be set').toBe('');
+  const offered=(await last(page).locator('button[data-chat-choice]').allTextContents()).map(label=>label.trim());
+  expect(offered,`the sentence has to stay replayable: ${offered.join(' | ')}`).toContain('Ask that again');
+
+  mode='answered';
+  const answeredBefore=counts.listAnswered;
+  await last(page).locator('button[data-chat-choice]').filter({hasText:/^Ask that again$/}).click();
+  await ready(page);
+  expect(counts.listAnswered,'the replay re-asked the saved list instead of replaying the refusal').toBeGreaterThan(answeredBefore);
+  expect(await speaker(page),'the replayed sentence is answered').toBe('Assistant');
+  expect(await replyText(page),'a read that answered is not reported as a failure').not.toMatch(/could not be read/i);
+  expect(await page.locator('#latitude').inputValue(),'the replayed point is the one in the sentence').toBe('18.52');
+  expect(await page.locator('#longitude').inputValue(),'the replayed point is the one in the sentence').toBe('73.85');
+  expect(errors,'page errors while the saved list refused once and then answered').toEqual([]);
+  await info.attach('Coordinate ask against a refused saved list',{body:Buffer.from(JSON.stringify({counts,status,spoken,offered},null,2)),contentType:'application/json'});
+});
