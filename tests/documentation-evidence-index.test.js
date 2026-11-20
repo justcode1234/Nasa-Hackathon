@@ -346,18 +346,145 @@ const TALLIES = [
       'SHA server/context/client.js 1bb7c539aff8ddde942cfa6bc0e268e461d7b2ee2b99ab95d0d4ad4d6046aa68 3419B 51L',
       'PROVENANCE_DONE 9 shipped hashes'],
     phrases: ['GIT_REMOTE_MAIN 4a54fa3fbd75f4b1ccaae238b00d439accf1d0d4'] },
+  // Iteration 59. The three probes subsection 59 reads its "cannot actually be reached" claims out of, then the ladder
+  // that built every number in the subsection. Each ladder step prints the sha256 of the `chat.js` it built, which is
+  // what tells the red run from the two attacks: all three report 4 failed / 4 passed and only the hash says which
+  // bytes produced them.
+  { archive: 'docs/evidence/iter59-probes-2026-11-20.log.gz',
+    lines: ['PHASE plain TRANSPORT worker', 'ASK_REQUESTS 0', 'COMPOSER ""'],
+    phrases: ['######## probe-ask-requests.mjs ########', '######## probe-evidence-ask.mjs ########',
+      '######## probe-place-cut.mjs ########', 'EXTERNALS_CUT 9 tile.openstreetmap.org'] },
+  { archive: 'docs/evidence/iter59-ladder-script-2026-11-20.py.gz',
+    lines: ["FIXED_SHA = '103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89'",
+      "RESTORE = \"        if ($('question').value === '') $('question').value = question;\\n\"",
+      "UNGUARDED = \"        $('question').value = question;\\n\""],
+    phrases: ['assert sha(CHAT) == FIXED_SHA'] },
+  { archive: 'docs/evidence/iter59-red-2026-11-20.log.gz',
+    lines: ['STEP red-2', 'CHAT_SHA256 be315867814eaeeb65b38d455fd1e2bf86523952457b34fba32cd3856409f985',
+      'Running 8 tests using 1 worker', '4 failed', '4 passed (19.6s)', 'EXIT=1'], marks: 4,
+    phrases: ['Error: the refused message must still be in the composer, ready to send again',
+      'Received: ""',
+      '[node-mobile] › tests/e2e/chat-refused-ask-keeps-question.spec.js:26:1 › a refused ask leaves the message in the composer'],
+    absent: ['EXIT=0'] },
+  // The same four failures with the restore statement deleted from the fixed file: the previous commit's bytes and this
+  // attack print the same tally, so the pair is only evidence because the hashes differ (be315867 against ad3caf58).
+  { archive: 'docs/evidence/iter59-attackA-2026-11-20.log.gz',
+    lines: ['STEP attackA2', 'CHAT_SHA256 ad3caf589c272123fa052b057c7f31081238aa6aeed368ff45c833c2379aebe3',
+      '4 failed', '4 passed (19.5s)', 'EXIT=1'], marks: 4,
+    phrases: ['Error: the refused message must still be in the composer, ready to send again'],
+    absent: ['EXIT=0', 'must not overwrite what the farmer wrote next'] },
+  // The paired attack: only the empty-composer guard removed, so the other case goes red and this one's message appears
+  // in the diff as the value that was pasted over. Neither attack can be mistaken for the other.
+  { archive: 'docs/evidence/iter59-attackB-2026-11-20.log.gz',
+    lines: ['STEP attackB2', 'CHAT_SHA256 5086a0ed344c71a948d99b3abb033e35adbe3919c17ae9d4e1371d4a1f269556',
+      '4 failed', '4 passed (20.3s)', 'EXIT=1'], marks: 4,
+    phrases: ['Error: the refused message must not overwrite what the farmer wrote next',
+      'Expected: "Also look at the lower field after the rain"',
+      'Received: "Use my point 1.3521, 103.8198 to plan a rotation in Singapore"',
+      '[static-desktop] › tests/e2e/chat-refused-ask-keeps-question.spec.js:76:1'],
+    absent: ['EXIT=0', 'Error: the refused message must still be in the composer'] },
+  { archive: 'docs/evidence/iter59-green-2026-11-20.log.gz',
+    lines: ['STEP green-final', 'CHAT_SHA256 103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89',
+      'Running 8 tests using 1 worker', '8 passed (19.6s)', 'EXIT=0'], marks: 0,
+    phrases: ['✓  8 [node-mobile] › tests/e2e/chat-refused-ask-keeps-question.spec.js:76:1'],
+    absent: ['EXIT=1', '4 failed'] },
+  { archive: 'docs/evidence/iter59-offline-2026-11-20.log.gz',
+    lines: ['STEP offline-final', 'COMMAND npm test',
+      'CHAT_SHA256 103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89',
+      'ℹ tests 259', 'ℹ pass 259', 'ℹ fail 0', 'ℹ skipped 0', 'EXIT=0'],
+    absent: ['✖', 'ℹ fail 1', 'EXIT=1'] },
+  // The neighbour slice this iteration re-ran on the shipped bytes: the nine chat-adjacent specs it inherited from
+  // subsections 56-58, which are the regressions a chat.js change could cause. The new spec is not in this archive - it
+  // is the 8-case ladder above and the gate below - and subsection 59 says "the nine chat-adjacent browser specs" for
+  // exactly that reason.
+  { archive: 'docs/evidence/iter59-focused-2026-11-20.log.gz',
+    lines: ['Running 88 tests using 1 worker', '88 passed (2.1m)', 'FOCUSED_EXIT=0'], marks: 0,
+    phrases: ['tests/e2e/field-service-failure.spec.js', 'tests/e2e/chat-only-flow.spec.js',
+      'tests/e2e/guided-chat-accessibility.spec.js'],
+    absent: ['✖', 'FOCUSED_EXIT=1', 'chat-refused-ask-keeps-question.spec.js'] },
+  // The gate attempt stopped on purpose: its spec header cited a line the fix had already moved, so publishing its
+  // numbers would have quoted coordinates that do not exist in the committed file. It is kept to record that it ran, and
+  // an archive cited as ending before its tally must print none - hence `noTally` rather than a needle list alone.
+  { archive: 'docs/evidence/iter59-gate-attempt1-interrupted-2026-11-20.log.gz',
+    lines: ['Running 260 tests using 1 worker', 'BUILD_EXIT=0'],
+    phrases: ['103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89  public/js/modules/chat.js',
+      '3e68b9d9a4cd85a6a4087c9ff760ef2f9da676eb141b3960fee57893c19e3fff  tests/e2e/chat-refused-ask-keeps-question.spec.js'],
+    absent: ['GATE_EXIT'], noTally: true },
+  // The four-project gate on the shipped bytes, and the census it matches. The gate is the only archive that proves the
+  // new spec really ran in all four transports - a focused run could have selected a subset - so one position line per
+  // project is a needle, not decoration. `CONTEXT_UNAVAILABLE` is absent because this run met no live field refusal at
+  // all, which is the opposite of iteration 58's gate and has to be recorded as its own fact.
+  { archive: 'docs/evidence/iter59-gate-2026-11-20.log.gz',
+    lines: ['Running 260 tests using 1 worker', '260 passed (21.0m)', 'GATE_EXIT=0', 'BUILD_EXIT=0',
+      '103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89  public/js/modules/chat.js',
+      'd173167e944821d7000f7c4d5db92e97e3366036fcf42893e87ecb78917cb217  tests/e2e/chat-refused-ask-keeps-question.spec.js'],
+    marks: 0,
+    phrases: ['✓   18 [static-desktop] › tests/e2e/chat-refused-ask-keeps-question.spec.js:26:1',
+      '✓   84 [static-mobile] › tests/e2e/chat-refused-ask-keeps-question.spec.js:76:1',
+      '✓  148 [node-desktop] › tests/e2e/chat-refused-ask-keeps-question.spec.js:26:1',
+      '✓  214 [node-mobile] › tests/e2e/chat-refused-ask-keeps-question.spec.js:76:1'],
+    absent: ['✘', 'GATE_EXIT=1', 'skipped', 'did not run', 'CONTEXT_UNAVAILABLE'] },
+  { archive: 'docs/evidence/iter59-census-2026-11-20.log.gz',
+    lines: ['Total: 260 tests in 25 files', 'CENSUS_EXIT=0'],
+    phrases: ['CENSUS_CMD npx playwright test --list (full output, no tail)',
+      '[static-desktop] › chat-refused-ask-keeps-question.spec.js:26:1',
+      '[node-mobile] › chat-refused-ask-keeps-question.spec.js:76:1'],
+    absent: ['(skipped)', 'Total: 252 tests in 24 files'] },
+  // The known bootstrap red: archives shelved before `docs/evidence-index.md` is regenerated. It is the index guard
+  // firing correctly, and it is also the reading that proves the offline suite is 260 cases now, not 259.
+  { archive: 'docs/evidence/iter59-offline-index-red-2026-11-20.log.gz',
+    lines: ['ℹ tests 260', 'ℹ pass 258', 'ℹ fail 2', 'ℹ skipped 0', 'OFFLINE_EXIT=1'],
+    onlyReds: ['every shipped evidence file is named by a document or carried by the index',
+      'the index header states counts its own rows and the filesystem agree with'],
+    phrases: ['the header says 612 files under docs/evidence and the scan found 614',
+      "actual: [ 'docs/evidence/iter59-census-2026-11-20.log.gz', 'docs/evidence/iter59-gate-2026-11-20.log.gz' ]"],
+    absent: ['ℹ fail 0', 'OFFLINE_EXIT=0'] },
+  // The offline run this iteration reports as green. Its header states the table size it executed against, because the
+  // rows below it were added after it ran and a reader cannot otherwise tell which tree printed 260/260.
+  { archive: 'docs/evidence/iter59-offline-final-2026-11-20.log.gz',
+    lines: ['ℹ tests 260', 'ℹ pass 260', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0'],
+    phrases: ['OFFLINE_CMD npm test (tally table 48 rows, index regenerated)',
+      '103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89  public/js/modules/chat.js'],
+    absent: ['ℹ fail 2', 'OFFLINE_EXIT=1'] },
+  // The five documentation guard files run on their own, which is the only way a reviewer can see the guard table and
+  // the citations agreeing without waiting for the whole offline suite. Its header prints the table size it read, so
+  // the archive says how big the table was at the moment it went green.
+  { archive: 'docs/evidence/iter59-docsguards-final-2026-11-20.log.gz',
+    lines: ['GUARD_TABLE_ROWS 49', 'ℹ tests 25', 'ℹ pass 25', 'ℹ fail 0', 'ℹ skipped 0', 'DOCSGUARDS_EXIT=0'],
+    phrases: ['the five documentation guard files re-run on the 49-row tally table, iteration 59 publication chain'],
+    absent: ['✖', 'DOCSGUARDS_EXIT=1'] },
+  // The provenance snapshot of the tree iteration 59 commits. Subsection 59 quotes two sha256s as the bytes the browser
+  // readings ran against and names the guard runner it ships; every one of those has to be printed by this archive
+  // rather than asserted beside it, and the interpreter line is here because the gate logs carry no banner at all.
+  { archive: 'docs/evidence/iter59-provenance-2026-11-20.log.gz',
+    lines: ['PROVENANCE_ITERATION 59 dated 2026-11-20',
+      'INTERPRETER v26.13.1 /opt/homebrew/Cellar/node/26.13.1_2/bin/node',
+      'GIT_HEAD cadd0b375191b9616a76c121304e318ed642a473',
+      'GIT_BRANCH fix/chat-flow-and-answers',
+      'SHA public/js/modules/chat.js 103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89 12508B 180L',
+      'SHA tests/e2e/chat-refused-ask-keeps-question.spec.js d173167e944821d7000f7c4d5db92e97e3366036fcf42893e87ecb78917cb217 8582B 102L',
+      'SHA public/js/modules/workflow-assistant.js d6b54dd6ca75b15335c5396b1a3457233193c129624259ee74b23909bf893d52 64057B 694L',
+      'SHA scripts/docs-guards.mjs 27577b3c1e48c63c1fe2b4d11301f3addbd48c101b95439003e1330ccea078a0 2407B 43L',
+      'PROVENANCE_DONE 8 shipped hashes'],
+    phrases: ['GIT_REMOTE_MAIN 4a54fa3fbd75f4b1ccaae238b00d439accf1d0d4'],
+    absent: ['PROVENANCE_DONE 7 shipped hashes'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 36, `the table carries ${TALLIES.length} archives; subsections 57 and 58 quote more runs than ` +
+  assert.ok(TALLIES.length >= 50, `the table carries ${TALLIES.length} archives; subsections 57, 58 and 59 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
     'green pre-final offline suite and the provenance snapshot joined it, 32 when the skipped controls pass, the ' +
     'superseded one and the pass that prints row coverage joined it, 33 when the shipped green offline run on the ' +
     'finished tree joined it, 34 when the pass that printed the coverage gap joined it, 35 when the archive of the ' +
-    'five guard files re-run on their own joined it and 36 when the pass that attacks every row preceding it joined it.');
-  for (const { archive, lines = [], phrases = [], absent = [], marks, partial, onlyReds } of TALLIES) {
+    'five guard files re-run on their own joined it, 36 when the pass that attacks every row preceding it joined it, ' +
+    '45 when iteration 59 archived its three probes, the ladder script that drove the four browser readings, the ' +
+    'red, both attacks, the green, the offline suite, the neighbour slice and the gate attempt it stopped on purpose, ' +
+    '48 when the four-project gate, the `--list` census and the bootstrap index red it expected joined it, and 49 when ' +
+    'the offline run that printed its own summary after that red joined it, 50 when the five guard files re-run on ' +
+    'their own joined it and 51 when the provenance snapshot that carries the hashes subsection 59 quotes joined it.');
+  for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }
     catch { assert.fail(`${archive} is quoted by the ledger and is not a readable gzip in the repository`); }
@@ -384,5 +511,20 @@ test('the tally of every archived run is printed by that archive, not by the pro
       assert.ok(crosses.length > 0 && crosses.every(line => line.includes('[static-')),
         `${archive} must show the aborted cases and only the static ones, since the node projects were green in it`);
     }
+    if (noTally) {
+      // The shape iteration 59 needed and `partial` could not serve: a gate killed on purpose, whose remaining cases
+      // were not failures at all, so it names no red case. It still has to be a run that started and has to print no
+      // tally, and only a file named as a stop may claim that, so a completed run cannot dodge a tally this way.
+      assert.match(path.basename(archive), /-interrupted-|-partial-|-stopped-/,
+        `${archive} is cited as a run that stopped before its tally but is not named as one`);
+      assert.ok(/Passing --list|Running \d+ tests/.test(text),
+        `${archive} is cited as a stopped run but shows no evidence a run started in it`);
+      assert.deepEqual(got.filter(line => TALLY_LINE.test(line)), [],
+        `${archive} is cited as a run that stopped before its tally, and it now prints one: ${got.filter(line => TALLY_LINE.test(line)).join(' / ')}`);
+    }
+    // The other direction, because an optional field is only a guard if dropping it is caught: a file named as a stop
+    // has to carry the check that proves it stopped, or its row silently claims a tally that was never printed.
+    if (!partial && !noTally) assert.doesNotMatch(path.basename(archive), /-interrupted-|-partial-|-stopped-/,
+      `${archive} is named as a run that stopped before its tally, and its row states no check that it printed none`);
   }
 });

@@ -136,13 +136,33 @@ const PINS = [
   { file: 'public/js/modules/workflow-assistant.js', line: 295, quote: "result?.ok === false ? 'failed' : 'done'", citedBy: 'docs/validation.md subsection 58, The fix' },
   { file: 'public/js/modules/workflow-assistant.js', line: 309, quote: 'const fieldsFailed = message => reply', citedBy: 'docs/validation.md subsection 58, The failure reply' },
   { file: 'public/js/modules/workflow-assistant.js', line: 459, quote: "fieldsFailed('Your selected point is still in place.')", citedBy: 'docs/validation.md subsection 58, The failure reply' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 510, quote: 'is selected as a town point. The town itself is not farmland.`)', citedBy: 'docs/validation.md subsection 58, The failure reply' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 510, quote: "if (fields === 'failed') return fieldsFailed(", citedBy: 'docs/validation.md subsection 58, The failure reply' },
   { file: 'tests/e2e/field-service-failure.spec.js', line: 21, quote: 'a refused field lookup is reported as a failure', citedBy: 'docs/validation.md subsection 58, The reproducing case' },
   { file: 'tests/e2e/field-service-failure.spec.js', line: 77, quote: '0 mapped fields were returned', citedBy: 'docs/validation.md subsection 58, The third phase' },
   { file: 'tests/workflow-place-choices.test.js', line: 488, quote: 'a town tap whose field lookup was refused reports a failure', citedBy: 'docs/validation.md subsection 58, Tests' },
   { file: 'tests/e2e/guided-chat-accessibility.spec.js', line: 52, quote: 'field lookup did not complete', citedBy: 'docs/validation.md subsection 58, superseded assertions' },
   { file: 'server/context/client.js', line: 5, quote: 'ttlMs = 86_400_000', citedBy: 'docs/validation.md subsection 58, the cache law' },
   { file: 'server/context/client.js', line: 13, quote: 'readCached(key, ttlMs)', citedBy: 'docs/validation.md subsection 58, the cache law' },
+  // Subsection 59 changed the shape of the ask failure path in public/js/modules/chat.js: its catch block grew from one
+  // line to ten, which moved every line below it, and its prose then names the ten lines it depends on. Each of these
+  // pins is a line that subsection cites by number or a line the fix itself sits on, so a future pass that shuffles the
+  // catch block has to re-point the ledger here rather than discover the drift by hand.
+  { file: 'public/js/modules/chat.js', line: 91, quote: "$('question').value = '';", citedBy: 'docs/validation.md subsection 59, What was wrong' },
+  { file: 'public/js/modules/chat.js', line: 93, quote: 'const choice = pendingChoice; pendingChoice = null;', citedBy: 'docs/validation.md subsection 59, What this does not fix' },
+  { file: 'public/js/modules/chat.js', line: 94, quote: 'let answer = await workflow.respond(question, choice);', citedBy: 'docs/validation.md subsection 59, What was wrong' },
+  { file: 'public/js/modules/chat.js', line: 117, quote: 'const isWorkflow = answer.topic === ', citedBy: 'docs/validation.md:1308 (subsection 5), which cites the range chat.js:117-131' },
+  { file: 'public/js/modules/chat.js', line: 128, quote: "'data-choice-type': followUp.workflowChoice?.type", citedBy: 'docs/validation.md:1308 (subsection 5), inside the range chat.js:117-131' },
+  { file: 'public/js/modules/chat.js', line: 149, quote: '} catch (error) {', citedBy: 'tests/e2e/chat-refused-ask-keeps-question.spec.js:5 and docs/validation.md subsection 59' },
+  { file: 'public/js/modules/chat.js', line: 154, quote: 'if (error.cancelled !== true && version === revision', citedBy: 'docs/validation.md subsection 56, and AGENTS.md iteration-56 bullet, both re-pointed by 59' },
+  { file: 'public/js/modules/chat.js', line: 155, quote: 'announce(error.message);', citedBy: 'docs/validation.md subsection 59, What was wrong' },
+  { file: 'public/js/modules/chat.js', line: 156, quote: "$('question').value === ''", citedBy: 'docs/validation.md subsection 59, The fix is one statement' },
+  { file: 'public/js/modules/chat.js', line: 159, quote: "finally { if (version === revision && serial === messageSerial)", citedBy: 'docs/validation.md subsection 59, What was wrong' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 431, quote: 'const result = await request(`/api/places?', citedBy: 'docs/validation.md subsection 59, How it was found' },
+  { file: 'server/api.js', line: 46, quote: 'body.question.length > 500', citedBy: 'docs/validation.md subsection 59, How it was found' },
+  { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 26, quote: 'a refused ask leaves the message in the composer', citedBy: 'docs/validation.md subsection 59, The cases that cover it' },
+  { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 54, quote: 'the refused message must still be in the composer', citedBy: 'docs/validation.md subsection 59, The cases that cover it' },
+  { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 76, quote: 'a message written into the composer while the ask was in flight', citedBy: 'docs/validation.md subsection 59, The cases that cover it' },
+  { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 97, quote: 'the refused message must not overwrite what the farmer wrote next', citedBy: 'docs/validation.md subsection 59, The cases that cover it' },
 ];
 
 // The drift shape this guard exists to catch: line 15 is a comment and 16 is the code, so a citation that lands on a
@@ -170,7 +190,7 @@ test('every pinned ledger citation lands on the statement the ledger quotes', as
 });
 
 test('the pin table covers the citation targets the loop leans on and cannot be narrowed to pass', () => {
-  assert.ok(PINS.length >= 72, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green, to 22 by iteration 54 for the six lines its own subsection names while editing them in place, to 25 by iteration 55 because it inserted 4 lines above cited code in two files that held no pin at all, to 29 by iteration 57 because replacing a Playwright spec silently moved two pointers in the header of the file that replaced it - one onto a blank line, one onto a neighbouring live line - to 30 when that iteration's catch-all quoted the client's own no-answer sentence as the reason its route ordering matters, to 34 when the same iteration's own prose insertions moved two ledger self-citations seven lines down inside docs/validation.md, which had never been a pinned surface although the ledger cites itself by absolute line, to 36 when the same drift ran the other way - four lines added to AGENTS.md moved a target the ledger names there, and the paragraph that quoted it had also quoted two file lengths as "before and after" that belonged to the previous commit - and to 42 when the ledger paragraph that reports all of that started naming six lines of the rewritten spec itself, to 44 when the repair of that spec's state.inputs falsehood quoted the two public/js/app.js lines that are the only reason an /api/ask body carries inputs at all, to 46 when it started quoting the shared stub list the catch-all is built from, and to 72 by iteration 58: that fix inserted 5, 10 and 7 lines into three shipped files and moved 26 cited lines over 15 prose sites with every guard green, so both the twelve endpoints it had to re-point and the fourteen lines subsection 58 names while changing them are pinned`);
+  assert.ok(PINS.length >= 88, `the pin table holds ${PINS.length} entries; it was sized 19 Nov at 7, widened to 12 by iteration 51 as the first prose that quotes the lines it changes, to 13 when this iteration's own citation of server/nasa/power.js:116 became a top target, to 16 by iteration 53 after a 48-line insertion in tests/context.test.js moved six ledger citations with every guard green, to 22 by iteration 54 for the six lines its own subsection names while editing them in place, to 25 by iteration 55 because it inserted 4 lines above cited code in two files that held no pin at all, to 29 by iteration 57 because replacing a Playwright spec silently moved two pointers in the header of the file that replaced it - one onto a blank line, one onto a neighbouring live line - to 30 when that iteration's catch-all quoted the client's own no-answer sentence as the reason its route ordering matters, to 34 when the same iteration's own prose insertions moved two ledger self-citations seven lines down inside docs/validation.md, which had never been a pinned surface although the ledger cites itself by absolute line, to 36 when the same drift ran the other way - four lines added to AGENTS.md moved a target the ledger names there, and the paragraph that quoted it had also quoted two file lengths as "before and after" that belonged to the previous commit - and to 42 when the ledger paragraph that reports all of that started naming six lines of the rewritten spec itself, to 44 when the repair of that spec's state.inputs falsehood quoted the two public/js/app.js lines that are the only reason an /api/ask body carries inputs at all, to 46 when it started quoting the shared stub list the catch-all is built from, to 72 by iteration 58: that fix inserted 5, 10 and 7 lines into three shipped files and moved 26 cited lines over 15 prose sites with every guard green, so both the twelve endpoints it had to re-point and the fourteen lines subsection 58 names while changing them are pinned, and to 88 by iteration 59: the ask-failure fix grew chat.js's catch block from one statement into a guard plus a restore, moved that block's own lines, and its prose cites ten chat.js lines, the reverse-lookup call site, the /api/ask length rule and four lines of the spec that reproduces it`);
   const pinned = file => PINS.filter(pin => pin.file === file).map(pin => pin.line);
   for (const line of [33]) {
     assert.ok(pinned('public/js/lib/chat-context.js').includes(line), `chat-context.js:${line} is the composer gate every location-suppression citation in the ledger depends on and is no longer pinned`);
@@ -222,6 +242,18 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   for (const line of [71, 73, 89, 93, 96, 104, 220, 248]) {
     assert.ok(pinned('tests/e2e/chat-evidence-panel.spec.js').includes(line), `chat-evidence-panel.spec.js:${line} is a line subsection 57 quotes by number and is no longer pinned`);
   }
+  // Subsection 59's own statements: the composer clear that loses the message, the two lines of the catch that report
+  // and restore, the reverse-lookup call site that no branch catches, the length rule that makes the 400 unreachable by
+  // typing, and the four spec lines the ledger quotes as its evidence. Iteration 59 moved the last of the catch lines by
+  // inserting above it, so a future rewrite of this block that drops any of them has to be a decision made here.
+  for (const [file, line] of [['public/js/modules/chat.js', 91], ['public/js/modules/chat.js', 149], ['public/js/modules/chat.js', 154],
+    ['public/js/modules/chat.js', 155], ['public/js/modules/chat.js', 156], ['public/js/modules/chat.js', 159],
+    ['public/js/modules/workflow-assistant.js', 431], ['server/api.js', 46]]) {
+    assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 59 quotes while changing it and is no longer pinned`);
+  }
+  for (const line of [26, 54, 76, 97]) {
+    assert.ok(pinned('tests/e2e/chat-refused-ask-keeps-question.spec.js').includes(line), `chat-refused-ask-keeps-question.spec.js:${line} is a line subsection 59 quotes as its evidence and is no longer pinned`);
+  }
   for (const pin of PINS) {
     assert.ok(pin.quote.length >= 12, `${pin.file}:${pin.line} is pinned to a ${pin.quote.length}-character fragment, which a rewritten line can satisfy by accident`);
     assert.ok(pin.citedBy.length > 0, `${pin.file}:${pin.line} has no citation to explain it`);
@@ -256,9 +288,13 @@ test('inserting a line above a pinned statement turns this guard red rather than
   assert.ok(apiCaught.length === apiPins.length, `the drift left ${apiPins.length - apiCaught.length} of ${apiPins.length} transport pins passing, so one line inserted above the Worker statement would not be reported`);
   assert.ok(apiDrifted.length === apiOriginal.length + 1, 'the transport replay must be a one-line insertion');
   const askOriginal = await linesOf('server/api.js');
-  const askDrifted = [...askOriginal.slice(0, 54), '  const inserted = 1;', ...askOriginal.slice(54)];
+  // Iteration 59 pinned a second, higher statement in this file (the 1-500 length rule at :46, beside the route ordering
+  // rule at :55), so a fixed insertion point below :46 would leave that pin in place and the assertion would be counting
+  // the wrong denominator. The replay now inserts above the earliest pinned statement in the file, which moves all of them.
   const askPins = PINS.filter(pin => pin.file === 'server/api.js');
-  assert.deepEqual(mismatches(askOriginal, askPins), [], 'the shipped tree must satisfy the /api/ask pin before the drift is replayed');
+  const askFirst = Math.min(...askPins.map(pin => pin.line));
+  const askDrifted = [...askOriginal.slice(0, askFirst - 1), '  const inserted = 1;', ...askOriginal.slice(askFirst - 1)];
+  assert.deepEqual(mismatches(askOriginal, askPins), [], 'the shipped tree must satisfy the /api/ask pins before the drift is replayed');
   const askCaught = mismatches(askDrifted, askPins);
   assert.ok(askCaught.length === askPins.length, `the drift left ${askPins.length - askCaught.length} of ${askPins.length} /api/ask pins passing, so one line inserted above that guard would not be reported`);
   assert.ok(askDrifted.length === askOriginal.length + 1, 'the /api/ask replay must be a one-line insertion');
@@ -292,4 +328,31 @@ test('inserting a line above a pinned statement turns this guard red rather than
   assert.ok(specPins.length === 8, `the spec holds ${specPins.length} pins, not the eight subsection 57 writes about, so the replay below proves nothing`);
   assert.ok(specCaught.length === specPins.length, `the drift left ${specPins.length - specCaught.length} of ${specPins.length} spec pins passing, so a line inserted above the panel helpers would not be reported`);
   assert.ok(specDrifted.length === specOriginal.length + 1, 'the spec replay must be a one-line insertion');
+});
+
+// The six replays above each pick one insertion point per file, so they prove the guard notices drift somewhere in a
+// file. Iteration 59 put two pins 9 lines apart in the same file, which made the gap visible: an insertion between them
+// moved the lower pin and left the upper one green, and the fixed replay points could never have shown that. This
+// replay asks the narrower question of every entry - would a single line landing on this pin's number still read as the
+// quoted statement, because the neighbouring line says the same thing - so a pin that only looks specific cannot ride
+// along on an adjacent line.
+test('no pin is satisfied by the statement above or below the line it names', async () => {
+  const byFile = new Map();
+  for (const pin of PINS) byFile.set(pin.file, byFile.get(pin.file) ?? await linesOf(pin.file));
+  const ambiguous = [];
+  for (const [file, lines] of byFile) {
+    for (const pin of PINS.filter(entry => entry.file === file)) {
+      assert.ok(pin.line >= 2, `${file}:${pin.line} is pinned to the first line, which has no line above it to replay a drift against`);
+      // One line inserted above the pin pushes the pinned statement down, so the pin's number now holds the old
+      // previous line; one line deleted above it pulls the old next line up onto the pin's number.
+      const shifts = {
+        'a line inserted above': [...lines.slice(0, pin.line - 1), lines[pin.line - 2], ...lines.slice(pin.line - 1)],
+        'a line deleted above': [...lines.slice(0, pin.line - 1), ...lines.slice(pin.line)],
+      };
+      for (const [shape, drifted] of Object.entries(shifts)) {
+        if (mismatches(drifted, [pin]).length === 0) ambiguous.push(`${file}:${pin.line} still matches ${JSON.stringify(pin.quote)} after ${shape}, so this pin cannot report a one-line drift`);
+      }
+    }
+  }
+  assert.ok(ambiguous.length === 0, `pins a one-line drift would leave green:\n${ambiguous.join('\n')}`);
 });

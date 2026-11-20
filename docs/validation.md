@@ -1305,7 +1305,7 @@ The matrix walk used to guess whether a reply was asking for a region or a town 
 That guessing produced 17 false defects earlier, and "Andorra la Vella" is both a parish and a town, so the
 app now stamps every choice button with `data-choice-type` (town / region / farm / follow-up) and names the
 group for a screen reader as "Choose one of these to continue planning" when the buttons are the only way
-to answer ([public/js/modules/chat.js:150-166](../public/js/modules/chat.js)). The walk taps by button
+to answer ([public/js/modules/chat.js:117-131](../public/js/modules/chat.js)). The walk taps by button
 position and kind instead of by text. It also walks the five supported codes with no saved place list
 (AQ BV HM IO UM) as its own terminal state, because requiring a town point there was never meaningful:
 executed **5 cases, 5 explained whole-country replies, 0 defects**. A 17-code subset through the rewritten
@@ -4384,7 +4384,7 @@ Mistakes in this iteration's own process, recorded because they cost runs. The f
   completion, and its final `restore()` overwrote the fix with a snapshot taken mid-control; four rounds then
   reported numbers for the wrong bytes and the log was discarded. The rewritten script refuses to snapshot unless
   the rule is present in all three places, and it runs in the foreground. Separately, a comment claimed five callers
-  branch on `AbortError` where the count is four - `public/js/modules/chat.js:149`, `public/js/app.js:236`,
+  branch on `AbortError` where the count is four - `public/js/modules/chat.js:154`, `public/js/app.js:236`,
   `public/js/app.js:296` and `public/js/modules/workflow-assistant.js:412` - and the gate was restarted rather than
   left running on bytes that a later edit would change. Three more cost time after the gate. The trace reader
   first reported 0 Overpass requests, because Playwright wraps every record in a `resource-snapshot` object and
@@ -5419,3 +5419,171 @@ microphones, audio quality, independent agronomy and anything deployed. The gate
 **Next.** Commit this tree with the gate, the census and the 24 tally controls, then take the lost-input finding above
 as its own iteration: `chat.js:91` should not clear the box until an answer exists, with a control that proves a
 failing ask leaves the question on screen and re-askable.
+
+### 59. A refused ask put the farmer's sentence in the history, where it cannot be sent
+
+**What was wrong.** `public/js/modules/chat.js:91` empties the composer before the request is made, then
+`public/js/modules/chat.js:94` and `:96` await the guided-plan reply or the evidence reply. When either rejects, the
+catch at `public/js/modules/chat.js:149` writes `error.message` into the status line at `:155` and nothing else, and
+`finally` at `:159` re-enables Send. So the sentence the farmer typed survives only as their own message further up the
+history - an `<article>` with no control on it - while the box they would press Send from is empty. The status line that
+explains the failure is the element the next message overwrites. An unanswered ask was therefore unrecoverable except by
+retyping it, and on a phone that means typing it twice.
+
+**How it was found, by ruling the plausible triggers out first.** Three scratch probes and their scripts are archived in
+[docs/evidence/iter59-probes-2026-11-20.log.gz](evidence/iter59-probes-2026-11-20.log.gz). A catalogue question cannot
+fail on the network at all: `server/api.js:55` answers it from bundled crop data, and the probe counted zero requests
+for one. The 400 for a malformed question at `server/api.js:46` cannot be reached by typing, because the composer's own
+`maxlength="500"` agrees with the handler's 1-500 rule. An evidence question with every external host cut never issues a
+request while no place is selected, so there is nothing to fail. What a farmer does hit is the guided plan that names its
+own coordinates: `public/js/modules/workflow-assistant.js:431` awaits the reverse lookup with no branch around it, and a
+refusal there rejects out of `workflow.respond` into the path above. That is the failure the case reproduces, triggered
+locally by intercepting one regex so both transports answer the same way.
+
+**The fix is one statement.** Inside the guard that already ignores cancellations and stale replies at
+`public/js/modules/chat.js:154`, `:156` writes the question back when - and only when - the composer is still empty. A
+cancellation the farmer asked for is not a failure to retry. Dictation and typing both land in that box while a request
+is in flight, so restoring unconditionally would paste a dead message over text written after it was sent; that
+condition is the difference between the two cases below, not a nicety.
+
+**The cases that cover it.** `tests/e2e/chat-refused-ask-keeps-question.spec.js:26` refuses the place lookup, asserts
+`the refused message must still be in the composer, ready to send again` at `:54` alongside the status sentence, the
+empty `#latitude`/`#longitude` and a live Send button, then presses Send again *without retyping* and requires the
+retry to be answered, the point to be set and the composer to be cleared.
+`tests/e2e/chat-refused-ask-keeps-question.spec.js:76` holds a lookup open for 2.5 s, types a different sentence into
+the composer while it is in flight, and asserts `the refused message must not overwrite what the farmer wrote next` at
+`:97` and that the waiting sentence is not also echoed into the history.
+
+**Numbers, all from the archived logs of this iteration.** Against the previous commit's bytes the new spec reports
+**4 failed, 4 passed (19.6s)** with every failure at `spec.js:26:1` on the composer assertion, in
+[docs/evidence/iter59-red-2026-11-20.log.gz](evidence/iter59-red-2026-11-20.log.gz); the archived log stamps the
+`chat.js` it built as `be315867…`. With the fix, **8 passed (19.6s)** on `103dede5…`
+([docs/evidence/iter59-green-2026-11-20.log.gz](evidence/iter59-green-2026-11-20.log.gz)). Two paired attacks show the
+spec discriminates: deleting the restore statement leaves **4 failed, 4 passed (19.5s)** on `ad3caf58…` with the same
+composer message ([docs/evidence/iter59-attackA-2026-11-20.log.gz](evidence/iter59-attackA-2026-11-20.log.gz)), and
+dropping only the empty-composer guard leaves **4 failed, 4 passed (20.3s)** on `5086a0ed…` with the *other* message,
+`the refused message must not overwrite what the farmer wrote next`, so neither case passes for the wrong reason
+([docs/evidence/iter59-attackB-2026-11-20.log.gz](evidence/iter59-attackB-2026-11-20.log.gz)). The offline suite is
+**259 tests, 259 pass, 0 fail, 0 skipped**
+([docs/evidence/iter59-offline-2026-11-20.log.gz](evidence/iter59-offline-2026-11-20.log.gz)) and the nine chat-adjacent
+browser specs are **88 passed (2.1m)** on the same shipped bytes
+([docs/evidence/iter59-focused-2026-11-20.log.gz](evidence/iter59-focused-2026-11-20.log.gz)).
+
+**A first ladder and a first gate were thrown away, and are recorded as thrown away.** Both ran against a copy of the
+spec whose header comment was one line shorter, so every case in the file sat one line lower and the archived failure
+would have named `spec.js:25` where the committed file declares the test at `:26`. Rather than publish numbers whose
+line coordinates do not exist, the whole ladder above was re-executed against the bytes that will be committed, driven by
+[docs/evidence/iter59-ladder-script-2026-11-20.py.gz](evidence/iter59-ladder-script-2026-11-20.py.gz)
+which stamps the sha256 of the product file it built at every step and refuses to continue if a mutation does not apply
+exactly once. The stopped gate attempt is kept as
+[docs/evidence/iter59-gate-attempt1-interrupted-2026-11-20.log.gz](evidence/iter59-gate-attempt1-interrupted-2026-11-20.log.gz)
+- its own header stamps the same fixed `chat.js` (`103dede5…`) beside the one-line-shorter spec (`3e68b9d9…`), it completed
+35 cases into the `static-desktop` project, and it was killed there, so it prints no summary line and no tally is drawn
+from it.
+
+**The gate and the census on these bytes.** The four-project gate re-launched against the committed spec is
+**260 passed / 0 failed / 0 skipped (21.0 m)**, exit 0, and it prints `Running 260 tests using 1 worker` beside the two
+hashes it built (`103dede5…` for `chat.js`, `d173167e…` for the spec) in
+[docs/evidence/iter59-gate-2026-11-20.log.gz](evidence/iter59-gate-2026-11-20.log.gz). The eight executions of the new
+file are named there by position, one pair per transport: `[18]`/`[19]` in `static-desktop`, `[83]`/`[84]` in
+`static-mobile`, `[148]`/`[149]` in `node-desktop` and `[213]`/`[214]` in `node-mobile`. `npx playwright test --list`
+agrees with the run rather than with arithmetic - `Total: 260 tests in 25 files`, exit 0, all eight new entries present
+and no `(skipped)` marker anywhere - in
+[docs/evidence/iter59-census-2026-11-20.log.gz](evidence/iter59-census-2026-11-20.log.gz); iteration 58's 252 in 24
+files became 260 in 25 because this iteration added one spec file with two cases in each of four projects. Two facts
+about this gate are worth their own sentence because they differ from the previous one. It met no live field refusal at
+all: `CONTEXT_UNAVAILABLE` appears zero times in the raw log, which is 348 lines by `wc -l`, where iteration 58's gate
+absorbed two, so this run is evidence about this app and nothing at all about upstream load. And two captures had to be
+thrown away before they were
+shipped: the first census was piped through `tail -4`, which left an archive that could not evidence the eight entries
+it was cited for, and the first offline run was piped through `tail -22`, which cut the summary block off the end of a
+log whose whole purpose is its summary; both were re-measured with the full output written to the file. Then the tally
+guard refused a needle of my own - I typed `✓  18` where the reporter right-aligns the counter as `✓   18` - and the
+rejection, rebuilt here by hand from the template at `tests/documentation-evidence-index.test.js:462`, read:
+`docs/evidence/iter59-gate-2026-11-20.log.gz never contains "✓  18 [static-desktop] › tests/e2e/chat-refused-ask-keeps-question.spec.js:26:1"`.
+A needle typed from memory rather than copied from the log is exactly the error the row format exists to catch, and here
+it was caught before anything was shipped.
+
+**The offline suite grew with the guard, and the bootstrap red is kept.** `npm test` is now **260 tests / 260 pass / 0
+fail / 0 skipped**, exit 0, on 48 tally rows and a regenerated
+[docs/evidence-index.md](evidence-index.md)
+([docs/evidence/iter59-offline-final-2026-11-20.log.gz](evidence/iter59-offline-final-2026-11-20.log.gz)) - iteration
+58's 259 plus the fourth citation-anchors case. The run immediately before it is
+[docs/evidence/iter59-offline-index-red-2026-11-20.log.gz](evidence/iter59-offline-index-red-2026-11-20.log.gz):
+**258 pass / 2 fail**, exit 1, red on exactly `every shipped evidence file is named by a document or carried by the
+index` and `the index header states counts its own rows and the filesystem agree with`, because three archives had been
+shelved and the index regenerated for none of them. That is iteration 58's finding reproducing itself on schedule, and
+it is also the reading that first showed the suite at 260 rather than 259.
+
+**The guard run, the provenance snapshot, and the one asymmetry this cannot remove.** The five documentation guard files
+re-run on their own read **25 tests / 25 pass / 0 fail / 0 skipped**, exit 0, under a header line that prints the table
+size they were reading: `GUARD_TABLE_ROWS 49`, because their own green run is row 50
+([docs/evidence/iter59-docsguards-final-2026-11-20.log.gz](evidence/iter59-docsguards-final-2026-11-20.log.gz)).
+`artifacts/scratch/iter59/capture-provenance.mjs` prints the interpreter (`v26.13.1`,
+`/opt/homebrew/Cellar/node/26.13.1_2/bin/node`), `GIT_HEAD cadd0b375191b9616a76c121304e318ed642a473`,
+`GIT_BRANCH fix/chat-flow-and-answers`, `GIT_REMOTE_MAIN 4a54fa3fbd75f4b1ccaae238b00d439accf1d0d4 refs/heads/main`, the
+working-tree status of the moment and the sha256/bytes/lines of the eight files this iteration ships or reads as input
+([docs/evidence/iter59-provenance-2026-11-20.log.gz](evidence/iter59-provenance-2026-11-20.log.gz)). Two of those
+hashes are the ones the browser readings were taken against - `chat.js` at
+`103dede5c2026f5fa49307c3923053c03e4aa4bc3010bb8d6fc04efe178fca89` and the spec at
+`d173167e944821d7000f7c4d5db92e97e3366036fcf42893e87ecb78917cb217` appear in the gate's own banner, so the bytes the
+red, the green, both attacks, the focused run and the gate executed are the bytes being committed - and
+`public/js/modules/workflow-assistant.js` at `d6b54dd6…`, unchanged since iteration 58, which is the control that the
+pin re-quote in the anchors guard touched no product code. The limit is the one subsection 58 states rather than smooths:
+an archive cannot be quoted by the run that produces it, so the guard row above describes a table one row smaller than
+itself and the provenance file's own hash is necessarily absent from the snapshot inside it. The confirmation runs that
+close this subsection are therefore deliberately not archived, and say so.
+
+**A guard run that reported 15 cases where the suite has 25, and the runner that forbids it.** The first attempt to
+confirm the published tree typed the five guard paths into `node --test`; two of the names I typed do not exist
+(`tests/documentation-prose.test.js` and `tests/documentation-handoff-table.test.js`), the child printed `ℹ tests 15`
+with `ℹ pass 15` and `ℹ fail 0`, and the exit status I recorded came from a `tail` in the same pipeline rather than
+from the test process. Nothing in that output says ten cases never started, and it is exactly why the reproduction was
+worth archiving in the scratch log: `node --test` pointed at one real file and one invented one reports `ℹ tests 6` -
+the whole of the real file, nothing of the missing one - and exits 0. `scripts/docs-guards.mjs` now carries the five
+names, refuses to start the child unless each is on disk, and exits with the child's status. Its negative control ran
+on the shipped file, not a copy: with `tests/documentation-nonexistent.test.js` appended to the list the runner printed
+`DOCSGUARDS_ABORT guard file(s) not on disk: tests/documentation-nonexistent.test.js`, exit 1, with no child started,
+and reverting it returned the script to the hash the provenance snapshot prints. The confirmation this subsection
+closes on is that runner - `GUARD_FILES 5`, **25 tests / 25 pass / 0 fail / 0 skipped**, `DOCSGUARDS_CHILD_EXIT 0` -
+taken after the provenance row joined the table and the floor moved to **50**, so the guard set, its runner and its own
+ledger row agree on the bytes being committed. The runner earned its keep before it shipped: the first draft of the new
+provenance row asserted the phrase `ITERPRETER v26.13.1`, copied from iteration 58's row, while iteration 59's script
+spells the key correctly, and the tally guard answered
+`docs/evidence/iter59-provenance-2026-11-20.log.gz never contains "ITERPRETER v26.13.1"` - 24 pass / 1 fail. The row now
+quotes the whole interpreter line instead of a prefix. The runner ships; its transcript and the scratch scripts quoted above sit
+under gitignored `artifacts/`, which is why the number here is a command any reviewer re-runs rather than a log they
+have to trust.
+
+**What this does not fix.** `pendingChoice`, consumed at `public/js/modules/chat.js:93`, is not restored with the
+sentence, so a refused guided-plan step returns the words but not the level the farmer had tapped; the queue takes that
+next. The two transports also still describe the same refusal in different sentences, which is P1's and P2's remaining
+residual rather than this iteration's. The case stubs the place service at the network layer, so it proves the app's
+classification and its composer behaviour, not what a live Nominatim outage looks like. Whether the restore is the right
+*behaviour* for every farmer - someone dictating, someone on a small screen with the keyboard still open, someone whose
+next message was deliberate - is UNVERIFIED, as are real phones, Safari/WebKit, microphones, audio quality, independent
+agronomy and anything deployed.
+
+**The publication chain still tells a reader to run a file no clone has.** `grep` over the tracked prose names 108
+distinct paths under `artifacts/`, and `git ls-files artifacts` returns nothing because `.gitignore:4` ignores the
+whole directory - so two of those mentions are commands a fresh checkout cannot execute:
+`node artifacts/iter47-index-generator.mjs`, the tool this subsection's own index regeneration depends on and the one
+cited above, and `node artifacts/iter36-coordinate-probe.mjs`. The guards cannot see this:
+`tests/documentation-commands.test.js` skips
+`artifacts` when it builds its inventory and the citation guards `stat()` the working tree, which has the files because
+this machine wrote them. A reviewer therefore has to trust that the ledger's index was produced by the generator the
+ledger names. Promoting both instruments into `scripts/` the way iteration 58 promoted `scripts/citation-drift.mjs`, and
+adding a case that fails on a documented `node artifacts/…` command, is the next pass's first job.
+
+**Next.** First the two instruments the ledger tells a reader to run, which are gitignored today; they cost one commit
+and they are what every provenance claim in these subsections rests on. Then the `pendingChoice` gap above, which is now
+a mechanism rather than a suspicion, because the two lines are one
+action: `public/js/modules/chat.js:129` sets `pendingChoice` *and* writes the button's own sentence into the composer
+before it submits, so the sentence this iteration restores is precisely the sentence that carried a guided-step choice.
+Re-sending it after a refusal therefore takes the free-text path at `:96` instead of the guided path at
+`:94` - the retry answers a different question than the one the farmer tapped. The next pass should restore the choice
+exactly when the sentence is restored, in the same `:156` condition, with a case whose first send is refused and whose
+retry must still reach the guided branch, plus the negative control that restores the choice when the farmer has typed
+over the box (which would attach a stale level to a new sentence). `public/js/lib/api.js:13` and `:61` remain the
+structured-fact half of P2: neither carries the posted `error.code`, so nothing downstream can tell one refusal from
+another without matching words.

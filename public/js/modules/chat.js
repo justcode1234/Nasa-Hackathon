@@ -146,7 +146,16 @@ export function initChat(getState, actions) {
       while (log.children.length > 20) log.firstElementChild.remove();
       log.scrollTop = log.scrollHeight;
       announce('Answer ready. Sources and limits are included.');
-    } catch (error) { if (error.cancelled !== true && version === revision && serial === messageSerial) announce(error.message); }
+    } catch (error) {
+      // The composer was cleared before the request was made, so a failure that only writes a status line leaves the
+      // farmer nothing to send: the message survives in the history, where it cannot be re-submitted, and the next
+      // message overwrites the sentence explaining this one. A stop the farmer asked for is not a failure to retry, and
+      // text typed while the ask was in flight belongs to them now, so it is never pasted over.
+      if (error.cancelled !== true && version === revision && serial === messageSerial) {
+        announce(error.message);
+        if ($('question').value === '') $('question').value = question;
+      }
+    }
     finally { if (version === revision && serial === messageSerial) { $('ask').disabled = false;starters.forEach(button=>button.disabled=false); } }
   });
   return { invalidate({ fromAssistant = false } = {}) {
