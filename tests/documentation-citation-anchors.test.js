@@ -139,7 +139,7 @@ const PINS = [
   { file: 'public/js/modules/workflow-assistant.js', line: 530, quote: "if (fields === 'failed') return fieldsFailed(", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61)' },
   { file: 'tests/e2e/field-service-failure.spec.js', line: 21, quote: 'a refused field lookup is reported as a failure', citedBy: 'docs/validation.md subsection 58, The reproducing case' },
   { file: 'tests/e2e/field-service-failure.spec.js', line: 77, quote: '0 mapped fields were returned', citedBy: 'docs/validation.md subsection 58, The third phase' },
-  { file: 'tests/workflow-place-choices.test.js', line: 488, quote: 'a town tap whose field lookup was refused reports a failure', citedBy: 'docs/validation.md subsection 58, Tests' },
+  { file: 'tests/workflow-place-choices.test.js', line: 621, quote: 'a town tap whose field lookup was refused reports a failure', citedBy: 'docs/validation.md subsection 58, Tests (moved 488 -> 584 -> 621 by iteration 64)' },
   { file: 'tests/e2e/guided-chat-accessibility.spec.js', line: 52, quote: 'field lookup did not complete', citedBy: 'docs/validation.md subsection 58, superseded assertions' },
   { file: 'server/context/client.js', line: 5, quote: 'ttlMs = 86_400_000', citedBy: 'docs/validation.md subsection 58, the cache law' },
   { file: 'server/context/client.js', line: 13, quote: 'readCached(key, ttlMs)', citedBy: 'docs/validation.md subsection 58, the cache law' },

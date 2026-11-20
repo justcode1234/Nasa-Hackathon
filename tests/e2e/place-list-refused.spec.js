@@ -212,4 +212,86 @@ test.describe('a country place list that cannot be read', () => {
     expect(errors, 'page errors while the form could not check a tapped region').toEqual([]);
     await info.attach('Tapped region against a refused re-read', { body: Buffer.from(JSON.stringify({ counts, status, selected, offered }, null, 2)), contentType: 'application/json' });
   });
+
+  // Iteration 64. The switch guard asks the country the plan is already in whether a name is one of its places, and a
+  // read that refused used to answer "it is not" (`workflow-assistant.js:340`). "Georgia" is a US region row with 162
+  // saved towns and parses as the country Georgia, exactly as "Inner Mongolia" is a Chinese province that parses as
+  // Mongolia, so a farmer who typed it after a refusal had the whole plan moved to another country: new country, no
+  // region, no point, while the same sentence with a readable list selects the region. Measured offline in
+  // docs/evidence/iter64-country-switch-probe-2026-11-20.log.gz and pinned by
+  // `tests/workflow-place-choices.test.js:380` and `:497`; this is the real page over both transports, plus the
+  // outright switch the refusal names, which has to keep working because the fix cannot be a blanket refusal.
+  test('a region spelled like another country keeps the plan when the list refuses, and naming the switch still moves it', async ({ page, context }, info) => {
+    test.setTimeout(240_000);
+    const errors = [], counts = { refused: 0, answered: 0 };
+    const unavailable = await authoredFailure(async name => { throw new Error(`HTTP 503 ${name}`); });
+    let mode = 'refused';
+    page.on('pageerror', error => errors.push(error.message));
+    await context.route(lists, async route => {
+      const url = route.request().url();
+      counts[mode]++;
+      if (mode === 'answered') return route.continue();
+      return url.includes('/api/locations')
+        ? route.fulfill({ ...unavailable, contentType: 'application/json', body: JSON.stringify(unavailable.body) })
+        : route.abort('failed');
+    });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#catalog-status')).toContainText('Choose a country');
+    // The country the guard asks about has to be one nothing has read yet, on either transport. The step 1 form and
+    // the assistant share one location client, and it keeps the last four countries it answered for
+    // (`server/context/locations.js:9`); on the static transport that client runs inside the worker, so a list the
+    // form fetched is handed to the assistant without a request and `counts.refused` below would be an instrument
+    // blind spot instead of a measurement (measured: 12 passed/4 failed with refused=0 on all four projects when the
+    // plan was built from the saved list, then 14/2 with both node projects passing and both static ones at 0 when
+    // the form had read it). So the plan keeps the one step 1 control that needs no saved list at all — the example
+    // region dropdown, which sets a country and a point from a coordinate — and the list stays shut from the first
+    // message. A second measured fact: with the chat not mid-plan the sentence never reaches the switch check, it is
+    // answered as a crop name ("I could not match that crop to a sourced entry for Mongolia"), so the plan is opened
+    // through the chat first.
+    await page.getByRole('button', { name: 'Open FieldShift assistant', exact: true }).click();
+    await send(page, 'Help me plan a rotation in the United States');
+    expect(counts.refused, 'the plan is open in a country whose saved list has refused').toBeGreaterThan(0);
+    await page.locator('#chat-close').click();
+    await page.locator('#example-location').selectOption('42,-93.69');
+    await page.locator('#chat-toggle').click();
+    expect(await page.locator('#pest-country').inputValue(), 'the example point is in the United States').toBe('US');
+    const point = await page.locator('#latitude').inputValue();
+    expect(point, 'the example point is held in step 1').not.toBe('');
+    const regionBlank = await page.locator('#place-region').inputValue();
+
+    const refusedBefore = counts.refused;
+    await send(page, 'Georgia');
+    expect(counts.refused, 'the switch check read the saved list, so the refusal below is one it received')
+      .toBeGreaterThan(refusedBefore);
+    const spoken = await replyText(page);
+    expect(spoken, 'a list that refused cannot claim the name is not a local place').toMatch(/could not be read just now/);
+    expect(spoken, 'the reply says which two readings it cannot tell apart').toMatch(/cannot tell whether/i);
+    expect(spoken, 'and says what it left alone').toMatch(/Nothing was changed/i);
+    for (const claim of ['is selected', 'Which part of Georgia'])
+      expect(spoken, `the plan answered as if the switch had happened: ${spoken}`).not.toContain(claim);
+    expect(await page.locator('#pest-country').inputValue(), 'the country stays the United States').toBe('US');
+    expect(await page.locator('#latitude').inputValue(), 'the point the farmer chose survives the refusal').toBe(point);
+    expect(await page.locator('#place-region').inputValue(), 'a read that never answered selects no region').toBe(regionBlank);
+    const offered = await labels(page);
+    expect(offered, `the refusal offers a replay: ${offered.join(' | ')}`).toContain('Ask that again');
+    expect(offered, `and the move that needs no list: ${offered.join(' | ')}`).toContain('Switch to Georgia');
+
+    mode = 'answered';
+    const answeredBefore = counts.answered;
+    await tap(page, 'Ask that again');
+    expect(counts.answered, 'the replay re-asked instead of replaying the cached refusal').toBeGreaterThan(answeredBefore);
+    expect(await replyText(page), 'with the list readable the same name is the US region row').toContain('Georgia is selected');
+    expect(await page.locator('#pest-country').inputValue(), 'the replay moved the plan nowhere').toBe('US');
+    const replayedRegion = await page.locator('#place-region').inputValue();
+    expect(replayedRegion, 'the recovered list selects the region in step 1, not only in the chat').not.toBe('');
+    expect(replayedRegion).not.toBe('__all__');
+    // What the recovery does to the point is recorded rather than asserted: selecting a region has always reset the
+    // town, and this case exists to pin the country, so the value goes into the attachment.
+    const replayedPoint = await page.locator('#latitude').inputValue();
+
+    await send(page, 'switch to Georgia');
+    expect(await page.locator('#pest-country').inputValue(), 'naming the move outright still moves it').toBe('GE');
+    expect(errors, 'page errors while the saved list refused between two selections').toEqual([]);
+    await info.attach('Switch guard against a refused list', { body: Buffer.from(JSON.stringify({ counts, point, regionBlank, replayedRegion, replayedPoint, spoken, offered }, null, 2)), contentType: 'application/json' });
+  });
 });

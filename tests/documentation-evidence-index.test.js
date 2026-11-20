@@ -946,10 +946,96 @@ const TALLIES = [
     lines: ['ℹ tests 274', 'ℹ pass 274', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0'],
     phrases: ['a saved list that could not be read says so', 'the tally of every archived run is printed by that archive'],
     marks: 0, absent: ['✘'] },
+  // Iteration 64. A place name that is also another country's name reached the switch guard while the country's own
+  // saved list was refusing, and the guard answered "it is not a local place" - which moves the whole plan. The probe
+  // that measured it, the offline cases as they were written red, the controls pass that missed one of its own
+  // mutations, the browser drafts that were blind to their own instrumentation and the green that followed.
+  { archive: 'docs/evidence/iter64-country-switch-probe-2026-11-20.log.gz',
+    phrases: ['PARSE_INNER_MONGOLIA countries=["MN"]',
+      'S2_FAILED_LIST after=country=MN region=null place=null evidence=null',
+      'CMD node artifacts/scratch/iter64/country-switch-probe.mjs'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter64-coord-list-refused-probe-2026-11-20.log.gz',
+    phrases: ['listRefused=true', 'The saved place list could not load.',
+      '{"country":"IN","location":null}'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter64-offline-cases-red-4-2026-11-20.log.gz',
+    lines: ['ℹ tests 35', 'ℹ pass 31', 'ℹ fail 4', 'ℹ skipped 0'],
+    onlyReds: ['a switch an unreadable list cannot arbitrate keeps the plan and names the read it could not do',
+      'a list whose shape cannot be read offers the move outright and no retry it has ruled out',
+      '“switch to Mongolia” still moves the plan when the saved list refuses',
+      'a cancelled list read is a stop, not a licence to move the plan to another country'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter64-offline-cases-red-3-2026-11-20.log.gz',
+    lines: ['ℹ tests 35', 'ℹ pass 32', 'ℹ fail 3', 'ℹ skipped 0'],
+    onlyReds: ['a switch an unreadable list cannot arbitrate keeps the plan and names the read it could not do',
+      'a list whose shape cannot be read offers the move outright and no retry it has ruled out',
+      'a cancelled list read is a stop, not a licence to move the plan to another country'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter64-offline-cases-green-37-2026-11-20.log.gz',
+    lines: ['ℹ tests 37', 'ℹ pass 37', 'ℹ fail 0', 'ℹ skipped 0'],
+    phrases: ['a switch an unreadable list cannot arbitrate keeps the plan and names the read it could not do',
+      'a list answering the switch check after the plan moved on stops instead of answering'],
+    marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter64-offline-controls-superseded-2026-11-20.log.gz',
+    phrases: ['CONTROL C6 no guard after the switch read', 'fail_count=0 restore_ok=true', 'red=[]'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter64-offline-controls-2026-11-20.log.gz',
+    phrases: ['CONTROL C1 shipped bare-catch shape', 'CONTROL C7 harness ignores the country',
+      'fail_count=3 restore_ok=true digest=89d6666e1f567185c2bcf2b7ee2e4bda',
+      'fail_count=2 restore_ok=true digest=8598d72d8a805b0f49dc96518a8e8190'],
+    marks: 0, absent: ['fail_count=0'] },
+  { archive: 'docs/evidence/iter64-browser-red-form-built-plan-2026-11-20.log.gz',
+    lines: ['4 failed', '12 passed (13.0s)'],
+    phrases: ['ITER64_SPEC_START 2026-11-20T11:55:26Z HEAD=6ca7cca6cdf32e5e79678d88c2a3caaa43fa84f6', 'the switch check read the saved list, so the refusal below is one it received'], marks: 0 },
+  { archive: 'docs/evidence/iter64-browser-red-worker-cache-2026-11-20.log.gz',
+    lines: ['2 failed', '14 passed (12.8s)'],
+    phrases: ['ITER64_SPEC_START 2026-11-20T11:57:36Z HEAD=6ca7cca6cdf32e5e79678d88c2a3caaa43fa84f6', 'Error: the switch check read the saved list, so the refusal below is one it received'], marks: 0 },
+  { archive: 'docs/evidence/iter64-browser-focused-green-2026-11-20.log.gz',
+    lines: ['16 passed (11.7s)'],
+    phrases: ['ITER64_SPEC_START 2026-11-20T12:02:40Z HEAD=6ca7cca6cdf32e5e79678d88c2a3caaa43fa84f6', 'a region spelled like another country keeps the plan when the list refuses'], marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter64-browser-control-2026-11-20.log.gz',
+    lines: ['4 failed', '12 passed (14.3s)'],
+    phrases: ['ITER64_NEGCTL_BROWSER_START 2026-11-20T12:03:57Z HEAD=6ca7cca6cdf32e5e79678d88c2a3caaa43fa84f6', '2a27d927af5aeca3cf0fa517dad8650f', 'Error: a list that refused cannot claim the name is not a local place'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter64-browser-restore-green-2026-11-20.log.gz',
+    lines: ['16 passed (14.5s)'],
+    phrases: ['ITER64_RESTORE md5=89d6666e1f567185c2bcf2b7ee2e4bda expected=89d6666e1f567185c2bcf2b7ee2e4bda'],
+    marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter64-bare-name-crop-misanswer-2026-11-20.log.gz',
+    phrases: ['active_before=false active_after=false asked=[]', 'reply=""', 'Georgia is selected',
+      'SOURCE_MD5=89d6666e1f567185c2bcf2b7ee2e4bda'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter64-offline-final-2026-11-20.log.gz',
+    lines: ['ℹ tests 280', 'ℹ pass 280', 'ℹ fail 0', 'ℹ skipped 0'],
+    phrases: ['a tapped place choice answers without re-reading the list',
+      'OFFLINE CMD=node --test tests/*.test.js'],
+    marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter64-offline-final-full-2026-11-20.log.gz',
+    lines: ['ℹ tests 280', 'ℹ pass 280', 'ℹ fail 0', 'ℹ skipped 0', 'ℹ duration_ms 24392.744083'],
+    phrases: ['a list answering the switch check after the plan moved on stops instead of answering',
+      'a switch an unreadable list cannot arbitrate keeps the plan and names the read it could not do',
+      'a cancelled list read is a stop, not a licence to move the plan to another country'],
+    marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter64-gate-2026-11-20.log.gz',
+    lines: ['Running 296 tests using 1 worker', '296 passed (23.4m)', 'GATE_EXIT=0', 'ITER64_GATE_DONE 2026-11-20T12:30:21Z'],
+    phrases: ['GIT_HEAD 6ca7cca6cdf32e5e79678d88c2a3caaa43fa84f6',
+      'MD5 assistant=89d6666e1f567185c2bcf2b7ee2e4bda', 'place-list-refused.spec.js:224:3',
+      '(8 attempts across 3 services). No fields were invented'],
+    marks: 0, absent: ['✘', 'did not run', 'cdn.jsdelivr.net', 'skipped'] },
+  { archive: 'docs/evidence/iter64-census-2026-11-20.log.gz',
+    lines: ['Listing tests:', 'Total: 296 tests in 27 files'],
+    phrases: ['[node-mobile] › zero-evidence-parity.spec.js:245:1', 'place-list-refused.spec.js:224:3'],
+    marks: 0, absent: ['✘', 'skipped'] },
+  { archive: 'docs/evidence/iter64-spec-comment-shelf-repoint-2026-11-20.log.gz',
+    lines: ['16 passed (11.4s)'],
+    phrases: ['ITER64_SPEC_DONE 2026-11-20T12:33:50Z exit=0', 'ac19cc29c44b8f14f1a6c9cdb6b9456c',
+      'dccb577c480dc3224afacd393b88ccf1'],
+    marks: 0, absent: ['✘', 'did not run'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 108, `the table carries ${TALLIES.length} archives; subsections 57 through 63 quote more runs than ` +
+  assert.ok(TALLIES.length >= 126, `the table carries ${TALLIES.length} archives; subsections 57 through 64 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -994,7 +1080,15 @@ test('the tally of every archived run is printed by that archive, not by the pro
     + 'header that spelled the strings its tally row declared absent, which went red twice over - once in the guard set '
     + 'alone and once in the whole offline suite - and stayed on the shelf as those two logs, and 108 when the guard set '
     + 'and the whole suite were read again green on the finished tree, their own two rows the only ones in this pass that '
-    + 'no run of this pass executed.');
+    + 'no run of this pass executed, and 122 when iteration 64 shelved the probe that measured the move this pass '
+    + 'prevents, the two red drafts of its offline cases, the controls pass that left one of its own mutations '
+    + 'undetected and the pass that caught it, the three browser drafts, the browser control that made the new page '
+    + 'case bite, the byte-identical restore re-run, the probe that measured what the new case could not reach and the '
+    + 'whole offline suite as it finished, and 125 when the four-project gate on those delivered bytes closed at 296 '
+    + 'passed (23.4m) with exit 0, the `--list` census counted the same 296 in 27 files, and the focused spec ran once '
+    + 'more after a comment line in it was re-pointed from a gitignored scratch path to the shelf file that now holds '
+    + 'those bytes, and 126 when the complete capture of that offline suite joined it beside the filtered one, six case '
+    + 'titles against 280.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

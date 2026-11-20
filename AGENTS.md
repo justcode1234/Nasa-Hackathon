@@ -1967,7 +1967,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `server/context/farms.js:89` `code: 'CONTEXT_UNAVAILABLE'` refusals without calling them passes. The census on these
   bytes reads `Total: 252 tests in 24 files` with no skip anywhere under `tests/e2e`
   (`docs/evidence/iter58-census-2026-11-20.log.gz`), so iteration 57's 248 in 23 gained four cases in one new spec
-  file. `tests/workflow-place-choices.test.js:488` adds the offline half, and the tally guard now also reads the
+  file. `tests/workflow-place-choices.test.js:621` adds the offline half, and the tally guard now also reads the
   census, the controls runs, the provenance snapshot and the green pre-final offline suite out of the gzip bytes. The
   controls harness ran six times and all six readings ship. Pass five is the one that reported its own gap:
   `CONTROL_ROWS_IN_TABLE 33 ATTACKED 30 UNATTACKED 3` names the three earlier controls archives it had never attacked
@@ -2160,7 +2160,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   on structure instead of wording - its first version timed out for 60 s waiting for an answered ask while the
   tap was failing, and the probe had the same class of flaw as a sentence whitelist that read
   `region_tap_rejects=false` after the fix made the sentence honest - plus
-  `tests/workflow-place-choices.test.js:598` (35 lines). Both go red on their own control: reverting
+  `tests/workflow-place-choices.test.js:731` (the last block in that file). Both go red on their own control: reverting
   `context.js` prints `1 failed` naming the blamed sentence, and removing the cached-list short-circuit from
   `public/js/modules/workflow-assistant.js` prints `ℹ tests 31` / `ℹ fail 1` with `actual: 3` against
   `expected: 2`. The spec reads `3 passed` in each of the four projects, the offline suite is `ℹ tests 270` /
@@ -2210,6 +2210,47 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `docs/validation.md`. The all-fill payload the browser cases serve is a derived fixture, so a live station-year that
   really arrives wholly filled stays UNVERIFIED, as do Safari/WebKit, real phones, microphones, audio quality and
   independent agronomy. Nothing was deployed, `main` is untouched, no NASA portal edit.
+
+- **20 Nov, same branch: iteration 64 - a saved place list that refused stopped answering "that name is not from
+  here"**, and on that answer the plan had already changed country. `workflow-assistant.js:340` ended in a bare
+  `.catch(() => null)`, so a read that failed and a read that genuinely found nothing both told the switch guard "not
+  local", and `docs/evidence/iter64-country-switch-probe-2026-11-20.log.gz` measures what that cost: "Inner Mongolia", a
+  Chinese province that parses as the country Mongolia, left `country=MN region=null place=null evidence=null` - the
+  point and its readings gone - where the same sentence with a readable list selects region 22 and moves nothing. The
+  refusal now gets its own reply (`switchListUnreadable`, `workflow-assistant.js:717-733`): the read that could not be
+  done, the two readings it cannot separate, `Nothing was changed`, a replay, and the explicit switch that still works.
+  Six offline cases carry it, red before the guard (`docs/evidence/iter64-offline-cases-red-4-2026-11-20.log.gz`), red
+  after the first draft of it (`docs/evidence/iter64-offline-cases-red-3-2026-11-20.log.gz`) and green at 37
+  (`docs/evidence/iter64-offline-cases-green-37-2026-11-20.log.gz`); seven mutation controls take 3/2/1/1/1/1/2 of them
+  back out with `restore_ok=true` on each (`docs/evidence/iter64-offline-controls-2026-11-20.log.gz`), and the earlier
+  controls pass whose sixth mutation proved nothing stayed on the shelf as
+  `docs/evidence/iter64-offline-controls-superseded-2026-11-20.log.gz`. The browser case survived two instrument
+  failures (`docs/evidence/iter64-browser-red-form-built-plan-2026-11-20.log.gz`,
+  `docs/evidence/iter64-browser-red-worker-cache-2026-11-20.log.gz`) before it counted the refusal on both transports
+  (`docs/evidence/iter64-browser-focused-green-2026-11-20.log.gz`), and reverting the shipped clause made it bite:
+  `4 failed` / `12 passed (14.3s)` (`docs/evidence/iter64-browser-control-2026-11-20.log.gz`) and green again on the
+  delivered bytes (`docs/evidence/iter64-browser-restore-green-2026-11-20.log.gz`). The gate opens
+  `Running 296 tests using 1 worker` and closes `296 passed (23.4m)`, exit 0
+  (`docs/evidence/iter64-gate-2026-11-20.log.gz`), with `tests/e2e/place-list-refused.spec.js:224:3` green in all four
+  projects and the census reading `Total: 296 tests in 27 files` (`docs/evidence/iter64-census-2026-11-20.log.gz`); two
+  live field refusals inside it (`CONTEXT_UNAVAILABLE`, 8 attempts across 3 services, `server/context/farms.js:89`) are
+  upstream capacity rather than a repair. The spec's one post-gate edit was a comment re-pointed at the shelf,
+  `16 passed (11.4s)` on the final bytes (`docs/evidence/iter64-spec-comment-shelf-repoint-2026-11-20.log.gz`). The
+  offline suite reads `ℹ tests 280 / ℹ pass 280 / ℹ fail 0`
+  (`docs/evidence/iter64-offline-final-full-2026-11-20.log.gz`, all 280 case lines; its filtered companion
+  `docs/evidence/iter64-offline-final-2026-11-20.log.gz` carries the run banner and the tally). Five findings this pass
+  left alone: F1 a place name typed while no chat plan is open never reaches the guard at all -
+  `docs/evidence/iter64-bare-name-crop-misanswer-2026-11-20.log.gz` prints
+  `active_before=false active_after=false asked=[]` over an answer with no text and no offers; F2 the worker-side list
+  cache (`server/context/locations.js:9-34`) makes page-side request counters blind on the static transport; F3 the
+  replay that new reply offers re-selects the region and leaves the town unselected, so one thing does change after
+  "nothing was changed"; F4 `workflow-assistant.js:279` still swallows a refusal inside `exactPlaceRow`; F5 a coordinate
+  sentence reads `/api/locations` outside any try/catch at `workflow-assistant.js:455`, and
+  `docs/evidence/iter64-coord-list-refused-probe-2026-11-20.log.gz` shows `respond()` throwing after the country had
+  already moved. Full account in subsection 64 of `docs/validation.md`. Every refusal in these runs is simulated by
+  route interception or a stub - no live GeoNames outage was reproduced and none is claimed - and real phones,
+  Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED. Nothing was deployed, `main` is
+  untouched, no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

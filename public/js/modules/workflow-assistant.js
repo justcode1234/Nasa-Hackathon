@@ -336,10 +336,10 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       // of China. A saved local place name that happens to contain another country’s name answers
       // the pending place question; it is not a request to move the whole plan to that country.
       const replied = foldName(question), phrase = mentionPhrase(question) ?? replied;
-      const SWITCH_LEAD_IN = /^(?:switch to|change to|move to|go to)\s+/;
-      const local = await getLocationList(state.country).catch(() => null);
-      if (local && [...(local.regions ?? []), ...(local.places ?? [])].some(row => row.name && foldName(row.name) === phrase)
-        && !SWITCH_LEAD_IN.test(replied)) requestedCountry = undefined;
+      const SWITCH_LEAD_IN = /^(?:switch to|change to|move to|go to)\s+/; let local = null, listUnreadable = null;
+      try { local = await getLocationList(state.country); guard(); } catch (error) { if (error.cancelled === true) throw error; listUnreadable = error; }
+      if (listUnreadable && !SWITCH_LEAD_IN.test(replied)) return switchListUnreadable(state.country, requestedCountry, question, listUnreadable);
+      if (local && !SWITCH_LEAD_IN.test(replied) && [...(local.regions ?? []), ...(local.places ?? [])].some(row => row.name && foldName(row.name) === phrase)) requestedCountry = undefined;
     }
     if (requestedCountry && requestedCountry !== state.country) {
       progress(`Step 1: selecting ${COUNTRY_NAMES.of(requestedCountry)}…`);
@@ -713,6 +713,22 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     choices.push(next('Use selected point', 'Use the selected point'));
     return reply(`${message} ${state.farms.length} mapped fields were returned. You can also choose from the full field dropdown or use explicit farm coordinates.`, choices,
       [{ id: 'osm', title: 'OpenStreetMap contributors; community mapped land use, not verified ownership', url: 'https://www.openstreetmap.org/copyright' }]);
+  }
+  // Measured 20 Nov on the iteration-63 tree: the country-switch check asks the list of the country the plan is
+  // already in whether a name is one of its places, and a read that refused used to answer “not a local place”. A
+  // farmer mid-plan in China who typed that country's own province name then saw `country=MN region=null
+  // place=null evidence=null` after the calls `country:MN`, `inputs` and `step:location`, the chat asking “Which
+  // part of Mongolia…” as if nothing had been lost. An unanswered read cannot settle that question, so it no longer
+  // answers it: every selection stays where it was and the reply names the read that could not be done, with the
+  // two moves that do not need it — replay the sentence once the list answers, or say the switch outright.
+  function switchListUnreadable(current, requested, question, error) {
+    const here = COUNTRY_NAMES.of(current), there = COUNTRY_NAMES.of(requested);
+    const unreadable = error?.code === 'LOCATIONS_SCHEMA';
+    return reply(`The saved place list for ${here} ${unreadable ? 'arrived in a shape this app cannot read' : 'could not be read just now'}, so this assistant cannot tell whether “${question}” names a place in ${here} or asks to move this plan to ${there}. Nothing was changed: ${here} is still the country this plan is in, and no region, point or loaded evidence was dropped or invented. ${unreadable
+      ? 'Asking again cannot change a source format, but naming the move outright needs no list.'
+      : 'Ask again in a moment, or name the move outright — that needs no list.'}`,
+      unreadable ? [next(`Switch to ${there}`, `Switch to ${there}`)]
+        : [next('Ask that again', question), next(`Switch to ${there}`, `Switch to ${there}`)]);
   }
   return { respond, invalidate, isActive: () => active };
 }

@@ -5265,7 +5265,7 @@ They were rewritten rather than skipped or narrowed. The accessibility spec now 
 `toEqual(['Use selected point', 'Show mapped fields'])`, and because its retry walk needs the empty-count prompt -
 which only a lookup that actually answered can reach - a `mode='answered'` scan was added at
 `tests/e2e/guided-chat-accessibility.spec.js:59` so the same assertions run against services that replied. One
-offline case was added, `tests/workflow-place-choices.test.js:488`, which drives a town tap whose lookup was refused
+offline case was added, `tests/workflow-place-choices.test.js:621`, which drives a town tap whose lookup was refused
 and asserts the location is preserved, no farm is invented, the failure sentence appears, `doesNotMatch` the count
 claim, both way-ons are present and a second tap re-asks. All of it is green inside the gate below, so the stricter
 assertions were not traded against coverage.
@@ -5940,7 +5940,7 @@ and the region field separately. `docs/evidence/iter62-region-tap-negative-contr
 `docs/evidence/iter62-spec-four-projects-2026-11-20.log.gz` runs the whole spec once per project: `3 passed (2.7s)`,
 `3 passed (2.5s)`, `3 passed (2.7s)` and `3 passed (2.4s)` with no skips.
 
-The offline half is `tests/workflow-place-choices.test.js:598`, which pins the promise the fix makes to the farmer: a
+The offline half is `tests/workflow-place-choices.test.js:731`, which pins the promise the fix makes to the farmer: a
 tap whose buttons came from a list answers from that list, whatever the place service does afterwards.
 `docs/evidence/iter62-offline-negative-control-2026-11-20.log.gz` takes the cached-list short-circuit out of the tap
 path in `public/js/modules/workflow-assistant.js` and prints `ℹ tests 31`, `ℹ pass 30`, `ℹ fail 1` with `actual: 3`
@@ -6158,3 +6158,134 @@ and no live POWER request was made to find a station-year that really arrives th
 untested; what is tested is that when it happens the app neither ranks it as evidence nor caches it as a result. Real
 phones, Safari/WebKit, microphones, audio quality and any independent agronomic judgement about the rotations themselves
 remain outside every number above, as they have through the whole programme.
+
+### 64. A place list that refused answered "that name is not from here", and the plan changed country on the strength of it
+
+The switch check asks a question of the country the plan is already in: does this sentence name one of its own regions
+or towns, or does it name another country? Until this pass the read that answers it ended in a bare catch
+(`workflow-assistant.js:340`, `.catch(() => null)`), so a list that refused and a list that answered "no such row"
+produced the same `null` and the guard proceeded as if it had been told the name is not local. The country parser then
+took over. `artifacts/scratch/iter64` is gitignored, so the measurement is on the shelf instead:
+`docs/evidence/iter64-country-switch-probe-2026-11-20.log.gz` seeds a plan in China, region 22, with a point at
+40.8494,111.6869 and evidence already loaded, and asks for "Inner Mongolia" after three failed reads. The parser reads
+that name as the country Mongolia (`PARSE_INNER_MONGOLIA countries=["MN"]`), and the state after the refusal is
+`country=MN region=null place=null evidence=null` — the plan is in another country, the point the farmer chose is gone
+and the readings that justified the rotation are dropped — while the reply asked "Which part of Mongolia should we
+focus on, or would you like an overview of the whole country?". The same sentence with the list readable selects the
+region row and moves nothing, which is the whole of the difference this pass is about: a read that never completed was
+allowed to arbitrate a move.
+
+The guard no longer treats a refusal as an answer. A failed read now produces its own reply (`switchListUnreadable`,
+`workflow-assistant.js:717-733`): it names the read that could not be done, says which two readings it cannot tell
+apart, states that nothing was changed, and offers the two things that are still true — replay the sentence
+(`Ask that again`) and, if the farmer really meant the country, say so (`Switch to Mongolia`). Four limits inside that
+shape, each with a case of its own. An explicit lead-in still switches during a refusal, because the fix must not
+become a blanket refusal to move anywhere. A read the runtime cancelled is rethrown rather than answered, so a stale
+sentence cannot move a plan the farmer has since re-targeted. A list that arrives in a shape the module cannot read
+offers the move and no retry, because a retry would ask for the same broken payload. And a row that is really in the
+saved list still wins against the parser: "Georgia" is a US region row (`GA`, 162 towns in
+`public/data/locations/US.json`) and also parses as the country Georgia, exactly as Inner Mongolia is a Chinese
+province that parses as Mongolia, so with a readable list the name stays in the country the plan is in.
+
+Six offline cases carry that, in `tests/workflow-place-choices.test.js`. They went red before they went green, in two
+steps that are both on the shelf: `docs/evidence/iter64-offline-cases-red-4-2026-11-20.log.gz` runs 35 cases with 4
+red against the module as `6ca7cca` shipped it, and `docs/evidence/iter64-offline-cases-red-3-2026-11-20.log.gz` runs
+the same 35 with 3 red once the guard was in — the explicit lead-in case was already green, and the case that had to
+be written for the stale-answer control was not there yet.
+`docs/evidence/iter64-offline-cases-green-37-2026-11-20.log.gz` is the file complete at 37 cases, all passing. Seven
+mutations then tried to prove those cases vacuous (`docs/evidence/iter64-offline-controls-2026-11-20.log.gz`): C1
+restores the bare catch (3 red), C2 swallows the cancellation rethrow (2), C3 drops the lead-in exemption at the
+refusal (1), C4 makes a schema failure offer a retry (1), C5 lets the parser win over a saved row (1), C6 removes the
+guard that runs after the switch read (1) and C7 makes the harness ignore which country the list belongs to (2). Every
+control restored the tree byte-identically (`restore_ok=true` on all seven), and the archive prints no `fail_count=0`:
+that is a check on the archive, not a figure in prose, because the first pass did print one.
+`docs/evidence/iter64-offline-controls-superseded-2026-11-20.log.gz` is the run before C6 had a case to detect it —
+`CONTROL C6 no guard after the switch read` over `fail_count=0` over an empty red list — and it stayed on the shelf
+because a control that leaves the suite green is a finding about the tests, not about the module.
+
+The page-level case took three attempts and both failures are worth the bytes they cost, because they were failures of
+the instrument rather than of the fix. The first draft built the plan in the step-1 form and then opened the
+assistant, and the route counter that was supposed to prove the guard had read a refused list reported nothing to
+count in all four projects (`docs/evidence/iter64-browser-red-form-built-plan-2026-11-20.log.gz`, red on the guard's
+own precondition line). The module explains why, and the explanation is queue item F1 below: a plan assembled in the
+form leaves the chat inactive, and an inactive chat answers a bare place name through the read-only crop path, which
+never reaches the switch guard. The second draft opened the plan inside the chat and built the second country in the
+form, which went green in both node projects and stayed uncounted in both static ones
+(`docs/evidence/iter64-browser-red-worker-cache-2026-11-20.log.gz`). The reason is three separate saved-list caches
+rather than two: the assistant's own LRU (`workflow-assistant.js:264`), the step-1 form's LRU (`location-picker.js:6`)
+and the client LRU the worker shares with every other consumer (`server/context/locations.js:9-34`). On the static
+transport that third cache lives inside the worker, so a list the form fetched is handed to the assistant without a
+request the page can see, and a page-side counter is blind to a read that never crossed the page boundary. It is an
+asymmetry in what the instrument can observe, and it is recorded as F2 rather than fixed: the two transports still
+answer identically, which is what the parity objective is about. No assertion was loosened to accommodate it. The case
+was rebuilt so the refusal is unavoidable on both transports — the plan opens in the chat, the point comes from
+`#example-location` (a control that needs no saved list), and the list is refused from the first message onward — and
+that shape is what `docs/evidence/iter64-browser-focused-green-2026-11-20.log.gz` runs green at 16 passed across the
+four projects.
+
+What those 16 cover is the farmer-visible claim, asserted as state rather than only as wording: after a refusal the
+country input still reads `US`, `#latitude` still holds the point the farmer chose, the region select is still
+untouched, the reply names the read that failed and the two readings it cannot separate and says
+`Nothing was changed`, and it contains neither `is selected` nor the follow-up question a real move would ask; the
+offers include the replay and the explicit switch. Then the replay is tapped with the list readable, its own request
+counted, so `counts.answered` growing is the proof the refusal was not cached as an answer — and the same sentence
+lands on the region row: `#place-region` moves off empty and off `__all__` while `#pest-country` is still `US`.
+Finally `switch to Georgia` is typed and the country becomes `GE`, because a guard that cannot be overridden would be
+a worse failure than the one it replaced. `docs/evidence/iter64-browser-control-2026-11-20.log.gz` is the non-vacuity
+witness: with the clause at `workflow-assistant.js:340` reverted to the shipped bare catch — the module hashing
+2a27d927af5aeca3cf0fa517dad8650f during that run — exactly the four new cases go red, `4 failed` and
+`12 passed (14.3s)`, on the first assertion of the new case, and
+`docs/evidence/iter64-browser-restore-green-2026-11-20.log.gz` restores the delivered bytes, rebuilds and runs the
+same 16 green again. The whole offline suite on the finished tree is `ℹ tests 280 / ℹ pass 280 / ℹ fail 0 /
+ℹ skipped 0` (`docs/evidence/iter64-offline-final-full-2026-11-20.log.gz`, which prints all 280 case lines), and its
+companion `docs/evidence/iter64-offline-final-2026-11-20.log.gz` is the same reading from the wrapper's filtered
+capture: the run banner, the tally lines and six case lines rather than 280, kept because that banner stamps the run
+with `SOURCE_MD5=89d6666e1f567185c2bcf2b7ee2e4bda`. Either way the count is iteration 63's 274 plus these six.
+
+Five things this pass found and deliberately did not touch, each with a witness so the next iteration starts from
+bytes rather than from a recollection. F1: a place name said while no chat plan is open does not reach the switch
+guard at all. `docs/evidence/iter64-bare-name-crop-misanswer-2026-11-20.log.gz` asks the delivered module "Georgia"
+with the plan closed and gets `active_before=false active_after=false asked=[]` over an answer with no text blocks and
+no offers, and the same for "Inner Mongolia": the assistant declines to arbitrate rather than declining in words. What
+the farmer then sees comes from the layer above it — the first browser draft's live snapshot showed that page
+answering "Inner Mongolia" as a crop question naming Mongolia, which was read in a terminal and is deliberately not
+quoted here as archived evidence. The pass that fixes F1 should pin the page-level sentence in a case first. The two
+states can also disagree: `chat.js:165` invalidates the assistant when the location changes without clearing `active`,
+which only goes false at `workflow-assistant.js:611`. F2: the worker-side list cache above, which makes page-side
+request counters blind on the static transport. F3: the `Ask that again` recovery re-selects the region and leaves the
+town unselected, so the reply promising that nothing was changed is followed by a replay that changes one thing — the
+new case asserts the region select is untouched by the refusal, and says nothing about the replay. F4:
+`workflow-assistant.js:279` still swallows a list refusal inside `exactPlaceRow` with `.catch(() => null)`. F5: the
+coordinate sentence reads `/api/locations` outside any try/catch at `workflow-assistant.js:455`, and
+`docs/evidence/iter64-coord-list-refused-probe-2026-11-20.log.gz` shows what that costs: after `chooseCountry` has
+already moved the plan to India with its location cleared (`{"country":"IN","location":null}`), `respond()` throws
+`Error: The saved place list could not load.` and the farmer's sentence dies at the top level in `chat.js:149` instead
+of being answered.
+
+The four-project gate ran on those bytes and on nothing else. `Running 296 tests using 1 worker` opens it and
+`296 passed (23.4m)` over `GATE_EXIT=0` closes it (`docs/evidence/iter64-gate-2026-11-20.log.gz`), from
+`ITER64_GATE_START 2026-11-20T12:06:56Z` to `ITER64_GATE_DONE 2026-11-20T12:30:21Z` at HEAD `6ca7cca`, under a wrapper
+line recording `MD5 assistant=89d6666e1f567185c2bcf2b7ee2e4bda` and `spec=dccb577c480dc3224afacd393b88ccf1`. The new
+case is one of the 296 in every project: `place-list-refused.spec.js:224:3` appears four times in those bytes and
+passed four times, so the guard is executed over the static worker and the Node server on both viewports rather than
+only in the node harness. The census taken after it reads `Total: 296 tests in 27 files`
+(`docs/evidence/iter64-census-2026-11-20.log.gz`) - iteration 63's 292 plus this one case in each of the four projects
+- and neither log contains the string `skipped` anywhere; the four census lines containing "skips" are the titles of
+the `help-and-explanations.spec.js:41` cases. Two live field refusals were absorbed inside the gate, each
+`CONTEXT_UNAVAILABLE` at status 502 with `8 attempts across 3 services` from `server/context/farms.js:89`, inside
+`tests/e2e/review-phase-a.spec.js:34`, which passed in 4.0 m; they are recorded as upstream capacity rather than as a
+repair, as in the three gates before them.
+
+After the gate closed, the comment in the spec that pointed at a gitignored scratch path was re-pointed at the shelf
+archive holding those same bytes. The edit is line-count-neutral (297 lines before and after) and provably
+single-line: reverting that one line in the delivered file reproduces the digest the gate header recorded,
+`dccb577c480dc3224afacd393b88ccf1`, exactly. The spec then ran again on the bytes this pass delivers,
+`16 passed (11.4s)` at exit 0 (`docs/evidence/iter64-spec-comment-shelf-repoint-2026-11-20.log.gz`), and no
+application byte moved afterwards - `public/js/modules/workflow-assistant.js` still hashes
+`89d6666e1f567185c2bcf2b7ee2e4bda`.
+
+UNVERIFIED, and unchanged by this pass: every refusal in these runs is produced by route interception or by a stub in
+a node harness, so no live GeoNames outage was reproduced and none is claimed; the four projects are Chromium desktop
+and mobile over two transports, which leaves Safari, WebKit and real phones outside every number above; microphones
+and audio quality stay out of scope; and the agronomy in the compared rotations still has no independent expert
+review.

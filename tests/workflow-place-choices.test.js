@@ -54,7 +54,8 @@ function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGrace
   };
   const assistant = createWorkflowAssistant({ getState: () => state, actions, fieldsGraceMs,
     request: async path => { const url = new URL(path, 'https://test.invalid');
-      if (url.pathname === '/api/locations') { listAsked++; if (pendingFailure) { const error = new Error(pendingFailure.message); Object.assign(error, pendingFailure); throw error; } return locations; }
+      // `locations` may be a function of the requested country so a test can hold a different saved list per country.
+      if (url.pathname === '/api/locations') { listAsked++; if (pendingFailure) { const error = new Error(pendingFailure.message); Object.assign(error, pendingFailure); throw error; } return typeof locations === 'function' ? locations(url.searchParams.get('country')) : locations; }
       throw new Error('unexpected test request ' + path); } });
   return { assistant, calls, state, listAsked: () => listAsked, failList: failure => { pendingFailure = failure; } };
 }
@@ -357,6 +358,124 @@ test('“Use Inner Mongolia” answers the region question instead of moving the
   assert.deepEqual(towns(answer).map(choice => choice.label), ['Hohhot', 'Baotou'], 'its own towns follow the region');
 });
 
+// Measured 20 Nov on the iteration-63 tree by an offline walk of the shipped assistant: the guard above decides
+// whether a name that contains another country is a local place by reading the saved list, and the
+// `.catch(() => null)` that then stood on public/js/modules/workflow-assistant.js:340 answered that question with
+// “not a local place” whenever the read refused. With a China plan holding region 20, a Hohhot point and loaded
+// evidence, the same sentence reported `country=MN region=null place=null evidence=null` after the calls
+// `country:MN`, `inputs` and `step:location`, and answered “Which part of Mongolia should we focus on…”. The list
+// never answered, so it could not have said either; a page restored without a list read is how a farmer reaches
+// that state. Iteration 61 and 62 fixed the two other readers of the same refused list (:356 and chooseRegion).
+const mongoliaPlan = (harness, observations = { kind: 'TEST evidence the farmer already loaded' }) => {
+  // The region, the town point and the evidence are seeded rather than clicked through: a refused list makes the
+  // click path unreachable, and what is under test is the switch decision, not the picker.
+  harness.state.regionCode = '20';
+  harness.state.location = { latitude: 40.8494, longitude: 111.6649, placeId: 'n1' };
+  harness.state.observations = observations;
+  return { country: harness.state.country, regionCode: harness.state.regionCode,
+    place: harness.state.location.placeId, observations: harness.state.observations,
+    allowed: [...harness.state.planning.allowedCrops] };
+};
+
+test('a switch an unreadable list cannot arbitrate keeps the plan and names the read it could not do', async () => {
+  const harness = setup({ country: 'CN', locations: provinces, listFailure: UNAVAILABLE });
+  const { assistant, state, calls, listAsked, failList } = harness;
+  await assistant.respond('Help me plan a rotation in China');
+  const before = mongoliaPlan(harness);
+  const asked = listAsked();
+  const answer = await assistant.respond('Inner Mongolia');
+  assert.deepEqual({ country: state.country, regionCode: state.regionCode, place: state.location?.placeId,
+    observations: state.observations, allowed: [...state.planning.allowedCrops] }, before,
+    'a place-list read that never answered moved the plan to another country');
+  assert.equal(calls.filter(call => call === 'country').length, 0, 'chooseCountry ran on the strength of a list it could not read');
+  const sentence = text(answer), labels = answer.followUps.map(choice => choice.label);
+  assert.match(sentence, /could not be read just now/, `the refusal must name the read it could not do: ${sentence}`);
+  assert.match(sentence, /China/);
+  assert.match(sentence, /Mongolia/, 'the country the sentence could have meant is named, not hidden');
+  assert.match(sentence, /cannot tell whether/, 'the ambiguity the list would have settled is stated as an ambiguity');
+  for (const claim of ['is selected', 'Which part of Mongolia', 'No towns are listed', 'nothing matches'])
+    assert.ok(!sentence.includes(claim), `an unanswered read was answered as a finding: ${sentence}`);
+  assert.equal(listAsked(), asked + 1, 'one read per ask, and no second read to compose the reply');
+  // Both ways out have to work: replaying the sentence re-checks against a list that may now answer, and the
+  // explicit move is honoured without one.
+  assert.ok(labels.some(label => /again/i.test(label)) && labels.some(label => /switch to mongolia/i.test(label)),
+    `the refusal must offer the replay and the outright move: ${labels.join(' | ')}`);
+  failList(null);
+  const replay = answer.followUps.findIndex(choice => /again/i.test(choice.label));
+  const after = await click(assistant, answer, replay);
+  assert.equal(state.country, 'CN', 'a retry whose list now answers may not move the country either');
+  assert.match(text(after), /Inner Mongolia is selected/, `the replay should settle as the local place: ${text(after)}`);
+});
+
+test('a list whose shape cannot be read offers the move outright and no retry it has ruled out', async () => {
+  const harness = setup({ country: 'CN', locations: provinces, listFailure: SCHEMA });
+  const { assistant, state, calls } = harness;
+  await assistant.respond('Help me plan a rotation in China');
+  mongoliaPlan(harness);
+  const answer = await assistant.respond('Inner Mongolia');
+  const sentence = text(answer), labels = answer.followUps.map(choice => choice.label);
+  assert.match(sentence, /arrived in a shape this app cannot read/);
+  assert.ok(!labels.some(label => /again/i.test(label)), `a retry the reply has just ruled out is offered anyway: ${labels.join(' | ')}`);
+  assert.ok(labels.some(label => /switch to mongolia/i.test(label)), 'the way out that needs no list stays offered');
+  assert.equal(state.country, 'CN');
+  assert.equal(calls.filter(call => call === 'country').length, 0);
+});
+
+// The positive control that makes the case above a classification and not a blanket refusal: a farmer who names the
+// move outright has said what the unread list could not settle, so the refused read must not stop it. The reply the
+// switch lands on is the neutral country question at public/js/modules/workflow-assistant.js:574, which claims nothing
+// about the list and keeps the button that does state the gap.
+test('“switch to Mongolia” still moves the plan when the saved list refuses', async () => {
+  const harness = setup({ country: 'CN', locations: provinces, listFailure: UNAVAILABLE });
+  const { assistant, state, calls } = harness;
+  await assistant.respond('Help me plan a rotation in China');
+  mongoliaPlan(harness);
+  const answer = await assistant.respond('switch to Mongolia');
+  assert.equal(state.country, 'MN', 'an explicit move must not be held hostage to a place list');
+  assert.ok(calls.includes('country'), 'chooseCountry never ran for the country the farmer named');
+  const labels = answer.followUps.map(choice => choice.label);
+  assert.match(text(answer), /Which part of Mongolia/, `the move should land on the country question: ${text(answer)}`);
+  assert.ok(labels.includes('A specific area'), `the button that states the refused read is gone: ${labels.join(' | ')}`);
+  const area = await click(assistant, answer, answer.followUps.findIndex(choice => choice.label === 'A specific area'));
+  assert.match(text(area), /could not be read just now/, 'and the probe does name the read that failed');
+});
+
+test('a cancelled list read is a stop, not a licence to move the plan to another country', async () => {
+  // No list is ever read successfully here, so the switch guard is the first thing a second cancellation reaches.
+  const harness = setup({ country: 'CN', locations: provinces, listFailure: { message: 'Planning context changed', name: 'AbortError', cancelled: true } });
+  const { assistant, state, calls } = harness;
+  const isStop = error => error.cancelled === true && error.name === 'AbortError';
+  await assert.rejects(() => assistant.respond('Help me plan a rotation in China'), isStop,
+    'a cancelled read at the country question already answers as data');
+  mongoliaPlan(harness);
+  await assert.rejects(() => assistant.respond('Inner Mongolia'), isStop,
+    'a stop the page asked for did not settle as a stop');
+  assert.equal(state.country, 'CN', 'a cancelled read must move nothing');
+  assert.equal(calls.filter(call => call === 'country').length, 0);
+});
+
+// The switch check awaits on its own, so it has the stale half of the same hazard: a list that answers after the
+// farmer moved on must not be the thing that decides whether the plan changes country.
+test('a list answering the switch check after the plan moved on stops instead of answering', async () => {
+  let settle; const late = new Promise(resolve => { settle = resolve; });
+  let list = provinces;
+  const harness = setup({ country: 'CN', locations: () => list,
+    listFailure: { message: 'The saved town list could not load.', status: 503, code: 'LOCATIONS_UNAVAILABLE' } });
+  await harness.assistant.respond('Help me plan a rotation in China');
+  harness.failList(null);
+  list = late;
+  // Said outright, so nothing else can stop the switch: if the late read is allowed to arbitrate, `chooseCountry`
+  // runs and clears the plan before the next guard notices the session is gone.
+  const inFlight = harness.assistant.respond('switch to Mongolia');
+  await new Promise(yielded => setTimeout(yielded, 0));
+  harness.assistant.invalidate();
+  settle(provinces);
+  await assert.rejects(() => inFlight, error => error.cancelled === true && error.name === 'AbortError',
+    'a list that answered after the session moved on was allowed to arbitrate the switch');
+  assert.equal(harness.state.country, 'CN', 'the stale read moved the plan after the farmer had left the session');
+  assert.equal(harness.calls.filter(call => call === 'country').length, 0);
+});
+
 const states = { regions: [{ id: 'GA', name: 'Georgia' }, { id: 'NJ', name: 'New Jersey' }],
   places: [{ id: 's1', name: 'Athens', regionCode: 'GA', latitude: 33.9609, longitude: -83.3779 },
     { id: 's2', name: 'Newark', regionCode: 'NJ', latitude: 40.7357, longitude: -74.1724 }] };
@@ -369,6 +488,20 @@ test('a state spelled like another country stays in the country the plan is alre
   assert.equal(state.regionCode, 'GA');
   assert.equal(calls.filter(call => call === 'country').length, 0);
   assert.match(text(answer), /^Georgia is selected/);
+});
+
+// The other side of the same clause: a farmer who says the move outright means the country even when the current
+// list holds a region of that spelling. Without this, “resolved locally whenever a row matches” would strand it.
+const georgiaCountry = { regions: [{ id: '14', name: 'Kakheti' }, { id: '65', name: 'Tbilisi' }],
+  places: [{ id: 'g1', name: 'Telavi', regionCode: '14', latitude: 41.9179, longitude: 45.4741 }] };
+test('“switch to Georgia” in a US plan means the country, not the Georgia region row', async () => {
+  const { assistant, state, calls } = setup({ country: 'US', locations: code => (code === 'US' ? states : georgiaCountry) });
+  await assistant.respond('Help me plan a rotation in the United States');
+  const answer = await assistant.respond('switch to Georgia');
+  assert.deepEqual({ country: state.country, regionCode: state.regionCode, location: state.location },
+    { country: 'GE', regionCode: null, location: null }, 'the lead-in names the country, and a US region row must not answer for it');
+  assert.ok(calls.includes('country') && !calls.includes('region'), 'chooseCountry never ran for the country the farmer named');
+  assert.match(text(answer), /Which part of Georgia/, 'the plan restarts as a question about the country the farmer moved to');
 });
 
 // Luxembourg, Djibouti, Martinique, San Marino, Taiwan, Guadeloupe and Guatemala each save a region
