@@ -58,6 +58,8 @@ npm run test:place-audit        # offline census of every saved place row (scrip
 npm run test:chat-matrix        # walks every supported code through chat buttons in real Chrome
 npm run test:chat-place         # one country, detailed place checks
 npm run test:country-spelling   # this engine's country spellings against Chrome's recognition module
+npm run test:choice-loss        # offline, no server: does an untouched retry land on the branch the tap chose?
+npm run test:tap-rejection      # real Chrome, both transports: can a tapped place button reject its send?
 node scripts/check-sourced-context.js
 node scripts/check-documentation.js   # add --external to also GET the public URLs
 node scripts/benchmark-mini-lm.js

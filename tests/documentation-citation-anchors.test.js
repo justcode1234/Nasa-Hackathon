@@ -173,8 +173,8 @@ const PINS = [
   { file: 'public/js/modules/workflow-assistant.js', line: 357, quote: 'catch (error) { if (error.cancelled === true) throw error; listFailed = error;', citedBy: 'docs/validation.md subsection 61, What was wrong' },
   { file: 'public/js/modules/workflow-assistant.js', line: 498, quote: 'is selected. Now choose a town in the Town list in step 1', citedBy: 'docs/validation.md subsection 61, The recovery the refusal promises' },
   { file: 'public/js/modules/workflow-assistant.js', line: 655, quote: 'if (listFailed) return placeListFailure(countryName, listFailed);', citedBy: 'docs/validation.md subsection 61, The whole-country escape' },
-  { file: 'public/js/modules/context.js', line: 245, quote: "await picker.setCountry(countryCode, { regionCode });", citedBy: 'docs/validation.md subsection 61, the second defect the browser run found' },
-  { file: 'public/js/modules/context.js', line: 246, quote: 'Choose a region from the current country list.', citedBy: 'docs/validation.md subsection 61, the sentence the stale dropdown threw' },
+  { file: 'public/js/modules/context.js', line: 248, quote: "const read = await picker.setCountry(countryCode, { regionCode });", citedBy: 'docs/validation.md subsection 61, the second defect the browser run found' },
+  { file: 'public/js/modules/context.js', line: 250, quote: 'Choose a region from the current country list.', citedBy: 'docs/validation.md subsection 61, the sentence the stale dropdown threw' },
   { file: 'public/js/lib/api.js', line: 13, quote: 'if (!response.ok) throw identified(new Error(data?.error?.message', citedBy: 'docs/validation.md subsection 60, and AGENTS.md §13 queue (both re-pointed by 61)' },
   { file: 'public/js/lib/api.js', line: 60, quote: 'function identified(error, status, code) {', citedBy: 'docs/validation.md subsection 60, The fix keeps identity only when a status came' },
   { file: 'public/js/lib/api.js', line: 70, quote: "return typeof data.status === 'number' ? identified(new Error(data.error), data.status, data.code)", citedBy: 'docs/validation.md subsection 60, the worker half' },
@@ -285,7 +285,7 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   // Subsection 61's own eight numbers plus the ±1 repair band this iteration re-pointed by tool rather than by hand.
   for (const [file, line] of [['public/js/modules/workflow-assistant.js', 224], ['public/js/modules/workflow-assistant.js', 357],
     ['public/js/modules/workflow-assistant.js', 498], ['public/js/modules/workflow-assistant.js', 655],
-    ['public/js/modules/context.js', 245], ['public/js/modules/context.js', 246],
+    ['public/js/modules/context.js', 248], ['public/js/modules/context.js', 250],
     ['public/js/lib/api.js', 13], ['tests/e2e/place-list-refused.spec.js', 36], ['tests/e2e/place-list-refused.spec.js', 100], ['docs/validation.md', 1007], ['docs/validation.md', 1021], ['docs/validation.md', 1035], ['tests/documentation-citation-anchors.test.js', 380]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 61 quotes while changing it and is no longer pinned`);
   }

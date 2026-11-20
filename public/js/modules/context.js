@@ -241,8 +241,12 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
       // failed it keeps its `List unavailable` placeholder until the country is reselected, so a region the chat
       // just recovered would be refused by a form still holding the older failure. Ask this country's rows of the
       // picker first — it caches a body only on a successful read, so that is a real re-check after a failure and
-      // costs nothing on a healthy list — and then the sentence below means what it says.
-      await picker.setCountry(countryCode, { regionCode });
+      // costs nothing on a healthy list — and then the sentence below means what it says. A picker that never got
+      // an answer is reported as its own lookup failing: measured 20 Nov (scripts/place-tap-rejection-probe.mjs),
+      // a tapped region on the Node transport died here with the sentence below, which described the farmer's tap
+      // for a read that never completed.
+      const read = await picker.setCountry(countryCode, { regionCode });
+      if (!read.ok) throw new Error(`The saved place list for ${names.of(countryCode)} could not be read just now, so the region you chose could not be checked against it. Nothing was selected; step 1 shows the same failure and its lists refill once that lookup answers.`);
       if (![...$('place-region').options].some(option => option.value === regionCode && option.value !== '__all__')) throw new Error('Choose a region from the current country list.');
       onCountrySelection(options);
       return locationChanged({ countryCode, regionCode, ...options });

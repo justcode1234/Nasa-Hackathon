@@ -2140,6 +2140,40 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   the P0 19 Nov field-discovery red stays undiagnosed. Safari/WebKit, real phones, microphones, audio quality
   and independent agronomy stay UNVERIFIED. Nothing was deployed, main is untouched, no NASA portal edit.
 
+- **20 Nov, same branch: iteration 62 - goal 6 was measured rather than assumed, and the sentence that blamed the
+  farmer for a read the app itself made was replaced.** `scripts/place-choice-loss-census.mjs` (`npm run
+  test:choice-loss`) and `scripts/place-tap-rejection-probe.mjs` (`npm run test:tap-rejection`) left
+  `artifacts/` and are listed in `docs/development.md`. The census prints `TAPS_MEASURED 2338 | region 655 |
+  town 1683` with `DIVERGENT 27`, every one of them at the town stage, and the probe cannot make a tapped town
+  reject on either transport, so goal 6's restore-the-armed-identity half is NOT shipped - no reachable
+  rejection can exercise it - and goal 7 now says why. What the probe did reach: on the Node transport a tapped
+  region's form-side re-read (`public/js/modules/context.js:248`) can refuse, and the ask died with `Choose a
+  region from the current country list.` - a sentence about the farmer's aim, for a lookup that never answered.
+  `public/js/modules/location-picker.js:33` and `public/js/modules/location-picker.js:50` now report `{ ok }`
+  from `setCountry` (8 lines changed, DOM behaviour untouched) and `public/js/modules/context.js:249` throws the
+  sentence naming the failed read (6 changed), keeping `public/js/modules/context.js:250` for a code a list that
+  answered really does not hold. A tapped region still fails when the read genuinely refuses: the composer keeps
+  the sentence, Send stays live and the retry re-selects it, while on the static build the armed refusal never
+  reached the read at all (`B_REQUESTS_DURING_TAP 0`, answered from a cache the probe cannot see), so whether the
+  two transports really differ here is unmeasured - the transport-parity item this pass did not close. Coverage
+  is one case at `tests/e2e/place-list-refused.spec.js:154` (71 lines) that settles
+  on structure instead of wording - its first version timed out for 60 s waiting for an answered ask while the
+  tap was failing, and the probe had the same class of flaw as a sentence whitelist that read
+  `region_tap_rejects=false` after the fix made the sentence honest - plus
+  `tests/workflow-place-choices.test.js:598` (35 lines). Both go red on their own control: reverting
+  `context.js` prints `1 failed` naming the blamed sentence, and removing the cached-list short-circuit from
+  `public/js/modules/workflow-assistant.js` prints `ℹ tests 31` / `ℹ fail 1` with `actual: 3` against
+  `expected: 2`. The spec reads `3 passed` in each of the four projects, the offline suite is `ℹ tests 270` /
+  `ℹ pass 270` / `ℹ fail 0` in 24.3 s and the guard set `DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0`. Moving
+  those two lines re-pointed four citations over three documents and both pins in
+  `tests/documentation-citation-anchors.test.js` that name them. The four-project gate on the delivered bytes
+  opens `Running 272 tests using 1 worker` and closes `272 passed (17.9m)`, exit 0, with no `✘` line and no skip
+  anywhere: the new case ran in all four projects at positions 45, 113, 181 and 249
+  (`docs/evidence/iter62-gate-2026-11-20.log.gz`), and the one live-service event in those bytes is a
+  field-lookup refusal (`CONTEXT_UNAVAILABLE`, 8 attempts across 3 services, `server/context/farms.js:89`) that
+  the retry inside another case absorbed; `cdn.jsdelivr.net` and `did not run` appear nowhere in it.
+  Safari/WebKit, real phones, microphones and independent agronomy stay UNVERIFIED.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry
@@ -2367,7 +2401,7 @@ The offline probe that first measured it is still
 `docs/evidence/review-goals-place-list-2026-11-20.mjs.gz`; extract the source and run it with
 Node from the repository root; its imports resolve from that working directory. Reproduced since in both transports by
 `tests/e2e/place-list-refused.spec.js`, with validation.md subsection 61 carrying the gate, the single-file revert
-controls and the second defect the browser run exposed at `public/js/modules/context.js:245`: the region the refusal
+controls and the second defect the browser run exposed at `public/js/modules/context.js:248`: the region the refusal
 tells the farmer to pick was validated against a step-1 dropdown still holding the older failure.
 Goal 2's half is shipped too — `public/js/lib/api.js:13` and `public/js/lib/api.js:70` carry the status and code each
 transport reported beside the sentence, and `public/js/lib/api.js:54` keeps a runtime exception with no status behind it
@@ -2416,9 +2450,16 @@ when existing behaviour is sound. No goal is marked executed merely by appearing
    three classes apart.
 5. Exercise list retry after recovery; keep the country and never cache a failed read as an empty list. CLOSED 20 Nov
    as VERIFIED FIX: the case refuses twice, counts the re-ask, then taps a recovered region; that tap found the second
-   defect (`public/js/modules/context.js:245`) and is asserted at `tests/e2e/place-list-refused.spec.js:92`.
-6. Reproduce pending-choice loss through a reachable UI failure, or close the candidate as sound.
-7. If reachable, retain the exact tapped identity on retry without overwriting a newer typed draft.
+   defect (`public/js/modules/context.js:248`) and is asserted at `tests/e2e/place-list-refused.spec.js:92`.
+6. Reproduce pending-choice loss through a reachable UI failure, or close the candidate as sound. CLOSED 20 Nov on
+   both halves: the census prints `TAPS_MEASURED 2338` / `DIVERGENT 27` / `DIVERGENT_BY_STAGE town=27`, and the probe
+   cannot make a tapped town reject on either transport (`town_tap_rejects=false` twice), so the loss is latent and the
+   candidate closes as VERIFIED SOUND. What the probe did reach is a tapped *region* whose form-side re-read refuses:
+   it rejected with `Choose a region from the current country list.`, and that half closes as VERIFIED FIX
+   (`docs/validation.md` subsection 62, `docs/evidence/iter62-tap-rejection-before-fix-2026-11-20.log.gz`).
+7. If reachable, retain the exact tapped identity on retry without overwriting a newer typed draft. NOT SHIPPED 20 Nov:
+   its "if reachable" precondition was measured and is not met (goal 6), so there is no rejection that could exercise
+   a restored identity, and no test could hold one. Re-open only with a reachable failure.
 8. Invalidate retained choices after location changes, cancellation or a different message.
 9. Replace unsupported device blame on model-load failure with safe, observable failure wording.
 10. Prove model refusal/unload/reload leaves deterministic chat and planning usable, with no fake success.

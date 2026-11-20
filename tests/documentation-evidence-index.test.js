@@ -740,10 +740,104 @@ const TALLIES = [
       'every shipped evidence file is named by a document or carried by the index',
       'the committed index is what the shipped generator prints, line for line'],
     marks: 0, absent: ['✘', 'not ok'] },
+  // Iteration 62, goal 6: the measurement that decided the work, and the two runs that show what the shipped fix
+  // changes. The census had to be archived because the ledger now quotes 2,338 taps from it; the probe pair had to be
+  // archived as a pair because the before run is the only witness that the node transport really did blame the farmer.
+  { archive: 'docs/evidence/iter62-census-2026-11-20.log.gz',
+    lines: ['TAPS_MEASURED 2338 | region 655 | town 1683', 'INSTRUMENT_FAILURES 0', 'DIVERGENT 27',
+      'DIVERGENT_BY_STAGE town=27', 'DIVERGENT_BY_CATEGORY region-changed=7 point-changed-or-lost=20',
+      'CENSUS_DONE', 'CENSUS_EXIT=0'],
+    phrases: ['HEAD bf4bc8c63085ba7bd357b7c598af9e4d56168de1', 'test:choice-loss'],
+    marks: 0, absent: ['✘', 'not ok'] },
+  { archive: 'docs/evidence/iter62-tap-rejection-before-fix-2026-11-20.log.gz',
+    lines: ['VERDICT_NODE town_tap_rejects=false region_tap_rejects=true',
+      'VERDICT_STATIC town_tap_rejects=false region_tap_rejects=false',
+      'B_TAP_STATUS Choose a region from the current country list.',
+      'B_TAP_REGION_FIELD ""', 'TAPREJ_NODE_EXIT=0'],
+    phrases: ['B_TAP_COMPOSER "Hamilton city"', 'A_REJECTED false', 'B_REGION_FIELD_PLACEHOLDER "List unavailable'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter62-tap-rejection-after-fix-2026-11-20.log.gz',
+    lines: ['VERDICT_NODE town_tap_rejects=false region_tap_rejects=true',
+      'VERDICT_STATIC town_tap_rejects=false region_tap_rejects=false',
+      'B_STATUS The saved place list for Bermuda could not be read just now, so the region you chose could not be ' +
+      'checked against it. Nothing was selected; step 1 shows the same failure and its lists refill once that lookup ' +
+      'answers.', 'B_LAST_SPEAKER You', 'B_REQUESTS_DURING_TAP 0 []', 'B_REQUESTS_DURING_TAP 1 []'],
+    phrases: ['HEAD bf4bc8c63085ba7bd357b7c598af9e4d56168de1', 'COUNTS {"A":3,"B":0}', 'COUNTS {"A":2,"B":1}'],
+    marks: 0, absent: ['Choose a region from the current country list'] },
+  { archive: 'docs/evidence/iter62-region-tap-red-2026-11-20.log.gz',
+    lines: ['1 failed'],
+    phrases: ['Received string:  "Choose a region from the current country list."', 'Timeout: 60000ms',
+      'place-list-refused.spec.js:154:3'],
+    marks: 1 },
+  { archive: 'docs/evidence/iter62-region-tap-negative-control-2026-11-20.log.gz',
+    lines: ['1 failed'],
+    phrases: ["Error: a list read that failed is reported as the farmer's own choice: Choose a region from the " +
+      'current country list.', 'Received string:      "Choose a region from the current country list."'],
+    marks: 1 },
+  { archive: 'docs/evidence/iter62-region-tap-green-2026-11-20.log.gz',
+    lines: ['1 passed (2.1s)'], phrases: ['place-list-refused.spec.js:154:3'], marks: 0 },
+  { archive: 'docs/evidence/iter62-spec-four-projects-2026-11-20.log.gz',
+    lines: ['3 passed (2.7s)', '3 passed (2.5s)', '3 passed (2.4s)'],
+    phrases: ['[static-desktop] › tests/e2e/place-list-refused.spec.js:154:3', '[static-mobile] › tests/e2e/place-list-refused.spec.js:154:3',
+      '[node-desktop] › tests/e2e/place-list-refused.spec.js:154:3', '[node-mobile] › tests/e2e/place-list-refused.spec.js:154:3'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter62-offline-negative-control-2026-11-20.log.gz',
+    lines: ['ℹ tests 31', 'ℹ pass 30', 'ℹ fail 1'],
+    phrases: ['the tapped region was looked up again instead of read from the list its buttons came from',
+      'actual: 3', 'expected: 2'],
+    onlyReds: ['a tapped place choice answers without re-reading the list, whatever the place service does afterwards'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter62-offline-pair-green-2026-11-20.log.gz',
+    lines: ['ℹ tests 33', 'ℹ pass 33', 'ℹ fail 0', 'ℹ skipped 0'],
+    phrases: ['a tapped place choice answers without re-reading the list, whatever the place service does afterwards',
+      'moving while country lookup is pending starts a lookup for the new coordinates and ignores the old result'],
+    marks: 0, absent: ['✘', 'not ok'] },
+  // The three closing readings of this pass: what the four-project suite now holds, the whole offline suite on the
+  // shipped bytes and the guard set re-run after the iteration-62 ledger bullet existed. The offline header names the
+  // 87-row table it executed against, which is the row count before the three rows below it - the bootstrap asymmetry
+  // subsections 57, 58 and 61 record, restated here rather than hidden by re-running.
+  { archive: 'docs/evidence/iter62-census-playwright-2026-11-20.log.gz',
+    lines: ['Total: 272 tests in 26 files', 'CENSUS_EXIT=0'],
+    phrases: ['[static-desktop] › place-list-refused.spec.js:154:3', '[static-mobile] › place-list-refused.spec.js:154:3',
+      '[node-desktop] › place-list-refused.spec.js:154:3', '[node-mobile] › place-list-refused.spec.js:154:3',
+      'a tapped region the form cannot check names the read that failed and still leaves its region selectable'],
+    marks: 0, absent: ['test.skip', 'fixme(', 'CENSUS_EXIT=1'] },
+  { archive: 'docs/evidence/iter62-offline-final-2026-11-20.log.gz',
+    lines: ['ℹ tests 270', 'ℹ pass 270', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0'],
+    phrases: ['OFFLINE_CMD node --test tests/*.test.js (iteration 62, tally table 87 rows, index regenerated)',
+      'HEAD bf4bc8c63085ba7bd357b7c598af9e4d56168de1', 'duration_ms 24349.294625'],
+    marks: 0, absent: ['✖', 'OFFLINE_EXIT=1', 'ℹ fail 1'] },
+  { archive: 'docs/evidence/iter62-docsguards-final-2026-11-20.log.gz',
+    lines: ['GUARD_FILES 5', 'ℹ tests 28', 'ℹ pass 28', 'ℹ fail 0', 'ℹ skipped 0',
+      'DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0', 'DOCSGUARDS_CHILD_EXIT 0'],
+    phrases: ['CMD node scripts/docs-guards.mjs on the iteration-62 tree after the AGENTS.md section 10 bullet was written',
+      'GUARD_FILE tests/documentation-citation-anchors.test.js'],
+    marks: 0, absent: ['✖', 'fail 1', ': SKIP -'] },
+  // The gate on the delivered bytes, archived from the log the runner wrote rather than from a re-run: 272 cases across
+  // the four projects, green, with the one live-service event of the pass (a field-lookup refusal the server absorbed)
+  // still in it. The new region-tap case is quoted once per project because the parity claim is that all four agree.
+  { archive: 'docs/evidence/iter62-gate-2026-11-20.log.gz',
+    lines: ['272 passed (17.9m)', 'GATE_EXIT=0', 'Running 272 tests using 1 worker'],
+    phrases: ['GIT_HEAD bf4bc8c63085ba7bd357b7c598af9e4d56168de1', 'ITER62_GATE_DONE 2026-11-20T09:55:09Z',
+      'server/context/farms.js:89', "code: 'CONTEXT_UNAVAILABLE'",
+      'The field lookup services are busy or unavailable (8 attempts across 3 services). No fields were invented.',
+      '✓   45 [static-desktop] › tests/e2e/place-list-refused.spec.js:154:3',
+      '✓  113 [static-mobile] › tests/e2e/place-list-refused.spec.js:154:3',
+      '✓  181 [node-desktop] › tests/e2e/place-list-refused.spec.js:154:3',
+      '✓  249 [node-mobile] › tests/e2e/place-list-refused.spec.js:154:3'],
+    marks: 0, absent: ['✘', 'GATE_EXIT=1', 'did not run', 'cdn.jsdelivr.net'] },
+  // The offline suite re-run once the gate archive was on the shelf and this table carried 91 rows. Its header names
+  // that size, which is the row count before its own row below - the asymmetry the paragraph quoting it states.
+  { archive: 'docs/evidence/iter62-offline-gate-row-2026-11-20.log.gz',
+    lines: ['ℹ tests 270', 'ℹ pass 270', 'ℹ fail 0', 'ℹ skipped 0', 'ℹ duration_ms 26503.551708'],
+    phrases: ['CMD node --test tests/*.test.js (iteration 62, tally table 91 rows, index regenerated at evidence 661, ' +
+      'the gate archive already shelved)', 'HEAD bf4bc8c63085ba7bd357b7c598af9e4d56168de1',
+      'EXIT_OBSERVED_BY_ARCHIVER 0'],
+    marks: 0, absent: ['✖', 'ℹ fail 1', 'OFFLINE_EXIT'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 78, `the table carries ${TALLIES.length} archives; subsections 57 through 60 quote more runs than ` +
+  assert.ok(TALLIES.length >= 92, `the table carries ${TALLIES.length} archives; subsections 57 through 62 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -770,7 +864,14 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'census whose eight place-list needles are what the handoff\'s "+8 over iteration 60" rests on, and 76 with the ' +
     'isolated four-project re-check of the five cases that gate lost, and 78 with the offline suite and the guard set ' +
     'that executed against a 76-row table and exited under their own process status rather than a pipeline\'s last ' +
-    'command.');
+    'command, and 87 when iteration 62 archived the 2,338-tap place-choice census, the before/after tap-rejection ' +
+    'probe pair, the red the new browser case printed against the unfixed `chooseRegion`, its reverted-bytes control, ' +
+    'the focused green, the same spec once per project and the offline control/green pair, and 90 when this pass\'s ' +
+    'three closing readings joined it: the `--list` census at 272 in 26 files, the whole offline suite at 270 and the ' +
+    'guard set at 28 re-run after the iteration-62 ledger bullet existed, and 91 when the four-project gate on the ' +
+    'delivered bytes finished green at 272 and was archived from the log its own runner wrote, which is the only ' +
+    'reading in this pass that exercised the browser transports rather than a `--list` count or an offline suite, and ' +
+    '92 when the offline suite that ran against that 91-row table joined it, carrying the gate archive on the shelf.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

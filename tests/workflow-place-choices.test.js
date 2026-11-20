@@ -586,3 +586,38 @@ test('an answered empty list keeps its wording and a cancelled read is never ans
     'a stop the page asked for must settle as a stop, not as a reply about the farmer\'s country');
   assert.equal(cancelled.state.location, null, 'a cancelled read must select nothing on the way out');
 });
+
+// Iteration 62, goal 6. public/js/modules/chat.js:93 lifts the armed `workflowChoice` out of `pendingChoice` before the
+// await, and its catch at :154-157 writes the sentence back to the composer and not the choice - so a tapped button
+// whose send rejects comes back as a typed message. scripts/place-choice-loss-census.mjs measured what that costs over
+// every saved list: 27 of 1,683 town taps land on a different branch, 7 of them on another region's towns, because a
+// town button says "Use <name>" and only its id says which row. The case below pins why the page does not reach that
+// state today: a place button a farmer can tap never re-reads the saved list, so there is no uncaught read left on the
+// tap and the ask settles as a reply rather than a rejection. It goes red the moment a tap starts depending on a live
+// read, which is exactly when the restore asymmetry stops being theoretical and the pair has to be restored together.
+test('a tapped place choice answers without re-reading the list, whatever the place service does afterwards', async () => {
+  const { assistant, state, listAsked, failList } = setup({ country: 'IN', locations: indiaLocations });
+  await assistant.respond('Help me plan a rotation in India. Crops: tomato, cabbage, bulb onion.');
+  const area = await assistant.respond('A specific area');
+  const asked = listAsked();
+  assert.ok(asked > 0, 'the buttons below are built from a saved list the plan actually read');
+  // From here every saved-list read refuses, and any other path the harness is asked for throws already.
+  failList(UNAVAILABLE);
+  const indexOf = (answer, type) => answer.followUps.findIndex(choice => choice.workflowChoice?.type === type);
+  const region = await click(assistant, area, area.followUps.findIndex(choice => choice.label === 'Maharashtra'));
+  assert.equal(listAsked(), asked, 'the tapped region was looked up again instead of read from the list its buttons came from');
+  assert.match(text(region), /Maharashtra is selected\. Now choose a town/);
+  const town = await click(assistant, region, indexOf(region, 'town'));
+  assert.equal(listAsked(), asked, 'the tapped town re-read the saved list');
+  assert.ok(state.location, 'the town point the tap chose is in place');
+  assert.match(text(town), /Pune is selected as a town point/);
+  const fieldTap = indexOf(town, 'farm');
+  assert.ok(fieldTap >= 0, `the town tap left no mapped field to tap: ${town.followUps.map(choice => choice.label).join(' | ')}`);
+  const field = await click(assistant, town, fieldTap);
+  assert.equal(listAsked(), asked, 'the tapped field re-read the saved list');
+  assert.ok(state.farm, 'the field the tap chose is selected');
+  for (const answer of [region, town, field]) {
+    assert.ok(answer, 'a tapped place choice answered');
+    assert.doesNotMatch(text(answer), /could not be read|did not complete/, 'a tap that needed no read is not reported as a failed one');
+  }
+});

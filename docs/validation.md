@@ -4257,7 +4257,7 @@ Limits. What iteration 51 covers is the four producers, and it covers them on bo
   sentence reads the same whichever side answers. Nine page-side sites still print whatever their own `catch` caught -
   `public/js/modules/context.js:80,114,136`, `public/js/modules/terrain-controls.js:56`,
   `public/js/modules/map3d.js:36,83`, `public/js/modules/gibs-controls.js:40`, `public/js/app.js:307` and
-  `public/js/modules/location-picker.js:46`, which assigns the message instead of interpolating it - and for an error
+  `public/js/modules/location-picker.js:50`, which assigns the message instead of interpolating it - and for an error
   raised outside those four producers, such as the MapLibre failure `map3d.js:36` reports deliberately, a runtime's
   own wording still reaches the screen. The worker exit is also structurally unlike the Node exit:
   `server/index.js:71` replaces the text of every 500 with one sentence while `public/js/lib/core-worker-entry.js:9`
@@ -5750,16 +5750,16 @@ has ruled out. Both keep the country selected, leave the point unset and invent 
 `public/js/modules/workflow-assistant.js:357` now rethrows a cancellation instead of answering for it, and the four
 sites that used to fall through to the empty-list wording (`:406`, `:417`, `:563` and the whole-country escape through
 `public/js/modules/workflow-assistant.js:655`) return the failure reply instead. Nothing caches a failure: the
-assistant's `locationLists`, `public/js/modules/location-picker.js:30` and the server-side read all store on success
+assistant's `locationLists`, `public/js/modules/location-picker.js:33` and the server-side read all store on success
 only, which is what makes the retry in the reproducing case a real re-ask rather than a replay.
 
 **The second defect, found by running it in a browser and not by reading the code.** The refusal sentence tells the
 farmer to use the region list, so the spec tapped an offered region after the list recovered — and on the first run of
 `tests/e2e/place-list-refused.spec.js` that tap produced no reply at all: `#answer-status` read "Choose a region from
-the current country list." `public/js/modules/context.js:246` validates the region against `#place-region`'s options,
+the current country list." `public/js/modules/context.js:250` validates the region against `#place-region`'s options,
 which the picker fills asynchronously and which still held its `List unavailable` placeholder from the failed read; the
 assistant's own retry refreshed only the assistant's cache. A recovery the app names has to be pressable, so
-`public/js/modules/context.js:245` now asks the picker for that country's rows before validating, which costs nothing on
+`public/js/modules/context.js:248` now asks the picker for that country's rows before validating, which costs nothing on
 a healthy list because failures were never cached. The failed run is kept red on purpose:
 `docs/evidence/iter61-browser-red-2026-11-20.log.gz` is the record of it, and the same case now asserts
 `tests/e2e/place-list-refused.spec.js:92` as well as the reply.
@@ -5869,3 +5869,127 @@ status, which is zero whether or not the suite failed. The numbers in those two 
 line that would have certified them, and it is the same trap the census archive hit in subsection 61's first capture.
 These two runs executed against a 76-row table, so the two rows that pin them are 77 and 78 and their headers say 76 -
 subsection 57's asymmetry again, stated rather than hidden.
+
+### 62. A tapped region was refused for where the farmer aimed, and the button loss it was meant to explain turned out to be unreachable
+
+Goal 6 asks for the armed-choice loss to be reproduced through a reachable failure or closed as sound. The mechanism is
+on the record above: `public/js/modules/chat.js:93` clears `pendingChoice` before the await, and the catch that
+restores the sentence at `public/js/modules/chat.js:156` restores the text and not the choice, so a send that rejects
+is retried as a typed sentence. Two instruments were written for the question and both are shipped now, listed in
+`docs/development.md` and in `package.json`: `scripts/place-choice-loss-census.mjs` (`npm run test:choice-loss`) drives
+every place button the classifier can offer and counts the taps whose retry lands on a different branch, and
+`scripts/place-tap-rejection-probe.mjs` (`npm run test:tap-rejection`) cuts one read at a time in a real page and asks
+whether a tap can be made to reject at all.
+
+The census (`docs/evidence/iter62-census-2026-11-20.log.gz`, both runs of it) prints `TAPS_MEASURED 2338 | region 655
+| town 1683`, `INSTRUMENT_FAILURES 0`, `DIVERGENT 27`, `DIVERGENT_BY_STAGE town=27` and `DIVERGENT_BY_CATEGORY
+region-changed=7 point-changed-or-lost=20`. So the cost is real and it is one-stage deep: a lost choice never moved
+the region a farmer was choosing, and all 27 divergences sit at the town stage, where the re-sent sentence is read
+again as free text. Nothing in that number says a farmer can *cause* it.
+
+The probe answers that. Section A arms a refusal for everything a town tap reads (saved lists, the reverse lookup, the
+field lookup, the country crop, the water reads) and then taps the town: `A_REJECTED false` with
+`VERDICT_STATIC town_tap_rejects=false region_tap_rejects=false` and the same in `VERDICT_NODE`. A tapped town cannot
+be made to reject on either transport, because the answer it needs is already in the message the button came from. The
+pair-restore this goal had been written to request - keep the identity beside the sentence and re-arm it on retry -
+therefore stays unshipped: with no reachable failure there is no test that can hold it, and an untestable
+restore-and-retry path in the composer is exactly the kind of code this loop has been removing. Goal 6's town half
+closes as VERIFIED SOUND on that measurement, and goal 7 stays open because its precondition was never reached.
+
+Section B is a different matter, and it is reachable. On the Node transport the form checks the tapped region by
+reading the list for itself at `public/js/modules/context.js:248`, so a read that refuses at the moment of the tap
+rejects the send. `docs/evidence/iter62-tap-rejection-before-fix-2026-11-20.log.gz` records what the farmer was then
+told: `B_REQUESTS_DURING_TAP 1`, `B_TAP_STATUS Choose a region from the current country list.`,
+`B_TAP_COMPOSER "Hamilton city"`, no assistant reply, and `B_TAP_REGION_FIELD ""`. That sentence describes the
+farmer's aim, and the farmer's aim was fine: the region is in the list, and the read that could not confirm it is the
+one the app made a second later. On the static build the same section prints `B_REQUESTS_DURING_TAP 0`, and that zero
+is the limit of the instrument rather than a measured cache hit: no list request was visible in the page or in the
+worker while the tap ran, so the refusal armed for it never reached the read, the tap was answered from a cache the
+probe cannot see (the picker's page-side `Map` at `public/js/modules/location-picker.js:33` or the shared list
+cache at `server/context/locations.js:12`), and `region_tap_rejects=false` on static is therefore not evidence that
+a static farmer is spared the failure - only that this harness cannot arm it there.
+
+The instrument was wrong before it was right, and that is worth recording: the first version of the probe decided the
+verdict by matching the status line against a list of failure wordings. After the fix landed it printed
+`region_tap_rejects=false` while the tap was still failing, because the sentence it had been taught to look for had
+been replaced by an honest one. The verdict is now structural (`B_LAST_SPEAKER`, i.e. whether an `Assistant` article
+was appended, plus the composer's value), which is what makes the before/after archives comparable at all.
+
+Shipped with this: `public/js/modules/location-picker.js:33` and `public/js/modules/location-picker.js:50` -
+`setCountry` now reports its outcome as `{ ok }` instead of only rendering a sentence, so a caller outside step 1 can
+tell a list that refused from a list that answered without the row; `public/js/modules/context.js:249` throws the
+sentence naming the failed read, and `public/js/modules/context.js:250` keeps the old sentence for the case it
+actually describes, a code that is not in a list that answered. The picker caches a body only on a successful read, so
+the re-check it performs costs nothing on a healthy list and is a real second look after a failure.
+
+`docs/evidence/iter62-tap-rejection-after-fix-2026-11-20.log.gz` holds the same two transports after the change. The
+Node section still rejects - a genuinely refused read cannot confirm anything, and this fix does not pretend otherwise
+- but now says `B_STATUS The saved place list for Bermuda could not be read just now, so the region you chose could
+not be checked against it. Nothing was selected; step 1 shows the same failure and its lists refill once that lookup
+answers.`, keeps `B_COMPOSER "Hamilton city"` sendable and reports `PAGEERRORS 0`; the blamed sentence no longer
+appears in either run. Static is unchanged at `VERDICT_STATIC town_tap_rejects=false region_tap_rejects=false`.
+
+The regression is covered at three depths. `tests/e2e/place-list-refused.spec.js:154` drives the refused re-read in a
+real browser: `docs/evidence/iter62-region-tap-red-2026-11-20.log.gz` is the case against the unfixed tree, which sat
+on a 60 s `Timeout: 60000ms` because the shared waiter only recognises an answered ask, so the case now settles on a
+wording-free signal (the history grew by an article and `#ask` answers again) and asserts the sentence, the composer
+and the region field separately. `docs/evidence/iter62-region-tap-negative-control-2026-11-20.log.gz` reverts
+`public/js/modules/context.js` to the base commit and goes red in 907 ms on
+`a list read that failed is reported as the farmer's own choice`, and
+`docs/evidence/iter62-region-tap-green-2026-11-20.log.gz` is the same case on the shipped bytes at `1 passed (2.1s)`.
+`docs/evidence/iter62-spec-four-projects-2026-11-20.log.gz` runs the whole spec once per project: `3 passed (2.7s)`,
+`3 passed (2.5s)`, `3 passed (2.7s)` and `3 passed (2.4s)` with no skips.
+
+The offline half is `tests/workflow-place-choices.test.js:598`, which pins the promise the fix makes to the farmer: a
+tap whose buttons came from a list answers from that list, whatever the place service does afterwards.
+`docs/evidence/iter62-offline-negative-control-2026-11-20.log.gz` takes the cached-list short-circuit out of the tap
+path in `public/js/modules/workflow-assistant.js` and prints `ℹ tests 31`, `ℹ pass 30`, `ℹ fail 1` with `actual: 3`
+against `expected: 2`; `docs/evidence/iter62-offline-pair-green-2026-11-20.log.gz` is the restored tree at
+`ℹ tests 33`, `ℹ pass 33`, `ℹ fail 0`. The control file was put back byte for byte before the green run.
+
+What this does not fix, and stays queued: the same tap still succeeds on the static build and refuses on Node under
+this instrument, and the next pass has to establish whether that is a cache asymmetry or an instrumentation
+asymmetry before it can call the transports equivalent here. The readable version of the item is to arm the refusal on
+a path both transports share - `server/context/locations.js:12` answers from a country-keyed `Map` that never expires
+and is filled by the worker's own `/data/locations/…` read, which the harness can already see - and to drive the tap
+before any successful read warms a cache, so a static `region_tap_rejects` is measured rather than inferred. Real
+phones, Safari/WebKit, microphones and independent agronomy remain UNVERIFIED, as does any claim about a service that
+was offline while these runs executed: every read above is answered from the shipped data or from a refusal the
+harness armed.
+
+Three closing readings finish the pass. `docs/evidence/iter62-census-playwright-2026-11-20.log.gz` is `npx playwright
+test --list` on these bytes: `Total: 272 tests in 26 files`, `CENSUS_EXIT=0`, four entries for
+`place-list-refused.spec.js:154` (one per project) and no skipped entry - the only lines containing "skips" are the
+titles of the `help-and-explanations.spec.js:41` cases. `docs/evidence/iter62-offline-final-2026-11-20.log.gz` is the
+whole offline suite on the shipped bytes: `ℹ tests 270`, `ℹ pass 270`, `ℹ fail 0`, `ℹ skipped 0`, `OFFLINE_EXIT=0` in
+24.3 s. `docs/evidence/iter62-docsguards-final-2026-11-20.log.gz` is the guard set standing alone after this
+subsection and the ledger bullet existed: `GUARD_FILES 5`, `ℹ tests 28`, `ℹ pass 28`, `ℹ fail 0`, `DOCSGUARDS_SUMMARY
+tests 28 | pass 28 | fail 0 | skipped 0`, `DOCSGUARDS_CHILD_EXIT 0`.
+
+The pass then closed on the browsers themselves. `docs/evidence/iter62-gate-2026-11-20.log.gz` is `npm run test:e2e`
+with one worker over all four projects on the delivered bytes, opening `Running 272 tests using 1 worker` and closing
+`272 passed (17.9m)` and `GATE_EXIT=0`: no `✘` line, no skip and no `did not run` anywhere in it, with
+`tests/e2e/place-list-refused.spec.js:154:3` executed in every project at positions 45, 113, 181 and 249 in 637 ms,
+673 ms, 783 ms and 729 ms. The single live-service event in those bytes is `server/context/farms.js:89` answering
+`CONTEXT_UNAVAILABLE` - "The field lookup services are busy or unavailable (8 attempts across 3 services). No fields
+were invented." - which the retry inside another case absorbed, so it is recorded as upstream capacity and not as a
+defect this pass introduced. Of the four readings, this is the only one that executed the browser transports rather
+than counting their titles, and it is the reading the parity claim in the paragraph above still does not have: the
+gate proves the two transports agree on every case that runs, not on a refusal only one transport can be armed with.
+
+Those five archives joined the tally table, which took its floor from 87 to 92 and names the census, the suite, the
+guard set, the gate and the re-run of the suite below; `node scripts/evidence-index-generator.mjs` printed `orphan 162 /
+evidence 661` after the gate archive landed and `orphan 162 / evidence 662` after the offline one did, where iteration
+61 left 657, so each new archive is cited by prose and none of them added an orphan. The gate row is the one this pass
+adds that checks a run it did not produce: the archive was shelved from the log the gate's own runner wrote, and the row
+was written afterwards against those bytes. `docs/evidence/iter62-offline-gate-row-2026-11-20.log.gz` is the whole
+offline suite re-run on that finished tree - `ℹ tests 270`, `ℹ pass 270`, `ℹ fail 0`, `ℹ skipped 0`,
+`ℹ duration_ms 26503.551708`, no `✖` line - and its header states the 91-row table it executed against, because its own
+row is the 92nd.
+
+After both rows landed, the guard set and the whole offline suite were re-run on the finished tree: `GUARD_FILES 5`,
+`ℹ tests 28`, `ℹ pass 28`, `ℹ fail 0`, `ℹ skipped 0` and `DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0`,
+exit 0, then `ℹ tests 270`, `ℹ pass 270`, `ℹ fail 0`, `ℹ skipped 0`, `ℹ duration_ms 29035.152417`, exit 0. Those two
+readings are quoted here rather than archived: an archive cannot be the evidence for the table rows that name it, which
+is the asymmetry subsections 57, 58 and 61 record for their own iterations, and the row count only grows once a run is
+on the shelf.

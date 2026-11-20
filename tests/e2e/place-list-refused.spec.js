@@ -141,4 +141,75 @@ test.describe('a country place list that cannot be read', () => {
     expect(errors, 'page errors while the saved list arrived unreadable twice').toEqual([]);
     await info.attach('Unreadable place list', { body: Buffer.from(JSON.stringify({ counts, sentence, offered, status }, null, 2)), contentType: 'application/json' });
   });
+
+  // Iteration 62, goal 6. A tapped region button is checked twice against two different copies of the same list: the
+  // chat answers from the copy it read itself (public/js/modules/workflow-assistant.js:614) while `chooseRegion`
+  // re-reads for the form before it accepts the tapped code (public/js/modules/context.js:248-250). Measured on both
+  // transports with scripts/place-tap-rejection-probe.mjs: on the Node build the form's re-read goes out at the moment
+  // of the tap and a refusal there escapes as a rejected ask - no reply, the sentence alone in the composer, and the
+  // status line reading `Choose a region from the current country list.`, which describes the farmer's tap and not the
+  // read that failed; on the static build the worker answers that same read from its own cache and the tap succeeds.
+  // The two transports are allowed to differ about the cache. They are not allowed to differ about which of these
+  // things happened, and neither may report a failed lookup as a mistake the farmer made.
+  test('a tapped region the form cannot check names the read that failed and still leaves its region selectable', async ({ page, context }, info) => {
+    test.setTimeout(240_000);
+    const REGION = 'Hamilton city';
+    const errors = [], counts = { refused: 0, answered: 0 };
+    const unavailable = await authoredFailure(async name => { throw new Error(`HTTP 503 ${name}`); });
+    let mode = 'refused';
+    page.on('pageerror', error => errors.push(error.message));
+    await context.route(lists, async route => {
+      const url = route.request().url();
+      counts[mode]++;
+      if (mode === 'answered') return route.continue();
+      return url.includes('/api/locations')
+        ? route.fulfill({ ...unavailable, contentType: 'application/json', body: JSON.stringify(unavailable.body) })
+        : route.abort('failed');
+    });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await expect(page.locator('#catalog-status')).toContainText('Choose a country');
+    await page.getByRole('button', { name: 'Open FieldShift assistant', exact: true }).click();
+    await send(page, 'Help me plan a rotation in Bermuda');
+    await tap(page, 'A specific area');
+    await tap(page, 'Try the place list again');
+    mode = 'answered';
+    await tap(page, 'Try the place list again');
+    const offered = (await last(page).locator('button[data-choice-type="region"]').allTextContents()).map(label => label.trim());
+    expect(offered, `the recovered list offers the regions it holds: ${offered.join(' | ')}`).toContain(REGION);
+
+    // The chat is healthy and the form is not: this is the state whose re-read the two transports answer differently.
+    // Neither wait below is `ready()` - this case exists to read the sentence the ask settles on, so it waits for the
+    // ask to finish (the farmer's own message in the history and Send live again) rather than for any wording, which
+    // is what lets it report a wrong sentence instead of timing out on it or passing on the previous step's status.
+    mode = 'refused';
+    const articles = () => page.locator('#chat-history article').count();
+    const settled = async since => { await expect(async () => {
+      expect(await articles(), 'the send did not reach the chat').toBeGreaterThan(since);
+      expect(await page.locator('#ask').isEnabled(), 'the send is still in flight').toBe(true);
+    }, 'the send finished answering').toPass({ timeout: 60_000 }); };
+    const beforeTap = await articles();
+    await last(page).locator('button[data-choice-type="region"]').filter({ hasText: new RegExp(`^${REGION}$`) }).click();
+    await settled(beforeTap);
+    const status = (await page.locator('#answer-status').textContent()).trim();
+    const spoken = `${status} ${await replyText(page)}`;
+    const selected = await page.locator('#place-region').inputValue();
+    expect(status, `a list read that failed is reported as the farmer's own choice: ${status}`)
+      .not.toMatch(/Choose a region from the current country list/i);
+    expect(spoken, `the tapped region is either selected, or the reply names the read that could not confirm it: ${spoken}`)
+      .toMatch(/is selected|could not be read/i);
+    expect(await page.locator('#question').inputValue(), 'the sentence has to stay sendable for exactly as long as nothing is selected')
+      .toBe(selected === '' ? REGION : '');
+
+    if (selected === '') {
+      const answered = counts.answered, beforeRetry = await articles();
+      mode = 'answered';
+      await page.getByRole('button', { name: 'Send', exact: true }).click();
+      await settled(beforeRetry);
+      expect(counts.answered, 'the retry on the restored sentence did not re-ask the list').toBeGreaterThan(answered);
+    }
+    expect(await page.locator('#place-region').inputValue(), 'the region the farmer tapped ends up selected on either transport').not.toBe('');
+    expect(await replyText(page), 'and the assistant confirms the region it holds').toContain(`${REGION} is selected`);
+    expect(errors, 'page errors while the form could not check a tapped region').toEqual([]);
+    await info.attach('Tapped region against a refused re-read', { body: Buffer.from(JSON.stringify({ counts, status, selected, offered }, null, 2)), contentType: 'application/json' });
+  });
 });

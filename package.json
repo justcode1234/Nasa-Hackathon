@@ -28,6 +28,8 @@
     "test:chat-place": "node scripts/chat-place-probe.mjs",
     "test:chat-matrix": "node scripts/chat-place-matrix-probe.mjs",
     "test:country-spelling": "node scripts/country-spelling-cross-engine-probe.mjs",
+    "test:choice-loss": "node scripts/place-choice-loss-census.mjs",
+    "test:tap-rejection": "node scripts/place-tap-rejection-probe.mjs",
     "test:release": "npm test && npm run test:e2e"
   },
   "dependencies": {

@@ -15,6 +15,9 @@ export function initLocationPicker({ request, onTown, onRegion }) {
       `${places.length.toLocaleString('en')} listed towns/cities ${regionCode === null ? 'in this country' : `in ${regionName(regionCode)}`}. ${data?.regions.some(region=>region.name) ? 'Choose a town or change the region filter.' : 'No named regions are available in this place list; choose a town directly, use the map or enter coordinates.'}` :
       'No towns are listed for this selection. Search a place, pick the map or enter coordinates.';
   }
+  // The outcome is reported as a structured fact because a caller outside step 1 has to tell a list that refused
+  // apart from a list that answered without the row: the sentences rendered below read the same either way, and
+  // `chooseRegion` must not describe a lookup that never completed as a place the farmer chose wrongly.
   async function setCountry(nextCountry, { regionCode = null, placeId = '' } = {}) {
     const version = ++revision;
     country = nextCountry;
@@ -25,10 +28,10 @@ export function initLocationPicker({ request, onTown, onRegion }) {
     $('place-region').closest('label').hidden=false;
     $('location-list-source').replaceChildren();
     $('location-list-status').textContent = country ? 'Loading the saved region and town list…' : 'Choose a country to browse regions and towns. No place name is needed.';
-    if (!country) return;
+    if (!country) return { ok: true };
     try {
       const result = cache.get(country) ?? await request(`/api/locations?country=${country}`);
-      if (version !== revision) return;
+      if (version !== revision) return { ok: true };
       data = result; cache.set(country, data);
       while (cache.size > 4) cache.delete(cache.keys().next().value);
       $('place-region').replaceChildren(el('option', 'All regions', { value: '__all__' }));
@@ -41,11 +44,13 @@ export function initLocationPicker({ request, onTown, onRegion }) {
       renderTowns($('place-region').value === '__all__' ? null : $('place-region').value, placeId);
       $('location-list-source').replaceChildren(el('p', `${data.source.title} · ${data.source.license} · snapshot retrieved ${data.source.retrievedAt}. ${data.source.coverage}`),
         list(data.notices), sourceLinks(['geonames-places'], [data.source]));
+      return { ok: true };
     } catch (error) {
-      if (version !== revision) return;
+      if (version !== revision) return { ok: true };
       $('location-list-status').textContent = error.message;
       $('place-region').replaceChildren(el('option', 'List unavailable — reselect country to retry', { value: '' }));
       $('place-town').replaceChildren(el('option', 'Use search, map or coordinates', { value: '' }));
+      return { ok: false };
     }
   }
   $('place-region').addEventListener('change', () => {
