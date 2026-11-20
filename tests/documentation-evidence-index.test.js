@@ -215,19 +215,156 @@ const TALLIES = [
       'CONTROL_RESTORED_RUN exit=0 ℹ tests 1 ℹ pass 1 ℹ fail 0', 'TALLY_CONTROLS2_EXIT=0',
       'GUARD_SHA256 f1d0a0c960b760acadfde3bd461a173f65d09bb1f48b922d3a047135258438ce'],
     absent: ['GREEN - CONTROL FAILED', 'SKIP - anchor text not found'] },
+  // Iteration 58. Subsection 58 quotes the sentence a farmer was shown before the fix, so the sentence is pinned to
+  // the bytes of the run that printed it rather than to the paragraph.
+  { archive: 'docs/evidence/iter58-focused-red-2026-11-20.log.gz', lines: ['Running 4 tests using 1 worker', '4 failed'],
+    phrases: ['Received string:      "Admiralty is selected as a town point. Choose the specific field; the town itself is not farmland. 0 mapped fields were returned.',
+      'a lookup that never completed must not be reported as a returned field count'] },
+  { archive: 'docs/evidence/iter58-focused-green-2026-11-20.log.gz',
+    lines: ['### a refused field lookup is reported as a failure, not as an empty map, and keeps a retry [static-desktop] status=passed at field-service-failure.spec.js:21',
+      '### a refused field lookup is reported as a failure, not as an empty map, and keeps a retry [node-mobile] status=passed at field-service-failure.spec.js:21',
+      'JSON_TALLY 4 passed expected=4 unexpected=0 flaky=0 skipped=0'],
+    phrases: ['The community field lookup did not complete', '"refuse": 6', '"refuse": 2'] },
+  { archive: 'docs/evidence/iter58-focused-green-json-2026-11-20.log.gz',
+    lines: ['"expected": 4,', '"unexpected": 0,', '"flaky": 0'],
+    phrases: ['a refused field lookup is reported as a failure, not as an empty map, and keeps a retry', 'static-mobile'] },
+  // The controls, both readings. The source-only run is kept because it is the measurement of a harness defect: the
+  // same four breaks it missed in the two static projects, the rebuilt run caught in all four.
+  { archive: 'docs/evidence/iter58-focused-controls-source-only-2026-11-20.log.gz',
+    lines: ['MISSED static-desktop static-mobile of 4 projects ran', 'CONTROLS_DONE 4 cases, 4 detected',
+      'CONTROL_RESTORED_RUN exit=0 4 passed'],
+    phrases: ['CASE nc-a-refusal-reported-as-empty-list: RED as required (exit 1, 2 failed / 2 passed)'] },
+  { archive: 'docs/evidence/iter58-focused-controls-2026-11-20.log.gz',
+    lines: ['BUILD_BASELINE exit=0 context.=e9f2c6ac6f9826df workflow=d6b54dd6ca75b153',
+      'MISSED none of 4 projects ran', 'CASE nc-d-selected-point-site-unclassified: RED as required (exit 1, 4 failed / 0 passed)',
+      'CONTROLS_DONE 4 cases, 4 detected', 'CONTROL_RESTORED_RUN exit=0 4 passed',
+      'CONTROL_SHA_AFTER public/js/modules/context.js e9f2c6ac6f9826df identical=true'],
+    phrases: ['DETECTED node-desktop node-mobile static-desktop static-mobile'] },
+  { archive: 'docs/evidence/iter58-neighbours-superseded-2026-11-20.log.gz', lines: ['Running 20 tests using 1 worker',
+    '8 failed', '12 passed (3.8m)'],
+    phrases: ["Expected substring: \"mapped fields were returned\"", 'guided-chat-accessibility.spec.js:17:1'] },
+  // One `[n/252] [project]` progress line per case is what `--reporter=line` prints, so the four project prefixes are
+  // how the gate itself proves the new case ran in all four transports rather than only in the focused run. The gate
+  // never prints `tests/e2e/live-fields.js`: that path is a helper module (`waitForLiveFields`), not a spec, which is
+  // why the 19 Nov red quoted a helper frame and named no spec. `code: 'CONTEXT_UNAVAILABLE'` is the pair of genuine
+  // upstream refusals the gate's own web server logged while those 252 cases ran.
+  { archive: 'docs/evidence/iter58-gate-2026-11-20.log.gz', lines: ['Running 252 tests using 1 worker',
+    '252 passed (27.6m)', 'playwright_exit=0'], marks: 0,
+    phrases: ["code: 'CONTEXT_UNAVAILABLE'",
+      '[20/252] [static-desktop] › tests/e2e/field-service-failure.spec.js:21:1',
+      '[83/252] [static-mobile] › tests/e2e/field-service-failure.spec.js:21:1',
+      '[146/252] [node-desktop] › tests/e2e/field-service-failure.spec.js:21:1',
+      '[209/252] [node-mobile] › tests/e2e/field-service-failure.spec.js:21:1'] },
+  { archive: 'docs/evidence/iter58-citation-drift-2026-11-20.log.gz',
+    lines: ['HEAD CITED_LINES_CHECKED 180 DRIFTED 26 INSIDE_DIFF_HUNKS 0',
+      'TREE CITED_LINES_CHECKED 179 DRIFTED 0 INSIDE_DIFF_HUNKS 1'] },
+  // The offline run that went red on the index's own header after this iteration's archives landed, kept because it is
+  // the proof the header guard fires; `onlyReds` says nothing else failed.
+  { archive: 'docs/evidence/iter58-offline-index-red-2026-11-20.log.gz',
+    lines: ['ℹ tests 259', 'ℹ pass 258', 'ℹ fail 1', 'OFFLINE_EXIT=1'],
+    onlyReds: ['the index header states counts its own rows and the filesystem agree with'] },
+  // The census behind "no skip in tests/e2e": subsection 58 reads 252 in 24 files, the skip scan's own `(none)` line and
+  // the four per-project entries of the new spec out of this archive rather than out of the prose.
+  { archive: 'docs/evidence/iter58-census-2026-11-20.log.gz',
+    lines: ['Total: 252 tests in 24 files', '(none)'],
+    phrases: ['field-service-failure.spec.js entries in the census:\n4'] },
+  { archive: 'docs/evidence/iter58-tally-controls-2026-11-20.log.gz',
+    lines: ['CONTROL_ROWS 25', 'CONTROL_RESTORED_IDENTICAL true', 'CONTROL_RESTORED_RUN exit=0 ℹ tests 1 ℹ pass 1 ℹ fail 0',
+      'CONTROLS_DONE 24 cases, 24 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, 0 skipped anchors'],
+    phrases: ['CONTROL_TARGET_SHA_BEFORE eaf7bc42673ff24d', 'CONTROL_TARGET_SHA_AFTER eaf7bc42673ff24d'] },
+  // Pass two of the same harness, kept because it is the pass that met the anchor rule instead of slipping past it:
+  // `CONTROL_RESTORED_IDENTICAL true` is a needle three rows pin, so the patch was refused and announced.
+  { archive: 'docs/evidence/iter58-tally-controls-run1-skipped-2026-11-20.log.gz',
+    lines: ['CONTROL_ROWS 29',
+      'CASE controls-own-row-restore-flag: SKIP - anchor matched 3 times, must match exactly once (nothing was patched)',
+      'CONTROLS_DONE 30 cases, 29 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, ' +
+      '1 skipped anchors'] },
+  { archive: 'docs/evidence/iter58-tally-controls-run2-32cases-2026-11-20.log.gz',
+    lines: ['CONTROLS_DONE 32 cases, 32 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, ' +
+      '0 skipped anchors'],
+    absent: [': SKIP - anchor'] },
+  // The pass whose coverage line is the point of the whole harness: a case count says nothing about which rows are
+  // attacked, so this one prints the row census and subsection 58 reads it back out of the archive.
+  { archive: 'docs/evidence/iter58-tally-controls-final-2026-11-20.log.gz',
+    lines: ['CONTROL_ROWS_IN_TABLE 29 ATTACKED 29 UNATTACKED 0', 'CONTROL_RESTORED_RUN exit=0 ℹ tests 1 ℹ pass 1 ℹ fail 0',
+      'CONTROLS_DONE 39 cases, 39 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, ' +
+      '0 skipped anchors'],
+    phrases: ['FLOOR_ANCHOR TALLIES.length >= 29, -> attacked by raising it to 999',
+      'CONTROL_TARGET_SHA_BEFORE e1088a17e718bbb0'] },
+  // Pass five, kept because it is the pass that printed the gap rather than hiding it: it attacked 30 of the 33 rows
+  // that existed and named the three it had not been taught to attack.
+  { archive: 'docs/evidence/iter58-tally-controls-pass5-2026-11-20.log.gz',
+    lines: ['CONTROL_ROWS 33', 'CONTROL_ROWS_IN_TABLE 33 ATTACKED 30 UNATTACKED 3', 'CONTROL_RESTORED_IDENTICAL true',
+      'CONTROL_RESTORED_RUN exit=0 ℹ tests 1 ℹ pass 1 ℹ fail 0',
+      'UNATTACKED iter58-tally-controls-run1-skipped-2026-11-20.log.gz',
+      'UNATTACKED iter58-tally-controls-run2-32cases-2026-11-20.log.gz',
+      'UNATTACKED iter58-tally-controls-final-2026-11-20.log.gz',
+      'CONTROLS_DONE 43 cases, 43 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, ' +
+      '0 skipped anchors'],
+    phrases: ['CONTROL_TARGET_SHA_BEFORE 50332367110e9d32', 'CONTROL_TARGET_SHA_AFTER 50332367110e9d32',
+      'CASE offline-row-wrong-tally-rows: RED aimed at iter58-offline (exit 1)'],
+    absent: [': SKIP - anchor'] },
+  // Pass six is the shipped coverage reading: every row that existed when it ran was attacked, including the rows the
+  // earlier passes could not reach. It has no `: SKIP -` absence because its own assertion echoes quote the skip line
+  // they were aimed at, which the archive therefore does print.
+  { archive: 'docs/evidence/iter58-tally-controls-pass6-2026-11-20.log.gz',
+    lines: ['CONTROL_ROWS 35', 'CONTROL_ROWS_IN_TABLE 35 ATTACKED 35 UNATTACKED 0', 'CONTROL_RESTORED_IDENTICAL true',
+      'CONTROL_RESTORED_RUN exit=0 ℹ tests 1 ℹ pass 1 ℹ fail 0',
+      'CONTROLS_DONE 53 cases, 53 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, ' +
+      '0 skipped anchors'],
+    phrases: ['CONTROL_TARGET_SHA_BEFORE ea4c8c62beef21c1', 'CONTROL_TARGET_SHA_AFTER ea4c8c62beef21c1',
+      // Deliberately cut before `assert.ok(`: the controls harness finds the floor with
+      // /assert\.ok\(TALLIES\.length >= (\d+),/ and requires exactly one hit, so a needle quoting a previous pass's
+      // floor line verbatim would be read as a second threshold and the floor attack would SKIP silently.
+      '(TALLIES.length >= 35, -> attacked by raising it to 1005'],
+    absent: ['GREEN - CONTROL FAILED'] },
+  { archive: 'docs/evidence/iter58-offline-prefinal-2026-11-20.log.gz',
+    lines: ['OFFLINE_PREFINAL_START 2026-11-20T02:48:20Z — npm test on the tree after the iteration-58 archives were shelved and the index regenerated',
+      'ℹ tests 259', 'ℹ pass 259', 'ℹ fail 0', 'OFFLINE_EXIT=0'],
+    absent: ['✖', 'OFFLINE_EXIT=1', 'ℹ fail 1'] },
+  // The shipped green `npm test` on the finished tree - the archive the ledger's offline-suite cell ends on. Its header
+  // prints `TALLY_ROWS 32` because this row is written after the run it pins, which is the self-reference subsection 58
+  // records for iteration 57 rather than something this table can fix.
+  { archive: 'docs/evidence/iter58-offline-2026-11-20.log.gz',
+    lines: ['TALLY_ROWS 32', 'DIRTY_ENTRIES 30', 'GIT_BRANCH fix/chat-flow-and-answers',
+      'ℹ tests 259', 'ℹ pass 259', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0'],
+    phrases: ['OFFLINE_FINAL_START 2026-11-20T03:24:18.508Z - npm test on the finished iteration-58 tree,'],
+    absent: ['✖', 'OFFLINE_EXIT=1', 'ℹ fail 1', ': SKIP -'] },
+  // The five guard files re-run on their own, which is the first check that can read a row about the shipped offline
+  // archive above; its header prints the row count it saw, so this archive carries one fewer than it checks.
+  { archive: 'docs/evidence/iter58-docsguards-final-2026-11-20.log.gz',
+    lines: ['GUARD_TABLE_ROWS 34', 'ℹ tests 24', 'ℹ pass 24', 'ℹ fail 0', 'ℹ skipped 0', 'DOCSGUARDS_EXIT=0'],
+    phrases: ['DOCSGUARDS_START 2026-11-20T03:30:47Z - the five documentation guard files re-run on the 34-row tally table'],
+    absent: ['✖', 'DOCSGUARDS_EXIT=1', 'ℹ fail 1'] },
+  // The provenance snapshot: every hash subsection 58 quotes for the shipped files, plus the remote-main reference the
+  // push recipe re-reads, has to be printed by this archive and not merely asserted next to it.
+  { archive: 'docs/evidence/iter58-provenance-2026-11-20.log.gz',
+    lines: ['PROVENANCE_ITERATION 58 dated 2026-11-20', 'GIT_HEAD d6ce8c884fd6979041113ccb035128aada97cbaf',
+      'GIT_BRANCH fix/chat-flow-and-answers',
+      'SHA public/js/modules/context.js e9f2c6ac6f9826df4dded0205e413a834739fc8d5cfecccd3c9535fa0e2222d2 15699B 244L',
+      'SHA public/js/modules/workflow-assistant.js d6b54dd6ca75b15335c5396b1a3457233193c129624259ee74b23909bf893d52 64057B 694L',
+      'SHA server/context/client.js 1bb7c539aff8ddde942cfa6bc0e268e461d7b2ee2b99ab95d0d4ad4d6046aa68 3419B 51L',
+      'PROVENANCE_DONE 9 shipped hashes'],
+    phrases: ['GIT_REMOTE_MAIN 4a54fa3fbd75f4b1ccaae238b00d439accf1d0d4'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 16, `the table carries ${TALLIES.length} archives; subsection 57 quotes more runs than ` +
-    'that, so a number in it is unguarded');
+  assert.ok(TALLIES.length >= 36, `the table carries ${TALLIES.length} archives; subsections 57 and 58 quote more runs than ` +
+    'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
+    'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
+    'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
+    'green pre-final offline suite and the provenance snapshot joined it, 32 when the skipped controls pass, the ' +
+    'superseded one and the pass that prints row coverage joined it, 33 when the shipped green offline run on the ' +
+    'finished tree joined it, 34 when the pass that printed the coverage gap joined it, 35 when the archive of the ' +
+    'five guard files re-run on their own joined it and 36 when the pass that attacks every row preceding it joined it.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }
-    catch { assert.fail(`${archive} is quoted by subsection 57 and is not a readable gzip in the repository`); }
+    catch { assert.fail(`${archive} is quoted by the ledger and is not a readable gzip in the repository`); }
     const got = text.split('\n').map(line => line.trim());
     for (const line of lines) assert.ok(got.includes(line), `${archive} never prints the line "${line}" the ledger reads out of it`);
     for (const phrase of phrases) assert.ok(text.includes(phrase), `${archive} never contains "${phrase}"`);
-    for (const needle of absent) assert.ok(!text.includes(needle), `${archive} contains "${needle}", which subsection 57 ` +
+    for (const needle of absent) assert.ok(!text.includes(needle), `${archive} contains "${needle}", which the ledger ` +
       'states that archive does not print');
     const crosses = got.filter(line => line.startsWith('✘'));
     if (marks !== undefined) assert.equal(crosses.length, marks, `${archive} prints ${crosses.length} ✘ case lines, not the ${marks} quoted`);
@@ -236,7 +373,7 @@ test('the tally of every archived run is printed by that archive, not by the pro
       // has to match exactly: a run red on more cases than the ledger says, or on a different one, is another run.
       const reds = [...new Set(got.filter(line => line.startsWith('✖ ')).map(line => line.slice(2).replace(/ \(\d+(\.\d+)?ms\)$/, '')).filter(name => name !== 'failing tests:'))].sort();
       assert.deepEqual(reds, [...onlyReds].sort(),
-        `${archive} was red on ${reds.join(' / ') || 'nothing'}, which is not the red set subsection 57 describes`);
+        `${archive} was red on ${reds.join(' / ') || 'nothing'}, which is not the red set the ledger describes`);
     }
     if (partial) {
       // A partial run has to stay visibly partial. If a tally ever appears in this file the archive is a different run

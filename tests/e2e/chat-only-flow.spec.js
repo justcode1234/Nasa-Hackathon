@@ -72,8 +72,13 @@ test('tapping only assistant buttons carries a plan from country to step 4',asyn
   expect(towns.at(-1),`the region prompt must keep a national escape`).toBe('Whole India');
   const town=await tapNth(page,0);
   await expect(last(page)).toContainText(`${town} is selected as a town point`);
-  await expect(last(page)).toContainText('mapped fields were returned');
-  await smoothChoices(page,'field prompt');
+  // Rewritten stricter 20 Nov, iteration 58: the field services are aborted above, so a field count here would mean
+  // the chat had read a transport refusal as an empty map (tests/e2e/field-service-failure.spec.js pins that
+  // sentence to answered lookups). The failure reply must name the failed lookup and keep both way-ons, and the
+  // chat-only walk depends on 'Use selected point' being one of them.
+  await expect(last(page)).toContainText(/field lookup did not complete/i);
+  await expect(last(page)).not.toContainText(/mapped fields were returned/);
+  expect(await smoothChoices(page,'field lookup failure')).toEqual(['Use selected point','Show mapped fields']);
   // The chat choice must show in step 1 and step 3's own controls, not only in the panel.
   await expect(page.locator('#latitude')).not.toHaveValue('');
   await expect(page.locator('#place-town')).not.toHaveValue('');

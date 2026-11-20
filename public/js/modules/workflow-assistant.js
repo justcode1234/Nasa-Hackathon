@@ -292,13 +292,21 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     // its whole 75 s server deadline, and the chat was awaiting that before confirming the farmer's tap.
     // The reply therefore waits this long at most, then says which part of the answer has not arrived.
     const fieldsOutcome = async () => {
-      const outcome = await Promise.race([findFields().then(() => 'done', error => ({ error })),
+      const outcome = await Promise.race([findFields().then(result => result?.ok === false ? 'failed' : 'done', error => ({ error })),
         new Promise(resolve => setTimeout(resolve, fieldsGraceMs, 'waiting'))]);
       guard();
       if (typeof outcome === 'object') throw outcome.error;
       return outcome;
     };
     const fieldsWaiting = message => reply(`${message} The shared OpenStreetMap field services have not answered yet, so no field list is shown and nothing was invented. You can continue with the selected point, or ask me to show the fields again in a moment.`,
+      [next('Use selected point', 'Use the selected point'), next('Show mapped fields', 'Show mapped fields around this point')],
+      [{ id: 'osm', title: 'OpenStreetMap contributors; community mapped land use, not verified ownership', url: 'https://www.openstreetmap.org/copyright' }]);
+    // Measured 20 Nov on all four Playwright projects: when the services refuse the lookup the failure is caught
+    // inside step 2, so the chat used to read the leftover empty `state.farms` as a result and answer "0 mapped
+    // fields were returned" — a claim about what is mapped near the farmer's point, drawn from a transport
+    // failure, with no retry offered. A refusal says which lookup failed, claims nothing about coverage, and
+    // keeps the same two way-ons the waiting reply already gives.
+    const fieldsFailed = message => reply(`${message} The community field lookup did not complete, so this app cannot say whether any mapped fields exist near this point. No field list is shown and no coverage conclusion is drawn. You can continue with the selected point, or ask me to show the fields again in a moment.`,
       [next('Use selected point', 'Use the selected point'), next('Show mapped fields', 'Show mapped fields around this point')],
       [{ id: 'osm', title: 'OpenStreetMap contributors; community mapped land use, not verified ownership', url: 'https://www.openstreetmap.org/copyright' }]);
     if (parsed.countries.length > 1) return reply('Which country should I work in first?', parsed.countries.slice(0, 3).map(country => next(COUNTRY_NAMES.of(country), `Help me plan a rotation in ${COUNTRY_NAMES.of(country)}`)));
@@ -446,7 +454,9 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     if (state.farm && (parsed.useFarm || !requestedCountry) && !placeMention) { pointAccepted = true; scope = 'area'; }
     if (parsed.findFarms && state.location) {
       progress('Step 1: finding community-mapped fields near the selected point…');
-      if (await fieldsOutcome() === 'waiting') return fieldsWaiting('Your selected point is still in place.');
+      const fields = await fieldsOutcome();
+      if (fields === 'waiting') return fieldsWaiting('Your selected point is still in place.');
+      if (fields === 'failed') return fieldsFailed('Your selected point is still in place.');
       return fieldPrompt(getState(), 'Choose the specific mapped field. Map coverage and crop tags may be incomplete.');
     }
     if (placeMention || !state.location || !pointAccepted) {
@@ -497,6 +507,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
         const fields = await fieldsOutcome();
         await keepInputs(); state = getState();
         if (fields === 'waiting') return fieldsWaiting(`${matches[0].name} is selected as a town point. The town itself is not farmland.`);
+        if (fields === 'failed') return fieldsFailed(`${matches[0].name} is selected as a town point. The town itself is not farmland.`);
         return fieldPrompt(state, `${matches[0].name} is selected as a town point. Choose the specific field; the town itself is not farmland.`);
       }
       if (matches.length > 1) {

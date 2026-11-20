@@ -1824,7 +1824,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   for and what lets the two falsified ledger lines be repaired instead of argued about. The defect was P2's last
   browser-side instance: `public/js/lib/api.js:54` decided a failed request was a cancellation by reading
   `reason?.name === 'AbortError'`, and four consumers (`public/js/app.js:236`, `public/js/app.js:296`,
-  `public/js/modules/chat.js:149`, `public/js/modules/workflow-assistant.js:404`) made the same test, so any
+  `public/js/modules/chat.js:149`, `public/js/modules/workflow-assistant.js:412`) made the same test, so any
   `AbortError` the runtime raised on its own - a dropped frame, an abort the page never requested - silenced the
   evidence status, hid `#retry-evidence`, and left the farmer with no sentence and no next step. The fix is one
   structured fact: `cancellation()` at `public/js/lib/api.js:49` sets `cancelled = true` where this app asked for
@@ -1938,6 +1938,64 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   not attempted. Safari/WebKit, real phones, microphones, audio quality and independent agronomy stay UNVERIFIED, and
   the fixtures prove the wiring replays rather than that the agronomy inside them is right. Next: P4 with the same
   reproduce-then-assert discipline, and the tally guard as the standard for what this ledger may write down as verified.
+
+- **20 Nov, same branch: iteration 58 - a field lookup that never completed was reported as a field count of zero.** The
+  farmer journey was audited at the point where it says something about the world, and the sentence it said was
+  `0 mapped fields were returned.` A refused lookup and an empty area produce the same words, so the app told a farmer
+  that no mapped fields exist near their point on the strength of a request that never answered. Root cause is two
+  layers of swallowed state: `public/js/modules/context.js` returned an empty list on every failure path, and
+  `public/js/modules/workflow-assistant.js:295` mapped any resolution at all onto its `done` branch. The fix makes the
+  outcome structured rather than inferred - `public/js/modules/context.js:123` returns `reason: 'no-location'`,
+  `:130` `superseded`, `:138` `{ ok: true, count }` and `:144` `lookup-failed`, and only `ok === false` reaches
+  `fieldsFailed` at `public/js/modules/workflow-assistant.js:309`, which both chat and the guided panel route through
+  (`:459` and `:510`). The replacement sentence names the failure, keeps the selected point and offers the retry:
+  `The community field lookup did not complete, so this app cannot say whether any mapped fields exist near this point.`
+  **Executed numbers.** `tests/e2e/field-service-failure.spec.js:21` reproduces it: on the pre-fix bytes
+  **4 failed / 0 passed** in all four projects with the defective sentence printed
+  (`docs/evidence/iter58-focused-red-2026-11-20.log.gz`), after the fix **4 passed / 0 failed / 0 skipped**
+  (`docs/evidence/iter58-focused-green-2026-11-20.log.gz`, raw report `docs/evidence/iter58-focused-green-json-2026-11-20.log.gz`
+  with `expected=4 unexpected=0 flaky=0`). The refusal phases have to run before the answered phase because the first
+  successful lookup is cached for 24 h (`tests/e2e/field-service-failure.spec.js:55-60`). One case is worth stealing:
+  the two `static-*` projects serve `dist/client`, a build of `public/`, so a source-only patch is invisible to them:
+  the source-only control run reports the two node projects only
+  (`docs/evidence/iter58-focused-controls-source-only-2026-11-20.log.gz`, `MISSED static-desktop static-mobile`), while
+  the rebuilt run (`docs/evidence/iter58-focused-controls-2026-11-20.log.gz`) detects four of four half-fixes.
+  The four superseded neighbour assertions were rewritten stricter rather than deleted; their pre-fix reading is
+  `8 failed / 12 passed (3.8m)` (`docs/evidence/iter58-neighbours-superseded-2026-11-20.log.gz`). The four-project gate
+  is **252 passed / 0 failed / 0 skipped (27.6 m)**, exit 0, with the new case executed once per transport
+  (`docs/evidence/iter58-gate-2026-11-20.log.gz`), and it absorbed two live
+  `server/context/farms.js:89` `code: 'CONTEXT_UNAVAILABLE'` refusals without calling them passes. The census on these
+  bytes reads `Total: 252 tests in 24 files` with no skip anywhere under `tests/e2e`
+  (`docs/evidence/iter58-census-2026-11-20.log.gz`), so iteration 57's 248 in 23 gained four cases in one new spec
+  file. `tests/workflow-place-choices.test.js:488` adds the offline half, and the tally guard now also reads the
+  census, the controls runs, the provenance snapshot and the green pre-final offline suite out of the gzip bytes. The
+  controls harness ran six times and all six readings ship. Pass five is the one that reported its own gap:
+  `CONTROL_ROWS_IN_TABLE 33 ATTACKED 30 UNATTACKED 3` names the three earlier controls archives it had never attacked
+  (`docs/evidence/iter58-tally-controls-pass5-2026-11-20.log.gz`), and pass six closed it with
+  `CONTROL_ROWS_IN_TABLE 35 ATTACKED 35 UNATTACKED 0` above `CONTROLS_DONE 53 cases, 53 detections aimed` and nothing
+  skipped (`docs/evidence/iter58-tally-controls-pass6-2026-11-20.log.gz`). Pass four's
+  `CONTROL_ROWS_IN_TABLE 29 ATTACKED 29 UNATTACKED 0`
+  (`docs/evidence/iter58-tally-controls-final-2026-11-20.log.gz`) stayed true only of the rows that existed when it
+  read them, and the pass before it printed `CONTROLS_DONE 30 cases, 29 detections aimed, 0 red-but-unaimed,
+  0 invalid patches, 0 green controls, 1 skipped anchors` because the needle it aimed at is pinned by three rows, so
+  the harness refused the patch rather than attacking a neighbour
+  (`docs/evidence/iter58-tally-controls-run1-skipped-2026-11-20.log.gz`). The last two archives of this iteration -
+  the shipped `npm test` on the finished tree at **259 passed / 0 failed** under `TALLY_ROWS 32`
+  (`docs/evidence/iter58-offline-2026-11-20.log.gz`) and the five documentation guard files re-run after it at
+  **24 passed / 0 failed** under `GUARD_TABLE_ROWS 34`
+  (`docs/evidence/iter58-docsguards-final-2026-11-20.log.gz`) - each carry a tally row, and the one row no pass can
+  attack is pass six's own, which subsection 58 states. Two of this iteration's findings are about the instruments,
+  not the product:
+  `docs/evidence/iter58-offline-index-red-2026-11-20.log.gz` is a **258 passed / 1 failed** run red on exactly the
+  index-header case, because shelving archives before regenerating `docs/evidence-index.md` is its own defect, and
+  the P0 queue wording itself was wrong - `tests/e2e/live-fields.js:13` is a frame in a helper module that three specs
+  import, never a case line, so no gate log can ever print it; the 19 Nov field-discovery red stays undiagnosed and
+  intermittent. P1 is untouched: `server/context/soil.js` still builds the 429 refusal and
+  `server/context/client.js:44` still rethrows it unwrapped. Still open and now named by line, the
+  `public/js/modules/chat.js:91` composer clear that runs before `workflow.respond` at `:94` while `:149` announces
+  `error.message`, so a failed ask loses the question instead of making it retryable - iteration 59's target.
+  Safari/WebKit, real phones, microphones, audio quality and independent agronomy stay UNVERIFIED. Nothing was
+  deployed, main is untouched (`4a54fa3`), no NASA portal edit.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

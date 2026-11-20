@@ -23,7 +23,7 @@ const indiaLocations = { regions: [{ id: '16', name: 'Maharashtra' }, { id: '27'
     { id: 'p2', name: 'Nagpur', regionCode: '16', latitude: 21.1458, longitude: 79.0082 },
     { id: 'p3', name: 'Ratnagiri', regionCode: '27', latitude: 16.9905, longitude: 73.3003 }] };
 
-function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGraceMs, fieldsNeverAnswer = false } = {}) {
+function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGraceMs, fieldsNeverAnswer = false, fieldsRefused = false } = {}) {
   const calls = [];
   const state = { country, catalog, countryCrops: getCountryCrops({ country }), farm: null, farms: [],
     regionCode: null, location: null, observations: null,
@@ -38,6 +38,9 @@ function setup({ country = 'SG', locations = sgLocations, farms = 2, fieldsGrace
       calls.push('fields');
       // A shared community service that accepts the connection and never answers: the request stays open.
       if (fieldsNeverAnswer) return new Promise(() => {});
+      // A service that refuses outright: this is what public/js/modules/context.js reports now, and `state.farms`
+      // is left as it was, which is exactly the leftover the chat must not read as an answer.
+      if (fieldsRefused) return { ok: false, reason: 'lookup-failed' };
       state.farms = Array.from({ length: farms }, (_, index) => ({ id: `way/${index + 1}`, name: `TEST FIELD ${index + 1}`, representativePoint: { latitude: 1.3 + index / 100, longitude: 103.8 } }));
     },
     showStep(step) { calls.push(`step:${step}`); },
@@ -475,4 +478,41 @@ test('a town tap confirms the point instead of waiting out a field service that 
   const again = await assistant.respond('Show mapped fields around this point');
   assert.equal(calls.filter(call => call === 'fields').length, asked, 'a second field request was opened while the first was still in flight');
   assert.match(text(again), /have not answered yet/);
+});
+
+// Measured 20 Nov on all four Playwright projects: when the community services refuse the lookup, step 2 catches the
+// failure and `state.farms` keeps whatever it held (empty for a first ask), which the chat used to read as an answer
+// and report as "0 mapped fields were returned" — a claim about the farmland near the farmer's point, drawn from a
+// transport refusal, with no retry offered. tests/e2e/field-service-failure.spec.js proves that in a browser; this
+// pins the same classification where no service is involved, on the structured outcome alone.
+test('a town tap whose field lookup was refused reports a failure, keeps a retry and re-asks on tap', async () => {
+  const { assistant, calls, state } = setup({ farms: 0, fieldsRefused: true });
+  await assistant.respond('Help me plan a rotation in Singapore. Crops: tomato, cabbage, bulb onion.');
+  const answer = await assistant.respond('A specific area');
+  const townIndex = answer.followUps.findIndex(choice => choice.workflowChoice?.type === 'town');
+  assert.ok(townIndex >= 0, 'a town button was offered');
+  const refused = await click(assistant, answer, townIndex);
+  assert.ok(state.location, 'the saved town point is not lost when the lookup is refused');
+  assert.equal(state.farms.length, 0, 'no field was invented in place of the missing list');
+  assert.match(text(refused), /is selected as a town point/);
+  assert.doesNotMatch(text(refused), /mapped fields were returned/, 'a lookup that never completed is not reported as a field count');
+  assert.match(text(refused), /field lookup did not complete/, 'the reply says the lookup did not complete');
+  assert.match(text(refused), /cannot say whether any mapped fields exist/, 'no coverage conclusion is drawn from a refusal');
+  assert.match(text(refused), /no field list is shown/i);
+  const labels = refused.followUps.map(choice => choice.label);
+  assert.ok(labels.includes('Use selected point') && labels.includes('Show mapped fields'),
+    `the failure reply leaves nothing to tap: ${labels.join(' | ')}`);
+  // Unlike an open request, a finished refusal must be asked again from the start.
+  const asked = calls.filter(call => call === 'fields').length;
+  const again = await assistant.respond('Show mapped fields around this point');
+  assert.equal(calls.filter(call => call === 'fields').length, asked + 1, 'the retry did not re-ask the field services');
+  assert.doesNotMatch(text(again), /mapped fields were returned/);
+  assert.match(text(again), /field lookup did not complete/);
+  // The pair: the same empty list is reportable once a service has answered it.
+  const answered = setup({ farms: 0 });
+  await answered.assistant.respond('Help me plan a rotation in Singapore. Crops: tomato, cabbage, bulb onion.');
+  const area = await answered.assistant.respond('A specific area');
+  const done = await click(answered.assistant, area, area.followUps.findIndex(choice => choice.workflowChoice?.type === 'town'));
+  assert.match(text(done), /0 mapped fields were returned/, 'an answered empty lookup reports its count');
+  assert.doesNotMatch(text(done), /did not complete/, 'an answered lookup is not reported as a failure');
 });

@@ -115,16 +115,19 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     finally { $('load-soil-context').disabled = false; }
   }
   $('load-soil-context').addEventListener('click', loadSoil);
+  // The lookup reports its outcome as a structured fact because the chat has to tell a refusal apart from
+  // an empty map: `farms-status` below is a rendered sentence, and a caller outside step 2 must not read
+  // error text to decide what the farmer is told. Nothing here forwards the runtime's own words.
   async function loadFarms() {
     const position = coordinates();
-    if (!position) return message('farms-status', 'Choose a place or coordinate first.', true);
+    if (!position) { message('farms-status', 'Choose a place or coordinate first.', true); return { ok: false, reason: 'no-location' }; }
     const version = token;
     $('find-farms').disabled = true;
     $('find-farms').textContent = 'Finding mapped fields…';
     message('farms-status', 'Loading community-mapped farmland in a small area around this point… The shared OpenStreetMap lookup services can take up to a minute when busy.');
     try {
       const data = await request(`/api/farms?${new URLSearchParams(position)}`);
-      if (version !== token) return;
+      if (version !== token) return { ok: false, reason: 'superseded' };
       farms = data.farms; map.setFarms(farms);
       $('farm-results').replaceChildren(el('option', farms.length ? 'Choose a mapped field' : 'No complete mapped fields returned', { value: '' }));
       farms.forEach((farm, index) => $('farm-results').append(el('option', `${index + 1}. ${farm.name}${farm.crops.length ? ` · ${farm.crops.join(', ')}` : ' · crop unknown'}`, { value: farm.id })));
@@ -132,10 +135,14 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
       message('farms-status', `${farms.length} mapped fields returned. OSM data retrieved ${data.retrievedAt}. Coverage is incomplete; this is not land available for use.`);
       $('farm-details').replaceChildren(list(data.notices));
       $('find-farms').textContent = 'Find mapped fields around selection';
-    } catch (error) { if (version === token) {
-      message('farms-status', `${error.message} You can continue with the selected map point or coordinates without field outlines.`, true);
-      $('find-farms').textContent = 'Retry mapped field search';
-    } }
+      return { ok: true, count: farms.length };
+    } catch (error) {
+      if (version === token) {
+        message('farms-status', `${error.message} You can continue with the selected map point or coordinates without field outlines.`, true);
+        $('find-farms').textContent = 'Retry mapped field search';
+      }
+      return { ok: false, reason: 'lookup-failed' };
+    }
     finally { if(version===token)$('find-farms').disabled = false; }
   }
   async function selectFarm(id, options = {}) {

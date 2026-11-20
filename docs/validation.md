@@ -1018,7 +1018,7 @@ At "Which state or region of France?", typing "France" matched nothing: the repl
 same area prompt, so the chat asked itself the same thing with nothing new to tap. The long official
 spellings reached it too ("South Georgia & South Sandwich Islands" is past the short-reply limit, so the
 first attempt only fixed the short ones). The rule now compares the whole reply in the same canonical
-shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:386-397](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L386)):
+shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:394-405](file:///C:/Users/~/Documents/Life/Coding/github/Nasa-Hackathon/public/js/modules/workflow-assistant.js#L394)):
 it names the level still missing ("a town in Nampula", "one of its regions"), offers that level's real
 rows plus `Whole <country>`, and ends with "Nothing was selected." A saved row that really does carry
 the country's spelling is matched earlier and still selects itself, so Guadeloupe and Martinique keep
@@ -2974,7 +2974,7 @@ outright, else the crop the *reply* is about, else a crop in the plan, else the 
 retired it: `public/js/modules/chat.js:96` posts `{...state.inputs, selectedCountry, chatContext, question}` - no
 pest payload - so `/api/ask` cannot know which country's watchlist the browser holds, and answering from it would
 either re-query GBIF for every chat question or guess from `selectedCountry`, which is a different country from the
-one the farmer may have loaded in step 03 (`public/js/modules/context.js:188` uses a manually chosen
+one the farmer may have loaded in step 03 (`public/js/modules/context.js:195` uses a manually chosen
 `#pest-country` value in preference to the selected location, and `:218` re-loads on every change of it).
 The loaded list is in `state.pests`, which is where the composer already has it.
 
@@ -3995,7 +3995,7 @@ evidence that this guard bites. The documentation guards move from 16 to 20 test
 changed, so the gate is re-run to keep the pushed tip green on the iteration-49 bytes, and it took two attempts.
 Attempt 1 (docs/evidence/iter49-gate-attempt1-2026-11-19.log.gz) exited 1 with 2 failed, 220 passed and 6 skipped in
 24.1 m, and both failures are `node-desktop` cases in `tests/e2e/chat-only-flow.spec.js` reaching live third-party
-services. The `:56` case failed its `Step 4 is ready` assertion (`tests/e2e/chat-only-flow.spec.js:81`) with the panel
+services. The `:56` case failed its `Step 4 is ready` assertion (`tests/e2e/chat-only-flow.spec.js:86`) with the panel
 reading `NASA evidence could not be loaded. The app has not generated a comparison.` The `:95` case failed the shared
 ready helper (`tests/e2e/chat-only-flow.spec.js:8`), which polls `#answer-status` for up to 180 s and recorded `The
 external context service could not respond (fetch failed). No records were invented.` 335 times. Running that file
@@ -4081,7 +4081,7 @@ Costs. The offline suite moves from 236 to 239 tests (the three new cases, one n
   8 did not run (`docs/evidence/iter50-gate-attempt1-2026-11-19.log.gz`). The 8 are the four downstream cases of the
   serial group opened at `tests/e2e/chat-pest-context.spec.js:26` in each static project, and a serial group cannot
   run its tail once its head fails, so they are cascade rather than evidence. All three failures read as live services
-  rather than as this change: `tests/e2e/chat-only-flow.spec.js:95` received the bundle's own "The external context
+  rather than as this change: `tests/e2e/chat-only-flow.spec.js:100` received the bundle's own "The external context
   service could not respond (signal timed out)" where it requires `Answer ready|Step 4 is ready`, and both
   `tests/e2e/chat-pest-context.spec.js:98` runs received "Fall armyworm in AU: Unavailable" where they require "Fall
   armyworm in AU: Country records found". Running those two files alone on the same bytes returns 32 passed, 0 failed
@@ -4385,7 +4385,7 @@ Mistakes in this iteration's own process, recorded because they cost runs. The f
   reported numbers for the wrong bytes and the log was discarded. The rewritten script refuses to snapshot unless
   the rule is present in all three places, and it runs in the foreground. Separately, a comment claimed five callers
   branch on `AbortError` where the count is four - `public/js/modules/chat.js:149`, `public/js/app.js:236`,
-  `public/js/app.js:296` and `public/js/modules/workflow-assistant.js:404` - and the gate was restarted rather than
+  `public/js/app.js:296` and `public/js/modules/workflow-assistant.js:412` - and the gate was restarted rather than
   left running on bytes that a later edit would change. Three more cost time after the gate. The trace reader
   first reported 0 Overpass requests, because Playwright wraps every record in a `resource-snapshot` object and
   the reader asked the wrapper for its request URL - an absence of evidence that was one sentence from being
@@ -4832,7 +4832,7 @@ response, and until this iteration its helper decided what to do with that rejec
 `reason?.name === 'AbortError'`. The same name decided four farmer surfaces: `public/js/app.js:236` (the
 evidence status line and the `#retry-evidence` button), `public/js/app.js:296` (the comparison status),
 `public/js/modules/chat.js:149` (the answer the farmer is waiting for) and
-`public/js/modules/workflow-assistant.js:404` (the inputs a guided plan keeps). A name is not a fact about this
+`public/js/modules/workflow-assistant.js:412` (the inputs a guided plan keeps). A name is not a fact about this
 app. Chromium raises `AbortError` by itself for reasons the page never asked for - a navigation, a discarded
 frame, a backend it decided to drop - and every one of those made four surfaces go silent at once: no status
 line, no retry control, no announced answer, and no console trace. The farmer was left staring at a spinner that
@@ -5167,3 +5167,255 @@ coverage.
 **Next.** Commit this tree with the three gate tallies, then run P4 as its own pass with the same discipline: reproduce
 before asserting, keep the journeys that use real services, and treat every number in the ledger as a claim that needs
 an archive behind it.
+
+### 58. A lookup that never completed was reported as "0 mapped fields were returned", and the harness that hid that sentence from two of the four transports
+
+**The sentence the farmer was shown.** When the community field services refuse a lookup, step 2 catches the failure
+inside the assistant, `state.farms` is left as the empty array it started as, and the chat read that leftover as a
+result. The reply, printed verbatim as the `Received string:` of a failing assertion in all four Playwright projects in
+`docs/evidence/iter58-focused-red-2026-11-20.log.gz`, was:
+
+> Admiralty is selected as a town point. Choose the specific field; the town itself is not farmland. 0 mapped fields
+> were returned. You can also choose from the full field dropdown or use explicit farm coordinates.
+
+That is a claim about what is mapped near the farmer's point, drawn from a transport failure, and it offered no retry:
+the only way-ons were the two the empty-list prompt always carries. It is the P4 defect class - an unsupported claim
+plus an unusable recovery - reached from the P2 rule the queue set: a failure has to be classified on a structured
+fact. The same archive prints `Running 4 tests using 1 worker` and `4 failed`, so the case is red on the shipped bytes
+before anything is changed, in both transports and both viewports.
+
+**The reproducing case.** `tests/e2e/field-service-failure.spec.js:21` cuts the field lookups off at the network layer
+with a page-level route, taps a town, reads the reply, then taps the `Show mapped fields` button the failure reply
+offers and reads the second reply, and finally repeats the whole walk with the services answering normally so the
+empty-count sentence is still reachable when a lookup really did reply. Its ordering is not a style choice:
+`:57-60` records that the first *successful* lookup is held for 24 h by `createCachedJson`
+(`server/context/client.js`), after which a retry for the same point is answered from cache with no request leaving the
+page, so a refusal placed after an answer reads as an answered lookup on the static transport while the node transport
+is still cut at `/api/farms`. That asymmetry is the reason the refusals come first, and the reason this iteration could
+measure the transports disagreeing about a scenario rather than about a sentence.
+
+**The fix, and how small it is.** `loadFarms` now reports its outcome as data at every exit -
+`public/js/modules/context.js:123` returns `{ok: false, reason: 'no-location'}`, `:130` `{ok: false,
+reason: 'superseded'}` where it used to `return;` with no value at all, `:138` `{ok: true, count: farms.length}` and
+`:144` `{ok: false, reason: 'lookup-failed'}` - and the chat classifies on the shape rather than on the words:
+`public/js/modules/workflow-assistant.js:295` maps a `result?.ok === false` to `'failed'` inside the same race that
+already produced `'waiting'`, and the new `fieldsFailed` at `:309` is reached from both of the sites that ask for
+fields, `:459` (a point the farmer already selected) and `:510` (a town tap). Nothing in those lines forwards the
+runtime's own error text: the refusal sentence names the lookup that failed, states that no field list is shown and
+that no coverage conclusion is drawn, and keeps the two way-ons the waiting reply already gives. The previously
+shipped server-side half of P2 stopped at `server/context/client.js:42`, where `answered` and `responseStatus` are
+attached to the wrapper that `:44` rethrows; this is the first time a structured outcome reaches the client's own
+branching.
+
+**What the farmer is told now, and where it is byte-for-byte identical.** The green run's attachment prints the
+refusal `Admiralty is selected as a town point. The town itself is not farmland. The community field lookup did not
+complete, so this app cannot say whether any mapped fields exist near this point. No field list is shown and no
+coverage conclusion is drawn. You can continue with the selected point, or ask me to show the fields again in a
+moment.` with the buttons `['Use selected point', 'Show mapped fields']` and the typed point still in the box, and the
+same sentence for the same town in `static-desktop`, `static-mobile`, `node-desktop` and `node-mobile`
+(`docs/evidence/iter58-focused-green-2026-11-20.log.gz`, whose four case lines each print
+`status=passed at field-service-failure.spec.js:21`). What differs between transports is the number of requests, not
+the text: the attachment counts `"refuse": 6` on the static pair against `"refuse": 2` on the node pair, both with
+`"answered": 1`, because the node projects are cut one level lower at `/api/farms` while the static worker retries
+inside the handler. The spec therefore asserts that a refusal produced *at least one* cut request in each phase rather
+than an equal count, and the raw JSON behind it prints `"expected": 4,` `"unexpected": 0,` `"flaky": 0`
+(`docs/evidence/iter58-focused-green-json-2026-11-20.log.gz`).
+
+**A harness law this iteration discovered, measured twice.** The first control pass reported every one of its four
+breaks as `2 failed / 2 passed`, which reads as though half the matrix were blind. It was not the spec: the two
+`static-*` projects are served `dist/client` (`playwright.config.js:24-26` starts `node scripts/playwright-server.js`
+and its `--node` sibling), and `dist/client` is a *build* of `public/`. A patch to `public/js/**` that is not followed
+by `node scripts/build-browser.js` is therefore invisible to exactly the two transports a farmer on a phone would use,
+and the driver - not the product - was what was broken. The corrected driver rebuilds after every patch and after
+every restore and prints the built bundle's own hash, so the rebuild is provably part of the run:
+`BUILD_BASELINE exit=0 context.=e9f2c6ac6f9826df workflow=d6b54dd6ca75b153`. Both readings are archived because they
+say different things: `docs/evidence/iter58-focused-controls-source-only-2026-11-20.log.gz` prints
+`MISSED static-desktop static-mobile of 4 projects ran` for all four cases, and
+`docs/evidence/iter58-focused-controls-2026-11-20.log.gz` prints `DETECTED node-desktop node-mobile static-desktop
+static-mobile` and `MISSED none of 4 projects ran` for all four. Any future iteration that patches
+`public/js/**` and runs only the static projects is testing stale bytes; the law is now in this ledger and in the
+driver's header comment.
+
+**Four half-fixes, each detected in all four projects.** A green focused spec proves the fix works; only a control
+proves the spec detects the bug. `artifacts/scratch/iter58/run-field-refusal-controls.mjs` patches one decision the
+fix makes, runs the one case in all four projects, then restores the file and rebuilds, and every case came back
+`RED as required (exit 1, 4 failed / 0 passed)`: reporting a refusal as an empty successful result
+(`{ok: false, reason: 'lookup-failed'}` → `{ok: true, count: 0}`), which is the exact defect the farmer met;
+stripping the two way-ons from the failure reply, which is the second half of it; and classifying `'failed'` at only
+one of the two chat sites that ask for fields, which leaves the other inventing a count. The run closes with
+`CONTROL_SHA_AFTER public/js/modules/context.js e9f2c6ac6f9826df identical=true`, a restore proven by a green run
+rather than by bytes alone (`CONTROL_RESTORED_RUN exit=0 4 passed`) and `CONTROLS_DONE 4 cases, 4 detected`.
+
+**A control driver that mutated the shipped product, and the evidence it lost.** The first version of that driver
+threw `ReferenceError: red is not defined` in its own reporting line - inside the `try`, after the patch was written -
+and so exited before restoring `public/js/modules/context.js`, leaving the *product* file holding the injected
+`return { ok: true, count: 0 };`. It was found by checking the working tree against a sha256 snapshot taken during the
+gate and repaired by restoring the bytes, and the driver now derives its verdict from the run it just made, dumps the
+raw Playwright output before parsing any of it, and restores in a `finally`. One thing cannot be repaired: the crashed
+run's log. The re-run was launched with the same `> controls-final.log` path and overwrote it, so no bytes of that
+attempt survive to shelve. It is disclosed here rather than reconstructed, and the archive table therefore has two
+control readings instead of three.
+
+**Neighbour assertions rewritten stricter, not relaxed.** Three specs asserted the defective sentence as correct
+behaviour, so they went red the moment the product was fixed: `docs/evidence/iter58-neighbours-superseded-2026-11-20.log.gz`
+prints `Running 20 tests using 1 worker`, `8 failed` and `12 passed (3.8m)` with
+`Expected substring: "mapped fields were returned"` naming `guided-chat-accessibility.spec.js:17:1` among the failures.
+They were rewritten rather than skipped or narrowed. The accessibility spec now refuses the invented count outright
+(`not.toContainText(/mapped fields were returned/)`) and requires the failure sentence and
+`toEqual(['Use selected point', 'Show mapped fields'])`, and because its retry walk needs the empty-count prompt -
+which only a lookup that actually answered can reach - a `mode='answered'` scan was added at
+`tests/e2e/guided-chat-accessibility.spec.js:59` so the same assertions run against services that replied. One
+offline case was added, `tests/workflow-place-choices.test.js:488`, which drives a town tap whose lookup was refused
+and asserts the location is preserved, no farm is invented, the failure sentence appears, `doesNotMatch` the count
+claim, both way-ons are present and a second tap re-asks. All of it is green inside the gate below, so the stricter
+assertions were not traded against coverage.
+
+**Gate and census.** The four-project gate ran on the shipped bytes: `Running 252 tests using 1 worker`,
+`252 passed (27.6m)`, `playwright_exit=0`, zero `✘` lines
+(`docs/evidence/iter58-gate-2026-11-20.log.gz`). `--reporter=line` prints one `[n/252] [project]` progress line per
+case, so the same archive is what proves the new case executed in all four transports rather than only in the focused
+run: `[20/252] [static-desktop]`, `[83/252] [static-mobile]`, `[146/252] [node-desktop]` and `[209/252] [node-mobile]`,
+each followed by `tests/e2e/field-service-failure.spec.js:21:1`. That gate also logged two genuine upstream refusals
+while its 252 cases ran - `code: 'CONTEXT_UNAVAILABLE'` from the web server, thrown at
+`server/context/farms.js:89` - and passed anyway, which is the retry absorbing load rather than an outage.
+`npx playwright test --list` on the same tree reads `Total: 252 tests in 24 files`, finds no `test.skip`, `testFixme`
+or `test.fail` anywhere under `tests/e2e`, and lists the new spec four times
+(`docs/evidence/iter58-census-2026-11-20.log.gz`), against iteration 57's 248 in 23 files.
+
+**Offline, and the header guard firing on the loop's own bookkeeping.** `npm test` first ran after this iteration's
+archives were shelved but before the index was regenerated: `ℹ tests 259`, `ℹ pass 258`, `ℹ fail 1`, `OFFLINE_EXIT=1`
+(`docs/evidence/iter58-offline-index-red-2026-11-20.log.gz`), and the single red is that archive's own recorded
+property - `onlyReds` in the guard's table lists exactly
+`the index header states counts its own rows and the filesystem agree with` and nothing else, because the newly
+shelved citation-drift log was not yet indexed. After `node artifacts/iter47-index-generator.mjs` the same command is
+green on the same 259 cases: `ℹ tests 259`, `ℹ pass 259`, `ℹ fail 0`, `OFFLINE_EXIT=0`
+(`docs/evidence/iter58-offline-prefinal-2026-11-20.log.gz`), and the same command run once more against the tree this
+subsection leaves behind - after the census, controls, pre-final and provenance rows joined the guard's table and its
+floor rose with them - prints `ℹ tests 259`, `ℹ pass 259`, `ℹ fail 0` and `OFFLINE_EXIT=0` under its own header of
+`TALLY_ROWS 32` (`docs/evidence/iter58-offline-2026-11-20.log.gz`), which is the offline cell of the handoff ledger.
+The five documentation guard files re-run over the table that archive joined print `ℹ tests 24`, `ℹ pass 24`,
+`ℹ fail 0` and `DOCSGUARDS_EXIT=0` under `GUARD_TABLE_ROWS 34`
+(`docs/evidence/iter58-docsguards-final-2026-11-20.log.gz`).
+
+**Controls on the guard itself, six passes and 53 attacks.** A 36-row tally table is only as good as its ability to
+notice a wrong tally, so `artifacts/scratch/iter58/run-tally-controls.mjs` patches one needle, re-runs the single tally
+case and requires it to go red, then restores the file. Pass one ran against a 25-row table: `CONTROL_ROWS 25`,
+`CONTROLS_DONE 24 cases, 24 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, 0 skipped
+anchors`, and `CONTROL_RESTORED_IDENTICAL true` against the opening hash `eaf7bc42673ff24d` with a green re-run after
+the restore (`docs/evidence/iter58-tally-controls-2026-11-20.log.gz`). Twelve of its cases are iteration 57's,
+re-anchored so the older rows stay attacked too; twelve are new, aimed at the red, the green rendering, the JSON stats,
+both control readings, the neighbours, the gate twice, the drift counts, the offline red set and the row-count floor
+itself. Passes two to four ran after the table grew to 29 rows, and each is shipped because each says something the
+others do not. Pass two printed `CONTROLS_DONE 30 cases, 29 detections aimed, 0 red-but-unaimed, 0 invalid patches,
+0 green controls, 1 skipped anchors` next to `CASE controls-own-row-restore-flag: SKIP - anchor matched 3 times, must
+match exactly once (nothing was patched)`: the needle it aimed at, `'CONTROL_RESTORED_IDENTICAL true'`, is pinned by
+three rows, and the harness refused to patch a neighbouring row rather than silently attacking the wrong one
+(`docs/evidence/iter58-tally-controls-run1-skipped-2026-11-20.log.gz`). Pass three, with that anchor given its row's
+own archive name as context plus two attacks on iteration 57's copies of the same flag, reached
+`32 cases, 32 detections aimed, 0 skipped anchors`
+(`docs/evidence/iter58-tally-controls-run2-32cases-2026-11-20.log.gz`) and was superseded the moment the harness started
+reporting coverage, because a case count says nothing about which rows are attacked. Pass four reached
+`CONTROL_ROWS 29` with `CONTROL_ROWS_IN_TABLE 29 ATTACKED 29 UNATTACKED 0` above
+`CONTROLS_DONE 39 cases, 39 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, 0 skipped
+anchors`, `CONTROL_RESTORED_IDENTICAL true` and a green re-run after the restore, all against the same opening hash
+`e1088a17e718bbb0` (`docs/evidence/iter58-tally-controls-final-2026-11-20.log.gz`). It was written as the shipped
+reading, and it stayed true only of the rows that existed when it started: coverage is a claim about the table at the
+moment a run reads it, and seven rows joined the table after the 29 that pass four read, so the pass was re-run
+instead of left as the headline. Pass five, over a 33-row table and 43 cases, is the pass that printed its own gap rather than hiding it -
+`CONTROL_ROWS_IN_TABLE 33 ATTACKED 30 UNATTACKED 3` with the three names listed under it, and they are the three
+controls readings above: passes one, two and four had never been attacked
+(`docs/evidence/iter58-tally-controls-pass5-2026-11-20.log.gz`). Pass six's ten new cases are two per row for those
+three, two for pass five's own row and two for the guard re-run's row, each anchored on a counter that row quotes, so
+a pass that printed 30 cases cannot be made to look like it printed 31, and the reading is
+`CONTROL_ROWS 35`, `CONTROL_ROWS_IN_TABLE 35 ATTACKED 35 UNATTACKED 0` and
+`CONTROLS_DONE 53 cases, 53 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, 0 skipped
+anchors` with `CONTROL_TARGET_SHA_BEFORE` and `CONTROL_TARGET_SHA_AFTER` both `ea4c8c62beef21c1`,
+`CONTROL_RESTORED_IDENTICAL true` and a green re-run after the restore
+(`docs/evidence/iter58-tally-controls-pass6-2026-11-20.log.gz`). The floor is attacked through
+`assert.ok(TALLIES.length >= ` read out of the file - pass one hardcoded `>= 25`, which goes stale on the next row - so
+each pass prints the floor it found and the raise it applies (`>= 29` to `999`, `>= 33` to `1003`, `>= 35` to `1005`)
+and requires the raised floor to be fatal. What no pass can attack is a row created by that pass, so exactly one
+pinned-but-unattacked archive stands at the end of this: pass six's own. That is the same self-reference the table's
+own comment records for iteration 57, and it is why the two readings that close the iteration - the five guard files
+and the full offline suite on the finished 36-row tree - are re-run for confirmation and left unarchived, because
+shelving either would add a row that its own run cannot attack. Writing the cases produced four findings of the kind the loop keeps meeting, all in the instruments
+rather than the product:
+
+1. The guard caught two claims this iteration's own rows had invented. A needle written as `"expected": 4` missed
+   because the JSON prints `"expected": 4,` with a trailing comma, and a row claimed the gate archive prints
+   `tests/e2e/live-fields.js` when it does not print that path at all. A row is a claim about bytes; it fails the
+   build like code that does not compile.
+2. `tests/e2e/live-fields.js` is not a spec. It exports `waitForLiveFields`, and the 19 Nov red quoted
+   `tests/e2e/live-fields.js:13` - a helper frame, `expect(retries, 'real fields were still unavailable after two user
+   retries')` - which is why the queue's P0 wording names a file that no gate run ever lists. The specs that import it
+   are `field-terrain.spec.js`, `review-phase-a.spec.js` and `review-phase-b.spec.js`; the helper still presses the real
+   `Retry mapped field search` button and fails after two presses, and this iteration changed none of that.
+3. "It went red" is not "the control worked". The harness now requires the failure message to name the archive the
+   patch aimed at, and one case failed that test immediately: its replacement string dropped a `]`, the guard file
+   stopped parsing and the run went red having executed no assertion. That class prints `INVALID - the patch broke the
+   file` and is counted separately from a detection.
+4. The reporting line of a harness can itself be wrong: `RED aimed at ${expect}` was written in single quotes, so the
+   first pass printed the literal token instead of the archive name for all 22 cases. The log is what says, and this
+   time the log said something impossible.
+
+**Provenance.** `artifacts/scratch/iter58/capture-provenance.mjs` prints the interpreter (`v26.13.1`,
+`/opt/homebrew/Cellar/node/26.13.1_2/bin/node`), `GIT_HEAD d6ce8c884fd6979041113ccb035128aada97cbaf`,
+`GIT_BRANCH fix/chat-flow-and-answers`, `GIT_REMOTE_MAIN 4a54fa3fbd75f4b1ccaae238b00d439accf1d0d4 refs/heads/main`,
+the `git status --porcelain` of the moment and the sha256 of the nine files this iteration ships or reads as input
+(`docs/evidence/iter58-provenance-2026-11-20.log.gz`). The product hashes are
+`e9f2c6ac6f9826df4dded0205e413a834739fc8d5cfecccd3c9535fa0e2222d2` for `public/js/modules/context.js` and
+`d6b54dd6ca75b15335c5396b1a3457233193c129624259ee74b23909bf893d52` for `public/js/modules/workflow-assistant.js`, and
+the same 16-hex prefixes appear in the controls' `BUILD_BASELINE` line, so the bytes the controls attacked are the
+bytes that shipped. Two limits on that archive, stated rather than smoothed: the browser logs it supplements carry no
+banner of their own (the focused, neighbours and gate runs were launched straight from `npx playwright test`), so their
+interpreter comes from the provenance run and not from their first lines; and the guard file keeps gaining rows after
+the provenance snapshot, so the hash it prints for `tests/documentation-evidence-index.test.js` is that moment's, not
+the commit's. The gate, the census, the focused runs and the controls all executed against product bytes that were
+frozen at 09:53-09:54 UTC and are unchanged since, which is what the `identical=true` lines above measure.
+
+**Citation drift, and the instrument that now ships.** Seven places in this ledger cite scripts under
+`artifacts/scratch/` (`docs/validation.md` subsection 55 and 57 and the handoff's status rows), and `.gitignore:4`
+ignores `artifacts/` entirely - a reviewer checking out this branch cannot run any of them. That is a reproducibility
+claim resting on untracked files. This iteration therefore ships its own instrument instead: `scripts/citation-drift.mjs`
+derives the changed line ranges from `git diff -U0` and reports how many `file:line` citations in the prose no longer
+point at the text they name. On the pre-commit tree it prints `HEAD CITED_LINES_CHECKED 180 DRIFTED 26 INSIDE_DIFF_HUNKS 0`
+and `TREE CITED_LINES_CHECKED 179 DRIFTED 0 INSIDE_DIFF_HUNKS 1`
+(`docs/evidence/iter58-citation-drift-2026-11-20.log.gz`): 26 pointers moved because their targets are inside the
+diff and are handled by the pinning guard, and the one tree-mode hit the guard could not vouch for is the handoff's
+iteration-51 queue bullet, whose `context.js` line sits in the range rewritten above and was read by hand instead.
+Re-run on the tree this subsection leaves behind, the same command prints `HEAD` unchanged - `180` checked, `26`
+drifted - and `TREE CITED_LINES_CHECKED 179 DRIFTED 0` with `INSIDE_DIFF_HUNKS 13` rather than 1, because writing the
+prose above moved line numbers that the pin table already vouches for; that reading, like the two confirming guard and
+offline runs, is deliberately unarchived.
+
+**Where the queued priorities stand after this pass.** P2 gained its client-layer half, described above. P4 was the
+route in: the farmer journey's place → constraints step was audited by reproducing a claim it makes about the world
+that its own transport never supported. P0 stays open in the only sense the queue asked and one word is corrected:
+`live-fields.js:13` is a helper frame, three green gates since - iteration 57's three and this one - have run the
+three specs that use it, and no run this loop made has reproduced the 19 Nov field-discovery red, so it remains
+intermittent upstream load with an unproven cause. P1 is untouched by this iteration: `server/context/soil.js` still
+builds the 429 `SOIL_FAIR_USE` refusal and `server/context/client.js:44` still rethrows it unwrapped, and nothing here
+re-measured a live ISRIC throttle. P3 stays done as iteration 57 left it: the census above finds no skip in `tests/e2e`.
+
+**Open, and not papered over.** `public/js/modules/chat.js:91` clears the question box before `await
+workflow.respond(...)` at `:94`, and `:149` announces `error.message` when an ask fails without putting the text back,
+so a failed question is lost rather than retryable - the lost-input half of P4, unfixed and now pinned to lines.
+`public/js/lib/api.js:13` still discards a posted `error.code`, so a refusal that already knows its own structured
+reason is re-flattened into a sentence one level up. `public/js/modules/chat.js:62` still resolves an id-tagged worker
+failure through `selections.get(data.id)?.(null)` while the worker posts a `message` beside that id, which is dropped.
+No case cancels a request while `response.json()` is in flight, and three gate cases still need `cdn.jsdelivr.net` to
+be reachable. One measurement of this iteration is also withdrawn rather than quietly reused: the first docs-guard pass
+printed `DOCSGUARDS_EXIT=0` because the command piped `node --test` into `grep` and read the pipeline's last status, so
+that number described `grep` and was not an exit status of the suite; the archived guard run captures the real one.
+
+**Limits.** The focused case stubs the field lookups at the network layer, so it proves the app's classification and
+copy, not the behaviour of a live Overpass or Nominatim outage; the two `CONTEXT_UNAVAILABLE` refusals inside the gate
+are the only real-service evidence this iteration has, and a refusal is not the same event as a timeout. Whether the
+failure sentence is the right *words* for a farmer - its reading level, its translations, its behaviour with a screen
+reader beyond the button roles the accessibility spec asserts - is UNVERIFIED, as are real phones, Safari/WebKit,
+microphones, audio quality, independent agronomy and anything deployed. The gate used one worker
+(`Running 252 tests using 1 worker`), which is why it takes 27.6 minutes; it is not a parallel-CI measurement.
+
+**Next.** Commit this tree with the gate, the census and the 24 tally controls, then take the lost-input finding above
+as its own iteration: `chat.js:91` should not clear the box until an answer exists, with a control that proves a
+failing ask leaves the question on screen and re-askable.
