@@ -92,20 +92,20 @@ export function normalizePower(raw, location, sourceUrl, retrievedAt) {
   };
 }
 
-export function createPowerClient({ fetchImpl = fetch, now = () => new Date(), ttlMs = 6 * 3_600_000, timeoutMs = 25_000 } = {}) {
+export function createPowerClient({ fetchImpl = fetch, now = () => new Date(), ttlMs = 6 * 3_600_000, timeoutMs = 25_000, persistence = { readCached, writeCached } } = {}) {
   const cache = new Map();
   const pending = new Map();
   return async function getObservations(input) {
     const location = validateLocation(input.latitude, input.longitude, input.year, now());
     const key = `${location.latitude},${location.longitude},${location.year}`;
     const hit = cache.get(key);
-    if (hit && now().getTime() - hit.storedAt < ttlMs) return { ...hit.data, cache: { hit: true, ttlSeconds: ttlMs / 1000 } };
+    if (hit && now().getTime() - hit.storedAt < ttlMs) return { ...hit.data, cache: { hit: true, ttlSeconds: ttlMs / 1000, persisted: hit.persisted } };
     if (pending.has(key)) return pending.get(key);
     const task = (async () => {
-      const saved = await readCached(`power:${key}`, ttlMs);
+      const saved = await persistence.readCached(`power:${key}`, ttlMs);
       if (saved) {
-        cache.set(key, { data: saved.data, storedAt: saved.storedAt });
-        return { ...saved.data, cache: { hit: true, ttlSeconds: ttlMs / 1000 } };
+        cache.set(key, { data: saved.data, storedAt: saved.storedAt, persisted: true });
+        return { ...saved.data, cache: { hit: true, ttlSeconds: ttlMs / 1000, persisted: true } };
       }
       const url = new URL(API);
       url.search = new URLSearchParams({ parameters: PARAMETERS.join(','), community: 'AG', latitude: String(location.latitude),
@@ -120,13 +120,23 @@ export function createPowerClient({ fetchImpl = fetch, now = () => new Date(), t
         throw Object.assign(new AppError('NASA POWER could not be reached or returned invalid JSON. Retry later; no substitute readings were generated.', 502, 'NASA_UNAVAILABLE'), { cause: error });
       }
       const data = normalizePower(raw, location, url.href, now().toISOString());
-      await writeCached(`power:${key}`, data, data.retrievedAt);
+      // A year whose every parameter is fill carries no reading at all, so it is kept for this session only: storing
+      // it on the device would show the next farmer an empty year as retrieved evidence for a full TTL window
+      // (artifacts/scratch/iter63/cache-fill-probe-2026-11-20.log measured the old path caching it identically to a
+      // populated year). Partial coverage still persists — that is data, and its gaps are reported per parameter.
+      const persisted = !carriesNoReadings(data);
+      if (persisted) await persistence.writeCached(`power:${key}`, data, data.retrievedAt);
       cache.delete(key);
-      cache.set(key, { data, storedAt: now().getTime() });
+      cache.set(key, { data, storedAt: now().getTime(), persisted });
       while (cache.size > 64) cache.delete(cache.keys().next().value);
-      return { ...data, cache: { hit: false, ttlSeconds: ttlMs / 1000 } };
+      return { ...data, cache: { hit: false, ttlSeconds: ttlMs / 1000, persisted } };
     })();
     pending.set(key, task);
     try { return await task; } finally { pending.delete(key); }
   };
+}
+
+function carriesNoReadings(data) {
+  const parameters = Object.values(data?.parameters ?? {});
+  return parameters.length > 0 && parameters.every(entry => entry.validDays === 0);
 }

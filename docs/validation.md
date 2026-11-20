@@ -5993,3 +5993,168 @@ exit 0, then `ℹ tests 270`, `ℹ pass 270`, `ℹ fail 0`, `ℹ skipped 0`, `�
 readings are quoted here rather than archived: an archive cannot be the evidence for the table rows that name it, which
 is the asymmetry subsections 57, 58 and 61 record for their own iterations, and the row count only grows once a run is
 on the shelf.
+
+### 63. A POWER year of fill codes ranked three rotations, and the third criterion had become crop length
+
+Backlog goal 6's caching-and-corruption clause, scouted read-only during the iteration-62 gate and built after it: the
+two entries `docs/handoff-2026-11-18.md` §7 carried as "the zero-valid-evidence visibility in
+`comparisonReadiness`/step 4" and "the all-fill POWER payload's 6 h cache TTL". The question the earlier passes left
+open was what the comparison does when the weather evidence is not partial but entirely absent. A NASA POWER year in
+which every daily value is the service's own fill code is a transport success: `normalizePower`
+(server/nasa/power.js:48-52) maps that code to `null`, so the payload arrives with valid unit metadata, five parameters,
+366 dates, `validDays: 0` for each parameter, `latestAvailableDate: null` and five notices reading "T2M: 366 of 366
+requested days are missing; missing values are not zero." Nothing in the request path rejects it, and the journey walks
+straight into a ranked comparison.
+
+The mechanism is in the ordering, not in the numbers on screen. A day counts as missing when *any* required parameter is
+null (server/agronomy/rotation.js:102, accumulated into `criteria.missingEvidenceDays` at :105), so in that state every
+assessed day is a missing day and `missingEvidenceDays` becomes exactly `criteria.maturityUpperDays` (:99) for every
+scenario. That quantity is the second element of the safety vector and the third `orderedCriteria` entry, ahead of
+`repeatedFamilies` and ahead of the water tie-breaks, so a row labelled "Missing evidence days" was ranking rotations by
+how long they take to mature while every displayed count stayed truthful.
+
+Two offline probes measured this before any code changed. `docs/evidence/iter63-synthetic-ranking-probe-2026-11-20.log.gz`
+serves the same farmer inputs twice, once with readings and once without, and prints
+`C_MISSING_EQ MATURITY` with `{"label":"Alternative 1","missing":180,"maturity":180,"equal":true}` and the same identity
+for the other two scenarios, then `C_ALTERNATIVES_SPARSE 1:radish--radish--radish 2:bush-bean--radish--radish` against
+`C_ALTERNATIVES_FULL 1:bush-bean--radish--radish 2:radish--bush-bean--radish` and
+`C_COMPARED 1 vector_changed 1 changed_only_by_missing_evidence 1`: the alternative that appears in both selections
+differs from its own populated-evidence control in exactly one vector slot, the missing-evidence slot. The selection the
+farmer gets therefore changes with the evidence, by a criterion whose name describes data quality.
+`docs/evidence/iter63-all-fill-derivation-2026-11-20.log.gz` re-derives that year from the shipped capture rather than
+from an invented body — `CAPTURE header.fill_value -999 parameters 5 value cells 1830 non-fill cells 1830`, then
+`DERIVED value cells 1830 non-fill after derivation 0 metadata preserved true`, so only `properties.parameter` is
+rewritten and `header` and `parameters` stay byte-identical — and prints the degenerate pairs on the crops the browser
+spec uses: `SCENARIOS baseline|245|245|0|0|0 pea--pea--pea|240|240|0|0|0 pea--pea--sweet-corn|260|260|0|0|0`.
+`CONTROL_POPULATED evidenceLimited false` is the same code on the unmodified capture.
+
+The app was not silent about the missing days. Each timeline slot already stated
+"60 historical analogue days lack one or more required weather values; absence is not evidence of low risk.", step 3
+prints `0 / 366` and `None`, and every chart month is labelled `Missing`. What stayed silent was the ordering: the only
+place that could say the evidence criterion had degenerated sits inside the collapsed "How alternatives were ordered"
+block (`public/js/modules/strategy.js:36`), which no farmer has to open.
+
+Two shipped changes, deliberately narrow. (1) A disclosure at the point of use. `rank` now computes
+`evidenceLimited` only when all four required series exist, every scenario has a non-zero maturity bound and each
+scenario's missing count equals its own summed maturity (server/agronomy/rotation.js:170-175), builds the sentence that
+names those counts (:175), prefixes it into `ranking.limitation` (:207) so the collapsed note and the new visible notice
+cannot disagree, and `public/js/modules/strategy.js:28` renders it as a visible `p.notice` above the comparison. The
+ordering itself is untouched: an offline case pins the criterion vector as unchanged by the disclosure
+(tests/rotation.test.js:176), because re-choosing the third criterion is an agronomy decision this prototype does not
+own and independent agronomy stays UNVERIFIED (AGENTS.md §13.2). (2) A device-cache policy. `server/nasa/power.js:127-132`
+computes `persisted = !carriesNoReadings(data)` — true when every parameter reports `validDays === 0` (:139-142) — skips
+the IndexedDB write for that payload, keeps the in-process entry so the NASA call is still not repeated inside the TTL,
+and reports the decision to the page as `cache.persisted`. Partial coverage still persists: those are readings, and
+their gaps are already reported per parameter.
+
+`docs/evidence/iter63-cache-fill-probe-2026-11-20.log.gz` is the pre-change measurement of the second half:
+`HEADLESS_FILL fetches 1 first.hit false second.hit true validDays 0,0,0,0,0 latest null` beside
+`CONTROL_POPULATED fetches 1 first.hit false second.hit true validDays 366,366,366,366,366 latest "2024-12-31"` and
+`SAME_SENTENCE both paths print {"cache":{"hit":false,"ttlSeconds":21600}}` — an empty year and a populated year were
+stored and described identically, so the next farmer to open the app on that device would have been shown a blank year
+as retrieved evidence for six hours. `TTL retry_inside_ttl.hit true retry_after_ttl.hit false fetches 2` is the
+behaviour the new policy keeps.
+
+Four offline cases carry the claim between the code and the reader: three in tests/rotation.test.js (:157 the disclosure
+under an all-fill year, :176 the unchanged vector, :187 a single required parameter missing all year degenerates the
+criterion while a populated year does not) and one in tests/nasa.test.js:116 (the empty year reaches the process cache,
+is reported `persisted: false` and never reaches the device store). Seven mutations, each reverted and re-checked against
+its own digest, show those cases are not vacuous — the log is
+`docs/evidence/iter63-offline-controls-2026-11-20.log.gz`: C1 `const evidenceLimited = false && …` turned 2 red, C2
+`= true || …` turned 1, C3 stripping the sentence out of the `limitation` template turned 2, C4 `const persisted = true`
+turned 1, C5 `= false` turned 1, C6 rewiring both persistence call sites back to the module-level `readCached`/
+`writeCached` imports turned 1 and C7 deleting the `if (persisted)` guard turned 1; every `VERDICT DETECTED`, then
+`RESTORE_OK` and `FINAL_REPLAY ℹ tests 24 ℹ pass 24 ℹ fail 0`. One control had to be re-cut: the first C6 replaced the
+injected `persistence` object with `{ readCached: async () => null, … }`, printed `VERDICT MISSED` with `ℹ fail 0`, and
+is archived as `docs/evidence/iter63-offline-controls-run1-2026-11-20.log.gz` — stubbing a seam nobody calls is not a
+counterexample to anything, so C6 became the call-site rewiring above.
+
+The browser half is one new spec, `tests/e2e/zero-evidence-parity.spec.js`, whose five cases run in each of the four
+projects: it first proves its own payload ("the empty year this spec serves really is the shipped capture with every
+reading replaced", asserting 1,830 cells and 1,830 readings before the derivation, 1,830 cells and 0 readings after, and
+`header`/`parameters` still equal to the capture's), then "a POWER year of fill codes is shown as no evidence, and the
+chat quotes no number for it" — five rows of `0 / 366` and `None`, 36 `Missing` chart labels, no "Reading this historical
+year" sentence at all, and an assistant paragraph that says "latest non-missing value inside 2024-01-01 to 2024-12-31 is
+missing mm/day on unknown date" while still citing two sources — then "the comparison that a fill-coded year still ranks
+says out loud what its evidence criterion did", which pins the visible `p.notice` to the exact sentence the shipped
+`rank` computed, pins the collapsed note to the same sentence plus the generic one, asserts the notice is visible and the
+collapsed note is hidden (that hidden/collapsed pair *is* the defect), and requires all nine per-slot window lines to
+state assessed-days equal to missing-days. The last two cases split the device-cache claim by the mechanism each
+transport actually owns: the static projects read IndexedDB (`fieldshift-evidence-v1`/`responses`, no `power:` key after
+the empty year, exactly one after a populated year), the node projects read the answered payload's `cache.persisted`,
+because `server/persistence.js` returns `null` from the first line wherever `globalThis.indexedDB` is absent. No case
+skips on either transport.
+
+The spec's first execution was red 12 of 12, and every one of those reds was the spec being wrong about the app rather
+than the app being wrong — `docs/evidence/iter63-spec-first-run-2026-11-20.log.gz`. Three assertions were repaired, none
+loosened: the derivation counter used `.flat()` on an array of five date-keyed objects and compared 5 against 1,830; the
+valid-days column used `locator('td').nth(3).allTextContents()`, which collapses to a single element and returned
+`["None"]` against five rows, and the table's first column is a `th scope="row"` (`public/js/lib/dom.js:39`) so the cells
+are `td:nth-child(4)` and `td:nth-child(5)`; and the collapsed note was compared with `innerText()`, which is the empty
+string inside a closed `<details>`, so it is compared with `textContent()` while `toBeHidden()` is asserted separately.
+`docs/evidence/iter63-spec-repaired-12-2026-11-20.log.gz` records those three repairs landing green on all four projects
+(`Running 12 tests using 1 worker`, `12 passed (8.6s)`) before the two device-cache cases were added, so the repair and
+the extension are separate readings. `docs/evidence/iter63-spec-focused-2026-11-20.log.gz` is the finished spec on the
+built bytes: `Running 20 tests using 1 worker` and `20 passed`.
+
+Both browser halves were then mutated back to the defect, one file at a time, rebuilt, run, restored by digest and
+re-run. `docs/evidence/iter63-control-renderer-2026-11-20.log.gz` deletes the visible notice line
+(`public/js/modules/strategy.js:28`) from the shipped renderer: `C8 VERDICT DETECTED: spec exited non-zero`,
+`4 failed` / `8 passed` with all four failures on `expect(locator).toHaveCount(expected) failed` in the disclosure case
+across the four projects, `RESTORE_OK 34a43fcd43c2be9543139e813e777ec3` and `FINAL_REPLAY 12 passed (8.3s)`.
+`docs/evidence/iter63-control-devicecache-2026-11-20.log.gz` replaces `const persisted = !carriesNoReadings(data);` with
+`const persisted = true;`: `C9 VERDICT DETECTED`, `4 failed` / `16 passed` — the four "never written to the device cache"
+cases red on both transports while all four populated-year controls stayed green — `RESTORE_OK
+15dd3b30db33c958b901194d0cd63646` and `FINAL_REPLAY 20 passed (14.3s)`.
+
+The four-project gate ran on those bytes and only once. It opened `Running 292 tests using 1 worker` — iteration 62's 272
+plus the five new cases in each of the four projects — from `ITER63_GATE_START 2026-11-20T10:40:10Z` to
+`ITER63_GATE_DONE 2026-11-20T11:01:16Z` on HEAD `e78f808…`, and closed `292 passed (21.1m)` with `GATE_EXIT=0`
+(`docs/evidence/iter63-gate-2026-11-20.log.gz`, whose header records the same commit and names the six uncommitted files
+whose bytes the build consumed). The new spec executed twenty times, at positions 66-70 in `[static-desktop]`, 139-143 in
+`[static-mobile]`, 212-216 in `[node-desktop]` and 285-289 in `[node-mobile]`, so both transports really did carry the
+empty year through place, constraints, evidence and the compared table. Three counts in that log are the ones worth
+stating as zero: the `✘` case marker appears nowhere, `did not run` appears nowhere (nothing was blocked behind a
+failure, so no tail of the serial run went unexecuted) and `cdn.jsdelivr.net` appears nowhere (no optional-model case was
+stopped by a DNS failure this time). One live third-party event is inside those bytes: an
+`AppError: The field lookup services are busy or unavailable (6 attempts across 3 services). No fields were invented.`
+thrown at `server/context/farms.js:89`, HTTP 502, code `CONTEXT_UNAVAILABLE`, printed between the completed-case lines for
+`[node-desktop]` 169 and 170. It is recorded as upstream capacity, not as a repair to field discovery; the case whose
+subject is exactly that refusal, `tests/e2e/field-service-failure.spec.js:21`, passed in all four projects, as did
+`tests/e2e/field-terrain.spec.js:4` in the same project afterwards in 1.9 m.
+
+The same tree was counted without executing it. `docs/evidence/iter63-census-playwright-2026-11-20.log.gz` prints
+`Total: 292 tests in 27 files` and `CENSUS_EXIT=0`: twenty entries more than iteration 62's census, being the five new
+cases once per project, and no skipped entry anywhere — the four lines in that output carrying the word “skips” are the
+titles of the `help-and-explanations.spec.js:41` cases, exactly as in iteration 62's. So 272 + 20 = 292 by arithmetic and
+292 by execution and 292 by listing, from three separate commands.
+
+This pass then went red on its own bookkeeping, and those reds are on the shelf rather than withdrawn.
+`docs/evidence/iter63-docsguards-absent-claim-red-2026-11-20.log.gz` reads `DOCSGUARDS_SUMMARY tests 28 | pass 25 | fail 3`
+and `docs/evidence/iter63-offline-absent-claim-red-2026-11-20.log.gz` the same three inside the whole suite, at
+`ℹ pass 271` / `ℹ fail 3`. Two of the three were the generated index still counting 672 files when the shelf held 674, which
+is what those two cases exist to say. The third is the one worth keeping: the gate archive's provenance header spelled out
+the strings its own tally row declared absent — it said the log contained no cross-marked case line and no unexecuted-case
+phrase, using those phrases — and the guard is correct that the header is part of the archived bytes a row is checked
+against, so the row was false about an archive that was itself true. The gate archive was re-shelved with the same meaning
+written in words an absence check cannot collide with, and nothing about the run it carries changed.
+
+The two readings this ledger treats as its floor were then taken on the finished tree. The five guard files alone print
+`ℹ tests 28` / `ℹ pass 28` / `ℹ fail 0` / `ℹ skipped 0` and `DOCSGUARDS_CHILD_EXIT 0`
+(`docs/evidence/iter63-docsguards-final-2026-11-20.log.gz`), and the whole offline suite prints `ℹ tests 274` /
+`ℹ pass 274` / `ℹ fail 0` / `ℹ skipped 0` with `OFFLINE_EXIT=0`
+(`docs/evidence/iter63-offline-final-2026-11-20.log.gz`) — iteration 62's 270 plus the four cases this pass added:
+`tests/rotation.test.js:157`, `tests/rotation.test.js:176`, `tests/rotation.test.js:187` and `tests/nasa.test.js:116`. Both
+headers name the 106-row table they executed against, which is the honest limit of what they can prove: their own two rows
+joined the table afterwards, so they are the only archives on the shelf whose row this pass did not itself run — the same
+bootstrap iteration 62 accepted for its 92nd row and iteration 57 for an archive it cited and did not row. Regenerating the
+index for those six closing archives and re-running both commands on the tree that resulted is the reading quoted in the
+AGENTS.md §10 bullet for this pass; it is deliberately not shelved, because an archive written after the index was
+regenerated would be a shelf file the committed index no longer lists.
+
+What stays UNVERIFIED after all of that is narrower than what was measured, but not empty. The fill-coded year the browser
+spec serves is a derived fixture — the shipped 2024 capture with its 1,830 readings replaced by the source's own `-999` —
+and no live POWER request was made to find a station-year that really arrives that way, so “this happens in the field” is
+untested; what is tested is that when it happens the app neither ranks it as evidence nor caches it as a result. Real
+phones, Safari/WebKit, microphones, audio quality and any independent agronomic judgement about the rotations themselves
+remain outside every number above, as they have through the whole programme.

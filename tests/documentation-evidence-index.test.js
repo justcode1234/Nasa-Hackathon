@@ -834,10 +834,122 @@ const TALLIES = [
       'the gate archive already shelved)', 'HEAD bf4bc8c63085ba7bd357b7c598af9e4d56168de1',
       'EXIT_OBSERVED_BY_ARCHIVER 0'],
     marks: 0, absent: ['✖', 'ℹ fail 1', 'OFFLINE_EXIT'] },
+  // Iteration 63, goal 6 (the P1/P2 pair). The two ranking probes are archived as a pair on purpose: the synthetic one is
+  // the only witness that the *selection* changes when the evidence disappears (the same inputs, a different Alternative
+  // 1, one vector slot different), and the capture-derived one is the only witness of the sentence the shipped code
+  // prints for the crops and the year the browser spec serves. The controls pair is kept for the same reason: the first
+  // pass's C6 was a control that proved nothing, and a table that only carries the re-cut would hide that.
+  { archive: 'docs/evidence/iter63-synthetic-ranking-probe-2026-11-20.log.gz',
+    lines: ['C_MISSING_EQ MATURITY [{"label":"Existing rotation","missing":205,"maturity":205,"equal":true},'
+      + '{"label":"Alternative 1","missing":180,"maturity":180,"equal":true},'
+      + '{"label":"Alternative 2","missing":185,"maturity":185,"equal":true}]',
+      'C_ALTERNATIVES_SPARSE 1:radish--radish--radish 2:bush-bean--radish--radish',
+      'C_ALTERNATIVES_FULL 1:bush-bean--radish--radish 2:radish--bush-bean--radish',
+      'C_COMPARED 1 vector_changed 1 changed_only_by_missing_evidence 1',
+      'C_SPARSE_ORDER 1:180/180 2:185/185', 'C_FULL_ORDER 1:0/185 2:0/185'],
+    phrases: ['CATALOG_IDS radish,bush-bean,pea,onion COUNT 4', 'B_ENGINE_ACCEPTED true candidates 63'],
+    marks: 0, absent: ['✘', 'not ok'] },
+  { archive: 'docs/evidence/iter63-all-fill-derivation-2026-11-20.log.gz',
+    lines: ['CAPTURE header.fill_value -999 parameters 5 value cells 1830 non-fill cells 1830',
+      'DERIVED value cells 1830 non-fill after derivation 0 metadata preserved true',
+      'NORMALIZED dates 366 validDays T2M 0,T2M_MAX 0,T2M_MIN 0,PRECTOTCORR 0,ALLSKY_SFC_SW_DWN 0 latestAvailableDate null completeMonths 0 notices 5',
+      'RANKING evidenceLimited true priority water',
+      'SCENARIOS baseline|245|245|0|0|0 pea--pea--pea|240|240|0|0|0 pea--pea--sweet-corn|260|260|0|0|0',
+      'CONTROL_POPULATED evidenceLimited false limitation starts "Counts are screening rules, not suitabil"',
+      'ALL_FILL_DERIVATION_DONE'],
+    phrases: ['CMD node artifacts/scratch/iter63/all-fill-derivation.mjs', 'usable days out of 366: T2M 0, T2M_MIN 0'],
+    marks: 0, absent: ['✘', 'not ok'] },
+  { archive: 'docs/evidence/iter63-cache-fill-probe-2026-11-20.log.gz',
+    lines: ['HEADLESS_FILL fetches 1 first.hit false second.hit true validDays 0,0,0,0,0 latest null',
+      'CONTROL_POPULATED fetches 1 first.hit false second.hit true validDays 366,366,366,366,366 latest "2024-12-31"',
+      'SAME_SENTENCE both paths print {"cache":{"hit":false,"ttlSeconds":21600}} {"cache":{"hit":false,"ttlSeconds":21600}}',
+      'TTL retry_inside_ttl.hit true retry_after_ttl.hit false fetches 2 ttlSeconds 21600', 'CACHE_FILL_PROBE_DONE'],
+    phrases: ['CMD node artifacts/scratch/iter63/cache-fill-probe.mjs'], marks: 0, absent: ['✘', 'not ok'] },
+  { archive: 'docs/evidence/iter63-offline-controls-run1-2026-11-20.log.gz',
+    lines: ["CONTROL C6 persistence-seam-ignored mutated server/nasa/power.js -> 'persistence = { readCached: async () => null, '",
+      'VERDICT MISSED', 'RESTORE_OK'],
+    phrases: ['  counts: ℹ tests 24 ℹ pass 24 ℹ fail 0', '  red tests: 0 | named-as-must-fail matched: 0'],
+    marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter63-offline-controls-2026-11-20.log.gz',
+    lines: ['CONTROL C1 never-disclose mutated server/agronomy/rotation.js -> \'const evidenceLimited = false && hasAllSeries\'',
+      'CONTROL C2 always-disclose mutated server/agronomy/rotation.js -> \'const evidenceLimited = true || hasAllSeries\'',
+      'CONTROL C3 sentence-not-merged-into-limitation mutated server/agronomy/rotation.js -> \'`Counts are screening rules\'',
+      "CONTROL C4 always-persist mutated server/nasa/power.js -> 'const persisted = true;'",
+      "CONTROL C5 never-persist mutated server/nasa/power.js -> 'const persisted = false;'",
+      "CONTROL C6 persistence-seam-bypassed mutated server/nasa/power.js -> ''",
+      "CONTROL C7 write-guard-dropped mutated server/nasa/power.js -> 'await persistence.writeCached('",
+      'RESTORE_OK', 'FINAL_REPLAY ℹ tests 24 ℹ pass 24 ℹ fail 0 reds 0'],
+    phrases: ["BASE {'server/agronomy/rotation.js': 'a6c523bf7805', 'server/nasa/power.js': 'e5f1aba224ba'}"],
+    marks: 0, absent: ['VERDICT MISSED', 'PARTIAL', '✘'] },
+  // The spec's own history, kept as three readings because the story is the point: 12 red on its first execution (every
+  // one a spec assertion wrong about the app), the same three cases green per project once repaired, then 20 green with
+  // the device-cache half added.
+  { archive: 'docs/evidence/iter63-spec-first-run-2026-11-20.log.gz',
+    lines: ['Running 12 tests using 1 worker', '12 failed'],
+    phrases: ['Error: a year of fill codes produced a non-zero valid-day count',
+      'Error: the collapsed note and the visible notice disagree',
+      'zero-evidence-parity.spec.js:41:1 › the empty year this spec serves'],
+    marks: 12 },
+  { archive: 'docs/evidence/iter63-spec-repaired-12-2026-11-20.log.gz',
+    lines: ['Running 12 tests using 1 worker', '12 passed (8.6s)'],
+    phrases: ['[static-desktop] › tests/e2e/zero-evidence-parity.spec.js:44:1',
+      '[node-mobile] › tests/e2e/zero-evidence-parity.spec.js:136:1',
+      '[node-desktop] › tests/e2e/zero-evidence-parity.spec.js:168:1'],
+    marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter63-spec-focused-2026-11-20.log.gz',
+    lines: ['Running 20 tests using 1 worker', '20 passed (15.4s)'],
+    phrases: ['[static-desktop] › tests/e2e/zero-evidence-parity.spec.js:225:1',
+      '[node-mobile] › tests/e2e/zero-evidence-parity.spec.js:245:1'],
+    marks: 0, absent: ['✘', 'did not run'] },
+  { archive: 'docs/evidence/iter63-control-renderer-2026-11-20.log.gz',
+    lines: ['C8 VERDICT DETECTED: spec exited non-zero', 'RESTORE_OK 34a43fcd43c2be9543139e813e777ec3',
+      '|   4 failed', '|   8 passed (1.1m)', '| FINAL_REPLAY   12 passed (8.3s)'],
+    phrases: ['MUTATED: deleted line 28 (the visible notice append)',
+      'Error: expect(locator).toHaveCount(expected) failed',
+      'zero-evidence-parity-the-c-de394--its-evidence-criterion-did-node-mobile'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter63-control-devicecache-2026-11-20.log.gz',
+    lines: ['C9 VERDICT DETECTED: spec exited non-zero', 'RESTORE_OK 15dd3b30db33c958b901194d0cd63646',
+      '|   4 failed', '|   16 passed (23.4s)', '| FINAL_REPLAY   20 passed (14.3s)'],
+    phrases: ['MUTATED 127:', 'zero-evidence-parity-a-yea-d2762-written-to-the-device-cache-static-desktop',
+      'zero-evidence-parity-a-yea-d2762-written-to-the-device-cache-node-desktop'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter63-gate-2026-11-20.log.gz',
+    lines: ['Running 292 tests using 1 worker', '292 passed (21.1m)', 'GATE_EXIT=0'],
+    phrases: ['ITER63_GATE_START 2026-11-20T10:40:10Z', 'ITER63_GATE_DONE 2026-11-20T11:01:16Z',
+      '[node-desktop] › tests/e2e/zero-evidence-parity.spec.js:225:1',
+      'unavailable (6 attempts across 3 services)', 'server/context/farms.js:89'],
+    marks: 0, absent: ['✘', 'did not run', 'cdn.jsdelivr.net'] },
+  { archive: 'docs/evidence/iter63-census-playwright-2026-11-20.log.gz',
+    lines: ['Total: 292 tests in 27 files', 'CENSUS_EXIT=0'],
+    phrases: ['[static-desktop] › zero-evidence-parity.spec.js:44:1',
+      '[node-mobile] › zero-evidence-parity.spec.js:245:1'],
+    marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter63-offline-absent-claim-red-2026-11-20.log.gz',
+    lines: ['ℹ tests 274', 'ℹ pass 271', 'ℹ fail 3', 'ℹ skipped 0', 'OFFLINE_EXIT=1'],
+    phrases: ['the header says 672 files under docs/evidence and the scan found 674',
+      'contains "✘", which the ledger states that archive does not print',
+      'docs/evidence-index.md is not what scripts/evidence-index-generator.mjs prints'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter63-docsguards-absent-claim-red-2026-11-20.log.gz',
+    lines: ['ℹ tests 28', 'ℹ pass 25', 'ℹ fail 3', 'ℹ skipped 0',
+      'DOCSGUARDS_SUMMARY tests 28 | pass 25 | fail 3 | skipped 0', 'DOCSGUARDS_CHILD_EXIT 1'],
+    phrases: ['the tally of every archived run is printed by that archive, not by the prose quoting it',
+      'the committed index is what the shipped generator prints, line for line'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter63-docsguards-final-2026-11-20.log.gz',
+    lines: ['ℹ tests 28', 'ℹ pass 28', 'ℹ fail 0', 'ℹ skipped 0',
+      'DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0', 'DOCSGUARDS_CHILD_EXIT 0'],
+    phrases: ['against the 106-row tally table'],
+    marks: 0, absent: ['✘'] },
+  { archive: 'docs/evidence/iter63-offline-final-2026-11-20.log.gz',
+    lines: ['ℹ tests 274', 'ℹ pass 274', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0'],
+    phrases: ['a saved list that could not be read says so', 'the tally of every archived run is printed by that archive'],
+    marks: 0, absent: ['✘'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 92, `the table carries ${TALLIES.length} archives; subsections 57 through 62 quote more runs than ` +
+  assert.ok(TALLIES.length >= 108, `the table carries ${TALLIES.length} archives; subsections 57 through 63 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -871,7 +983,18 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'guard set at 28 re-run after the iteration-62 ledger bullet existed, and 91 when the four-project gate on the ' +
     'delivered bytes finished green at 272 and was archived from the log its own runner wrote, which is the only ' +
     'reading in this pass that exercised the browser transports rather than a `--list` count or an offline suite, and ' +
-    '92 when the offline suite that ran against that 91-row table joined it, carrying the gate archive on the shelf.');
+    '92 when the offline suite that ran against that 91-row table joined it, carrying the gate archive on the shelf, and '
+    + '102 when iteration 63 archived the two ranking probes that established the degenerate evidence criterion (the '
+    + 'selection that changes with it and the sentence the shipped code prints), the caching probe that established the '
+    + 'device-write half, the seven-mutation ladder and the pass whose sixth control proved nothing, the browser spec '
+    + 'red on its own first execution, the same three cases repaired and green per project, the finished twenty, and the '
+    + 'two mutation controls that took the shipped notice and the shipped write guard back out, and 104 when the '
+    + 'four-project gate on those bytes closed green at 292 passed (21.1m) with exit 0 and the `--list` census counted '
+    + 'the same 292 in 27 files, and 106 when this pass\'s own publication error was shelved with them: an archive '
+    + 'header that spelled the strings its tally row declared absent, which went red twice over - once in the guard set '
+    + 'alone and once in the whole offline suite - and stayed on the shelf as those two logs, and 108 when the guard set '
+    + 'and the whole suite were read again green on the finished tree, their own two rows the only ones in this pass that '
+    + 'no run of this pass executed.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

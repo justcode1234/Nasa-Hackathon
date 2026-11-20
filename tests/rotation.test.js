@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { validateInputs, compareRotations, answerQuestion, rankingVector } from '../server/agronomy/rotation.js';
 import { catalog } from '../server/agronomy/catalog.js';
-import { syntheticObservations } from './fixtures.js';
+import { normalizePower } from '../server/nasa/power.js';
+import { syntheticObservations, syntheticPower } from './fixtures.js';
 
 export const validInput = () => ({ latitude: -31.95, longitude: 115.86, referenceYear: 2025,
   planningYear: 2027, startMonth: 1, baseline: ['sweet-corn', 'sweet-corn', 'pea'],
@@ -137,4 +138,63 @@ test('crop and water questions use traceable facts and deterministic limitations
   assert.ok(answer.blocks.some(b => b.text.includes('Fabaceae') && b.sourceIds.includes('umn-peas')));
   assert.ok(answer.sources.every(s => s.url.startsWith('https://')));
   assert.ok(answerQuestion('Will I have enough water?', result, observations).blocks.some(b => b.text.includes('cannot be assessed')));
+});
+
+// Iteration 63, P1. A POWER year whose values are all fill is a transport-layer success: normalizePower turns every
+// day into null (server/nasa/power.js:48-52) and the comparison still runs. Then `missing` (rotation.js:102) counts
+// every day in every window, so criteria.missingEvidenceDays equals criteria.maturityUpperDays for every scenario —
+// rankingVector position 3 (rotation.js:145) then orders sequences by crop length ahead of the farmer's chosen
+// priority tie-breaks while its label claims to measure evidence. Measured in
+// artifacts/scratch/iter63/cache-fill-probe-2026-11-20.log (validDays 0,0,0,0,0 for a 366-day all-fill year).
+// The fix is a disclosure, never a re-rank: which criterion should replace a degenerate one is an agronomy decision
+// and stays UNVERIFIED.
+function allFillObservations(year = 2025) {
+  const raw = syntheticPower(year);
+  for (const byDate of Object.values(raw.properties.parameter)) for (const key of Object.keys(byDate)) byDate[key] = -999;
+  return normalizePower(raw, { latitude: -31.95, longitude: 115.86, year }, 'TEST', '2026-11-14T00:00:00.000Z');
+}
+
+test('a year with no usable weather days discloses that the missing-evidence criterion is degenerate', () => {
+  const inputs = validateInputs(validInput());
+  const result = compareRotations(inputs, allFillObservations());
+  assert.equal(result.ranking.evidenceLimited, true, 'the machine-checkable flag is missing');
+  assert.match(result.ranking.limitation, /Weather evidence limit:/, 'nothing says the year carried no readings');
+  assert.match(result.ranking.limitation, /out of 365: T2M 0, T2M_MIN 0, T2M_MAX 0, PRECTOTCORR 0/,
+    'the disclosure does not quote the observed per-parameter counts');
+  assert.match(result.ranking.limitation, /compared crop lengths rather than evidence/, 'the disclosure hides what the ordering actually keyed on');
+  assert.ok(result.ranking.limitation.startsWith(result.ranking.evidenceLimitation), 'the visible notice and the ordering note can drift apart');
+  assert.match(result.ranking.limitation, /not suitability probabilities/, 'the existing limitation sentence was replaced rather than extended');
+  assert.match(result.ranking.limitation, /does not imply lower water demand/, 'the maturity limitation survived');
+  // The counts themselves are untouched: the disclosure reports the degeneracy instead of hiding it.
+  for (const scenario of result.scenarios) {
+    assert.equal(scenario.criteria.missingEvidenceDays, scenario.criteria.maturityUpperDays);
+    assert.ok(scenario.criteria.missingEvidenceDays > 0, 'a zero-evidence year must not read as complete evidence');
+  }
+  assert.deepEqual(compareRotations(inputs, allFillObservations()), result, 'the comparison is no longer deterministic');
+});
+
+test('the ordering vector is unchanged by the disclosure: position 3 stays the missing-evidence count', () => {
+  const inputs = validateInputs(validInput());
+  const result = compareRotations(inputs, allFillObservations());
+  for (const scenario of result.scenarios) {
+    const vector = rankingVector(scenario, inputs.priority);
+    assert.equal(vector[2], scenario.criteria.missingEvidenceDays, 'the disclosure silently re-ranked the scenarios');
+    assert.equal(vector[3], scenario.criteria.frostRiskDays);
+  }
+  assert.deepEqual(result.scenarios.map(s => s.id), compareRotations(inputs, allFillObservations()).scenarios.map(s => s.id));
+});
+
+test('one required parameter missing all year degenerates the same criterion, a populated year does not', () => {
+  const inputs = validateInputs(validInput());
+  // `missing` (rotation.js:102) counts a day when ANY required parameter is null, so a year that carries air
+  // temperature but no rainfall at all produces the same equality and needs the same disclosure.
+  const noRain = syntheticObservations();
+  noRain.parameters.PRECTOTCORR.values.fill(null);
+  const partial = compareRotations(inputs, noRain);
+  assert.equal(partial.ranking.evidenceLimited, true);
+  assert.match(partial.ranking.limitation, /out of 365: T2M 365, T2M_MIN 365, T2M_MAX 365, PRECTOTCORR 0/);
+  const result = compareRotations(inputs, syntheticObservations());
+  assert.equal(result.ranking.evidenceLimited, false);
+  assert.doesNotMatch(result.ranking.limitation, /Weather evidence limit:/);
+  assert.match(result.ranking.limitation, /not suitability probabilities/);
 });

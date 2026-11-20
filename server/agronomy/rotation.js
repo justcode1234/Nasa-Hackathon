@@ -149,8 +149,7 @@ export function rankingVector(scenario, priority) {
   return [...safety, ...tieBreaks];
 }
 
-export function compareRotations(inputs, observations) {
-  const baseline = evaluate(inputs.baseline, inputs, observations, 'Existing rotation', true);
+export function compareRotations(inputs, observations) {  const baseline = evaluate(inputs.baseline, inputs, observations, 'Existing rotation', true);
   const baselineKey = inputs.baseline.map(c => findCrop(c)?.id ?? c).join('--');
   const candidates = [];
   for (const a of inputs.allowedCrops) for (const b of inputs.allowedCrops) for (const c of inputs.allowedCrops) {
@@ -163,6 +162,22 @@ export function compareRotations(inputs, observations) {
     return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
   });
   const alternatives = candidates.slice(0, 2).map((scenario, i) => ({ ...scenario, label: `Alternative ${i + 1}`, rank: i + 1 }));
+  // Required readings are the same four parameters `missing` (above) tests each day against, so the counts below and
+  // the criterion they describe come from one source. A year in which every day of every evaluated window lacks at
+  // least one of them makes criteria.missingEvidenceDays equal criteria.maturityUpperDays for every scenario, which
+  // turns rankingVector position 3 into a maturity comparison; that is disclosed, not re-ranked, because replacing a
+  // degenerate criterion is an agronomy decision this prototype does not own.
+  const required = ['T2M', 'T2M_MIN', 'T2M_MAX', 'PRECTOTCORR'].map(id => ({ id, values: observations?.parameters?.[id]?.values }));
+  const scenarios = [baseline, ...alternatives];
+  const hasAllSeries = required.every(series => Array.isArray(series.values)) && new Set(required.map(series => series.values.length)).size === 1;
+  const evidenceLimited = hasAllSeries && required[0].values.length > 0 && scenarios.every(
+    scenario => scenario.criteria.maturityUpperDays > 0 && scenario.criteria.missingEvidenceDays === scenario.criteria.maturityUpperDays);
+  const evidenceLimitation = evidenceLimited
+    ? `Weather evidence limit: every day inside every crop window lacked at least one required NASA POWER reading ` +
+      `(usable days out of ${required[0].values.length}: ${required.map(series => `${series.id} ${series.values.filter(v => v !== null).length}`).join(', ')}). ` +
+      `The "Missing evidence days" criterion then equalled each rotation's own summed maturity, so at that position it compared crop lengths rather than evidence, ` +
+      `ahead of the ${inputs.priority} tie-breaks. Frost, heat and rain counts of 0 mean nothing was measured, not that risk is low. `
+    : null;
   const gaps = [
     inputs.country ? `Crop choices are filtered using national FAOSTAT 2020–2024 production categories for ${getCountryCrops({country: inputs.country}).countryName}; category/cultivar mappings and field suitability remain unverified.` : 'No country production filter was supplied to this comparison.',
     catalog.scope,
@@ -182,13 +197,14 @@ export function compareRotations(inputs, observations) {
   return {
     schemaVersion: 1, kind: 'deterministic rule-based comparison', inputs,
     horizon: { start: baseline.timeline[0].start, endExclusive: baseline.timeline[2].endExclusive, months: 12 },
-    scenarios: [baseline, ...alternatives], consideredCandidates: candidates.length,
-    ranking: { priority: inputs.priority, method: 'Every possible sequence of the allowed crops was checked. Fewer is better on the first criterion; ties go to the next. Exact ties use a stable order. Only alternatives are ordered; your baseline is retained.',
+    scenarios, consideredCandidates: candidates.length,
+    ranking: { priority: inputs.priority, evidenceLimited, evidenceLimitation,
+      method: 'Every possible sequence of the allowed crops was checked. Fewer is better on the first criterion; ties go to the next. Exact ties use a stable order. Only alternatives are ordered; your baseline is retained.',
       orderedCriteria: ['Unsupported crops', 'Calendar overruns', 'Missing evidence days', 'Historical frost-tender exposure days', 'Known soil pH / drainage concerns',
         ...(inputs.priority === 'water' ? ['Longest zero-rain run in a crop window', 'Family repeats', 'Days above cited ideal air range', 'Summed maturity upper bounds'] : inputs.priority === 'family' ? ['Family repeats', 'Days above cited ideal air range', 'Summed maturity upper bounds'] :
           inputs.priority === 'short-season' ? ['Summed maturity upper bounds', 'Family repeats', 'Days above cited ideal air range'] :
             ['Days above cited ideal air range', 'Family repeats', 'Summed maturity upper bounds'])],
-      limitation: 'Counts are screening rules, not suitability probabilities. Unequal thermal evidence between crops limits the ordering; unknown heat risk is not zero risk. Shorter maturity does not imply lower water demand.' },
+      limitation: `${evidenceLimitation ?? ''}Counts are screening rules, not suitability probabilities. Unequal thermal evidence between crops limits the ordering; unknown heat risk is not zero risk. Shorter maturity does not imply lower water demand.` },
     uncertainty: 'Uncertainty: high — local agronomic validation and future weather are unavailable', gaps,
     assumptions: ['One field; one crop starts each four-month slot; 12-month horizon.',
       'Maturity upper bound plus 14 days for harvest and turnaround; remaining days are unallocated.',

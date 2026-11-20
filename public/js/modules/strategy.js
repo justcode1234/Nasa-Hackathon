@@ -23,6 +23,9 @@ export function renderStrategy(result){
   const root=document.querySelector('#strategy-output');root.replaceChildren();
   root.append(el('p',`One field · ${monthRange(result.horizon.start,result.horizon.endExclusive)} · ${result.horizon.months} months · historical weather reference ${result.inputs.referenceYear}.`),el('p',result.uncertainty,{class:'notice'}));
   root.append(el('p',`The reference year is a historical comparison: each crop window uses the same calendar dates in ${result.inputs.referenceYear}. It is not a forecast for the planned year.`));
+  // The ordering note lives in a collapsed <details> below, so a year with no readings would otherwise reach the
+  // farmer as a ranked comparison whose stated evidence criterion meant nothing. Visible, unprompted, here.
+  if(result.ranking.evidenceLimitation)root.append(el('p',result.ranking.evidenceLimitation,{class:'notice'}));
   const allowed=result.inputs.allowedCrops.map(id=>result.scenarios.flatMap(s=>s.timeline).find(slot=>slot.cropId===id)?.cropName??id).join(', ');
   root.append(el('p',`Allowed alternative crops: ${allowed}. Your baseline stays as entered. Each alternative is a different three-crop sequence from this set; no extra crop is added.`));
   if(result.scenarios[0].timeline.some(slot=>slot.perennial))root.append(el('p','Your baseline includes perennial fruit trees. This annual-slot planner cannot make a like-for-like orchard comparison. The alternative annual sequences are not advice to remove or replace an orchard; a local orchard-specific plan is needed.',{class:'notice'}));

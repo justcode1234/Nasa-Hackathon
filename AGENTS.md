@@ -2174,6 +2174,43 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   the retry inside another case absorbed; `cdn.jsdelivr.net` and `did not run` appear nowhere in it.
   Safari/WebKit, real phones, microphones and independent agronomy stay UNVERIFIED.
 
+- **20 Nov, same branch: iteration 63 - a POWER year made entirely of fill codes stopped counting as evidence and
+  stopped being cached as if it were.** This is backlog goal 6 and the two `docs/handoff-2026-11-18.md` §7 entries about
+  the zero-valid-evidence visibility and the all-fill payload's 6 h TTL. `server/nasa/power.js:48-52` maps the source's
+  fill value to null, so an empty year arrives as five parameters with `validDays: 0`, `latestAvailableDate: null` and
+  one notice each. `server/agronomy/rotation.js:102` counts exactly those null days into `missingEvidenceDays`,
+  accumulated beside `maturityUpperDays` at `:99`, so over a full-year request the two are equal for every scenario and
+  `evidenceLimited` at `server/agronomy/rotation.js:173` is the third ordering key. Two offline probes established that
+  before any byte changed: `docs/evidence/iter63-synthetic-ranking-probe-2026-11-20.log.gz` prints
+  `C_MISSING_EQ MATURITY` with every scenario `equal:true` and the ranking itself flipping between sparse and filled
+  evidence, and `docs/evidence/iter63-all-fill-derivation-2026-11-20.log.gz` derives the payload from the shipped 2024
+  capture - 1,830 cells replaced by the source's own `-999`, metadata untouched - and reproduces `validDays: 0` three
+  times. The fix states the fact instead of promoting anything on the strength of an absence:
+  `server/agronomy/rotation.js:175` builds `evidenceLimitation`, it reaches the comparison summary at `:207` and the
+  visible strategy notice at `public/js/modules/strategy.js:28`, and the ordering of the criteria is unchanged. The cache
+  half: `server/nasa/power.js:127` persists only when `carriesNoReadings` at `server/nasa/power.js:139` is false, where
+  before an empty year was stored for 21,600 s and served back as though it were a result. Nine mutation controls each
+  went red and were restored by digest - seven offline
+  (`docs/evidence/iter63-offline-controls-2026-11-20.log.gz`, and the pass whose sixth control proved nothing is kept as
+  `docs/evidence/iter63-offline-controls-run1-2026-11-20.log.gz`) and two in the browser
+  (`docs/evidence/iter63-control-renderer-2026-11-20.log.gz`,
+  `docs/evidence/iter63-control-devicecache-2026-11-20.log.gz`). The new spec
+  `tests/e2e/zero-evidence-parity.spec.js` went red 12 of 12 on its own first execution because three of its assertions
+  were wrong about the app (`docs/evidence/iter63-spec-first-run-2026-11-20.log.gz`); both repairs and the finished
+  twenty are archived (`docs/evidence/iter63-spec-repaired-12-2026-11-20.log.gz`,
+  `docs/evidence/iter63-spec-focused-2026-11-20.log.gz`). The four-project gate on the delivered bytes opens
+  `Running 292 tests using 1 worker` and closes `292 passed (21.1m)`, exit 0, with no failed case, no unexecuted case and
+  no CDN-name failure (`docs/evidence/iter63-gate-2026-11-20.log.gz`), and `npx playwright test --list` counts the same
+  292 in 27 files (`docs/evidence/iter63-census-playwright-2026-11-20.log.gz`). The offline suite reads `ℹ tests 274` /
+  `ℹ pass 274` / `ℹ fail 0` and the guard set `DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0`
+  (`docs/evidence/iter63-offline-final-2026-11-20.log.gz`, `docs/evidence/iter63-docsguards-final-2026-11-20.log.gz`).
+  This pass also kept its own bookkeeping error on the shelf: a provenance header that spelled the strings its tally row
+  declared absent, red twice over (`docs/evidence/iter63-offline-absent-claim-red-2026-11-20.log.gz`,
+  `docs/evidence/iter63-docsguards-absent-claim-red-2026-11-20.log.gz`). Full account in subsection 63 of
+  `docs/validation.md`. The all-fill payload the browser cases serve is a derived fixture, so a live station-year that
+  really arrives wholly filled stays UNVERIFIED, as do Safari/WebKit, real phones, microphones, audio quality and
+  independent agronomy. Nothing was deployed, `main` is untouched, no NASA portal edit.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

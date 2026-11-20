@@ -104,3 +104,53 @@ test('a NASA POWER refusal keeps the status it answered and drops the promise th
   const timedOut = await ask(408);
   assert.match(timedOut.message, /Retry later/, 'HTTP 408 asks for a retry, so it is not a refusal');
 });
+
+// Iteration 63, P2. A year whose values are all fill answers 200, so it took the populated year's path whole: one
+// fetch, a 21,600 s in-process entry and a durable write. The probe in
+// artifacts/scratch/iter63/cache-fill-probe-2026-11-20.log prints validDays 0,0,0,0,0 next to
+// cache {"hit":false,"ttlSeconds":21600} on the empty path and the identical sentence on the populated control,
+// and it could not see the device half because Node has no indexedDB (server/persistence.js:15) — so the durable
+// claim below is only assertable through an injected persistence pair. An empty year that survives a reload reads
+// to the next farmer as retrieved evidence with "latest available: None", and nothing but a re-request can show
+// that the service has since answered.
+test('a POWER year with no readings stays in the process cache and is never written to the device cache', async () => {
+  const store = new Map();
+  const persistence = {
+    readCached: async (key, ttlMs) => { const entry = store.get(key); return entry && Date.now() - entry.storedAt < ttlMs ? entry : null; },
+    writeCached: async (key, data, retrievedAt) => { store.set(key, { key, data, retrievedAt, storedAt: Date.now() }); }
+  };
+  const emptyYear = () => {
+    const raw = syntheticPower();
+    for (const byDate of Object.values(raw.properties.parameter)) for (const key of Object.keys(byDate)) byDate[key] = -999;
+    return raw;
+  };
+  let calls = 0;
+  const answer = async () => { calls++; return { ok: true, status: 200, json: async () => emptyYear() }; };
+  const client = () => createPowerClient({ persistence, fetchImpl: answer });
+  const input = { latitude: -31.89, longitude: 116.77, year: 2025 };
+  const session = client();
+  const first = await session(input);
+  assert.equal(first.parameters.T2M.validDays, 0, 'the fixture no longer describes an empty year');
+  assert.equal(first.cache.persisted, false, 'an empty year was offered as device-persistent evidence');
+  assert.equal(store.size, 0, 'an empty year reached the device cache');
+  // Skipping the durable write must not become a request storm: a repeat inside the TTL stays in the process cache.
+  const repeat = await session(input);
+  assert.equal(repeat.cache.hit, true, 'a repeat click inside the TTL left the process cache for NASA again');
+  assert.equal(repeat.cache.persisted, false);
+  assert.equal(calls, 1, 'an empty year turned every click into a request');
+  const reload = await client()(input);
+  assert.equal(reload.cache.hit, false, 'a fresh session inherited the empty year from the device cache');
+  assert.equal(reload.cache.persisted, false);
+  assert.equal(calls, 2);
+  assert.equal(store.size, 0);
+  // Control: a year with readings keeps the durable write it always had, and the next session reads it back.
+  let filledCalls = 0;
+  const populated = await createPowerClient({ persistence, fetchImpl: async () => { filledCalls++; return { ok: true, status: 200, json: async () => syntheticPower() }; } })(input);
+  assert.equal(populated.parameters.T2M.validDays, 365, 'the control year is not populated');
+  assert.equal(populated.cache.persisted, true, 'a populated year stopped being written to the device cache');
+  assert.equal(store.size, 1);
+  const warm = await client()(input);
+  assert.equal(warm.cache.hit, true, 'a populated year is no longer served from the device cache');
+  assert.equal(warm.cache.persisted, true);
+  assert.equal(filledCalls, 1);
+});
