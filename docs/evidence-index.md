@@ -1,13 +1,13 @@
 # Evidence the loop never cited
 
-<!-- Generated 19 Nov 2026 by an isolated scan of docs/evidence against the tracked prose tree. Scanning
+<!-- Generated 20 Nov 2026 UTC by an isolated scan of docs/evidence against the tracked prose tree. Scanning
      and re-checking is the job of tests/documentation-evidence-index.test.js; the sizes below are read from the
      filesystem by that generator and re-asserted by that test, so a row cannot rot into a lie. -->
 
-158 of 560 files under `docs/evidence/` are named by no other tracked prose file:
+161 of 583 files under `docs/evidence/` are named by no other tracked prose file:
 no `docs/validation.md` subsection, no AGENTS.md bullet and no handoff sentence says what they are evidence
 for. They are listed here with the byte size each one has in this commit, because that is the only fact about
-them a reader can check without opening them. 25,570,808 bytes total.
+them a reader can check without opening them. 25,576,301 bytes total.
 
 
 ## JSON capture (78 files)
@@ -175,8 +175,11 @@ them a reader can check without opening them. 25,570,808 bytes total.
 * `docs/evidence/repository-review-public-playwright.log` - 3183 bytes
 * `docs/evidence/repository-review-release.log` - 60692 bytes
 
-## gzipped command log (4 files)
+## gzipped command log (7 files)
 
+* `docs/evidence/iter57-panel-build-attempt1-2026-11-20.log.gz` - 2007 bytes
+* `docs/evidence/iter57-panel-build-attempt2-2026-11-20.log.gz` - 2849 bytes
+* `docs/evidence/iter57-panel-build-attempt3-2026-11-20.log.gz` - 637 bytes
 * `docs/evidence/merged-release-final-gate.log.gz` - 10842 bytes
 * `docs/evidence/v5-field-fix-release.log.gz` - 9582 bytes
 * `docs/evidence/v5-green-release.log.gz` - 9460 bytes

@@ -958,13 +958,15 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   recorded in iteration 42 remains the executed four-project evidence for this tree. The gate-debt ledger in
   `docs/validation.md` was also brought current: its bullets now cite the 222 passed / 6 skipped gate on
   `10a6e47`, mark the pest half paid by iterations 37 and 40 to 42, and leave the `nasa-power` browser measurement
-  and the worker-transport half open. (Repaired in iteration 44: that `nasa-power` sentence was stale - the
-  browser measurement with `state.inputs` set was already standing at `tests/e2e/chat-evidence-panel.spec.js:110`
-  and `:135`, and this bullet's open list below repeated it.) What stays open: within-file line drift is
+  and the worker-transport half open. (Repaired in iteration 44: that `nasa-power` sentence was stale, and that
+  repair carried a claim iteration 57 disproved - the superseded spec held no `state.inputs`, never called
+  `addInitScript` and ran no comparison, so the browser measurement it said was already standing there had never
+  run, and this bullet's open list repeated it.) What stays open: within-file line drift is
   still a reader's problem because
   the guard cannot prefer `:98` over `:96`; `docs/history` and files over 300 KB are outside the scan; a citation
   to an existing but unscanned target passes without a line check; the pairing is not yet applied to the three
-  counts in `chat-evidence-panel.spec.js:99,129,150`; and the `nasa-power` ledger sentence, which iteration 44
+  paragraph counts in `chat-evidence-panel.spec.js` (the three line numbers this bullet named are dropped rather than
+  re-pointed: iteration 57 replaced that spec); and the `nasa-power` ledger sentence, which iteration 44
   found stale and repaired. Emulated Chrome only; nothing deployed; no NASA portal edit; main untouched
   (`4a54fa3`).
 - **19 Nov, same branch: iteration 44 - the citation-collision guard read only the context side, while the reply's
@@ -988,8 +990,10 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   unchanged at 228 in 21 files, so the `10a6e47` gate remains the executed four-project evidence. The stale
   ledger sentence and subsection 41's limit (vi) are repaired in `docs/validation.md` subsection 43. What stays
   open: the matrix is eight families with one plan shape; titles are not compared; the worker-transport half
-  stays open as the six skips at `chat-evidence-panel.spec.js:82,115,140`; the pairing counts at
-  `:99,129,150` are the next widening. Executed offline only; nothing deployed; no NASA portal edit; main
+  stayed open as six skips in `chat-evidence-panel.spec.js` until iteration 57 deleted them, and pairing that
+  spec's three paragraph-count assertions stayed queued (both line-number sets this bullet carried are dropped,
+  not re-pointed, because iteration 57 rewrote that file). Executed offline only; nothing deployed; no NASA portal
+  edit; main
   untouched (`4a54fa3`).
 - **19 Nov, same branch: iteration 51 - one upstream failure was five different farmer-facing sentences, and the
   reason now goes to the log instead of the screen.** `server/context/client.js:36` at `9607565` wrapped every
@@ -1334,15 +1338,18 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   (`docs/evidence/pest42-offline-2026-11-19.log.gz`), `--list` census still **228 tests in 21 files** since no
   case was added; the full four-project gate on this tree came out **222 passed, 6 skipped, 0 failed (25.6 m),
   `GATE EXIT=0`** (`docs/evidence/pest42-gate-2026-11-19.log.gz`) - 222 + 6 is the 228 that `--list` reports, and
-  the 6 skips are the three pre-existing worker-transport sites in
-  `tests/e2e/chat-evidence-panel.spec.js:82,115,140` running once per static project, the same 6 as iteration 41,
-  so nothing was skipped to make this pass. Two comment-only lines then landed in the spec, so the offline suite
+  the 6 skips are the three pre-existing worker-transport sites of
+  `tests/e2e/chat-evidence-panel.spec.js` running once per static project, the same 6 as iteration 41, so nothing
+  was skipped to make this pass. The three line numbers this bullet quoted named those `test.skip` guards; they are
+  dropped rather than re-pointed, because iteration 57 deleted all three and a pointer into a rewritten spec reads
+  as a live one. Two comment-only lines then landed in the spec, so the offline suite
   (**220/220**), the pest slice (**5 passed (14.2 s)**) and the census (**228 tests in 21 files**) were re-run
   together on the final tree (`docs/evidence/pest42-final-tree-2026-11-19.log.gz`); the two runs differ only in
   case line numbers, `:96` onward in the gate log against `:98` onward now. What stays open: the divergence is
   detected, not prevented - the honest fix (count only resolvable ids, or render a visible marker) was not made
-  because no shipped wording reaches it; the same pairing is not yet applied to the three counts in
-  `chat-evidence-panel.spec.js:99,129,150`; the `dom.js:23` span branch and the orphan separator have never been
+  because no shipped wording reaches it; the same pairing is not yet applied to the three paragraph counts in
+  `chat-evidence-panel.spec.js` (the three numbers this bullet carried are dropped, not re-pointed: subsection 57
+  replaced that spec); the `dom.js:23` span branch and the orphan separator have never been
   seen by a measured render; and the `nasa-power` id collision this run surfaced twice
   (`server/nasa/power.js:85-87` puts the request url under that id, `public/js/lib/chat-context.js:57` the
   `documentationUrl`, `dom.js:16` keeps the first) is the next iteration's measurement. Emulated Chrome only;
@@ -1844,11 +1851,93 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   cause: `public/js/modules/chat.js:63`
   throws away the `message` the model worker posts at `public/js/modules/mini-lm-worker.js:59` and substitutes
   "Model could not start on this device", which blamed this device for a hostname that did not resolve; and three
-  gate cases depend on a third-party CDN at load time (`public/js/modules/mini-lm-worker.js:32`). P3 proper did
-  not run: the three `test.skip` lines at `tests/e2e/chat-evidence-panel.spec.js:82` still skip. Safari/WebKit,
+  gate cases depend on a third-party CDN at load time (`public/js/modules/mini-lm-worker.js:32`). P3 proper had not
+  run as this bullet was written: the spec then held three `test.skip` lines, and subsection 57 of
+  `docs/validation.md` replaced them, so this bullet names no line in that file. Safari/WebKit,
   real phones, microphones, audio quality and independent agronomy stay UNVERIFIED. Next, measured: P3 proper on
   the bytes this iteration leaves behind, then the model-load sentence above, which is a farmer-facing lie about
   its own cause.
+
+- **20 Nov, same branch: iteration 57 - six announced-but-unrun panel cases became twenty that execute, and the
+  interception rule that excused them was wrong in both directions.**
+  The queue asked for P3 proper: make the six skipped `chat-evidence-panel.spec.js` cases deterministic while the live
+  checks stay. The census on these bytes reads `Total: 248 tests in 23 files`
+  (`docs/evidence/iter57-census-after-2026-11-20.log.gz`), every gate prints `Running 248 tests using 1 worker`, and a
+  recursive grep for `test.skip` and `testFixme` under `tests/e2e/` returns nothing, so this is the first gate in the
+  loop's history whose 248 contains no skip. The old excuse - that Playwright's `context.route` cannot intercept a
+  dedicated worker's `fetch` - was refuted by a probe on the real build: one POWER call and one SoilGrids call counted
+  inside the worker (`PROBE_COUNTS {"power":1,"soil":1}`,
+  `docs/evidence/iter57-worker-route-probe-2026-11-20.log.gz`). The cause was registration order, not transport:
+  `node_modules/playwright-core/lib/coreBundle.js:63783` unshifts route handlers, so the *last* registered match wins
+  and the spec's wildcard `/api/` catch-all, registered last, had been seizing the five stubbed endpoints too. Both
+  wrong orders were run rather than reasoned about, and both are archived: a bare catch-all registered after the stubs
+  turned ten node cases red while ten static ones passed
+  (`docs/evidence/iter57-panel-api-seizure-2026-11-20.log.gz`), and catch-all-last with the pinned pattern aborted
+  every case it reached - 7 `✘` lines, no tally and no exit status, because that run was killed to free the port
+  (`docs/evidence/iter57-panel-catchall-last-partial-2026-11-20.log.gz`). The second archive is why the spec comment
+  claiming "ten failed" for the 23:42 run was rewritten instead of re-pointed: the run it described never completed, so
+  the count it was quoted for does not exist. The endpoints now replay from two committed raw captures under
+  `tests/e2e/fixtures/raw/` (31,080 bytes sha256 `66bd857a…315584`, 866 bytes sha256 `c131235e…d17224`), so a live
+  upstream is not the thing the panel spec tests.
+  A count belonging to a run that never finished is the class of bug, so a new guard case reads the numbers subsection
+  57 quotes out of the gzip bytes instead of out of the paragraph quoting them
+  (`tests/documentation-evidence-index.test.js`, sixteen archives): each must print its own tally lines, contain the
+  farmer-facing sentences attributed to it, carry the `✘` count claimed, and for the partial one contain no tally at
+  all. Two mechanisms came out of controls rather than the design: an exact red-set assertion, because a weaker
+  "contains a failure line" check stayed green when the entry was repointed at a different run, and an absence
+  assertion on `SPEC_SHA256` for the two gates that carry no stamp. The suite's own offline tally does have a row now,
+  and the run that produced it carried fourteen rows rather than sixteen, so that row's first real check is the next
+  offline run; the row's power to fail is shown by the controls below instead.
+  The guard then got negative controls of its own, eight cases on the first pass
+  (`docs/evidence/iter57-tallyguard-controls-2026-11-20.log.gz`) and twelve on the second, after the table grew
+  (`docs/evidence/iter57-tallyguard-controls-2-2026-11-20.log.gz`): a wrong tally line, a `-partial-` entry repointed at
+  a completed run, an off-by-one `✘` count, a red-set short by one, four `absent` needles the archive really prints, a
+  corrupted guard sha and an off-by-one `ℹ pass` in the offline row, and one `phrases` needle no archive prints. The
+  first pass printed seven detections and one `GREEN - CONTROL FAILED`, and the miss was in the control - its anchor
+  hit the entry above, where the needle legitimately never appears - so the case was split per entry, the second pass
+  added a `SKIP` line for an anchor that matches nothing, and all twelve detections came back red with the guard sha
+  identical before and after and a post-restore run that has to be green before the script reports anything.
+  Separately: the index generator hard-coded its own
+  `Generated 19 Nov 2026` header, so every regeneration since dated the index to a run that had not happened; it now
+  stamps its own UTC clock.
+  Executed numbers. `tests/e2e/chat-evidence-panel.spec.js` is 298 lines at sha256
+  `4eef52d3e776b42078914fc5493a3715ae32014ef060d9b98018658d300ec59b`, and on those bytes the focused spec ran
+  **20 passed / 0 failed / 0 skipped** twice, exit 0, in 16.2 s and 16.3 s
+  (`docs/evidence/iter57-panel-focused-final-2026-11-20.log.gz`, whose header stamps that sha, and
+  `docs/evidence/iter57-panel-focused-tripwire-green-2026-11-20.log.gz`). The four-project gate ran three times and all
+  three tallies are recorded: **248 passed / 0 failed / 0 skipped in 24.8 m**
+  (`docs/evidence/iter57-gate-1-2026-11-20.log.gz`), the same count in 22.1 m
+  (`docs/evidence/iter57-gate-2-2026-11-20.log.gz`) and the same count in 22.1 m again on the shipped bytes
+  (`docs/evidence/iter57-gate-3-2026-11-20.log.gz`, which prints that sha and `HEAD_COMMIT a6f9bf6`), all exit 0. Only
+  the third can be certified against that sha: attempts 1 and 2 predate the comment rewrite - attempt 2's own banner
+  names the pre-correction spec `ba6f5bc2` - so their 248 is the same twenty executed cases on bytes differing in no
+  assertion, pattern or line count. Offline `npm test` counts **258 tests**, iteration 56's 257 plus the tally case,
+  and its first run against these documents was red at **254 passed / 4 failed**, exit 1, on exactly the four
+  publication guards that require every archive named in prose to exist and the generated index to match the shelf
+  (`docs/evidence/iter57-offline-tallybootstrap-red-2026-11-20.log.gz`) - the tally guard reading logs that had not been
+  written yet, kept as evidence instead of being quietly re-run. The same command on the same 258 cases then came back
+  **258 passed / 0 failed / 0 skipped**, exit 0, 31.3 s
+  (`docs/evidence/iter57-offline-final-2026-11-20.log.gz`), whose header prints the guard and spec shas it ran against,
+  and the confirming run on the published tree - every archive and tally row in place before it ran, this sentence added
+  after - is **258 passed / 0 failed / 0 skipped**, exit 0, 30.5 s, archived as
+  `docs/evidence/iter57-offline-shipped-2026-11-20.log.gz` with `TALLY_ROWS 16` and the shipped panel-spec sha in its
+  header; it is the one archive here with no row of its own, because a row reading it would be read by the run writing it.
+  P0 split into what is measurable and what is not. The queued literal `GATESENTENCE` at `AGENTS.md:1060` is in no
+  commit on any ref (`git log --all -S'GATESENTENCE'` empty) and a count reads 0 in the working tree, at `HEAD` and at
+  `HEAD~1`, so what the goal called a standing literal was 19 Nov scratch text; the line the queue means is
+  `AGENTS.md:1057`, which the anchors guard pins now. The 19 Nov field-discovery red is **not** diagnosed by this pass
+  and this bullet does not pretend otherwise: all three green gates printed live upstream trouble without failing -
+  `The field lookup services are busy or unavailable (7 attempts across 3 services)` in each of them and the same
+  sentence at 8 attempts in attempt 2, thrown at `server/context/farms.js:89` with `code: 'CONTEXT_UNAVAILABLE'` -
+  which is evidence of intermittent load, not of a cause. `tests/e2e/live-fields.js:13` still fails after two presses
+  when nothing upstream is stubbed, which is exactly why panel coverage now replays fixtures.
+  Still open and named: `public/js/modules/chat.js:62` drops the `message` that
+  `public/js/modules/mini-lm-worker.js:59` posts, `public/js/lib/api.js:13` ignores a posted `error.code`, no case
+  cancels during `response.json()`, three gate cases still need `cdn.jsdelivr.net`, and P1 and P2 remain untouched code
+  at `server/context/soil.js:26`, `server/context/client.js:40` and `server/nasa/power.js:116`. P4's journey audit was
+  not attempted. Safari/WebKit, real phones, microphones, audio quality and independent agronomy stay UNVERIFIED, and
+  the fixtures prove the wiring replays rather than that the agronomy inside them is right. Next: P4 with the same
+  reproduce-then-assert discipline, and the tally guard as the standard for what this ledger may write down as verified.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
