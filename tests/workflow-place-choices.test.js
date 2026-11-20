@@ -366,7 +366,7 @@ test('“Use Inner Mongolia” answers the region question instead of moving the
 
 // Measured 20 Nov on the iteration-63 tree by an offline walk of the shipped assistant: the guard above decides
 // whether a name that contains another country is a local place by reading the saved list, and the
-// `.catch(() => null)` that then stood on public/js/modules/workflow-assistant.js:340 answered that question with
+// `.catch(() => null)` that then stood on public/js/modules/workflow-assistant.js:358 answered that question with
 // “not a local place” whenever the read refused. With a China plan holding region 20, a Hohhot point and loaded
 // evidence, the same sentence reported `country=MN region=null place=null evidence=null` after the calls
 // `country:MN`, `inputs` and `step:location`, and answered “Which part of Mongolia should we focus on…”. The list
@@ -429,7 +429,7 @@ test('a list whose shape cannot be read offers the move outright and no retry it
 
 // The positive control that makes the case above a classification and not a blanket refusal: a farmer who names the
 // move outright has said what the unread list could not settle, so the refused read must not stop it. The reply the
-// switch lands on is the neutral country question at public/js/modules/workflow-assistant.js:574, which claims nothing
+// switch lands on is the neutral country question at public/js/modules/workflow-assistant.js:592, which claims nothing
 // about the list and keeps the button that does state the gap.
 test('“switch to Mongolia” still moves the plan when the saved list refuses', async () => {
   const harness = setup({ country: 'CN', locations: provinces, listFailure: UNAVAILABLE });

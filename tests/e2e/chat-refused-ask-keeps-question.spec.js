@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 
 // Measured 20 Nov on this branch, on static-desktop, static-mobile, node-desktop and node-mobile alike: a guided plan
 // that names its own coordinates is checked against the place service by `await request('/api/places?…')` at
-// public/js/modules/workflow-assistant.js:431, which no branch catches. Before this iteration the ask then rejected
+// public/js/modules/workflow-assistant.js:449, which no branch catches. Before this iteration the ask then rejected
 // into the catch at public/js/modules/chat.js:149, which wrote the failure into the status line at :155
 // and nowhere else, while the composer had already been emptied at :91 - before the request was even made.
 // The farmer's sentence survived only as their own message higher up the history, where it cannot be sent, and

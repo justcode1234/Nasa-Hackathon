@@ -1197,10 +1197,180 @@ const TALLIES = [
        'HEAD CITED_LINES_CHECKED 230 DRIFTED 84 INSIDE_DIFF_HUNKS 0'],
    phrases: ['DRIFT_TREE_EXIT=0 DRIFT_HEAD_EXIT=0'],
     marks: 0 },
+  // F1's page probe on the bytes HEAD ships, stamping the digests it served on its own first and third lines.
+  { archive: 'docs/evidence/iter66-f1-page-probe-2026-11-20.log.gz',
+   lines: ['PROBE_STATE pre-fix module=166c93504f3d0bc817c02ccb3cd8c6a6 dist=166c93504f3d0bc817c02ccb3cd8c6a6 head=93fea60 utc=2026-11-20T17:18:22Z',
+       'BYTES served_dist_module=166c93504f3d0bc817c02ccb3cd8c6a6 source_module=166c93504f3d0bc817c02ccb3cd8c6a6 marker_served=0 marker_source=0',
+       'buttons=[]', 'PROBE_EXIT=0 state=pre-fix utc=2026-11-20T17:18:24Z'],
+   phrases: ['I could not match that crop to a sourced entry for Mongolia',
+       'fields before={"country":"","region":"","lat":""} after={"country":"","region":"","lat":""}',
+       'pageerrors=[]'],
+   absent: ['is selected. Now choose a town', 'Cannot read properties'],
+    marks: 0 },
+  // The same probe, the same four sentences, on the delivered module.
+  { archive: 'docs/evidence/iter66-f1-page-probe-fixed-2026-11-20.log.gz',
+   lines: ['PROBE_STATE delivered module=1dce9746a1260ba70822e044a81730e9 dist=1dce9746a1260ba70822e044a81730e9 head=93fea60 utc=2026-11-20T17:18:24Z',
+       'BYTES served_dist_module=1dce9746a1260ba70822e044a81730e9 source_module=1dce9746a1260ba70822e044a81730e9 marker_served=2 marker_source=2',
+       'buttons=["Acworth","Adel","Albany","Whole United States"]',
+       'PROBE_EXIT=0 state=delivered utc=2026-11-20T17:18:26Z'],
+   phrases: ['Georgia is selected. Now choose a town', 'Inner Mongolia is selected.',
+       'fields before={"country":"CN","region":"","lat":""} after={"country":"CN","region":"20","lat":""}'],
+   absent: ['Cannot read properties'],
+    marks: 0 },
+  // The four runs the F1 offline file was written in, one red of mine and one of the product's.
+  { archive: 'docs/evidence/iter66-f1-redfirst-2026-11-20.log.gz',
+   lines: ['MODULE_MD5_AT_MERGE=1dce9746a1260ba70822e044a81730e9 UNIT_MD5_AT_MERGE=17ad63d25d60e5f95bbacda3ceaf77bf',
+       'ℹ tests 6', 'ℹ pass 5', 'ℹ fail 1', 'ℹ tests 7', 'ℹ pass 6', 'ℹ pass 7',
+       'ℹ tests 72', 'ℹ pass 72', 'ℹ fail 0'],
+   onlyReds: ['a bare region name typed with no plan open selects the region instead of answering a crop question',
+       'a stop word stays a stop word even where the saved list holds a row of that name'],
+    marks: 0 },
+  // The four mutants of the four clauses of the F1 fix, over the finished offline file.
+  { archive: 'docs/evidence/iter66-f1-offline-controls-2026-11-20.log.gz',
+   lines: ['delivered: exit=0 tests=9 pass=9 fail=0', 'gate-back-to-active-only: exit=1 tests=9 pass=5 fail=4',
+       'veto-dropped: exit=1 tests=9 pass=7 fail=2', 'point-guard-dropped: exit=1 tests=9 pass=8 fail=1',
+       'cancel-short-circuit-dropped: exit=1 tests=9 pass=8 fail=1', 'restored: exit=0 tests=9 pass=9 fail=0',
+       'CONTROLS OK'],
+   phrases: ['CONFIRMED the TypeError the cancel branch used to raise'],
+   absent: ['restored_identical=False'],
+    marks: 0 },
+  // The page spec against the shipped bytes and the delivered ones on both desktop transports, build witness each way.
+  { archive: 'docs/evidence/iter66-f1-browser-controls-2026-11-20.log.gz',
+   lines: ['PLAYWRIGHT_EXIT rc=1 project=node-desktop phase=reverted utc=2026-11-20T17:28:25Z',
+       'PLAYWRIGHT_EXIT rc=1 project=static-desktop phase=reverted utc=2026-11-20T17:29:30Z',
+       'PLAYWRIGHT_EXIT rc=0 project=node-desktop phase=restored utc=2026-11-20T17:29:34Z',
+       'PLAYWRIGHT_EXIT rc=0 project=static-desktop phase=restored utc=2026-11-20T17:29:48Z',
+       '3 failed', '3 passed (3.5s)', '3 passed (13.7s)'],
+   phrases: ['WITNESS 2026-11-20T17:28:25Z module=166c93504f3d0bc817c02ccb3cd8c6a6 dist=166c93504f3d0bc817c02ccb3cd8c6a6 fix_marker=0/0',
+       "Cannot read properties of undefined (reading 'length')"],
+    marks: 6 },
+  // The same three page cases once per project, which is the 12 gate cases this iteration adds.
+  { archive: 'docs/evidence/iter66-f1-spec-4projects-2026-11-20.log.gz',
+   lines: ['MODULE_MD5=1dce9746a1260ba70822e044a81730e9 DIST_MD5=1dce9746a1260ba70822e044a81730e9 SPEC_MD5=beff67b47087836ffee9dc17559e62b6 marker=2',
+       'PROJECT_EXIT=0 project=static-desktop utc=2026-11-20T17:30:02Z',
+       'PROJECT_EXIT=0 project=node-desktop utc=2026-11-20T17:30:05Z',
+       'PROJECT_EXIT=0 project=static-mobile utc=2026-11-20T17:30:11Z',
+       'PROJECT_EXIT=0 project=node-mobile utc=2026-11-20T17:30:14Z'],
+   phrases: ['3 passed', 'SPEC4_DONE 2026-11-20T17:30:14Z'],
+   absent: ['PROJECT_EXIT=1'],
+    marks: 0 },
+  // Pass one of the citation re-point: the map it built and the nine files it rewrote pointers in.
+  { archive: 'docs/evidence/iter66-docs-repoint-sites-2026-11-20.log.gz',
+   lines: ['map: 752 lines at HEAD, 770 in the worktree; 98 pointer sites over 56 distinct targets; 0 unmapped and 0 inside a replaced hunk',
+       'rewrote 27 pointer(s) in AGENTS.md', 'rewrote 17 pointer(s) in docs/handoff-2026-11-18.md',
+       'rewrote 44 pointer(s) in docs/validation.md',
+       'rewrote 3 pointer(s) in tests/documentation-citation-anchors.test.js'],
+   phrases: ['rewrote 2 pointer(s) in tests/documentation-evidence-index.test.js'],
+    marks: 0 },
+  // Pass two, the range endpoints, applied and then re-run over its own output.
+  { archive: 'docs/evidence/iter66-docs-repoint-ranges-2026-11-20.log.gz',
+   lines: ['lines changed: 20; endpoints with no map entry: 0', 'lines changed: 0; endpoints with no map entry: 0'],
+   phrases: ['================ repoint-ranges-apply2.log', '================ repoint-ranges-idem.log',
+       'rewrite AGENTS.md:1538'],
+    marks: 0 },
+  // The control that justified reverting the two literals pass one moved inside this guard file.
+  { archive: 'docs/evidence/iter66-docs-fixture-literals-2026-11-20.log.gz',
+   lines: ['grep_count_in_iter61-citation-drift-head=1', 'grep_count_in_iter61-anchor-control=2',
+       'pass_two_skips_this_file=2 constant(s) naming the exclusion'],
+   phrases: ["'DRIFT docs/validation.md:1007 public/js/modules/workflow-assistant.js:222'",
+       'HEAD=93fea603fa4d78e3c61b34f08cc08469b8e43bc4 RUN_UTC=2026-11-20T17:25:24Z GUARD_MD5=262aa3a1513bbe0caffeef0bc0e57555'],
+    marks: 0 },
+  // The two instruments of this pass that were wrong before they measured anything.
+  { archive: 'docs/evidence/iter66-instrument-failures-2026-11-20.log.gz',
+   lines: ['PROBE_EXIT=1 state=pre-fix utc=2026-11-20T17:17:30Z', 'PROBE_EXIT=1 state=delivered utc=2026-11-20T17:17:30Z',
+       'BUILD_PREFIX_EXIT=0', 'BUILD_RESTORE_EXIT=0', 'TREE_OK module_and_dist_on_delivered_bytes'],
+   phrases: ["open '../../../dist/client/js/modules/workflow-assistant.js'",
+       'REFUSING: something already serves the probe port 4575'],
+   absent: ['PROBE_EXIT=0'],
+    marks: 0 },
+  // F4, the swallowed refusal, measured at module level on the delivered bytes: both arms asked once and threw
+  // nothing, which is the point — the refusal never reaches the caller as an error. `absent` here cannot name
+  // ERR_MODULE_NOT_FOUND even though no arm hit it: the header the shelving tool writes is part of the archived
+  // body, and that header describes the first attempt at the probe, which died exactly that way.
+  { archive: 'docs/evidence/iter66-f4-refusal-fallthrough-2026-11-20.log.gz',
+   lines: ['REFUSE_LIST=false asked=1 threw=none', 'REFUSE_LIST=true asked=1 threw=none',
+       'state regionCode=GA location=null active=true', 'state regionCode=null location=null active=false',
+       'F4PROBE_EXIT=0 RUN_UTC=2026-11-20T18:08:17Z'],
+   phrases: ['answer="Georgia is selected. Now choose a town in the Town list in step 1, or type its name here.',
+       'answer=null (chat.js falls through to the read-only answer)',
+       'HEAD=93fea603fa4d78e3c61b34f08cc08469b8e43bc4 NODE=v26.13.1 RUN_UTC=2026-11-20T18:08:16Z module=1dce9746a1260ba70822e044a81730e9'],
+   absent: ['threw=Error', 'Cannot read properties'],
+    marks: 0 },
+  // The shelving tool that went blind to its own cross-check, and the wrapper that aborted on an unbound parameter.
+  { archive: 'docs/evidence/iter66-instrument-failures-2-2026-11-20.log.gz',
+   lines: ['REFUSING TO SHELF: the prose-cite extractor found only 10 iter66 archives in the ledger; it is broken, not the prose',
+       'REFUSING TO SHELF: the prose-cite extractor found only 11 iter66 archives in the ledger; it is broken, not the prose',
+       'artifacts/scratch/iter66/final66.sh: line 22: $3: unbound variable'],
+   phrases: ['=== FOURTH FAULT (same pass, the closing wrapper)', 'MERGE_UTC 2026-11-20T18:12:40Z',
+       'FINAL66_SCRIPT_EXIT=1', 'SOURCE_LOG_MD5_before f7d1a011500bbdac6f084b9397c65d5f',
+       'SOURCE_LOG_MD5_after  d6dc14898b817fe815b5d3955bb0ec02'],
+   absent: ['found only 12'],
+    marks: 0 },
+  // The control that shows the F11 pin is live: green on the renamed title, red with line 146 alone reverted.
+  { archive: 'docs/evidence/iter66-f11-pin-control-2026-11-20.log.gz',
+   lines: ['ℹ tests 13', 'ℹ pass 13', 'ℹ fail 0', 'ℹ tests 4', 'ℹ pass 3', 'ℹ fail 1',
+       'RESTORE_PROOF backup=18a060ff76259ad7dd8e0fb0ff586f8f live=18a060ff76259ad7dd8e0fb0ff586f8f equal=yes'],
+   phrases: ['MERGE_UTC 2026-11-20T18:24:59Z HEAD 93fea603fa4d78e3c61b34f08cc08469b8e43bc4 NODE v26.13.1',
+       'tests/workflow-bare-place-name.test.js:146 reads "test(\'a bare place name with no country chosen asks for the coun"',
+       'but docs/validation.md subsection 66, the no-country limit quotes "a bare place name with no country chosen selects'],
+   absent: ['✘', 'equal=NO'],
+    marks: 0 },
+  // The four-project gate this iteration closes on. Its line 2 is the freeze stamp, and two digests on that stamp are
+  // the pre-rename bytes of the two test files the F11 control measured separately; the gate itself passed, so the
+  // archive must carry no ✘ case line and no non-zero exit.
+  { archive: 'docs/evidence/iter66-gate-2026-11-20.log.gz',
+   lines: ['ITER66_GATE_START 2026-11-20T17:52:51Z HEAD=93fea603fa4d78e3c61b34f08cc08469b8e43bc4 NODE=v26.13.1 pgid=21684',
+       'Running 312 tests using 1 worker', '312 passed (23.5m)', 'GATE_EXIT=0',
+       'ITER66_GATE_DONE 2026-11-20T18:16:20Z'],
+   phrases: ['ITER66_FROZEN assistant=1dce9746a1260ba70822e044a81730e9', 'marker=2'],
+   absent: ['✘', 'GATE_EXIT=1'],
+    marks: 0 },
+  // The whole offline suite on the finished tree, read from its own summary rather than from a pipeline's last exit.
+  { archive: 'docs/evidence/iter66-offline-final-2026-11-20.log.gz',
+   lines: ['ℹ tests 295', 'ℹ pass 295', 'ℹ fail 0', 'ℹ cancelled 0', 'ℹ skipped 0',
+       'ℹ duration_ms 24128.991709', 'OFFLINE_EXIT=0'],
+   phrases: ['CMD node --test tests/*.test.js', 'HEAD 93fea603fa4d78e3c61b34f08cc08469b8e43bc4'],
+   absent: ['✘', 'fail 1'],
+    marks: 0 },
+  // The five documentation guard files re-run as a set on the finished docs, including this guard.
+  { archive: 'docs/evidence/iter66-docguards-final-2026-11-20.log.gz',
+   lines: ['ℹ tests 28', 'ℹ pass 28', 'ℹ fail 0',
+       'DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0', 'GUARD_FILES 5',
+       'DOCSGUARDS_CHILD_EXIT 0'],
+   phrases: ['CMD node scripts/docs-guards.mjs',
+       '✔ the tally of every archived run is printed by that archive, not by the prose quoting it'],
+   absent: ['✘', 'DOCSGUARDS_CHILD_EXIT 1'],
+    marks: 0 },
+  // The tree-side citation scout. Its counters move whenever the ledger grows, so this row is the only place the
+  // reading is asserted against the bytes that printed it.
+  { archive: 'docs/evidence/iter66-drift-final-2026-11-20.log.gz',
+   lines: ['TREE CITED_LINES_CHECKED 295 DRIFTED 0 INSIDE_DIFF_HUNKS 12', 'DRIFT_EXIT=0'],
+   phrases: ['CMD node scripts/citation-drift.mjs',
+       'FILES_WITH_EDITS public/js/modules/workflow-assistant.js'],
+   absent: ['DRIFTED 1', 'DRIFT_EXIT=1'],
+    marks: 0 },
+  // The four-project case census: the 312 the gate ran, counted from `--list` on the delivered tree.
+  { archive: 'docs/evidence/iter66-census-final-2026-11-20.log.gz',
+   lines: ['Total: 312 tests in 28 files', 'CENSUS_EXIT=0'],
+   phrases: ['CMD npx playwright test --list', '[node-mobile] › zero-evidence-parity.spec.js:245:1'],
+   absent: ['Total: 300 tests', '✘'],
+    marks: 0 },
+  // The same three instruments read again with all five closing shelves on the tree, so the readings above are not the
+  // last word about a tree that no longer exists. The equality of the two drift readings is printed by the log itself.
+  { archive: 'docs/evidence/iter66-confirm-final-2026-11-20.log.gz',
+   lines: ['CONFIRM_OFFLINE_EXIT=0',
+       'OFFLINE ℹ tests 295 ℹ pass 295 ℹ fail 0 ℹ cancelled 0 ℹ skipped 0',
+       'DOCGUARDS DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0',
+       'DRIFT TREE CITED_LINES_CHECKED 295 DRIFTED 0 INSIDE_DIFF_HUNKS 12',
+       'PREV_DRIFT TREE CITED_LINES_CHECKED 295 DRIFTED 0 INSIDE_DIFF_HUNKS 12',
+       'DRIFT_UNCHANGED=yes', 'CONFIRM_DONE 2026-11-20T18:39:14Z'],
+   phrases: ['rows=171', 'CONFIRM_DOCGUARDS_EXIT=0', 'CONFIRM_DRIFT_EXIT=0'],
+   absent: ['✘', 'CONFIRM_OFFLINE_EXIT=1', 'DRIFTED 1', 'fail 1'],
+    marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 153, `the table carries ${TALLIES.length} archives; subsections 57 through 65 quote more runs than ` +
+  assert.ok(TALLIES.length >= 172, `the table carries ${TALLIES.length} archives; subsections 57 through 66 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -1264,7 +1434,17 @@ test('the tally of every archived run is printed by that archive, not by the pro
     + 'are the only ones in this pass that no archived run of this pass executed, and 153 when the citation scout '
     + 'over the finished ledger joined it with the reading nothing else in this pass could print - 242 pointers '
     + 'checked against the tree, 0 drifted and 18 skipped for sitting inside this pass\'s own diff hunks - '
-    + 'because the scout runs outside the guard set the offline suite executes.');
+    + 'because the scout runs outside the guard set the offline suite executes, and 163 when iteration 66 archived F1 '
+    + 'with the page probe that measured the harm on the bytes HEAD ships and the same probe on the delivered ones, '
+    + 'the four runs its offline file was written in, the four mutants of its four clauses, its page spec reverted and '
+    + 'restored on both desktop transports and that spec once per project, and the three instruments of its '
+    + 'documentation sweep that were wrong before they measured anything: the pass that rewrote only the start of each '
+    + 'range, the pass that repaired the 20 lines that left inverted or stale, and the control that reverted two '
+    + 'literals the first pass had moved inside this guard file, 166 when F4\'s refusal probe, the second instrument-faults '
+    + 'record and the F11 pin control that went red on purpose joined it, and 171 when this iteration\'s five closing legs '
+    + 'joined it: the four-project gate at 312 passed (23.5m), the whole offline suite re-run on the renamed tree at 295, '
+    + 'the guard set at 28, the citation scout over the finished ledger and the `--list` census at 312 in 28 files, and '
+    + '172 when the confirmation leg that re-read those three instruments with all five shelves on the tree joined it.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

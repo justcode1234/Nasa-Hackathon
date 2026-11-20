@@ -143,7 +143,7 @@ test.describe('a country place list that cannot be read', () => {
   });
 
   // Iteration 62, goal 6. A tapped region button is checked twice against two different copies of the same list: the
-  // chat answers from the copy it read itself (public/js/modules/workflow-assistant.js:614) while `chooseRegion`
+  // chat answers from the copy it read itself (public/js/modules/workflow-assistant.js:632) while `chooseRegion`
   // re-reads for the form before it accepts the tapped code (public/js/modules/context.js:248-250). Measured on both
   // transports with scripts/place-tap-rejection-probe.mjs: on the Node build the form's re-read goes out at the moment
   // of the tap and a refusal there escapes as a rejected ask - no reply, the sentence alone in the composer, and the
@@ -214,7 +214,7 @@ test.describe('a country place list that cannot be read', () => {
   });
 
   // Iteration 64. The switch guard asks the country the plan is already in whether a name is one of its places, and a
-  // read that refused used to answer "it is not" (`workflow-assistant.js:340`). "Georgia" is a US region row with 162
+  // read that refused used to answer "it is not" (`workflow-assistant.js:358`). "Georgia" is a US region row with 162
   // saved towns and parses as the country Georgia, exactly as "Inner Mongolia" is a Chinese province that parses as
   // Mongolia, so a farmer who typed it after a refusal had the whole plan moved to another country: new country, no
   // region, no point, while the same sentence with a readable list selects the region. Measured offline in

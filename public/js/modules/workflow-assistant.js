@@ -2,11 +2,15 @@ import { api, cancellation } from '../lib/api.js';
 import { COUNTRY_NAMES, findCountries, normalizeName, regionPhrase } from '../lib/countries.js';
 import { isEvidenceQuestion } from '../lib/chat-intent.js';
 
+// The shapes that are never a place name, stated once because both readers below have to agree about them: the parser
+// declines them, and respond() must not read one as a farmer naming a place.
+const STOP_WORD = /^(?:cancel|stop|cancel planning|stop planning)$/;
+const GREETING = /^(?:hi|hello)\b/;
 export function parseWorkflowMessage(question, active = false) {
   const text = normalizeName(question);
-  if (/^(cancel|stop|cancel planning|stop planning)$/.test(text)) return active ? { cancel: true } : null;
+  if (STOP_WORD.test(text)) return active ? { cancel: true } : null;
   // Knowledge questions stay read-only, even during a guided planning session.
-  if (isEvidenceQuestion(question) || /^(hi|hello)\b/.test(text)) return null;
+  if (isEvidenceQuestion(question) || GREETING.test(text)) return null;
   const countries = findCountries(question);
   // The whole-country phrasing test must survive Intl's shortened names: "whole St. Vincent
   // & Grenadines" and "whole Saint Vincent and the Grenadines" are the same request.
@@ -278,16 +282,30 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
   const locationLists = new Map();
   function invalidate() { generation++; baseline = null; allowed = null; constraints = {}; pointAccepted = false; scope = null; areaRegion = null; fieldsTask = null; }
   async function respond(question, choice = null) {
+    // A stop word and a greeting are the two shapes that can never be a farmer naming a place, and they are the only
+    // two vetoed here without asking the list. An evidence-shaped sentence is not: “Can Tho City” is a real saved row
+    // that opens like a question, which is why the rule below is that the rows decide and the wording does not.
+    const written = normalizeName(question);
+    const neverAPlaceName = !choice && (GREETING.test(written) || STOP_WORD.test(written));
     let parsed = choice ? { countries: [], constraints: {} } : parseWorkflowMessage(question, active);
     // The short-reply cap keeps sentences out of place matching; a reply the saved list itself
     // contains is not a sentence. Only the list can decide, so whenever the message carries no other
     // workflow signal it is checked against the rows: however long the name is (“Chak One Hundred
     // Forty Nine Left”), however much it opens like a question (“Can Tho City”), reads as a crop list
     // (“United Townships of Dysart, Dudley, … and Clyde”) or has already been pointed elsewhere.
-    const noOtherSignal = !parsed || !parsed.intent && (parsed.implicitList ||
+    // A cancellation carries no `countries` array, so reading its length below threw before the stop word was ever
+    // reached: measured with this branch short-circuited back out, typing “cancel” mid-plan ended in chat.js’s catch
+    // with the status line “Cannot read properties of undefined (reading 'length')” and the plan still open, which is
+    // why the sentence “Guided planning stopped.” was unreachable from typed text.
+    const noOtherSignal = !parsed || Boolean(parsed.cancel) || !parsed.intent && (parsed.implicitList ||
       !parsed.countries.length && !parsed.location && !parsed.baseline && !parsed.allowed &&
       !parsed.wholeCountry && !parsed.specificArea && !Object.keys(parsed.constraints).length);
-    if (active && !choice && noOtherSignal) {
+    // The list also decides for a chat with no plan open. Measured 20 Nov on a served build: with a country already
+    // chosen in step 1, “Georgia” reached none of this, fell to the read-only answer and came back as “I could not
+    // match that crop to a sourced entry for Georgia.” with nothing to tap, while the same sentence one message later
+    // selects the region. Naming a place is step 1 of planning here, so a row that matches opens the plan on that row
+    // - unless the farmer already holds a point, which selecting a region clears.
+    if (!choice && !neverAPlaceName && noOtherSignal && (active || !getState().location)) {
       const asked = generation;
       const regionCode = areaRegion ?? getState().regionCode ?? null;
       const row = await exactPlaceRow(question, { regionCode, preferRegion: scope === 'area' && !regionCode }).catch(() => null);
