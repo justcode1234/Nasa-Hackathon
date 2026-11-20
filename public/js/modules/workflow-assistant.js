@@ -225,13 +225,15 @@ export function typedPlace(places, question, { countryName, regionCode = null, a
 // a second request cannot repair, while any other failure means no answer came back, which the farmer may ask for
 // again. The retry is real because neither cache keeps a failure — `getLocationList` below stores only a resolved
 // body, and server/context/locations.js caches only a successful read.
-function placeListFailure(countryName, error) {
+// `question` is the farmer’s own sentence, offered back when the read was made to check words they typed rather than
+// to answer the pending area question; without it the retry sends `A specific area`, which asks something else.
+function placeListFailure(countryName, error, question = null) {
   const unreadable = error?.code === 'LOCATIONS_SCHEMA';
   return reply(`${unreadable
     ? `The saved place list for ${countryName} arrived in a shape this app cannot read, so no region or town could be checked against it, and asking again cannot change a source format`
     : `The saved place list for ${countryName} could not be read just now, so this assistant cannot say which regions or towns it lists. Nothing was selected and nothing was invented`}. You can still search a place by name, select a field on the map or enter your farm coordinates in step 1; a whole-country overview needs none of these.`,
     unreadable ? [next(`Whole ${countryName}`, `Whole ${countryName}`)]
-      : [next('Try the place list again', 'A specific area'), next(`Whole ${countryName}`, `Whole ${countryName}`)]);
+      : [(question ? next('Ask that again', question) : next('Try the place list again', 'A specific area')), next(`Whole ${countryName}`, `Whole ${countryName}`)]);
 }
 // A typed point is checked against the saved list before it is accepted, so when that read refused the sentence can
 // neither accept the point nor pretend the check passed. Two facts it may still state come from reads that did
@@ -308,7 +310,22 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     if (!choice && !neverAPlaceName && noOtherSignal && (active || !getState().location)) {
       const asked = generation;
       const regionCode = areaRegion ?? getState().regionCode ?? null;
-      const row = await exactPlaceRow(question, { regionCode, preferRegion: scope === 'area' && !regionCode }).catch(() => null);
+      // A list that refused is not a list that answered “no such row”. The bare catch here made the two
+      // indistinguishable, so the sentence fell to the read-only branch and answered “Georgia” with
+      // “I could not match that crop to a sourced entry for Georgia.” — measured 20 Nov against the same page and the
+      // same refusal, the only difference being that the list answered (docs/evidence/
+      // iter66-f4-refusal-fallthrough-2026-11-20.log.gz). A stop the page asked for still travels as a stop, as the
+      // two reads further down do, because answering it would reply for a session the farmer has left.
+      let row = null, listFailed = null;
+      try { row = await exactPlaceRow(question, { regionCode, preferRegion: scope === 'area' && !regionCode }); }
+      catch (error) { if (error.cancelled === true) throw error; listFailed = error; }
+      // The refusal is stated for a message that has the shape of a place name, which `mentionPhrase` is this
+      // module’s existing test for. The read itself stays wording-blind, because only the list can tell a long row
+      // name from a question; a sentence with no place shape gets the same read-only answer whether the list answers
+      // or not, and a place refusal would replace the answer the farmer asked for. Measured 21 Nov on the first
+      // version of this branch: gating the reply on the refusal alone turned “How much rain fell last year?” into
+      // “The saved place list for United States could not be read just now…”.
+      if (listFailed && asked === generation && mentionPhrase(question)) return placeListFailure(COUNTRY_NAMES.of(getState().country), listFailed, question);
       if (row && asked === generation) { choice = row; parsed = { countries: [], constraints: {} }; }
     }
     if (!parsed) { generation++; return null; }

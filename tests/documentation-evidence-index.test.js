@@ -1367,10 +1367,170 @@ const TALLIES = [
    phrases: ['rows=171', 'CONFIRM_DOCGUARDS_EXIT=0', 'CONFIRM_DRIFT_EXIT=0'],
    absent: ['✘', 'CONFIRM_OFFLINE_EXIT=1', 'DRIFTED 1', 'fail 1'],
     marks: 0 },
+  // Iteration 67's F4 evidence, each archive a merge of the one-file-per-run captures the pass actually produced. The
+  // five legs that can only be read after the ledger cites them - the closing suite, guard set, scout, gate and census
+  // - are not here: their placeholders get rows when final67.sh replaces them from real captures.
+  { archive: 'docs/evidence/iter67-f4-offline-redfirst-2026-11-20.log.gz',
+   lines: ['MODULE 1dce9746a1260ba70822e044a81730e9', 'RED_UTC 2026-11-20T18:50:30Z', 'ℹ tests 6', 'ℹ pass 1',
+       'ℹ fail 5', 'ℹ tests 8', 'ℹ pass 8', 'ℹ fail 0'],
+   phrases: ['a refusal for one sentence does not answer a later sentence that is not a place'],
+   absent: ['✘', 'LOCK left in place', 'ABORT', 'restored'],
+    marks: 0,
+   onlyReds: ['a bare place name whose saved list refused names the read that failed instead of a crop',
+       'the refusal offers the farmer’s own words back and a tap after a healthy list selects the place',
+       'a list that arrived unreadable is reported as a source format and offers no replay',
+       'a cancelled saved-list read settles as a stop, not as a refusal sentence',
+       'a refusal for one sentence does not answer a later sentence that is not a place'] },
+  { archive: 'docs/evidence/iter67-f4-offline-controls-2026-11-20.log.gz',
+   lines: ['ℹ pass 6', 'ℹ fail 2', 'ℹ pass 3', 'ℹ fail 5'],
+   phrases: ['a sentence with no place shape keeps its read-only answer while the list refuses'],
+   absent: ['✘', 'pass 8', 'ABORT'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-f4-browser-controls-2026-11-20.log.gz',
+   lines: ['MUT1 RESTORED md5 43c133a152fee4fa5b15dee6dff8e0e0', 'CTL_HEAD DIST md5 43c133a152fee4fa5b15dee6dff8e0e0',
+       'MUT1 DONE 2026-11-20T19:40:59Z LOCK_RELEASED', 'CTL_HEAD DONE 2026-11-20T19:41:26Z LOCK_RELEASED'],
+   phrases: ['CTL_HEAD ON_HEAD md5 1dce9746a1260ba70822e044a81730e9 lines      770',
+       'Expected pattern: /could not be read just now/',
+       'CTRLRERUN FINAL module=43c133a152fee4fa5b15dee6dff8e0e0 dist=43c133a152fee4fa5b15dee6dff8e0e0',
+       'BUILD rc=0 (mutated)', 'BUILD rc=0 (restored)'],
+   absent: ['LOCK left in place', 'ABORT', 'RESTORE FAILED'],
+    marks: 12 },
+  { archive: 'docs/evidence/iter67-f4-spec-4projects-2026-11-20.log.gz',
+   lines: ['Running 3 tests using 1 worker'],
+   phrases: ['[node-desktop]', '[static-desktop]', '[node-mobile]', '[static-mobile]', '3 passed'],
+   absent: ['✘', 'ABORT'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-docs-repoint-2026-11-20.log.gz',
+   lines: ['DOCUMENT_CITATIONS_REPOINTED 57', 'NOTES 10', 'DOCUMENT_CITATIONS_REPOINTED 73',
+       'CITATIONS_NEEDING_PROSE 13', 'IndexError: list index out of range',
+       'ALIGNED public/js/modules/workflow-assistant.js HEAD_LINES 771 TREE_LINES 788 LINES_MOVED 543',
+       'ALIGNED tests/documentation-citation-anchors.test.js HEAD_LINES 463 TREE_LINES 463 LINES_MOVED 0'],
+   phrases: ['REWRITTEN :: function placeListFailure(countryName, error) {', 'beyond-head :: <no HEAD line 735>',
+       'repoint_docs.py", line 107, in rewrite'],
+   absent: ['✘', 'REPOINTED 74'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-instruments-2026-11-20.log.gz',
+   lines: ['TREE CITED_LINES_CHECKED 230 DRIFTED 0 INSIDE_DIFF_HUNKS 6',
+       'TREE CITED_LINES_CHECKED 244 DRIFTED 0 INSIDE_DIFF_HUNKS 3',
+       'DOCSGUARDS_SUMMARY tests 28 | pass 25 | fail 3 | skipped 0',
+       'DOCSGUARDS_SUMMARY tests 28 | pass 24 | fail 4 | skipped 0',
+       'CITES_JUDGED 228 UNJUDGED 686 STALE 192'],
+   phrases: ['RangeError [Error]: Invalid array length',
+       'public/js/modules/workflow-assistant.js:483 is a line subsection 59 quotes while changing it and is no longer pinned'],
+   absent: ['✘', 'DRIFTED 1'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-tally-controls-2026-11-20.log.gz',
+   lines: ['TARGET tests/documentation-evidence-index.test.js md5=a3d192c53c2dfb9a7744d047b0c6896c',
+       'GREEN rc=0 ℹ pass 7 ℹ fail 0',
+       'CTRLTALLY_FINAL md5=a3d192c53c2dfb9a7744d047b0c6896c SAME=yes', 'CTRLTALLY_DONE_UTC 2026-11-20T19:54:54Z'],
+   phrases: ['never prints the line "Running 4 tests using 1 worker"',
+       'never contains "BUILD rc=0 (mutated) and never restored"',
+       'which the ledger states that archive does not print', 'prints 12 ✘ case lines, not the 11 quoted',
+       'is not the red set the ledger describes', 'the table carries 178 archives',
+       'WARNING: the control driver shares the launcher process group'],
+   absent: ['ABORT', 'APPLY_FAILED', 'same=NO'],
+    marks: 0 },
+  // F10 and F15 are one repair and one instrument fault found by it, so their three archives are read as a set: the
+  // before/after counts, the run the widening lost, and the four breaks that prove the anchor case detects them.
+  { archive: 'docs/evidence/iter67-f10-deeplink-repair-2026-11-20.log.gz',
+   lines: ['count_file_slash_C=3', 'count_file_slash_C=0',
+       'ANCHOR_SCAN pattern=file_scheme_only head=3 tree=0',
+       'ANCHOR_SCAN pattern=any_markdown_target head=3 tree=3',
+       'ANCHOR_SCAN pattern=brackets_allowed head=0 tree=0',
+       'RAW_ANCHOR_TOKENS head=4 tree=4'],
+   phrases: ['1007:region is selected ([public/js/modules/workflow-assistant.js:255-261](../public/js/modules/workflow-assistant.js#L255)),',
+       '1035:anything ([public/js/modules/workflow-assistant.js:283-295](../public/js/modules/workflow-assistant.js#L283));',
+       '--- F14: the labels still say 255-261 / 462-474 / 283-295; those are not where the rules live now ---',
+       '--- F15: how many labelled deep links each pattern can see in each version of the file ---',
+       'const allowEponymousTown = namedRegions.length === 0 || Boolean(regionFilter);'],
+   absent: ['✘', 'ABORT', 'PLACEHOLDER'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-anchor-scan-starved-2026-11-20.log.gz',
+   lines: ['ℹ tests 303', 'ℹ pass 300', 'ℹ fail 3', 'OFFLINE_EXIT=1'],
+   phrases: ['the anchor scan saw 0 labelled deep links; the ledger has had at least three since iteration 51',
+       'the header says 754 files under docs/evidence and the scan found 755'],
+   absent: ['✘', 'ABORT', 'OFFLINE_EXIT=0'],
+    marks: 0,
+   onlyReds: ['a deep link anchor jumps to the line its own label names',
+       'the index header states counts its own rows and the filesystem agree with',
+       'the committed index is what the shipped generator prints, line for line'] },
+  { archive: 'docs/evidence/iter67-anchor-controls-2026-11-20.log.gz',
+   lines: ['TARGET guard=29b33722884ce6b06ccddadbe5a8eb33 ledger=78ae3e3ff04604533e379abaec5696ad',
+       'RESTORED guard=29b33722884ce6b06ccddadbe5a8eb33 ledger=78ae3e3ff04604533e379abaec5696ad',
+       'WARNING: the control driver shares the launcher process group', 'F15_CONTROLS_DONE 2026-11-20T20:37:57Z'],
+   phrases: ['the anchor scan saw 3 labelled deep links', 'the anchor scan saw 0 labelled deep links',
+       'docs/validation.md:1007 labels workflow-assistant.js:255-261 but its anchor lands on line 300',
+       '==== CTRL-D the naive widening'],
+   absent: ['✘', 'ABORT', 'APPLY_FAILED'],
+    marks: 0 },
+  // The five closing legs, read on the delivered bytes after the gate: they are what §67's committed-readings paragraph
+  // quotes, so every number in that paragraph has a row here or it is prose about a run nobody archived.
+  { archive: 'docs/evidence/iter67-gate-2026-11-20.log.gz',
+   lines: ['ITER67_GATE_START 2026-11-20T20:00:51Z HEAD=6c3091f370fa9f7dd1eb2a3fe992b2a08f3d00bf NODE=v26.13.1 pgid=87040',
+       'Running 324 tests using 1 worker', '324 passed (26.4m)', 'GATE_EXIT=0', 'ITER67_GATE_DONE 2026-11-20T20:27:13Z'],
+   phrases: ['ITER67_FROZEN assistant=43c133a152fee4fa5b15dee6dff8e0e0 dist=43c133a152fee4fa5b15dee6dff8e0e0',
+       'ITER67_AFTER assistant=43c133a152fee4fa5b15dee6dff8e0e0 dist=43c133a152fee4fa5b15dee6dff8e0e0'],
+   absent: ['✘', 'ABORT', 'failed ('],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-offline-final-2026-11-20.log.gz',
+   lines: ['ℹ tests 303', 'ℹ pass 303', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0'],
+   phrases: ['a bare place name whose saved list refused names the read that failed instead of a crop'],
+   absent: ['✘', 'ABORT', 'fail 3'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-docguards-final-2026-11-20.log.gz',
+   lines: ['DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0', 'DOCSGUARDS_CHILD_EXIT 0', 'DOCGUARDS_EXIT=0'],
+   phrases: ['GUARD_FILES 5', '✔ a deep link anchor jumps to the line its own label names',
+       '✔ the tally of every archived run is printed by that archive, not by the prose quoting it'],
+   absent: ['✘', 'ABORT', 'fail 3'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-drift-final-2026-11-20.log.gz',
+   lines: ['TREE CITED_LINES_CHECKED 264 DRIFTED 0 INSIDE_DIFF_HUNKS 10', 'DRIFT_EXIT=0',
+       'FILES_WITH_EDITS public/js/modules/workflow-assistant.js tests/documentation-citation-anchors.test.js tests/documentation-citations.test.js tests/documentation-evidence-index.test.js'],
+   phrases: ['RUN_UTC 2026-11-20T20:43:14Z', 'node scripts/citation-drift.mjs'],
+   absent: ['✘', 'ABORT', 'DRIFTED 1'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter67-census-final-2026-11-20.log.gz',
+   lines: ['Total: 324 tests in 29 files', 'CENSUS_EXIT=0'],
+   phrases: ['npx playwright test --list',
+       '[node-mobile] › zero-evidence-parity.spec.js:245:1 › control: a year with readings is still written to the device cache'],
+   absent: ['✘', 'ABORT', 'Total: 312'],
+    marks: 0 },
+  // The rows this pass appends are only evidence if the table can reject them, and the ladder that shows it is an
+  // archived run too. Its own row reads the six bites the child output proved, not a summary this file could invent, and
+  // its `absent:` list is the shortest in the table for a reason worth knowing: a ladder echoes the `MUTATED` needle it
+  // applies, so the strings carried by the needles it echoed - `✘`, `ABORT` and `OFFLINE_EXIT=0` all came in on the CTRL-D
+  // needle aimed at the gate row's own `absent:` list - are inside its log by construction, and declaring any of them
+  // absent is a guaranteed red. Only the two markers that would mean a leg failed to apply or failed to bite are safe to
+  // declare absent, and the claim that the ladder ran nothing red of its own moves to `marks: 0`, which counts case lines
+  // beginning with the glyph - the same layer CTRL-D proved by raising it to 1 on the gate row above.
+  { archive: 'docs/evidence/iter67-tally8-controls-2026-11-20.log.gz',
+   lines: ['TARGET guard=29c42386ea70d85bc66b3cd87c783b08 ledger=32c0ae32d0e549a62596b81ae7e63138',
+       'RESTORED guard=29c42386ea70d85bc66b3cd87c783b08 ledger=32c0ae32d0e549a62596b81ae7e63138',
+       'LAYER_BITE layer=lines matched="never prints the line"',
+       'LAYER_BITE layer=phrases matched="never contains"',
+       'LAYER_BITE layer=absent matched="states that archive does not print"',
+       'LAYER_BITE layer=marks matched="case lines, not the"',
+       'LAYER_BITE layer=onlyReds matched="is not the red set the ledger describes"',
+       'LAYER_BITE layer=floor matched="the table carries 187 archives"',
+       'TALLY8_CONTROLS_DONE 2026-11-20T20:49:18Z'],
+   phrases: ['==== baseline BASELINE, the eight new rows on the tree as this pass wrote them (expect 7/7 green)',
+       '==== restored RESTORED after CTRL-F'],
+   absent: ['MUTATION_REFUSED', 'LAYER_BITE_FAILED'],
+    marks: 0 },
+  // F13 firing on this pass's own prose, kept as it ran: the first draft of the ledger's F15 paragraph named the control
+  // driver instead of the archive that driver wrote, and the guard that checks a sentence's commands are shippable files
+  // said so on the whole offline suite.
+  { archive: 'docs/evidence/iter67-commands-guard-red-2026-11-20.log.gz',
+   lines: ['ℹ tests 303', 'ℹ pass 302', 'ℹ fail 1', 'OFFLINE_EXIT=1'],
+   phrases: ['these commands are named in prose and no clone has the file:',
+       'docs/validation.md -> artifacts/scratch/iter67/f15-anchor-controls.sh (under the ignored artifacts/)'],
+   absent: ['✘', 'ABORT', 'OFFLINE_EXIT=0'],
+    marks: 0,
+   onlyReds: ['a command named inside a sentence is a file the repository ships, not one only this machine has'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 172, `the table carries ${TALLIES.length} archives; subsections 57 through 66 quote more runs than ` +
+  assert.ok(TALLIES.length >= 189, `the table carries ${TALLIES.length} archives; subsections 57 through 67 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -1444,7 +1604,24 @@ test('the tally of every archived run is printed by that archive, not by the pro
     + 'record and the F11 pin control that went red on purpose joined it, and 171 when this iteration\'s five closing legs '
     + 'joined it: the four-project gate at 312 passed (23.5m), the whole offline suite re-run on the renamed tree at 295, '
     + 'the guard set at 28, the citation scout over the finished ledger and the `--list` census at 312 in 28 files, and '
-    + '172 when the confirmation leg that re-read those three instruments with all five shelves on the tree joined it.');
+    + '172 when the confirmation leg that re-read those three instruments with all five shelves on the tree joined it, '
+    + 'and 178 when iteration 67 archived F4 with the six merged captures its ledger cites: the offline file as it was '
+    + 'written (6 tests with five red on the bytes HEAD ships, 6 with one red on the unbounded fix, 8 green on the '
+    + 'delivered ones), the two offline control legs, both browser controls with their digest stamps inside the archive '
+    + 'rather than only on the console, the page spec once per project, the citation sweep that re-pointed 73 pointers '
+    + 'and died once on its own report, and the instrument readings that bracket the pin widening - the guard set dying '
+    + 'twice on RangeError: Invalid array length and the anchors guard red on one subsection-59 tuple then green at 160 '
+    + 'entries, and 179 when the six perturbation runs that prove those rows fail rather than pass by default joined '
+    + 'it - the guard green once, then red six times, one broken needle per assertion layer, the file restored '
+    + 'byte-for-byte between each, and 187 when iteration 67\'s eight more joined it: the F10 before/after capture that '
+    + 'counted the three `file:///C:/` targets HEAD ships against the zero the repair leaves, the wave-1 offline suite '
+    + 'that printed F15 as three reds instead of being told about it, the four breaks of the widened anchor case with '
+    + 'their digest-stamped restore, and the five closing legs on the delivered bytes - the four-project gate at 324 '
+    + 'passed (26.4m), the whole offline suite at 303, the guard set at 28, the citation scout over the finished ledger '
+    + 'and the `--list` census counting the same 324 in 29 files, and 188 when the ladder that breaks one needle in each '
+    + 'of those rows\' assertion layers joined it beside them - its row reading the six bites the child printed, since a '
+    + 'summary this file wrote would prove nothing about them - and 189 when the whole offline suite that went red '
+    + 'because this pass\'s own prose named a gitignored driver joined it too.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

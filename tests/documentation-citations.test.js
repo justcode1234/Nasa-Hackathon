@@ -127,7 +127,14 @@ test('the size cap drops only the named generated or vendored files, never handw
 // `#LNNN` anchor a click lands on. Iteration 61's citation repair rewrote three labels in docs/validation.md and left
 // their anchors on the pre-fix numbers, so the prose named the right line and the click jumped thirteen lines away.
 // Nothing else could see it: LINE_REF only reads labels, and the pins check code content, not URLs. This case reads both.
-const ANCHORED = /\((file:\/\/\/[^)\s]*?)#L(\d+)(?:-\d+)?\)/g;
+// The pattern used to require a `file:///` target, which iteration 67 found was a second defect of its own: the three
+// absolute Windows paths this guard had been certifying were the unreadable ones F10 removed, and replacing them with
+// repo-relative targets starved the scan to zero labelled links, tripping the floor below. Any markdown link target
+// ending in a `#LNNN` fragment now counts, so the guard follows the ledger instead of one URL scheme. The class still
+// excludes brackets and parentheses: the first draft allowed them, which made the match open on the `(` of
+// `([label](target))` instead of the one before the target, so the label lookup found nothing and the scan reported
+// zero links on a ledger that had three.
+const ANCHORED = /\(([^()\s[\]]*?)#L(\d+)(?:-\d+)?\)/g;
 
 test('a deep link anchor jumps to the line its own label names', async () => {
   const { text } = await scannedTree();
