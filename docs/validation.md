@@ -5799,7 +5799,7 @@ physical line by construction, so `DRIFTED 0` after a repair confirms the mappin
 still names the right statement. The one real pointer of that shape was found by hand and re-pointed —
 `docs/handoff-2026-11-18.md:19` cited the ±1 pin-shift test at `tests/documentation-citation-anchors.test.js:339`,
 which this pass moved to `tests/documentation-citation-anchors.test.js:380` and iteration 66 to
-`tests/documentation-citation-anchors.test.js:482`, which iteration 72's 16 new pins push to `tests/documentation-citation-anchors.test.js:503` (24 rows, was 443 before iteration 67 widened that table, the deep-link pins and the replay rewrite landed above it,
+`tests/documentation-citation-anchors.test.js:482`, which iteration 72's 16 new pins push to `tests/documentation-citation-anchors.test.js:503` and iteration 73's 15 more push to `tests/documentation-citation-anchors.test.js:524` (24 rows, was 443 before iteration 67 widened that table, the deep-link pins and the replay rewrite landed above it,
 40 past the 403 iteration 65 left) — the load stays where iteration 58 left it: the pin table, 88 to 106 here and 139 by
 66, is what carries it, and the floor case below is what stops it being narrowed. The repair then produced a defect of its own, which is the
 part worth keeping. Three deep links in this ledger — `docs/validation.md:1007`, `docs/validation.md:1021` and
@@ -7564,22 +7564,22 @@ All six arms leave `#load-model` enabled, `#unload-model` disabled and `window.f
 undefined, which is the correct state machine, so the defect is exactly one noun. Every failure reading above is byte-identical on
 static and node; the only cross-transport difference in either archive is the `wasm` load time.
 
-**The fix.** `public/js/lib/model-failure.js` (new, 32 lines, md5 `69fa1817db5601937e4f7a05835091ca`) separates the sentence a farmer
-reads from the text a machine wrote: `FRAME` at `:19` and `RECOVERY` at `:20`, an ordered cause table at `:23-25` whose ordering is
-pinned by the comment at `:21` because the runtime text also ends in `failed to load`, and a `return` at `:31` that composes
-`` `${FRAME} ${cause}. ${RECOVERY}` `` or drops the cause clause entirely. No branch returns any part of its argument - that is what
-keeps the jsdelivr host and the internal API name out of the panel, which iteration 50 established and this pass preserves. `:63`
-and `:66` of `chat.js` now call it (`md5 57fb95190930e3dc9d5ad47244537d9c`, `git diff --numstat` 3 added / 3 removed, file unchanged
-at 179 lines, so no citation moved), and the loading sentence at `:54` stays as it is because it describes something that is true at
-that moment. `tests/model-failure.test.js` (new, 9 cases at `:19 :23 :27 :32 :41 :47 :58 :67 :74`) checks each cause against the
-verbatim text the capture recorded, checks the null-`onerror` arm gets the sentence that claims no cause, checks no branch echoes
-any substring of its input, and pins the recovery clause to the label the panel actually renders. The page case at
-`tests/e2e/chat-model-egress.spec.js:17` now requires the whole sentence instead of the old one, and `:25` forbids `on this device`
-plus the host, the API name and any URL in what the panel shows. The case that already existed could not have caught this: at HEAD
-`tests/e2e/chat-model-egress.spec.js:17` asserts that very sentence, so the code and its regression test agreed on the wrong words
-(HEAD's copy is 26 lines, md5 `524878ed4fbe9ab2efb9da6cf3eaa994`, and HEAD's `chat.js` is md5 `6c91d2705da110e7118707b8bed07e87` -
-both digests are stamped in the two capture archives, so the pre-fix state this paragraph describes is an artifact and not a
-reconstruction).
+**The fix.** `public/js/lib/model-failure.js` (new here at 32 lines and md5 `69fa1817db5601937e4f7a05835091ca`, which is what this
+subsection's archives stamp; iteration 73 widened it to the dictation panel, so it is 51 lines and md5 `a614c2ff10a95f4a1dd5b7693391bd90` now
+and the pointers below are the current ones) separates the sentence a farmer reads from the text a machine wrote: `CHAT_FRAME` at `:26` and
+`CHAT_RECOVERY` at `:27`, an ordered cause table at `:34-36` whose ordering is pinned by the comment at `:30-32` because the runtime text
+also ends in `failed to load`, and a `return` at `:42` that composes `` `${frame} ${cause}. ${recovery}` `` or drops the cause clause
+entirely. No branch returns any part of its argument - that is what keeps the jsdelivr host and the internal API name out of the panel, which
+iteration 50 established and this pass preserves. `:63` and `:66` of `chat.js` now call it (md5 `57fb95190930e3dc9d5ad47244537d9c` at this
+pass, `git diff --numstat` 3 added / 3 removed, file unchanged at 179 lines, so no citation moved), and the loading sentence at `:54` stays
+as it is because it describes something that is true at that moment. `tests/model-failure.test.js` (new, 9 cases at
+`:19 :23 :27 :32 :41 :47 :58 :67 :74`) checks each cause against the verbatim text the capture recorded, checks the null-`onerror` arm gets
+the sentence that claims no cause, checks no branch echoes any substring of its input, and pins the recovery clause to the label the panel
+actually renders. The page case at `tests/e2e/chat-model-egress.spec.js:17` now requires the whole sentence instead of the old one, and `:25`
+forbids `on this device` plus the host, the API name and any URL in what the panel shows. The case that already existed could not have caught
+this: at HEAD `tests/e2e/chat-model-egress.spec.js:17` asserts that very sentence, so the code and its regression test agreed on the wrong
+words (HEAD's copy is 26 lines, md5 `524878ed4fbe9ab2efb9da6cf3eaa994`, and HEAD's `chat.js` is md5 `6c91d2705da110e7118707b8bed07e87` - both
+digests are stamped in the two capture archives, so the pre-fix state this paragraph describes is an artifact and not a reconstruction).
 
 **Controls, unit ladder.** `docs/evidence/iter72-unit-controls-2026-11-21.log.gz` runs the classifier's own suite against six byte
 states, each leg re-stamping the shipped digests: baseline `tests 9 pass 9 fail 0`; `ctl1` (chat.js reverted to the device sentence)
@@ -7657,5 +7657,192 @@ reason, and both raw texts stay in the archive rather than in the panel. The `wo
 because the event carried nothing that would license one - that is the honest reading, not a fixed one. Nothing here measures a
 phone, Safari or WebKit, a real microphone, or whether `Enable compact local model` is the right recovery for a device with 2 GB
 free, and no agronomy claim was touched. The sibling defect this pass deliberately did not widen into is
-`public/js/modules/speech.js:72`, which interpolates raw worker text into the panel and blames the device at `:74`: same shape,
-different module, queued as F16.
+`public/js/modules/speech.js:72`, which then interpolated raw worker text into the panel and blamed the device at `:74`: same shape,
+different module; queued as F16, and subsection 73 below is the pass that closes it.
+
+### 73. The dictation panel printed a runtime's internals at the farmer, and the two defects iteration 72 removed from the chat panel were still live on it
+
+**VERIFIED FIX (F16).** `public/js/modules/speech.js:72` ended every worker error with
+`` `Voice input unavailable: ${data.message}. Typing works as usual.` ``, which is the opposite defect from the one
+iteration 72 removed: the chat panel named the farmer's hardware instead of the text, and this panel printed the text and
+named nothing. `public/js/modules/speech.js:74` then made the same hardware claim iteration 72 deleted, on a worker-level
+error event whose `message`, `filename` and `lineno` are all `null`. `public/js/modules/stt-worker.js:46` is the line that
+decides what arrives - `self.postMessage({ type: 'error', id, message: error?.message ?? String(error) });` - so the panel
+was quoting whatever Transformers.js, ONNX Runtime Web or the fetch layer happened to write. F16 in the §13 queue. Measured
+on both transports before anything was touched.
+
+**What was measured.** The iteration-72 instrument, aimed at the other panel: seven arms, each blocking or corrupting one
+way a speech start can fail, driven on the real page over the static and Node transports
+(`docs/evidence/iter73-capture-static-pre-2026-11-21.log.gz` and `docs/evidence/iter73-capture-node-pre-2026-11-21.log.gz`,
+42 report lines each, driver md5 `9528075b326ede39bef5492edb43f026` embedded in both). A `Worker` subclass installed by an
+init script records the `type:'error'` payload and the `ErrorEvent` before the page module sees them, so the captured text
+is the shipped code's input rather than a paraphrase of the status line. The arms are `none` (nothing blocked), `hub` (the
+model host), `runtime` (the vendored `transformers.min.js`), `wasm` (the vendored `.wasm` binary), `worker-script` (the
+worker file itself), `config-garbage` (the model config answering 200 with an HTML body) and `onnx-garbage` (the model
+binary doing the same). `none` reaches `Transcript added to the message box. Check and edit it, then press Send.` with
+draft `Tell me about tomatoes in Kenya.` on both transports, which is what makes the other six readings failures rather
+than the normal state of this host. The census line the driver prints is identical on the two transports:
+`SPEECH_CENSUS mode=static arms=7 leaking=2 device_blame=2 raw_echo=4 doubled_period=2 settled=7`. Four of the seven arms
+echoed their worker text into the panel, two blamed the device, two printed this server's own origin or an engine error
+code, and two produced a doubled period where the interpolation seam sat:
+
+- `hub` posts `Failed to fetch` and the farmer reads `Voice input unavailable: Failed to fetch. Typing works as usual.`
+  The same string iteration 72 mapped on the chat panel, arriving from the same cause: a model file that never arrived.
+- `wasm` posts a 300-character internals sentence -
+  `no available backend found. ERR: [wasm] RuntimeError: Aborted(NetworkError: Failed to execute 'send' on 'XMLHttpRequest': Failed to load 'http://127.0.0.1:4173/vendor/transformers/ort-wasm-simd-threaded.asyncify.wasm'.). Build with -sASSERTIONS for more info.` -
+  and every character of it reaches the panel, so a farmer sees this machine's port, a filesystem path inside this app,
+  the name of an XMLHttpRequest method and a build instruction, and the seam doubles the period
+  (`...more info.. Typing works as usual.`). The driver's own mark list catches five of those:
+  `LEAKS ["http","/vendor/",".wasm","runtimeerror","assertions"]`.
+- `config-garbage` posts `Unexpected token '<', "<html>defi"... is not valid JSON` - a parse error quoting the first bytes
+  of the HTML body the server answered with - and the panel prints it, `engine_ellipsis=true` included, because the
+  ellipsis that JSON.parse writes is not the seam's doubled period and the instrument separates the two.
+- `onnx-garbage` posts `Can't create a session. ERROR_CODE: 7, ERROR_MESSAGE: Failed to load model because protobuf parsing failed.`
+  and the panel prints the ONNX numeric code and the word `protobuf` at the farmer, again with the doubled period
+  (`...parsing failed.. Typing works as usual.`).
+- `runtime` and `worker-script` never reach `:72` at all: the worker dies at module scope, `:74` catches an `ErrorEvent`
+  with `message`, `filename` and `lineno` all `null` - the driver records `ERRORED [{"script":"/js/modules/stt-worker.js","message":null,"filename":null,"lineno":null}]` -
+  and the panel says `The speech model could not start on this device. Typing works as usual.` That is the one arm where
+  the code genuinely observed nothing, and it answered with a claim about the farmer's hardware.
+
+Every one of those texts is byte-identical on the Node transport except that the leaked origin names the port the Node
+preview server listens on, and the post-fix capture repeats the whole matrix on both transports
+(`docs/evidence/iter73-capture-static-post-2026-11-21.log.gz`, `docs/evidence/iter73-capture-node-post-2026-11-21.log.gz`)
+and prints `leaking=0 device_blame=0 raw_echo=0 doubled_period=0` with `settled=7` while `none` still transcribes the
+control sentence - the arms are the only thing that changed.
+
+**The fix.** Iteration 72's classifier generalised rather than duplicated: the two constants it named for one panel are
+now `CHAT_FRAME` at `public/js/lib/model-failure.js:26` and `CHAT_RECOVERY` at `:27`, and the dictation panel gets
+`SPEECH_FRAME` at `:28` and `SPEECH_RECOVERY` at `:29` (`Voice input unavailable` plus
+`Typing works as usual. Press the microphone button to try again.`). The cause table sits at `:33-36` and one shared
+`classify(message, frame, recovery)` at `:39-43` composes `` `${frame} ${cause}. ${recovery}` `` or the frame with no
+cause, so a sentence cannot both echo and reword; the two exports at `:45` and `:49` differ only in the two clauses they
+pass. Ordering is the part a later pass is most likely to "tidy", so it is stated in the file at `:30-32` and asserted by
+a case of its own: ONNX answers a corrupt model binary with `Failed to load model because protobuf parsing failed`, whose
+`Failed to load` also matches the runtime pattern, so the unreadable-file clause at `:34` has to be tried before the
+missing-runtime clause at `:35` - read the other way the panel tells a farmer the engine never arrived when the engine is
+the thing that reported the bad file. `public/js/modules/speech.js` is line-neutral at 154 lines: the import at `:7` took
+the blank line that was under it instead of being inserted, which is why `:72` and `:74` still hold the statements this
+subsection quotes and every citation in it lands. `public/js/modules/chat.js` also carries the repair iteration 72
+announced and did not make - its two imports were mashed onto one line inside a frozen digest - and that reflow is
+2 added / 2 removed at the same 179 lines (md5 `aa198a0886235605ef1394bab36c2fdc`), so `:63` and `:66` stay where
+subsection 72 puts them. The six pointers subsection 72 quotes to this file moved with the rename and are re-pointed to
+`:26 :27 :34 :35 :36 :42` there; fifteen new pins in `tests/documentation-citation-anchors.test.js` cover the dictation
+side (the table grows from 176 entries to 191), which moved that guard's own self-pin from 503 to 524 in the file that exists to catch that.
+
+**Controls, unit ladder.** `tests/model-failure.test.js` was run four times against three states of
+`public/js/lib/model-failure.js` (`docs/evidence/iter73-unit-controls-2026-11-21.log.gz`, driver
+`artifacts/scratch/iter73/unit-controls.sh`, which mutates one file, runs the suite, restores it and refuses to continue
+if a digest does not come back byte-identical). Baseline: `tests 15 / pass 15 / fail 0` at md5 `a614c2ff10a95f4a1dd5b7693391bd90`.
+`ctl1-causes-swapped` exchanges the two clauses at `:34` and `:35` - the tidy-up a later pass would plausibly make - and
+goes red with `pass 13 / fail 2`: `a corrupt model binary is not called a missing runtime`, which is the ordering case
+written for exactly this, and `the dictation panel classifies the same texts without echoing any of them`, which is the
+dictation deepEqual seeing the same swap through the second export. `ctl2-raw-interpolated` puts the raw worker text back
+into the composition at `:42` and takes `pass 6 / fail 9`, nine cases across both panels including the four iteration 72
+wrote for chat, so the shared classifier is demonstrably the thing both panels' guards are counting on rather than two
+copies that happen to agree. `restore` returns `pass 15 / fail 0` and `UNITCTL_FINAL md5=a614c2ff10a95f4a1dd5b7693391bd90
+identical=True`; the test file's own digest (`c404af2cac50329404843b3ffcaff8ad`) is stamped equal at both ends, so no case
+was edited to make a control fail. The archive carries the four raw `node --test` outputs behind those tally lines beside
+the driver and its log. Both ladders ran in their own process group and print `DETACHED=yes`, and `PARENT_PGID` equals
+`SELF_PGID` in those stamps because the launcher calls `setpgrp` and so leads the group it is measured against.
+
+**Controls, page ladder.** Three legs, each `npm run build` plus `npx playwright test tests/e2e/speech-microphone.spec.js`
+on both transports (`docs/evidence/iter73-page-controls-2026-11-21.log.gz`, driver `artifacts/scratch/iter73/page-controls.sh`,
+launched detached at `2026-11-21T13:59:20Z` against `021ecf79`, each leg's raw suite output archived beside the log). Leg A, the
+shipped bytes: build exit 0, `served=ed702667361edf7657db607d71d5c289` for the module the browser actually fetched - the
+same digest as the source file, which is what makes the rest of the leg about the code rather than about a stale
+`dist/` - and `12 passed (39.1s)` at exit 0. Leg B overwrites `public/js/modules/speech.js` with the byte-exact pre-fix
+file from `git show HEAD:public/js/modules/speech.js` (md5 `9a7d2e2982fa453f55dcd565b99c8bb3`, checked on application:
+`LEG B_APPLIED … identical=True`), rebuilds, and the served digest moves to that value: `4 failed / 8 passed (38.8s)` at
+exit 1, the four reds the same test in each project - `speech-microphone.spec.js:67:1 › a failed speech-model download is
+reported and typed chat still works`, failing in 561/479/545/453 ms - and the text they print is the leak itself:
+expected `Voice input unavailable because a model file did not arrive. Typing works as usual. Press the microphone button
+to try again.`, received `Voice input unavailable: Failed to fetch. Typing works as usual.` Leg C restores the shipped
+bytes (`PAGECTL_FINAL speech_md5=ed702667361edf7657db607d71d5c289 identical=True`) and returns `12 passed (37.5s)`. What the
+ladder does not witness belongs in the record: reverting the file reddens only the download arm, because that arm is the
+only page test that reaches a worker `error` message at all - `:74`'s `onerror` path needs a worker that dies at module
+scope, which the spec never arranges - so the device-blame sentence is guarded at unit level
+(`the null error event gets the sentence that claims no cause` and `no dictation branch leaks an origin, a path, a
+response body or an engine code` in ctl2) and by the capture driver's two runtime arms, not by Playwright.
+
+**The recovery the sentence offers is the recovery the page performs.** The new clause ends
+`Press the microphone button to try again.`, and a promise of a retry is worth nothing if the button is dead, so the same
+arm counts the model host's requests (`speech-microphone.spec.js:69`), records how many had already been attempted at
+`:91`, clicks the microphone again at `:92` and requires a strictly larger count at `:93`
+(`await expect.poll(()=>hubRequests.length,{timeout:60_000}).toBeGreaterThan(attempted);`) before asserting the panel
+still states the same observed cause at `:94` and that typed chat answers at `:95-:96`. The attempt is measured on the
+network rather than by a success because this arm keeps the model host blocked; the success path is the first case in the
+file. The four-project green in leg A above includes all of that, so the retry proof runs on both transports.
+
+**Costs.** The four-project gate ran twice, and both runs ship. The first
+(`start_utc=2026-11-21T14:04:51Z`, `SELF_PGID=72083 PARENT_PGID=72083 DETACHED=yes`) was stopped by this host rather than
+by a test: its leg log ends at `GATE_SERVED` with no `GATE_EXIT`, no closing stamp and no tally, and its suite output
+stops after case 235 of the 348 it announced - 235 `✓` lines, zero `✘` and zero `✖` among them, counted out of the
+archive rather than from the console. Those truncated bytes are archived as
+`docs/evidence/iter73-gate-interrupted-2026-11-21.log.gz` with a `noTally` row, because a pass that relaunches a gate has
+to show the run it abandoned or the second gate is unverifiable. The relaunch stamped the same ten digests, the same
+`interpreter=v26.13.1` and `head=021ecf790cbd9efe148cccc778dac57152ff791c`, the same
+`TALLY_ROWS=240 PINS=191 SHELF=811 TREE_STATUS_LINES=18` and the same `GATE_SERVED` served-byte triple, so the second run
+graded the same bytes; the only lines that differ are the start stamp and the process-group number, and the completed run
+adds the `GATE_AFTER` digest banner the interrupted one never reached.
+`docs/evidence/iter73-gate-2026-11-21.log.gz` is green on all four projects: `Running 348 tests using 1 worker`,
+`348 passed (25.7m)`, `GATE_EXIT=0`, `GATE_RED_LINES 0`, `GATE_SPEECH_LINES 12` - three arms per project counted
+separately from the egress spec's `GATE_EGRESS_LINES 4` - and `GATE_CDN_HOST_LINES 0`, so no origin from a failure
+sentence reached a report. The freeze banner before and after the run is byte-identical (`GATE_TREE_STATUS_LINES_NOW 18`
+against the same `TREE_STATUS_LINES=18` the run opened with), and the served bytes are stamped
+`SPEECH=ed702667361edf7657db607d71d5c289 MODULE=a614c2ff10a95f4a1dd5b7693391bd90 CHAT=aa198a0886235605ef1394bab36c2fdc` -
+the module digest the browser fetched equals the one the unit ladder closed on. The four remaining legs ran on the same
+tree: the `--list` census prints `Total: 348 tests in 31 files`, moved by nothing this pass did to a spec
+(`CENSUS_SPEECH_LISTINGS 12` speech listings, `CENSUS_EGRESS_LISTINGS 4` egress), because the six new dictation cases are
+offline-only; the offline suite prints `ℹ tests 337` / `pass 337` / `fail 0`, six larger than the 331 iteration 72
+archived: the four that classify the texts this panel received and the two that pin its routing and the button its
+recovery clause names; the documentation guards print `DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0`; and
+the citation scout reports `DRIFTED 0` over 139 pointers on the working copy and 155 on HEAD. This pass moved lines twice
+in files that are themselves cited by line number, which is why both rewrites are line-neutral:
+`public/js/modules/speech.js` stays at 154 lines and `tests/e2e/speech-microphone.spec.js` at 97, and the two comment
+repairs this pass made to `tests/model-failure.test.js` and that spec each first grew a file by a line and were
+re-wrapped, because §73, §72 and the anchors guard all point into those two files and Playwright prints
+`speech-microphone.spec.js:67:1` from the spec.
+
+**What this pass does not establish.** `Failed to fetch` is still one text for two causes - a blocked model host and a
+missing local weight file - so the dictation panel says only "a model file did not arrive"; separating them needs the
+worker to report which request failed, the same build change iteration 72 declined to make and for the same reason.
+`runtime` and `worker-script` keep a sentence with no cause, because the `ErrorEvent` they arrive on carries `null` in
+`message`, `filename` and `lineno`: that is the honest reading, not a fixed one. The cause table maps only wordings
+measured on this host, so another engine's phrasing of the same abort (`NetworkError when attempting to fetch resource.`)
+lands on the cause-free sentence by design, which is asserted but not observed here. `:74`'s `onerror` path has no
+page-level witness at all: the ladder's middle leg reddens one arm in four projects, and the device-blame sentence it
+replaces is guarded at unit level and by the capture driver's two runtime arms, not by Playwright. The `none` arm proves
+the panel still reaches its success text when nothing is blocked, on the real vendored model hearing
+`tests/fixtures/TEST-synthetic-speech-tomatoes-kenya.wav` through Chromium's fake capture device
+(`--use-file-for-fake-audio-capture`): the pipeline is genuinely exercised and the audio is not, so this pass says nothing
+about audio quality, a real microphone, a room, an accent, a phone, or Safari/WebKit, and nothing about whether pressing
+the microphone is the right recovery for a device that will never have the RAM for this model. The chat panel is
+untouched apart from the import reflow iteration 72 announced and did not ship. No agronomy claim was read, changed, or
+re-run, and none of these archives is current about the shelf it sits on: the gate, the interrupted launch and the four
+legs stamp `TALLY_ROWS=240 SHELF=811`, which is the table and the shelf before the rows that grade them exist, and the
+re-run on the delivered tree stamps `TALLY_ROWS=246 PINS=191 SHELF=818`. The matrix that grades those rows reads every
+iteration-73 archive except the one holding its own run, and prints its own denominator rather than being quoted one:
+`MATRIX self_ok=13/13 cross_rejected=156/156 cross_accepted=0`, with the verifier and driver digests equal above and
+below the run. `docs/evidence/iter73-offline-final-2026-11-21.log.gz` exists because that ordering cannot be escaped by
+one run: the table size it graded has to be the `TALLY_ROWS=` line inside its own log rather than the 240 the gate saw,
+and the two rows written after it - its own, and the matrix's - bring the table the commit ships to 248 rows over 819
+files. The matrix row is the one row this pass had to write in two pieces, because its archive embeds the row list that
+grades it, so a negative typed as one contiguous string is a string the archive contains: the ledger's reverse rule
+caught the related mistake on the way, when the installer anchored on that needle's text and put the interrupted run's
+`noTally` flag on the matrix row instead of its own.
+
+After that write-up was finished, the guards and the scout were re-run to prove the final prose broke no pin. This
+sentence describes a re-check, not an archived leg: the numbers it prints belong to no `.log.gz`, and every figure
+elsewhere in this subsection still names the archived run it came from. The five documentation guards read 28 cases,
+0 failed, 0 skipped. The scout reads `TREE CITED_LINES_CHECKED 141 DRIFTED 0 INSIDE_DIFF_HUNKS 16` against
+`HEAD CITED_LINES_CHECKED 155 DRIFTED 17`: two pointers more than the archived drift leg, both added by this
+subsection while it described the two instrument defects above, and the invariant the scout exists for - zero drifted -
+holds on both passes. The scoped offline suite re-ran on the same final tree at `ℹ tests 337` with none failed and none
+skipped, the same reading the archived leg printed, because nothing this write-up can touch grew or shrank. One trap is
+worth recording with it: a bare `node --test` on this tree globs the gitignored control copies under `artifacts/` as
+well as the suite, and on this pass that printed 461 tests with 25 failures - all 25 inside a shelved baseline or
+scratch copy, none in the shipped table, all of them sub-millisecond source-text assertions. The scoped command is what
+the archived legs stamp and what a red must be re-run under before anyone reads it as a regression.
+A row was deliberately not written for an unarchived re-run: a ledger row pins bytes in an
+archive, and writing one here would have invented the artifact it claims to grade.

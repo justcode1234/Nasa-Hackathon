@@ -2625,9 +2625,40 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   could not match a path containing a slash while 31 spec files ran, and the row-discrimination matrix found the static capture's row passing
   unchanged against the node capture's archive - true parity, but a row that cannot say which log it read - so each capture row now pins its
   own `CMD` line and 20 of 20 foreign pairs reject. `Failed to fetch` still means two things, so the cause clause says only "a model file did
-  not arrive"; the null arm claims no cause; and the same shape survives at `public/js/modules/speech.js:72` and `:74`, queued as F16 rather
-  than widened into a gated change. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED; `main` is
+  not arrive"; the null arm claims no cause; and the same shape survived at `public/js/modules/speech.js:72` and `:74`, which this pass
+  queued as F16 rather than widening into a gated change and iteration 73 repaired. Real phones, Safari/WebKit, microphones, audio quality
+  and independent agronomy stay UNVERIFIED; `main` is
   untouched, nothing was deployed, no test was weakened. Full account in subsection 72 of `docs/validation.md`.
+- **21 Nov, same day: iteration 73 (F16 closed as VERIFIED FIX) - the dictation panel printed a runtime's internals at the farmer,
+  and the two defects iteration 72 removed from the chat panel were still live on it.** `public/js/modules/speech.js:72` interpolated the
+  worker's own text and `:74` answered an `ErrorEvent` whose message, filename and lineno are all null with
+  `The speech model could not start on this device.` A seven-arm capture on both transports
+  (`docs/evidence/iter73-capture-static-pre-2026-11-21.log.gz`, `docs/evidence/iter73-capture-node-pre-2026-11-21.log.gz`) printed
+  `leaking=2 device_blame=2 raw_echo=4 doubled_period=2 settled=7` - an ORT WASM URL, an ONNX `ERROR_CODE: 7` with the word `protobuf`, and
+  a hardware claim on a page whose hardware was fine. The fix generalised iteration 72's classifier instead of duplicating it:
+  `SPEECH_FRAME` and `SPEECH_RECOVERY` beside `CHAT_FRAME` and `CHAT_RECOVERY` in `public/js/lib/model-failure.js`, one ordered cause
+  table and one `classify(message, frame, recovery)`, so no sentence can both echo and reword. Post-fix capture on both transports reads
+  `leaking=0 device_blame=0 raw_echo=0 doubled_period=0` with the same seven arms and `none` still transcribing. The ordering is asserted
+  apart from the wording - a corrupt model file also matches the missing-runtime pattern, so the unreadable-file clause has to be tried
+  first - and the unit ladder proves both bites: swapping the two clauses reddens 2 of 15 cases, echoing the argument reddens 9. The page
+  ladder's middle leg writes `speech.js` back to the bytes HEAD ships, rebuilds, and the served digest moves: 4 failed / 8 passed across
+  four projects, receiving the leak itself as the sentence under test. Iteration 72's announced-but-unshipped `chat.js` import reflow
+  shipped here, line-neutral at 2 added / 2 removed on a 179-line file. The four-project gate ran twice and both runs ship: the first was
+  stopped by this host after case 235 of the 348 it announced with zero red lines, and its truncated output is archived with the table's
+  only `noTally` row; the relaunch stamped the same ten digests and the same freeze banner and closed `348 passed (25.7m)`, exit 0,
+  `GATE_RED_LINES 0`. Census 348 in 31 files, offline suite 337 (+6 over iteration 72's 331, all six in
+  `tests/model-failure.test.js`), documentation guards 28, citation scout `DRIFTED 0`. The pass then closed its own last mile: an archive
+  that grades the delivered tree cannot exist before the runs it grades finish, so the four legs and the interrupted launch were shelved
+  over their placeholders, the offline suite was re-run on the tree this iteration ships (`TALLY_ROWS=246 PINS=191 SHELF=818` against the
+  `TALLY_ROWS=240 SHELF=811` the legs themselves stamped), and a row/archive matrix asks every iteration-73 row about every iteration-73
+  archive but its own - `MATRIX self_ok=13/13 cross_rejected=156/156 cross_accepted=0` - because a matrix that only ever asks a row about
+  its own archive cannot tell a discriminating needle from a vacuous one. Shipped table: 248 rows over 819 files. Two instrument defects
+  surfaced on the way and both are stated rather than buried: a helper meant to hide self-referential needles was joining its parts with a
+  space, which builds a string no bytes can contain (the F17 class wearing a guard's clothing, now refused automatically by
+  `FORBID_SELFREFERENCE`), and the row installer anchored on a needle's text rather than a row key, so it wrote the interrupted run's
+  `noTally` flag onto the matrix row - caught by the ledger's own reverse rule, not by review. Real phones, Safari/WebKit, microphones,
+  audio quality and independent agronomy stay UNVERIFIED; `main` is untouched, nothing was deployed, no test was weakened. Full account in
+  subsection 73 of `docs/validation.md`.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -2880,11 +2911,19 @@ The optional-model error branch that dropped the worker's message and blamed the
 none, and `tests/e2e/chat-model-egress.spec.js:17` requires the whole sentence. Two rules from that queue item survive the fix
 and are what its regression tests enforce: give only an observed, safe reason, and do not restore the raw-error leak. The
 earlier CDN interruption and recovery stay archived in `docs/evidence/iter56-dns-trace-census-2026-11-19.log.gz`; deterministic
-failure coverage and live model-loading coverage must remain distinct. The same shape is still open one module over, queued as
-F16: `public/js/modules/speech.js:72` interpolates the raw worker text into the panel and `:74` blames the device. Superseded
-evidence replies and body-read cancellation are candidates to reproduce, not already-proven defects. F17, from the same pass: the
-tally guard at `tests/documentation-evidence-index.test.js` defaults a row's needle lists to empty, so a row written without needles
-passes by reading nothing; the candidate verifier now refuses that shape and the shipped guard should too.
+failure coverage and live model-loading coverage must remain distinct. The same shape one module over was queued as F16 -
+`public/js/modules/speech.js:72` interpolating the raw worker text into the panel and `:74` blaming the device - and iteration 73 closed
+it on the shared classifier, both panels now reading one cause table, with subsection 73 of `docs/validation.md` as its evidence.
+Superseded evidence replies and body-read cancellation are candidates to reproduce, not already-proven defects. F17, from the same pass: the
+tally guard at `tests/documentation-evidence-index.test.js` defaults a row's needle lists to empty, so a row written without needles passes by
+reading nothing. Measured on the 240-row table iteration 73 started from: one row pins no bytes at all - the iteration-57 partial capture, held
+only by a `partial` shape flag and a `marks` count - while a rule demanding all three needle kinds would redden 81 legacy rows, so the
+enforceable rule is at least one positive content needle (`lines`, `phrases` or `onlyReds`). The candidate verifier refuses the shape; the
+shipped guard should too, and its first run must be the single row the survey found rather than a table-wide rewrite. Iteration 73 found the
+same class one step along: a negative can be well-formed, present in the row and still pin no bytes, because the needle it builds joined its
+parts with a space and no archive can contain the result. The verifier now cross-checks every negative against the text of the verifier and
+driver embedded in the very archive it grades (`FORBID_SELFREFERENCE`), which is the half of F17 that is automated; the shipped guard still
+has neither rule, and both live in gitignored `artifacts/scratch` until F13 lands.
 
 ### 13.1. Next 50 goals, in priority order
 
@@ -2924,7 +2963,14 @@ when existing behaviour is sound. No goal is marked executed merely by appearing
    on the page (`tests/e2e/chat-bare-place-name.spec.js:76`, `:93`) and selects nothing offline
    (`tests/workflow-bare-place-name.test.js:132`, which is one of the four clauses its mutants go red on). The
    "different message" half - a stale reply landing after the farmer moved on, and any choice invalidated by a
-   location change made outside the chat - is untouched and stays open.
+   location change made outside the chat - is untouched and stays open. Premise corrected 21 Nov, measured rather than
+   assumed: three guards already sit on that path (`public/js/modules/chat.js:100` before the render, `:154` before the error
+   sentence, `:159` in the `finally` that returns the composer), and the two upstreams reject before them -
+   `public/js/lib/api.js:35` rejects a cancelled request with `cancellation()` and `public/js/modules/workflow-assistant.js:341`
+   throws `cancellation('Planning context changed')` from its own `guard()` - so `:100` is defensive over a microtask-scale window and
+   no test yet proves it bites; a spec that holds `/api/ask` open cannot be armed on the static transport at all, because
+   `public/js/lib/api.js:18-26` posts to the worker bundle instead of issuing that request, which is why the work left is a
+   contract-pinning spec with a mutation control on `:100` and a second one on `:159`, not a longer timeout.
 9. Replace unsupported device blame on model-load failure with safe, observable failure wording.
 10. Prove model refusal/unload/reload leaves deterministic chat and planning usable, with no fake success.
 
@@ -3003,6 +3049,18 @@ it stuck. Never kill another workload. On a live outage, preserve the trace/stat
 informative isolated check, not repeated full gates seeking green. Continue independent work
 or record a precise unblock condition. A permission denial stops that operation; it is not a
 reason to switch tools, identities or channels. Never raise timeouts or retries to hide a fault.
+
+The offline suite is `node --test tests/*.test.js`. A bare `node --test` globs the repository
+root, which on this tree includes gitignored control copies under `artifacts/`; measured on the
+iteration-73 tree it reported 461 tests with 25 failures, every one of them inside a shelved
+baseline or scratch copy, and none in the shipped suite. Re-run scoped before believing a red
+that arrives in under two milliseconds with a source-text assertion.
+
+After the prose for an iteration is final, re-run the documentation guards, the citation scout
+(both passes: `--head` is a separate invocation) and the scoped offline suite to prove the
+write-up broke no pin. Those re-runs are a self-check, not evidence: no ledger row is written
+for output that was not archived, because a row pins bytes in an archive and inventing one is
+the defect the row exists to catch.
 
 When review/implementation is resumed explicitly, inspect existing changes and running jobs
 before touching them. Commit only the reviewed work when authorised, stage explicit paths,

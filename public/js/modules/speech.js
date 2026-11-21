@@ -4,8 +4,8 @@
 // - Read aloud: the browser's built-in speech engine, restricted to English voices
 //   that run on this device (voice.localService). The text of the actual answer is
 //   spoken, including its limitations. No text is sent to a remote voice service.
+import { speechFailureStatus } from '../lib/model-failure.js';
 const MAX_SECONDS = 20, RATE = 16000;
-
 export const englishLocalVoice = voices => voices.filter(voice => voice.localService && /^en(?:[-_]|$)/i.test(voice.lang))
   .sort((a, b) => (b.default ? 1 : 0) - (a.default ? 1 : 0) || a.lang.localeCompare(b.lang) || a.name.localeCompare(b.name))[0] ?? null;
 
@@ -69,9 +69,9 @@ export function initSpeech({ input, status, micButton, unloadButton, stopButton,
         input.focus();
         say('Transcript added to the message box. Check and edit it, then press Send.');
       }
-      if (data.type === 'error') { pending = null; unload(`Voice input unavailable: ${data.message}. Typing works as usual.`); }
+      if (data.type === 'error') { pending = null; unload(speechFailureStatus(data.message)); }
     };
-    worker.onerror = event => { event.preventDefault(); unload('The speech model could not start on this device. Typing works as usual.'); };
+    worker.onerror = event => { event.preventDefault(); unload(speechFailureStatus(event.message)); };
     worker.postMessage({ type: 'load' });
   }
   async function start() {

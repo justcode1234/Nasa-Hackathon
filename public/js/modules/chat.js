@@ -2,8 +2,8 @@ import { api } from '../lib/api.js';
 import { el, sourceLinks } from '../lib/dom.js';
 import { composeAnswerBlocks, contextBlocks } from '../lib/chat-context.js';
 import { createWorkflowAssistant } from './workflow-assistant.js';
-import { initSpeech } from './speech.js';import { modelFailureStatus } from '../lib/model-failure.js';
-
+import { initSpeech } from './speech.js';
+import { modelFailureStatus } from '../lib/model-failure.js';
 export function initChat(getState, actions) {
   const $ = id => document.getElementById(id);
   let worker, ready = false, disabled = false, revision = 0, request, sequence = 0, chatContext = null;

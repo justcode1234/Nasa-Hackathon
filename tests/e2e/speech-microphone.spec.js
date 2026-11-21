@@ -66,6 +66,7 @@ test('unloading during recording cancels it, releases the microphone and leaves 
 
 test('a failed speech-model download is reported and typed chat still works',async({page,context})=>{
   test.setTimeout(120_000);
+  const hubRequests=[];context.on('request',request=>{if(/huggingface\.co|hf\.co/.test(request.url()))hubRequests.push(request.url());});
   await context.route(fields,r=>r.abort('failed'));await context.route(/huggingface\.co|hf\.co/,r=>r.abort('failed'));
   await open(page);await mic(page).click();
   if(await page.locator("#speech-consent").isVisible())await page.locator("#start-dictation").click();
@@ -74,6 +75,23 @@ test('a failed speech-model download is reported and typed chat still works',asy
   await expect(mic(page)).toHaveAttribute('aria-pressed','false');
   await expect(page.locator('#speech-status')).toContainText('Typing works as usual');
   await expect(page.locator('#question')).toHaveValue('');await expect(mic(page)).toBeEnabled();
+  // Iteration 73 (F16) pins the whole sentence and refuses the parts of it that used to be the worker's own text.
+  // Before this pass the panel read "Voice input unavailable: Failed to fetch. Typing works as usual." on this arm, and
+  // on the runtime arm it printed this server's origin, an XMLHttpRequest internals sentence and an ONNX error code
+  // (measured on both transports; docs/evidence/iter73-capture-static-pre-2026-11-21.log.gz). The literal below is written
+  // out rather than imported from public/js/lib/model-failure.js on purpose: an expectation derived from the code under
+  // test rewords itself silently.
+  const status=await page.locator('#speech-status').textContent();
+  expect(status).toBe('Voice input unavailable because a model file did not arrive. Typing works as usual. Press the microphone button to try again.');
+  expect(status).not.toMatch(/huggingface|hf\.co|http|Failed to fetch|XMLHttpRequest|on this device/i);
+  expect(status).not.toMatch(/\.\.\s/,'a period was doubled where the worker text used to be interpolated');
+  // The recovery the sentence offers has to be the recovery the page performs: pressing the microphone again starts a
+  // second load attempt, which is what distinguishes a retry from a dead end. The attempt is observed on the network
+  // rather than by a success, because this arm keeps the model host blocked; the success path is the first case above.
+  const attempted=hubRequests.length;
+  await mic(page).click();
+  await expect.poll(()=>hubRequests.length,{timeout:60_000}).toBeGreaterThan(attempted);
+  await expect(page.locator('#speech-status')).toContainText('Voice input unavailable because a model file did not arrive');
   await page.locator('#question').fill('Hi');await page.getByRole('button',{name:'Send',exact:true}).click();
   await expect(page.locator('#answer-status')).toContainText('Answer ready',{timeout:60_000});
 });
