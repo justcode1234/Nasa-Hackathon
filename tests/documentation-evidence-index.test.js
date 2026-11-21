@@ -1727,10 +1727,203 @@ const TALLIES = [
        'RESTORED md5 2a14bab0dedfd8364c50c7eb87b74cb5 identical=True'],
    absent: ['MUTATION_REFUSED', 'ABORT the guard is not green'],
     marks: 0 },
+  // Iteration 70, queue item F3. One archive, two arms, so the red and the green of the same walk sit next to each
+  // other and the ledger cannot quote one and mean the other. The two `MODULE_MD5` line pins say which bytes each arm
+  // read (798 lines shipped by iteration 69, 812 delivered here), the adjacent-pair phrase pins says which arm the
+  // changed-keys line belongs to - `["place","coordinates"]` after a `calls=["region"]` replay is the defect, `[]`
+  // after `calls=[]` is the repair - and the two `identical=true` phrases pin that neither arm's module digest moved
+  // while its four walks ran. A row that only listed both changed-keys lines would pass an archive where both came
+  // from the same arm.
+  { archive: 'docs/evidence/iter70-f3-replay-probe-2026-11-21.log.gz',
+   lines: ['PROBE HEAD=60500c3077ee6702575c1f70b6783420a667ea82',
+       'PROBE MODULE_MD5=efd158ed05f258705593ceb422893a5c MODULE_LINES=798',
+       'PROBE MODULE_MD5=6a23d42a807c8f7243077a67fb43c24b MODULE_LINES=812',
+       'A_REFUSAL_UNCHANGED  true',
+       'RESTORE_VERIFIED md5 6a23d42a807c8f7243077a67fb43c24b 6a23d42a807c8f7243077a67fb43c24b'],
+   phrases: ['ARM1_EXPECT_MD5=efd158ed05f258705593ceb422893a5c\nPROBE start_utc=',
+       'ARM2_EXPECT_MD5=6a23d42a807c8f7243077a67fb43c24b\nPROBE start_utc=',
+       'MODULE_MD5=efd158ed05f258705593ceb422893a5c identical=true',
+       'MODULE_MD5=6a23d42a807c8f7243077a67fb43c24b identical=true',
+       'A_AFTER_REPLAY  {"country":"CN","regionCode":"20","place":null,"coordinates":null,"farm":null,"observations":"LOADED"}  calls=["region"]\nA_REPLAY_CHANGED_KEYS  ["place","coordinates"]',
+       'A_AFTER_REPLAY  {"country":"CN","regionCode":"20","place":"n1","coordinates":"40.8494,111.6649","farm":null,"observations":"LOADED"}  calls=[]\nA_REPLAY_CHANGED_KEYS  []'],
+   absent: ['✘', '✖', 'ABORT'],
+    marks: 0 },
+  // The page-level harm run: one measure instrument, walked on both desktop transports against the shipped bytes and
+  // then against the delivered ones, and re-run a second time with the module digests stamped in-band. `DIFF_MEASURE
+  // lines=0` is the diff of the MEASURE lines between those two captures, which is what ties the digests in the REPRO
+  // banner to the sentences printed here. Both arms see the same state before the repeat and differ only after it.
+  { archive: 'docs/evidence/iter70-f3-page-harm-2026-11-21.log.gz',
+   lines: ['REPRO HEAD=60500c3077ee6702575c1f70b6783420a667ea82',
+       'REPRO arm2 APPLIED md5=efd158ed05f258705593ceb422893a5c WANT=efd158ed05f258705593ceb422893a5c identical=true',
+       'REPRO RESTORED md5=6a23d42a807c8f7243077a67fb43c24b identical=true',
+       'REPRO DIFF_MEASURE lines=0 identical=true',
+       'ARM=defect MEASURE after_repeat={"town":"","region":"20","latitude":"","longitude":""}',
+       'ARM=delivered MEASURE after_repeat={"town":"2038432","region":"20","latitude":"40.6516","longitude":"109.84389"}'],
+   phrases: ['FieldShift iteration 70, queue item F3 (the page half of the harm measurement)',
+       'Nothing is\nasserted by the instrument',
+       'ARM=defect MEASURE after_plan={"town":"2038432","region":"20","latitude":"40.6516","longitude":"109.84389"}\nARM=defect MEASURE after_repeat={"town":"","region":"20","latitude":"","longitude":""}',
+       'ARM=delivered MEASURE after_plan={"town":"2038432","region":"20","latitude":"40.6516","longitude":"109.84389"}\nARM=delivered MEASURE after_repeat={"town":"2038432","region":"20","latitude":"40.6516","longitude":"109.84389"}',
+       '✓  2 [node-desktop] › tests/e2e/zz-iter70-measure.spec.js:13:1'],
+   absent: ['✘'],
+   marks: 0 },
+  // F2's premise, measured rather than inherited: the instrument counts place-list requests per transport while a
+  // refusal is armed. The static page reads the list twice at country selection and never again, so the refusal it
+  // prints cannot have been caused by a read it did not make; the node page re-reads per assistant turn. The two
+  // `LOG FINAL` lines are the same instrument on the two servers, which is what makes the counts comparable.
+  { archive: 'docs/evidence/iter70-f2-list-cache-blind-2026-11-21.log.gz',
+   lines: ['REPRO DIFF_EXPLORE lines=0 identical=true',
+       'STEP counts {"refused":0,"answered":2}',
+       'F2URLS SPEC_MD5=1501c8d107bb92e6706feaec73288e34 MODULE_MD5=6a23d42a807c8f7243077a67fb43c24b SERVED_MD5=6a23d42a807c8f7243077a67fb43c24b',
+       'LOG FINAL seen=2 counts={"refused":0,"answered":2}',
+       'LOG FINAL seen=4 counts={"refused":2,"answered":2}',
+       'LOG REQ n=1 phase=country-cn-selected mode=answered method=GET resourceType=fetch url=http://127.0.0.1:4173/data/locations/manifest.json'],
+   phrases: ['FieldShift iteration 70, queue item F2 (measured premise, not a fix)',
+       'server-side cache in server/context/locations.js',
+       'url=http://127.0.0.1:4174/api/locations?country=CN',
+       'RAW STEP counts {"refused":0,"answered":2}'],
+   absent: ['✘'],
+   marks: 0 },
+  // The refusal-and-replay page run the third spec case was written from: on node the replay button exists and the
+  // second read is answered, on static the button is never offered because the list was never re-requested. Both
+  // transports keep the same town, point and region across it, which is the assertion the shipped code could break.
+  { archive: 'docs/evidence/iter70-f3-refusal-replay-page-2026-11-21.log.gz',
+   lines: ['F3REPLAY PLAYWRIGHT_EXIT=0',
+       'LOG P3 node-desktop replay_button="Ask that again" counts={"refused":2,"answered":1}',
+       'LOG P3 static-desktop replay_button=null counts={"refused":0,"answered":2}',
+       'LOG P3 node-desktop after-replay held={"town":"2038432","region":"20","latitude":"40.6516","longitude":"109.84389"} counts={"refused":2,"answered":2}',
+       'LOG P3 static-desktop FINAL counts={"refused":0,"answered":2} held={"town":"2038432","region":"20","latitude":"40.6516","longitude":"109.84389"}'],
+   phrases: ['FieldShift iteration 70, queue item F3 (the refusal half, on the page)',
+       'the instrument asserts nothing, it prints what the farmer is shown',
+       'after-replay text=Inner Mongolia is the region this plan is already in, so nothing was selected again: the point 40.6516, 109.84389 stays as the location.',
+       '4 passed (4.1s)'],
+   absent: ['✘'],
+   marks: 0 },
+  // The mutation ladder over the browser spec, and the only row that scores the unit layer per arm: 44/45/46/48 pass
+  // for revert/half/sentencedrop/delivered. `sentencedrop` keeps the wording and drops the state, so the two ✘ lines
+  // it reddens - the `held(page)` assertions - are the witness that those DOM reads detect anything. Eighteen ✘ case
+  // lines is 3 cases x 2 projects x 3 red arms; the delivered arm prints none.
+  { archive: 'docs/evidence/iter70-f3-spec-controls-2026-11-21.log.gz',
+   lines: ['MUT revert UNIT_EXIT=1 ℹ tests 48 ℹ pass 44 ℹ fail 4',
+       'MUT half UNIT_EXIT=1 ℹ tests 48 ℹ pass 45 ℹ fail 3',
+       'MUT sentencedrop UNIT_EXIT=1 ℹ tests 48 ℹ pass 46 ℹ fail 2',
+       'MUT delivered UNIT_EXIT=0 ℹ tests 48 ℹ pass 48 ℹ fail 0',
+       'MUT revert PLAYWRIGHT_EXIT=1',
+       'MUT half PLAYWRIGHT_EXIT=1',
+       'MUT sentencedrop PLAYWRIGHT_EXIT=1',
+       'MUT delivered PLAYWRIGHT_EXIT=0',
+       'MUT delivered RESTORED md5=6a23d42a807c8f7243077a67fb43c24b identical=true'],
+   phrases: ['CONTROLS iter70 F3-spec arm=sentencedrop',
+       'MUT revert DETAIL     > 56 |   expect(reply,\'naming the region the plan is already in selects it a second time\')',
+       'MUT half DETAIL     > 146 |     expect(refusal,\'the list was answered from what the page already holds, so the sentence is the plain one\')',
+       'MUT sentencedrop DETAIL     > 59 |   expect(await held(page),\'the town, its point and the region survive the sentence\').toEqual(picked);',
+       'MUT sentencedrop DETAIL     > 152 |   expect(await held(page),\'the town, its point and the region survive on either arm\').toEqual(picked);',
+       'MUT sentencedrop   6 failed',
+       'MUT delivered   6 passed ('],
+   marks: 18 },
+  // The green gate for the spec on the delivered tree: 3 cases x 4 projects, with the branch witness printed to
+  // stdout because Playwright discards attachments for passing tests and the archive would otherwise not say which arm
+  // each transport took.
+  { archive: 'docs/evidence/iter70-f3-spec-4projects-2026-11-21.log.gz',
+   lines: ['PLAYWRIGHT_EXIT=0',
+       'SPEC_MD5=3d9352d140a4af7333869c94067fc7fd MODULE_MD5=6a23d42a807c8f7243077a67fb43c24b SERVED_MD5=6a23d42a807c8f7243077a67fb43c24b',
+       'REGION-REPEAT static-desktop arm=list-never-requested step-one-reads={"refused":0,"answered":2} final-counts={"refused":0,"answered":2}',
+       'REGION-REPEAT node-desktop arm=refusal-replayed step-one-reads={"refused":0,"answered":1} final-counts={"refused":2,"answered":2}',
+       '12 passed (8.2s)'],
+   phrases: ['FieldShift iteration 70, queue item F3 (the shipped browser guard, all four transports)',
+       'REGION-REPEAT static-mobile arm=list-never-requested',
+       'REGION-REPEAT node-mobile arm=refusal-replayed'],
+   absent: ['✘'],
+   marks: 0 },
+  // The four closing captures, in the order they were taken: the browser gate, the case census, the offline suite and the
+  // document guards. Each header names the leg command and the digests that leg stamped before it ran, so a green summary is
+  // attached to bytes rather than to a date. Their rows arrive after the readings they quote, because a row cannot pin a count
+  // the run it describes did not print, which is why each one pins the leg's own status line beside its verdict: a capture
+  // re-shelved over a different reading has to disagree with itself before it can pass.
+  { archive: 'docs/evidence/iter70-gate-2026-11-21.log.gz',
+   lines: ['GATE iter70 start_utc=2026-11-21T09:55:45Z interpreter=v26.13.1 head=60500c3077ee6702575c1f70b6783420a667ea82',
+       'GATE MODULE_MD5=6a23d42a807c8f7243077a67fb43c24b SERVED_MD5=6a23d42a807c8f7243077a67fb43c24b',
+       'GATE E2E_SPECS=31 TREE_STATUS_LINES=15',
+       'Running 348 tests using 1 worker',
+       '348 passed (22.7m)',
+       'GATE_EXIT=0',
+       'GATE end_utc=2026-11-21T10:18:28Z'],
+   phrases: ['ITERATION 70',
+       'the four Playwright projects (static-desktop, static-mobile, node-desktop, node-mobile) on one worker with no build step',
+       'This pass\'s spec contributes 12 of those lines',
+       'GATE SELF_PGID=24316 PARENT_PGID=24312'],
+   absent: ['✘', 'GATE_EXIT=1'],
+   marks: 0 },
+  // The census is not a run and claims no pass: it exists so the gate's 348 is the runner's own count of the same
+  // configuration, and so a spec that reached only the two projects which read server/ could not hide inside a correct total.
+  { archive: 'docs/evidence/iter70-census-final-2026-11-21.log.gz',
+   lines: ['CENSUS iter70 start_utc=2026-11-21T10:23:47Z interpreter=v26.13.1 head=60500c3077ee6702575c1f70b6783420a667ea82',
+       'Total: 348 tests in 31 files',
+       'CENSUS_SPEC_LINES=12',
+       '3 CENSUS_SPEC_PROJECTS node-desktop', '3 CENSUS_SPEC_PROJECTS node-mobile',
+       '3 CENSUS_SPEC_PROJECTS static-desktop', '3 CENSUS_SPEC_PROJECTS static-mobile',
+       'CENSUS_EXIT=0'],
+   phrases: ['the four-project case census on the delivered configuration',
+       'CENSUS_RAW_MD5 ee8d0f8afc5e90285579b8c5e555e3cc',
+       '=== THIS PASS SPEC IN THE RAW LISTING (12 lines) ==='],
+   absent: ['✘', 'CENSUS_EXIT=1'],
+   marks: 0 },
+  // The offline suite over the delivered tree, archived with the red reading it superseded: that first run failed on the
+  // three index cases because this pass had shelved the gate capture without regenerating the index beside it, so the
+  // archive carries both the disagreement and the green that followed it once the shelf and the index agreed.
+  { archive: 'docs/evidence/iter70-offline-final-2026-11-21.log.gz',
+   lines: ['OFFLINE iter70 start_utc=2026-11-21T10:24:25Z interpreter=v26.13.1 head=60500c3077ee6702575c1f70b6783420a667ea82',
+       'ℹ tests 322', 'ℹ pass 322', 'ℹ fail 0', 'ℹ skipped 0', 'OFFLINE_EXIT=0'],
+   phrases: ['SOURCE_STATE this reading is the second',
+       'duration_ms 24908.816125',
+       'the three index cases'],
+   absent: ['✘', 'OFFLINE_EXIT=1'],
+   marks: 0 },
+  // The five documentation guard files over the ledger this pass writes. Their count is the one thing a reader cannot get
+  // from the tally table itself: the table checks archives, and these five check the prose that quotes the table.
+  { archive: 'docs/evidence/iter70-docguards-final-2026-11-21.log.gz',
+   lines: ['DOCSGUARDS iter70 start_utc=2026-11-21T10:26:11Z interpreter=v26.13.1 head=60500c3077ee6702575c1f70b6783420a667ea82',
+       'DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0', 'DOCSGUARDS_EXIT=0', 'GUARD_FILES 5'],
+   phrases: ['the five documentation guard files over the ledger as this leg found it',
+       'shelved after the closing paragraph is on the tree',
+       'HEADER_CORRECTION this file was re-gzipped at 2026-11-21T10:40:41Z',
+       'BODY_MD5 a36c3f697ff13d9ec538d0d387e984ee'],
+   absent: ['✘', 'DOCSGUARDS_EXIT=1', '2026-11-21T2026-11-21'],
+   marks: 0 },
+  // The second ladder of this pass, the one that attacks the four rows above. It cannot pin itself - the row naming it is
+  // written after it runs - but its own log carries the guard digest it attacked, so a reader can check the row and the
+  // ladder describe the same table. `identical=False` is the line the driver prints when a restore misses the delivered
+  // bytes, which would leave a mutant on the tree and make every reading after it a different file.
+  { archive: 'docs/evidence/iter70-tally-controls-2-2026-11-21.log.gz',
+   lines: ['TALLYCTL2_START_UTC 2026-11-21T10:32:35Z', 'DELIVERED md5 1b276977f4f7b0fef59b1c893299fb6e',
+       'ROWS_ON_TREE 218', 'BASELINE rc=0 tests=7 pass=7 fail=0 reds=0', 'LAYERS_BITTEN 6/6 ALL',
+       'TALLYCTL2_FINAL md5 1b276977f4f7b0fef59b1c893299fb6e identical=True fail=0',
+       'TALLYCTL2_DONE 2026-11-21T10:32:44Z'],
+   phrases: ['ITERATION 70',
+       'the tally of every archived run is printed by that archive, not by the prose quoting it',
+       'AssertionError [ERR_ASSERTION]: docs/evidence/iter70-gate-2026-11-21.log.gz never prints the line "348 passed (22.8m)" the ledger reads out of it',
+       'LAYER_BITE layer=marks red=True bit=True\nRESTORED md5 1b276977f4f7b0fef59b1c893299fb6e identical=True',
+       'DRIVER SOURCE (artifacts/scratch/iter70/tally-controls-2.py, md5 530aef398c80f5ff88d25f81dc40ded7)'],
+   absent: ['identical=False', 'Traceback (most recent call last)'],
+   marks: 0 },
+  // The drift scout, the last leg of the pass and the only one that reads the finished ledger. Its two readings are pinned
+  // as a pair because the working copy and `--head` are different questions: one asks whether this pass's prose points at
+  // this pass's bytes, the other whether the prose that survives on the branch points at the branch. `DRIFTED 1` is the
+  // shape of a real drift verdict, so declaring it absent is the case asserting that neither reading found one.
+  { archive: 'docs/evidence/iter70-drift-final-2026-11-21.log.gz',
+   lines: ['DRIFT iter70 start_utc=2026-11-21T10:38:19Z interpreter=v26.13.1 head=60500c3077ee6702575c1f70b6783420a667ea82',
+       'TREE CITED_LINES_CHECKED 263 DRIFTED 0 INSIDE_DIFF_HUNKS 2',
+       'HEAD CITED_LINES_CHECKED 262 DRIFTED 0 INSIDE_DIFF_HUNKS 0',
+       'DRIFT_TREE_EXIT=0', 'DRIFT_HEAD_EXIT=0', 'LEG drift end_utc=2026-11-21T10:38:20Z'],
+   phrases: ['ITERATION 70',
+       'GUARD_MD5=b6159a0e1529f6bc9591d48c389e3e6e TALLY_ROWS=219',
+       'FILES_WITH_EDITS public/js/modules/workflow-assistant.js tests/documentation-evidence-index.test.js tests/workflow-place-choices.test.js',
+       'DRIFT_TREE_EXIT=0\nTREE CITED_LINES_CHECKED 263 DRIFTED 0 INSIDE_DIFF_HUNKS 2'],
+   absent: ['✘', 'DRIFTED 1', 'DRIFT_TREE_EXIT=1', 'DRIFT_HEAD_EXIT=1'],
+   marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 208, `the table carries ${TALLIES.length} archives; subsections 57 through 69 quote more runs ` +
+  assert.ok(TALLIES.length >= 220, `the table carries ${TALLIES.length} archives; subsections 57 through 70 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -1834,7 +2027,28 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'own mutants unscored and said so, the page spec once per project printing the digest each arm served, the ' +
     'four-project gate at 336 whose two digest banners are equal because no byte moved while it ran, the scout in both ' +
     'of its modes, the case census and the ladder over these nine rows, beside the offline suite and the guard set as ' +
-    'they read once every one of those shelves existed.');
+    'they read once every one of those shelves existed, and 209 when iteration 70 archived F3 as one file with two arms ' +
+    '- the 798-line module iteration 69 shipped, whose replay of a refused switch read selected the region the plan ' +
+    'already held and lost the town point, and the 812-line one delivered here, whose replay states the point it keeps ' +
+    '- each arm printing the digest of the bytes it imported before and after its four walks, and 214 when the same ' +
+    'iteration shelved the page side of the same defect: the two-arm harm measure over four projects, whose delivered ' +
+    'bytes keep town 2038432 at 40.6516, 109.84389 across a repeat while the shipped ones empty both fields with the ' +
+    'same instrument file byte-for-byte between arms, the F2 blindness run that counts a place-list request per ' +
+    'transport and shows the static page answering from a client-side cache it never re-reads, the refused-read replay ' +
+    'green on all four projects with the branch each transport took printed to stdout, the four-arm browser ladder ' +
+    'whose sentence-preserving mutant reddens exactly the two state assertions and whose eighteen ✘ case lines are 3 ' +
+    'cases x 2 projects x 3 red arms, and the 12-case four-project gate on the delivered bytes; 218 when that iteration shelved ' +
+    'the closing captures themselves - the four-project browser gate printing 348 passed with the served bundle equal to the ' +
+    'source it was meant to exercise, the case census printing the same 348 in 31 files with twelve project lines for the new ' +
+    'spec, the offline suite at 322 with none skipped after its first reading went red on the three index cases this pass had ' +
+    'disturbed by shelving a capture beside a stale index, and the five document guard files at 28 with the citation-drift ' +
+    'scout deliberately left to run after the prose that cites these archives exists; 219 when the same iteration shelved ' +
+    'the second ladder beside them - the one that attacks those four closing rows, six assertion shapes broken one at a ' +
+    'time against the archives on the shelf, each of which had to go red naming the file it reads, and which ran three ' +
+    'times before every layer bit because its first two drafts anchored on text that matched nothing or matched seven ' +
+    'rows at once, and 220 when the citation-drift scout that reads all six joined it - the leg that runs last because it ' +
+    'counts the pointers the closing paragraph adds, and whose row arrived after it, together with the docguards capture ' +
+    're-shelved over a corrected header once its own WHAT line claimed a ledger newer than the run it described.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

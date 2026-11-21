@@ -2530,6 +2530,45 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   and leaves the town unset), F2 (the worker-side list cache that makes page-side request counters blind on the static
   transport), F6, F7, F12, F13 and F14 stay open; `main` is untouched and nothing was deployed. Full account in
   subsection 69 of `docs/validation.md`.
+- **2026-11-21 (iteration 70, F3 closed as VERIFIED FIX, F2 corrected and still open):** F3 was the refused-switch
+  replay: on the bytes iteration 69 shipped, asking the assistant to repeat a plan whose region switch had been
+  refused re-selected the region and dropped the town point, so the answer quoted a place the farmer never chose. The
+  delivered module states the point it keeps instead, and `tests/e2e/chat-region-repeat-keeps-point.spec.js` now
+  measures both halves on all four projects - three cases each, 12 lines - printing to stdout which side of the branch
+  the transport took, because Playwright keeps attachments only for failed tests and a green run would otherwise
+  archive no witness. `docs/evidence/iter70-f3-replay-probe-2026-11-21.log.gz` is that replay on the two module
+  revisions (the 798-line shipped file against the 812-line delivered one, each arm printing the digest it imported),
+  `docs/evidence/iter70-f3-spec-controls-2026-11-21.log.gz` is the four-arm ladder that shows the new cases go red for
+  the state assertions and not the wording ones, and
+  `docs/evidence/iter70-f3-page-harm-2026-11-21.log.gz` measures the same defect through a real page: the delivered
+  bytes keep town 2038432 at 40.6516, 109.84389 across a repeat while the shipped ones empty both fields. F2 is
+  corrected rather than closed: the static page answers a place-list read from a client-side cache in
+  `public/js/modules/location-picker.js` that the assistant's own list cache does not share, and
+  `docs/evidence/iter70-f2-list-cache-blind-2026-11-21.log.gz` counts a place-list request per transport to show that
+  the page never re-reads one - so a staleness fix has to name which of the three caches (that picker cache, the
+  assistant's, and the node-side one in `server/context/locations.js`) it touches, and must not pay for the offline
+  benefit it removes. Closing legs: `docs/evidence/iter70-gate-2026-11-21.log.gz` (four projects, one worker, `348
+  passed (22.7m)`, exit 0, module and served-bundle digests equal, 348 passed-case lines and no red, skipped or flaky
+  line), `docs/evidence/iter70-census-final-2026-11-21.log.gz` (`--list` planning the same `Total: 348 tests in 31
+  files`), `docs/evidence/iter70-offline-final-2026-11-21.log.gz` (322 unit cases, none failed, none skipped, beside
+  the earlier reading that went red on three index cases this pass had disturbed),
+  `docs/evidence/iter70-docguards-final-2026-11-21.log.gz` (five documentation guard files, 28 cases) and
+  `docs/evidence/iter70-tally-controls-2-2026-11-21.log.gz`, the ladder that breaks those four rows' assertion shapes -
+  6 of 6 layers biting only on its third attempt, the first two refused by anchors that matched no row and then seven
+  rows, and `docs/evidence/iter70-drift-final-2026-11-21.log.gz`, the citation scout run last because it counts the
+  pointers this bullet and the subsection add: 263 cited source lines checked against the working copy with none
+  drifted, 262 against `--head` with none drifted, the two pointers it skips sitting inside this pass's own diff hunks
+  and covered instead by the citation guard in the documentation set. The re-run that stands behind the commit, not archived because no
+  capture can pin the row naming it, reads 265 pointers with none drifted - the two extra are this pass's own closing rows - with 28
+  documentation cases and 322 unit cases green at `OFFLINE_EXIT=0`, after a first pass that was red on the two index cases because shelving
+  the drift capture left `docs/evidence-index.md` one file behind the shelf and the generator had to run again. The tally table goes from
+  214 rows to 220. One
+  archive on this pass's shelf needed a correction rather than a quiet replacement: the docguards capture's own header
+  called itself a reading of the ledger "as this pass leaves it" when it ran three rows earlier, so its header lines
+  were rewritten with a `HEADER_CORRECTION` banner and a digest proving the embedded output is byte-identical to the
+  first shelving. Real phones, Safari/WebKit, microphones, audio quality and
+  independent agronomy stay UNVERIFIED; `main` is untouched and nothing was deployed. Full account in subsection 70 of
+  `docs/validation.md`.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

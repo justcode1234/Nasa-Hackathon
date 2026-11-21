@@ -563,10 +563,10 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       // Repeating the already-chosen region’s own name is not a new choice. In eleven saved lists that
       // name is also a town somewhere else (the city of Buenos Aires is not a town inside the province of
       // Buenos Aires), so the pending question is still “which town” and re-selecting the region would
-      // answer the same question twice. Say what is missing and give the real towns instead.
-      if (regionMatches.length === 1 && selectedRegion && regionMatches[0].id === selectedRegion && !state.location) {
-        if (!townMentions.length) return placeRecovery();
-      } else if (regionMatches.length === 1) return selectRegion(regionMatches[0]);
+      // answer the same question twice. With a point already held the reply states what stays; see `regionHeld`.
+      const sameRegion = regionMatches.length === 1 && selectedRegion && regionMatches[0].id === selectedRegion;
+      if (sameRegion && !townMentions.length) return state.location ? regionHeld(regionMatches[0], state, places, countryName) : placeRecovery();
+      if (regionMatches.length === 1 && !sameRegion) return selectRegion(regionMatches[0]);
       const matches = choice?.type === 'town' ? places.places.filter(place => place.id === choice.id) :
         choice?.type === 'towns' ? places.places.filter(place => choice.ids.includes(place.id)) :
         townMentions.length ? townMentions : places.places.filter(place => {
@@ -792,6 +792,20 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       : 'Ask again in a moment, or name the move outright — that needs no list.'}`,
       unreadable ? [next(`Switch to ${there}`, `Switch to ${there}`)]
         : [next('Ask that again', question), next(`Switch to ${there}`, `Switch to ${there}`)]);
+  }
+  // Queue item F3, measured 21 Nov on the tree that shipped iteration 69 (docs/evidence/
+  // iter70-f3-replay-probe-2026-11-21.log.gz): the replay of a sentence whose switch read had refused reached this
+  // branch with the region it names already selected, ran `chooseRegion` with the id the plan already held, and
+  // answered “Inner Mongolia is selected. Now choose a town…”. That call is what `public/js/modules/context.js:237`
+  // routes through `locationChanged`, which clears the town point, the mapped fields and the loaded evidence — so a
+  // reply that had just promised “no region, point or loaded evidence was dropped” was followed by a replay that
+  // dropped the point and left the town unselected. The row resolver at `exactPlaceRow` already treats a region equal
+  // to the one selected as answering no question; this is the typed-sentence half of the same rule. Nothing is
+  // selected here, so the reply can state the point that stays and offer both ways forward.
+  function regionHeld(region, state, places, countryName) {
+    const point = `${state.location.latitude}, ${state.location.longitude}`;
+    return reply(`${region.name} is the region this plan is already in, so nothing was selected again: the point ${point} stays as the location.${state.observations ? ' The NASA evidence loaded for it stays too.' : ''} Choose another town in ${region.name} below or in the step 1 Town list to move the point, or continue planning where it stands.`,
+      [...townButtons(places, region.id), next('Continue planning with this location', 'Continue planning'), next(`Whole ${countryName}`, `Whole ${countryName}`)]);
   }
   return { respond, invalidate, isActive: () => active };
 }

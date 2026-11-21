@@ -410,7 +410,7 @@ test('a switch an unreadable list cannot arbitrate keeps the plan and names the 
   const replay = answer.followUps.findIndex(choice => /again/i.test(choice.label));
   const after = await click(assistant, answer, replay);
   assert.equal(state.country, 'CN', 'a retry whose list now answers may not move the country either');
-  assert.match(text(after), /Inner Mongolia is selected/, `the replay should settle as the local place: ${text(after)}`);
+  assert.match(text(after), /Inner Mongolia is the region this plan is already in/, `iteration 69 pinned “Inner Mongolia is selected” here, which is F3: a replay that selects the region again instead of settling as the place the plan is already in: ${text(after)}`);
 });
 
 test('a list whose shape cannot be read offers the move outright and no retry it has ruled out', async () => {
@@ -867,4 +867,97 @@ test('a coordinate sentence that moved the plan into a country whose list refuse
   assert.equal(state.location, null, 'only the point is withheld, because only the point could not be cross-checked');
   assert.deepEqual(calls, ['country'], 'the sentence may change the country and nothing else: ' + calls.join(' → '));
   assert.deepEqual(listAsks(), ['SG', 'IN'], 'the switch check and the shared read, one each: ' + listAsks().join(','));
+});
+
+// Iteration 70, queue item F3. The refusal above promises that “no region, point or loaded evidence was dropped”, and
+// the recovery it offers replays the farmer’s own words. Measured 21 Nov on the tree that shipped iteration 69
+// (artifacts/scratch/iter70/f3-replay-probe.mjs, archived as docs/evidence/iter70-f3-replay-probe-2026-11-21.log.gz):
+// the replay reached the region branch with that sentence, called `chooseRegion` with the id the plan already held, and
+// the harness’s own clear-on-region-select (the same clearing `public/js/modules/context.js:237` performs through
+// `locationChanged`) dropped the Hohhot point while the reply said “Inner Mongolia is selected. Now choose a town…”.
+// One thing had moved after a reply that promised nothing had: the town went unselected again. The cause is the
+// `&& !state.location` clause on that revision’s guard at `public/js/modules/workflow-assistant.js:567`, which excluded
+// exactly the state a point is held in, so the rule the row resolver keeps at `:683` (“a region row equal to the region
+// already selected answers no pending question”) never reached it.
+test('the replay of a refused switch keeps the point the refusal promised to keep', async () => {
+  const harness = setup({ country: 'CN', locations: provinces, listFailure: UNAVAILABLE });
+  const { assistant, state, calls, failList } = harness;
+  await assistant.respond('Help me plan a rotation in China');
+  const before = mongoliaPlan(harness);
+  const answer = await assistant.respond('Inner Mongolia');
+  failList(null);
+  calls.length = 0;
+  const after = await click(assistant, answer, answer.followUps.findIndex(choice => /again/i.test(choice.label)));
+  const sentence = text(after), labels = answer.followUps.map(choice => choice.label);
+  assert.deepEqual(calls.filter(call => call === 'region'), [], 'the replay re-selected a region the plan already held');
+  const held = { country: state.country, regionCode: state.regionCode, place: state.location?.placeId, observations: state.observations };
+  assert.deepEqual(held, { country: before.country, regionCode: before.regionCode, place: before.place,
+    observations: before.observations }, 'the replayed sentence changed the selection the refusal said it left alone');
+  assert.match(sentence, /Inner Mongolia is the region this plan is already in/, sentence);
+  assert.match(sentence, /40\.8494, 111\.6649/, 'the point that stays has to be the one the farmer can still see in step 1');
+  assert.ok(!/^Inner Mongolia is selected/.test(sentence), `the replay answers as if nothing were selected: ${sentence}`);
+  assert.ok(labels.includes('Ask that again'), 'the refusal still offers this replay');
+  assert.deepEqual(towns(after).map(choice => choice.label), ['Hohhot', 'Baotou'], 'the towns of the region stay the way forward');
+});
+
+// The same branch with no refusal behind it: any farmer who types the name of the region they already sit in while a
+// point is held loses that point today, so the fix is not a replay special case.
+test('repeating the chosen region’s name with a point held selects nothing and states what stays', async () => {
+  const harness = setup({ country: 'CN', locations: provinces });
+  const { assistant, state, calls } = harness;
+  await assistant.respond('Help me plan a rotation in China');
+  const before = mongoliaPlan(harness);
+  calls.length = 0;
+  const answer = await assistant.respond('Inner Mongolia');
+  assert.deepEqual(calls.filter(call => call === 'region'), [], 'a region already chosen was selected a second time');
+  assert.deepEqual({ regionCode: state.regionCode, place: state.location?.placeId, observations: state.observations },
+    { regionCode: before.regionCode, place: before.place, observations: before.observations }, 'the held point moved');
+  const sentence = text(answer);
+  assert.match(sentence, /is the region this plan is already in/, sentence);
+  assert.match(sentence, /nothing was selected again/, sentence);
+  const labels = answer.followUps.map(choice => choice.label);
+  assert.ok(labels.includes('Continue planning with this location'), `the reply must offer the step the held point unlocks: ${labels.join(' | ')}`);
+  assert.ok(labels.includes('Whole China'), `the escape that needs no region stays: ${labels.join(' | ')}`);
+});
+
+// Two controls that keep the fix a scope limit rather than a refusal to name a region.
+test('a region named while the point sits in another region is still that region choice', async () => {
+  const { assistant, state, calls } = setup({ country: 'CN', locations: provinces });
+  await assistant.respond('Help me plan a rotation in China');
+  state.regionCode = '13';
+  state.location = { latitude: 38.0428, longitude: 114.5149, placeId: 'n3' };
+  calls.length = 0;
+  const answer = await assistant.respond('Inner Mongolia');
+  assert.ok(calls.includes('region'), 'a different region has to be selectable over a held point');
+  assert.equal(state.regionCode, '20');
+  assert.match(text(answer), /^Inner Mongolia is selected/, text(answer));
+});
+
+// And the half the row resolver at `:683` already does: where the region spelling is also a listed town, the town wins
+// over both a re-selection and the “already here” reply.
+test('a region name that is also a listed town resolves to that town while a point is held', async () => {
+  const towns = { regions: provinces.regions,
+    places: [{ id: 'z9', name: 'Inner Mongolia', regionCode: '13', latitude: 39.1, longitude: 115.2 }, ...provinces.places] };
+  const harness = setup({ country: 'CN', locations: towns });
+  const { assistant, state, calls } = harness;
+  await assistant.respond('Help me plan a rotation in China');
+  state.regionCode = '20';
+  state.location = { latitude: 40.8494, longitude: 111.6649, placeId: 'n1' };
+  calls.length = 0;
+  const answer = await assistant.respond('Inner Mongolia');
+  assert.deepEqual(calls.filter(call => call === 'region'), [], 'the region was re-selected instead of the town');
+  assert.equal(state.location.placeId, 'z9', 'the listed town carrying the name is the choice');
+  assert.match(text(answer), /is selected as a town point/, text(answer));
+});
+
+// The unchanged half: with no point held the reply is still the honest “no town by that name here”.
+test('repeating the chosen region with no point still answers the town question', async () => {
+  const { assistant, state, calls } = setup({ country: 'CN', locations: provinces });
+  await assistant.respond('Help me plan a rotation in China');
+  state.regionCode = '20';
+  calls.length = 0;
+  const answer = await assistant.respond('Inner Mongolia');
+  assert.deepEqual(calls.filter(call => call === 'region'), [], 'a region already chosen was selected a second time');
+  assert.equal(state.regionCode, '20');
+  assert.match(text(answer), /^No town by that name is in the saved place list for China in Inner Mongolia/, text(answer));
 });

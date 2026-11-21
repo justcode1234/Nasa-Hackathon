@@ -7273,3 +7273,143 @@ of which executed against the finished table. The count is part of the verdict r
 draft of this driver reported the accounting only after the loop, so an anchor matching no place in the file printed
 `MUTATION_REFUSED`, the loop skipped that layer, and the run still ended with the final guard green - a ladder of
 five that had tested one.
+
+### 70. Naming the region the plan already sat in re-selected it, and the reply that said a town was chosen was the reply that deleted it
+
+The report this pass closed is F3 in `docs/handoff-2026-11-18.md`: a farmer who sets Country = China, Region = Inner Mongolia in step 1,
+picks Baotou in the Town list - which puts the point 40.6516, 109.84389 into step 1 - and then types `Inner Mongolia` into the assistant
+gets `Inner Mongolia is selected. Now choose a town in the Town list in step 1, or type its name here.` while the Town list falls back to
+`Choose a town / city` and the coordinates box empties. The sentence is not the defect; the sentence is the defect announcing itself. The
+cause is the region branch's own precondition: it only treated a repeated region name as "already in place" when nothing was selected, so
+the exact state a farmer reaches by picking a town fell through to `selectRegion`, which calls `chooseRegion`, which fires
+`locationChanged`, which is what clears the point. `public/js/modules/workflow-assistant.js:567` now computes the sameness once and
+`:568` answers it from the state rather than around it: with a point held the reply names the point that stays, with none held it still
+asks for a town, and neither path selects anything. `regionHeld` at `public/js/modules/workflow-assistant.js:805` is the reply that keeps.
+
+Two things about that shape are worth stating because both were assumptions this pass could have shipped. The first is that the fix is not
+a replay special case: the same sentence typed with no refusal behind it lost the same point, so the guard had to move rather than the
+replay path gain an exception. The second is the sibling rule at `public/js/modules/workflow-assistant.js:683`, which already refuses to
+answer a pending question with a region row equal to the region already selected - the row resolver and the free-text branch disagreed
+about the same fact, and this pass made the branch agree with the resolver instead of adding a third opinion.
+
+`docs/evidence/iter70-f3-replay-probe-2026-11-21.log.gz` is where the defect was confirmed before anything was written: the same harness
+state walked twice, once on the shipped bytes and once on the delivered ones, printing `PROBE MODULE_MD5=efd158ed05f258705593ceb422893a5c
+MODULE_LINES=798` for `git show HEAD:` of iteration 69 and
+`PROBE MODULE_MD5=6a23d42a807c8f7243077a67fb43c24b MODULE_LINES=812` for the tree, with the shipped replay reporting
+`A_REPLAY_CHANGED_KEYS ["place","coordinates"]` and `calls=["region"]` against a reply that had promised `A_REFUSAL_UNCHANGED true`, and the
+delivered replay reporting `A_REPLAY_CHANGED_KEYS []` and `calls=[]`. Those are `awk`-style line counts, one above `wc -l` because the
+module has no trailing newline; the digests, not the counts, are what tie each reading to its bytes.
+
+`docs/evidence/iter70-f3-page-harm-2026-11-21.log.gz` is the same measurement where a farmer can see it, because a state object that loses
+a point is only a story until the DOM that shows it is read: one instrument, no assertions, four controls printed before the plan, after
+opening a plan and after the repeated sentence, on `static-desktop` and `node-desktop`, run once on each arm and then re-run with the
+module digests stamped in-band. Its two arms start identically - `ARM=defect MEASURE after_plan={"town":"2038432","region":"20",
+"latitude":"40.6516","longitude":"109.84389"}` - and part at the sentence: the shipped bytes end with
+`ARM=defect MEASURE after_repeat={"town":"","region":"20","latitude":"","longitude":""}` and the `Inner Mongolia is selected.` reply, the
+delivered bytes keep the same object and answer that the region is where the plan already is. `REPRO DIFF_MEASURE lines=0 identical=true`
+is the diff of the `MEASURE` lines between the unstamped first capture and the stamped re-run, so the digests in the `REPRO` banner belong
+to the sentences quoted here rather than to a build that ran afterwards.
+
+`docs/evidence/iter70-f3-refusal-replay-page-2026-11-21.log.gz` covers the other half of the handoff line - the `Ask that again` button a
+refused place-list read offers, which replays the farmer's own sentence and so re-enters that same branch. It arms the list to fail after a
+town is held, refuses, clicks the recovery and reads the page again: `LOG P3 node-desktop replay_button="Ask that again"
+counts={"refused":2,"answered":1}` then `LOG P3 node-desktop after-replay held={"town":"2038432","region":"20","latitude":"40.6516",
+"longitude":"109.84389"} counts={"refused":2,"answered":2}`. The archive is also the correction of this pass's first draft, which asserted
+the browser could not reach that arm at all: measured on all four projects, `LOG P3 static-desktop replay_button=null
+counts={"refused":0,"answered":2}` says the static page never re-requests the list a refusal then blames, while the node page re-reads it
+once per assistant turn and so does refuse. `docs/evidence/iter70-f2-list-cache-blind-2026-11-21.log.gz` is that asymmetry as its own
+scout reading - `F2URLS SPEC_MD5=… SERVED_MD5=…` beside a request timeline whose first entry is
+`LOG REQ n=1 phase=country-cn-selected mode=answered … url=http://127.0.0.1:4173/data/locations/manifest.json` on static and
+`…url=http://127.0.0.1:4174/api/locations?country=CN` on node, ending at `LOG FINAL seen=2 counts={"refused":0,"answered":2}` against
+`LOG FINAL seen=4 counts={"refused":2,"answered":2}` - and it is filed as a measured premise, not a fix: it names the cache layer the
+handoff does not (the static answers come from the picker's client-side cache, and which layer holds them is stated as unestablished there)
+and it changes nothing, because the offline behaviour it protects is the reason the cache exists.
+
+The guards. `tests/workflow-place-choices.test.js` carries five new cases and extends one that already existed, to 48;
+`tests/e2e/chat-region-repeat-keeps-point.spec.js` is new at 157 lines and three cases, and it runs on all four transports, which is what
+makes the last archive's asymmetry a test rather than a comment: the case at `tests/e2e/chat-region-repeat-keeps-point.spec.js:104` branches
+on whether the list was requested, asserts the replay sentence on node at `tests/e2e/chat-region-repeat-keeps-point.spec.js:140` and the
+plain sentence on static at `:146`, and then asserts the same DOM state on either arm at
+`tests/e2e/chat-region-repeat-keeps-point.spec.js:152`. `docs/evidence/iter70-f3-spec-controls-2026-11-21.log.gz` is the ladder that says
+those assertions detect what they claim. Four arms over the same two files - `revert` (the bytes iteration 69 shipped), `half` (stop
+re-selecting but answer the town question instead of stating what stays), `sentencedrop` (keep the delivered sentence and select anyway),
+`delivered` - each rebuilding the bundle and printing the digest the server actually served. On the unit layer the arms go 44 pass / 4
+fail, 45 / 3, 46 / 2, 48 / 0, and the red set on `revert` is three of this pass's new cases plus the one whose expectation moved, which had
+pinned the F3 sentence itself. On the browser layer `revert`, `half` and `sentencedrop` each print `6 failed` - 3 cases x 2 projects - and
+`delivered` prints `6 passed (4.5s)`, for eighteen `✘` case lines in the file between them. The arm that matters for "does the state read
+catch anything" is `sentencedrop`: it keeps every word the fix says, so the sentence assertions at
+`tests/e2e/chat-region-repeat-keeps-point.spec.js:56` and `:95` stay green and only the two DOM-state assertions at
+`tests/e2e/chat-region-repeat-keeps-point.spec.js:59` and `:152` go red, which is the proof that those reads are not decoration behind a
+wording check. `docs/evidence/iter70-f3-spec-4projects-2026-11-21.log.gz` is the same file green on the delivered bytes - `12 passed
+(8.2s)` with `PLAYWRIGHT_EXIT=0` - and it prints the branch each transport took (`REGION-REPEAT static-desktop
+arm=list-never-requested …`, `REGION-REPEAT node-desktop arm=refusal-replayed …`) because Playwright keeps attachments only for failed
+tests and a green run would otherwise archive no witness of which side of that branch it exercised.
+
+Five tally rows join `tests/documentation-evidence-index.test.js` for these archives and the floor moves from 209 to 214. One boundary is
+worth naming rather than burying: the ladder's unit banners executed against the test file as it stood while the arms ran, and this pass
+later reworded two comment lines above its new cases, so the 44/45/46/48 readings are pinned to the ladder's own archived bytes and the
+final claim about the unit file on the shipped tree is the offline run below, which executed against it. Real phones, Safari/WebKit,
+microphones, audio quality and independent agronomy stay UNVERIFIED, and the static transport's place-list cache remains unexamined as a
+correctness question rather than closed: what this pass established is only that a refusal sentence the page cannot produce on static is
+produced, and recovered from, on node.
+
+The closing legs of this pass are archived, and every number in the next two paragraphs is a line one of those files prints rather than a
+summary of one. `docs/evidence/iter70-gate-2026-11-21.log.gz` is the four-project browser gate on the finished tree: it planned
+`Running 348 tests using 1 worker`, closed `348 passed (22.7m)` under its own status of 0, and carries 348 passed-case lines with no red,
+skipped, flaky or did-not-run line anywhere in the file, started 09:55:45Z and finished 10:18:28Z. Its two digest banners are equal - the
+module and the served bundle both md5 6a23d42a807c8f7243077a67fb43c24b - which is what makes that green a measurement of the file this
+pass edited rather than of the previous pass's bytes, and `E2E_SPECS=31` beside `TREE_STATUS_LINES=15` is the shelf and the working tree as
+the freeze began. The driver only appends to its own log, so those 15 entries are the before-state and not a moving target; the same driver
+prints its process group beside its parent's (24316 against 24312) because the line it emits when those match is the sign a per-session
+reaper could stop the run mid-suite, and that line is absent. `docs/evidence/iter70-census-final-2026-11-21.log.gz` counts the same 348
+with a different instrument - the runner's `--list` prints `Total: 348 tests in 31 files`, which is a plan rather than a verdict, and the
+value of reading it is that a planned count and a passed count agree - and the 12 lines this pass's spec contributes are printed with their
+project names, three cases in each of the four projects, which is where the parity claim gets its number rather than inheriting one.
+`docs/evidence/iter70-offline-final-2026-11-21.log.gz` is the whole unit suite on the delivered bytes: 322 tests, 322 passed, none failed,
+none skipped, 24.9 s, status 0 - and it keeps the earlier reading that went red on three index cases, which this pass had disturbed by
+shelving a capture beside an index generated before that capture existed. A superseded run is a fact about the pass, so it is recorded
+inside the header of the file that replaces it instead of being deleted. `docs/evidence/iter70-docguards-final-2026-11-21.log.gz` is the
+five documentation guard files over the ledger as this pass leaves it, 28 cases with none failing and none skipped.
+`docs/evidence/iter70-tally-controls-2-2026-11-21.log.gz` is the second mutation ladder, and the one that matters most here because it is
+the only reading that asks whether the four rows pinning those captures can fail: six assertion shapes broken one at a time against the
+archives on the shelf, each of which has to go red naming the file it reads, the guard file restored by digest between mutants. It needed
+three attempts to bite on all six, and the two refusals are in its own words - an anchor that matched no row because the pasted row keeps
+its counters on one line, then one that matched seven because that is how seven rows end the same banner. A ladder that cannot place a
+mutant is a ladder that would certify a row it never reached, which is the defect that row exists to prevent.
+
+Six tally rows join `tests/documentation-evidence-index.test.js` for these captures and the floor moves from 214 to 220. Two limits are
+worth stating rather than leaving to the reader. The ladder's own row is written after the ladder runs, so no archived reading of this
+pass executed against the table that finally ships; what covers those bytes is the guard set and the unit suite re-run once the last row
+lands, whose numbers this paragraph deliberately does not quote because they describe a table newer than any capture on the shelf. And the
+citation-drift scout is the last leg on purpose: a capture cannot be pinned by prose that did not exist when it ran, so it reads the ledger
+that quotes all five shelves and lands as `docs/evidence/iter70-drift-final-2026-11-21.log.gz` after this paragraph. Its reading against the
+working copy checked 263 cited source lines and found none drifted, with two pointers skipped because they sit inside this pass's own diff
+hunks - the two that cite this pass's new browser spec, which the citation guard in the documentation set resolves regardless of hunks and
+did resolve, 28 cases green with this paragraph on the tree. Against `--head` it checked 262 and skipped none. That row makes the table 220
+rows deep, and the row naming the drift capture arrived after the drift capture ran, which is the same asymmetry the scout exists to
+describe rather than a defect in it.
+
+The reading that stands behind this commit rather than the shelf is deliberately not archived, because a capture cannot pin the row that names
+it: the same three legs over the finished working copy printed `TREE CITED_LINES_CHECKED 265 DRIFTED 0 INSIDE_DIFF_HUNKS 2` and
+`HEAD CITED_LINES_CHECKED 262 DRIFTED 0 INSIDE_DIFF_HUNKS 0` at `start_utc=2026-11-21T10:47:11Z`, two pointers more against the tree than the
+capture above because this section's rows were written after that capture ran, with `DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 |
+skipped 0` and `ℹ tests 322` / `ℹ pass 322` / `ℹ fail 0` / `ℹ skipped 0` at `OFFLINE_EXIT=0`. Two things about it are worth stating rather
+than smoothing over. The guard file's own digest in that run is not the `GUARD_MD5` the drift capture stamped, for the ordinary reason that
+the row naming that capture lives inside the file it hashes. And the first pass of this re-run was red: 26 of 28 documentation cases and 320
+of 322 unit cases, the two failures being the index header reading 790 files while the shelf held 791 and the committed index not matching
+what the generator prints, because shelving the drift capture added a file after the index was last regenerated. The generator was run again
+and the legs repeated; no assertion was touched to get from red to green.
+
+One header on this pass's shelf was wrong and was corrected in place, which is worth recording because the alternative - quietly
+re-shelving a capture - is how an archive stops being evidence. `docs/evidence/iter70-docguards-final-2026-11-21.log.gz` described itself
+as the guard set over the ledger "as this pass leaves it"; it ran at 10:26:11Z over a 214-row table, and the closing paragraph plus two more
+rows landed after it, so the sentence claimed a reading that had not happened. Its `RUN_UTC` line also carried a doubled date. The header
+lines were rewritten and the file re-gzipped at 10:40:41Z with a `HEADER_CORRECTION` banner saying exactly that; the leg output, the guard
+set's own output and the driver inside the file are byte-identical to the first shelving, and their digest (`BODY_MD5 a36c3f697ff13d9ec538d0d387e984ee`)
+is printed in the banner and pinned by the row, so the claim that nothing measured was touched is checkable rather than asserted.
+
+Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED.
+F3 is closed by this pass; F2 stays open as a measured question, not a guess - the static page answers a place-list read from a client-side
+cache in `public/js/modules/location-picker.js` that `public/js/modules/workflow-assistant.js` does not share, so a stale list after a
+country change is a cache-lifetime question on one transport and a server-cache question on the other, and this pass proved only that the
+two transports do not behave the same way about it.
