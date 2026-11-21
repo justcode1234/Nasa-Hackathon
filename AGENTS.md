@@ -2570,6 +2570,43 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   independent agronomy stay UNVERIFIED; `main` is untouched and nothing was deployed. Full account in subsection 70 of
   `docs/validation.md`.
 
+- **2026-11-21 (iteration 71, F2 closed as VERIFIED SOUND, no application byte moved):** F2 asked which of the three place-list caches
+  answers a read on which transport, and `scripts/place-list-cache-layers.mjs` (tracked) now measures it: it walks a refused sentence, a
+  successful retry and a tapped region, stamping every list-shaped request with the step that caused it. The static column ends
+  `TAP_OBSERVED 0 []` with `LAYER_VERDICT static tap_answered=true tap_reads=0`, the node column `TAP_OBSERVED 1 [tap /api/locations?country=BM]`
+  with `LAYER_VERDICT node tap_answered=false tap_reads=1`. Three manifest reads inside one sentence step rule out a worker-level HTTP
+  response cache, which leaves the location client bundled into the static service worker (`server/context/locations.js:9`) as the blind
+  layer - and because that bundled `Map` answers a country once the worker has resolved it, a page-side route cannot make a later read fail
+  there, so the queue's `static region_tap_rejects` item is unreachable by construction rather than unreproduced. Closed sound rather than
+  fixed: the static tap refills step 1 (`value="03"`, nine parishes) and the node tap refuses honestly with `Nothing was selected`, so both
+  transports keep the farmer's state, and trusting a cached body at `public/js/modules/context.js:248` would buy a silent success on the
+  transport that can still fail. The pass's real product was instrument trustworthiness: both scripts had authored their own refusal sentence
+  (`Place list is busy or unavailable.`, which `server/context/locations.js:20` does not write) and now derive it from the adapter with a
+  guard that aborts unless it comes back `503`/`LOCATIONS_UNAVAILABLE`, and section B's witness had been printing a count with an empty
+  bracket for four days because its recording line was missing. Six mutations in
+  `docs/evidence/iter71-instrument-hardening-2026-11-21.log.gz` reproduce both defects - CTL6 the empty bracket on demand, CTL3 the false
+  zero that makes the two columns agree when only one can see, CTL2/CTL4 the abort line, CTL5 the loose pre-21-Nov guard arming the wrong
+  outage and reporting nothing - and CTL1 is disclosed as having hit section A instead of section B. Each prints `mutation_lines` before it
+  runs, because a control whose regex matches nothing silently becomes a clean run. The census is
+  `docs/evidence/iter71-f2-layer-census-2026-11-21.log.gz`, the ladder over the three new tally rows is
+  `docs/evidence/iter71-tally-ladder-2026-11-21.log.gz` (five needle mutants red with three lines each naming the archive they falsify, the
+  row-deletion mutant caught by the coverage case rather than the floor with nine, and the guard green again at the digest it started from);
+  the table goes 220 -> 223 for those three rows and 224 with the citation leg. No four-project gate ran because none was owed: the leg
+  stamps carry `MODULE_MD5=6a23d42a807c8f7243077a67fb43c24b` and `SERVED_MD5=6a23d42a807c8f7243077a67fb43c24b`, equal to each other and to
+  the pair iteration 70 gated. The legs that did run: `--list` census `Total: 348 tests in 31 files`, 322 unit cases with none failed or
+  skipped, 28 documentation cases, 795 evidence files on the shelf (the number the generator prints, not the 783 a non-recursive `ls`
+  reports - this driver printed that wrong twice and the corrected stamp is what the ledger quotes), and the citation scout last because its
+  own rows cannot pin the capture that precedes it. That leg found a gap rather than closing one, and it is queued as F15: the scout compares
+  the bytes at a cited line only for files the working copy modifies, so on a pass that edits nothing outside the guard it opens one pointer
+  and prints a true, nearly free `CITED_LINES_CHECKED 1 DRIFTED 0` while the source lines the ledger quotes bytes about go unexamined -
+  `tests/documentation-citations.test.js` proves those pointers land on a real non-blank line, never that the line still says what the pass
+  claims. The eight lines were read by hand and their text archived (`docs/evidence/iter71-drift-final-2026-11-21.log.gz`, whose row pins the
+  `QUOTE` lines), which is coverage for one pass and not a guard for the next. Still unestablished, and stated so the zero is not over-read:
+  whether the worker's `Map` or
+  `location-picker.js:6` absorbs the static tap read, and whether a stale list survives a *country change* on static - the second is the
+  half that would touch a farmer. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED; `main` is
+  untouched, nothing was deployed, no test was weakened. Full account in subsection 71 of `docs/validation.md`.
+
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
 A Claude Code review of commit 8b53619 produced this plan; the user asked Codex to carry

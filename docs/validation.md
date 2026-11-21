@@ -7413,3 +7413,126 @@ F3 is closed by this pass; F2 stays open as a measured question, not a guess - t
 cache in `public/js/modules/location-picker.js` that `public/js/modules/workflow-assistant.js` does not share, so a stale list after a
 country change is a cache-lifetime question on one transport and a server-cache question on the other, and this pass proved only that the
 two transports do not behave the same way about it.
+
+### 71. Counting which cache answers a place-list read turned out to be a property of the transport, and the two instruments doing the counting were blind in their own ways
+
+Iteration 70 left F2 as a measured question with the layer unnamed, because one line could be read two ways. The static column of
+`scripts/place-tap-rejection-probe.mjs` printed `B_REQUESTS_DURING_TAP 0 []`, which is both what a page-side boundary that nothing crossed
+prints and what a page-side boundary that cannot see the crossing prints. This pass built the instrument that separates those readings, and
+the first thing it separated was that the two instruments already quoting numbers at the ledger were not trustworthy.
+
+**F2 closes VERIFIED SOUND, with no application byte changed.** `scripts/place-list-cache-layers.mjs` (md5
+`68cc4832e23db8c5ca83772570194fd2`, tracked) names its three caches in its own header - the step-1 list body at
+`public/js/modules/location-picker.js:6`, the assistant's copy at `public/js/modules/workflow-assistant.js:284`, and the location client at
+`server/context/locations.js:9`, which runs once inside the Node process and again bundled into the static service worker - and walks the
+one sequence where the layering changes what a test can arm: a sentence whose list read is refused, a retry that succeeds, a tapped region.
+Every list-shaped request is stamped with the step that caused it. The static column ends
+`TAP_OBSERVED 0 []` / `LAYER_VERDICT static tap_answered=true tap_reads=0`; the node column ends
+`TAP_OBSERVED 1 [tap /api/locations?country=BM]` / `LAYER_VERDICT node tap_answered=false tap_reads=1`. Three things follow from reading
+them side by side, and each is a different kind of claim.
+
+One: the tap's re-check on static happens behind a boundary a page-side route cannot see, and it is not an HTTP response cache doing it.
+The sentence step asked `/data/locations/manifest.json` three times and all three are visible to the route, so a worker-level response cache
+is ruled out by its own instrument - a cached response would have made that one read. Two: once the worker has resolved a country, the
+bundled client's `Map` answers for it, so no page-side route can make a later read fail for that country. That is the answer to the queue's
+`static region_tap_rejects` item, and it is a construction result rather than a failed reproduction: an instrument that wants that refusal
+on static has to arm it inside the worker, which is a build change, or before anything warms the Map for that country. Three: the retry
+step shows the three layers really are three, because on both transports `RETRY_FORM` still reports
+`options="List unavailable — reselect country to retry"` while `RETRY_BUTTONS Devonshire | Hamilton | Hamilton city` proves the chat's own
+copy recovered. A successful read in the assistant's cache does not refill step 1's dropdown, and nothing pretends otherwise.
+
+What is not a defect is the reason F2 closes sound rather than fixed. The static tap that answered also left step 1 holding `value="03"`
+with nine parish options and `1 listed towns/cities in Hamilton city`, and the node tap that refused left the form exactly where the
+farmer left it and said `Nothing was selected`. The candidate change - letting `chooseRegion` trust a cached body instead of re-reading at
+`public/js/modules/context.js:248` - would trade that honest sentence for a silent success on the transport that can still fail, and the
+re-check is deliberate: `tests/locations.test.js:69` pins cached-body identity and `tests/security-boundaries.test.js:103` pins that a
+rejected country code reads no file path. So the difference is where each transport puts its boundary, and the queue item is closed as
+measured with the blind layer named.
+
+**The instruments were this pass's real find, and both defects were of the "reports a number it did not observe" kind.** Defect 1: each
+script authored its own refusal, a typed 503 carrying `Place list is busy or unavailable.`, while `server/context/locations.js:20` writes
+`The saved town list could not load. Retry the country selection, search a place or use the map.` A page-side failure therefore read one
+sentence in the node column and another in the static column, and the ledger was comparing an authored message against a shipped one. Both
+scripts now derive the refusal from the adapter that writes it - `createLocationClient` over a reader that throws - and refuse to start
+unless the derivation comes back as exactly `503`/`LOCATIONS_UNAVAILABLE`. Defect 2: a counter whose recording line is missing reports a
+count with an empty bracket, which is the shape `B_REQUESTS_DURING_TAP 1 []` had every day before this pass while section A's witness
+carried two URLs. The repair is a witness that says which boundary it watched, and the first attempt at it over-reported the other way by
+prefixing a worker file read as if the page had requested it (`B_REQUESTS_DURING_TAP 0 [B /data/locations/manifest.json]`); that mis-fix is
+quoted in the archive instead of quietly re-cut, because an empty bracket and a full bracket on a path no route can refuse are two defects
+with one root.
+
+Six mutations over the node transport, each on one line of one instrument, each followed by a digest-compared restore, are in
+`docs/evidence/iter71-instrument-hardening-2026-11-21.log.gz` (416 lines). CTL6 deletes section B's witness line and reproduces
+`B_REQUESTS_DURING_TAP 1 []` on demand - the pre-fix reading, not a description of it. CTL3 deletes the census's `observed.push(...)` and
+gets `TAP_OBSERVED 0 []` together with `LAYER_VERDICT node tap_answered=false tap_reads=0`: the node column reporting the static column's
+zero, which is precisely the false symmetry the census was written to detect. CTL2 and CTL4 make the adapter derivation succeed instead of
+throw, and both instruments abort before launching a browser with `Error: cannot arm a saved-list failure (503/LOCATIONS_SCHEMA)`, exit 1.
+CTL5 restores the pre-21-Nov guard that accepted any 503 while leaving that schema body in place, and the walk goes on to report nothing
+about the outage it thinks it armed: `SENTENCE_REPLY The saved place list for Bermuda arrived in a shape this app cannot read…`, step 1 left
+on `The saved town list has an invalid source format. Use place search or`, then `ABORT no "Try the place list again" button was offered`
+at exit 2. CTL1 is disclosed rather than smoothed over: it was written to delete section B's witness and matched section A's line instead,
+which still shows a witness line is load-bearing but is not the control that was intended - CTL6 is. Every mutant prints
+`mutation_lines` before it runs, because a control whose regex matches nothing silently becomes a clean run, and every one of the six
+restores `md5_equal=True`.
+
+Three archives join the shelf - the layer census (`docs/evidence/iter71-f2-layer-census-2026-11-21.log.gz`, 197 lines, both transport logs
+and the instrument source), the six controls (416 lines, above) and the ladder over these rows
+(`docs/evidence/iter71-tally-ladder-2026-11-21.log.gz`, 207 lines) - and the tally table takes three rows, moving its floor from 220 to
+223. Those rows were then mutated the way this pass mutates instruments, because a row that reads an archive can pass for the wrong reason:
+`LADDER_START guard_md5=eca41712c7624d9171e3bd080ed47690 rows=222`, then M1 (a `lines` needle no log prints, `TAP_OBSERVED 7 []`), M2 (a
+header phrase one word off), M3 (an `absent` needle aimed at a line the archive prints on every tail), M4 (a restore needle flipped to
+`md5_equal=False`) and M5 (the hardening row's `absent` needle loosened from `town_tap_rejects=true` to `region_tap_rejects=true`, which
+the archive does contain) each exit 1 with three red lines naming the archive whose reading they falsify. M5 is the same shape as the two
+contradictions this pass walked into while writing the rows - an `absent: ['Place list is busy or unavailable.']` needle contradicted by the
+row's own prose quoting the drifted sentence, and a `✘`-never-appears claim contradicted by the driver text embedded in the archive - caught
+by accident first and on purpose second, which is why the census row now claims that sentence's absence and the ladder row claims only
+`marks: 0` with the reason in a comment above it. M6 deletes a whole row and exits 1 with nine red lines, caught first by the coverage case
+(`evidence no document names or indexes`) rather than the floor, and the delivered guard re-runs green at the digest it started from
+(`ℹ tests 7` / `pass 7` / `fail 0`).
+
+No four-project gate ran, and the reason is stamped rather than asserted: `MODULE_MD5=6a23d42a807c8f7243077a67fb43c24b` and
+`SERVED_MD5=6a23d42a807c8f7243077a67fb43c24b` - `public/js/modules/workflow-assistant.js` and the bundle the server ships, equal to each
+other and to the pair iteration 70 gated, so no application byte moved for the gate to re-verify. The legs that did run, at head
+`6e2edfce4281de933b04cf3d18e1ca899e9a0039` on interpreter v26.13.1: the `--list` census prints `Total: 348 tests in 31 files` with 348
+listing lines over 31 distinct spec files, and the two saved-list specs account for 28 of those lines (7 in each of four projects);
+the unit suite prints `ℹ tests 322` / `pass 322` / `fail 0` / `skipped 0` at `OFFLINE_EXIT=0`; the five documentation guard files print
+`DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0`; the shelf held 794 files when those legs stamped it, which is what the index
+generator counts and not the 782 a non-recursive `ls` reports - a stamp this driver printed wrong twice before it was fixed, which is worth
+recording because those stamps are the numbers that enter the ledger. The citation-drift scout stays the last leg on purpose, since a capture
+cannot be pinned by prose that did not exist when it ran, so it and its row land after this paragraph.
+
+The citation leg is the one that found something by going green, and it is the reason `docs/evidence/iter71-drift-final-2026-11-21.log.gz`
+exists. `scripts/citation-drift.mjs` compares the bytes at a cited line with the bytes at the pre-edit line number in HEAD, but only for
+files the working copy modifies - that is the whole of its design, because drift is what an edit causes. Iteration 70 handed it three
+modified source files and it walked 263 pointers. This pass modified one file the scout opens (the tally guard) and two it does not (the
+instruments under `scripts/`), and both readings came back `CITED_LINES_CHECKED 1 DRIFTED 0 INSIDE_DIFF_HUNKS 0`, in each direction, exit 0.
+That zero is true, and it checked none of what this subsection writes: the pointers into
+`public/js/modules/location-picker.js:6`, `public/js/modules/workflow-assistant.js:284`, `server/context/locations.js:9`, the same file at
+`:20`, `public/js/modules/context.js:248`, `tests/locations.test.js:69` and `tests/security-boundaries.test.js:103` sit in files no edit
+touched, so nothing compares their bytes to anything. The existence guard in the documentation set does read them, and it passed, but it asks
+only whether a pointer lands on a real non-blank line. So a second driver printed the bytes at each of them into that archive, and the row
+pinning the archive pins those `QUOTE` lines rather than the leg's verdict, because a pass that quotes a source line's text has a content
+claim and a green drift leg on unmodified files does not test it. The gap itself is queued as F15 in `docs/handoff-2026-11-18.md`: a shipped
+check that a pointer whose bytes the ledger quotes still holds them, sized so it does not fire on the thousands of pointers that only name a
+location. Until then a doc-only pass gets a citation leg that measures almost nothing, and reading its zero as coverage is the mistake F15
+exists to prevent.
+
+With the citation leg's capture and row on the shelf the finished table carries 224 rows over 795 evidence files; the numbers in the
+paragraph above describe the tree as the three earlier legs ran them, which is the asymmetry subsection 70 describes rather than a second
+one. The drivers for the controls, the ladder and this leg live under the gitignored `artifacts/`, the F13 shape from subsection 67 unchanged: the two instruments themselves are tracked and re-runnable from a
+clone (`node scripts/place-list-cache-layers.mjs static|node`), and the mutation drivers exist only as the source these archives embed.
+
+What this pass does not establish, stated because the census invites the reader to over-read a zero: whether it is the worker's `Map` or
+`location-picker.js:6` that absorbs the static tap read, since both are warm by then and separating them means instrumenting the worker's
+own module instance; whether a stale list survives a *country change* on static, since the walk warms one country and never changes it,
+which is the half of F2 that would matter to a farmer and is still unmeasured; and anything at all about the halves of this app that only a
+device can answer for.
+
+The ladder's sixth mutant promised one re-check it could not run on itself, and the reading is here rather than on the shelf, because a
+capture cannot pin the row that names it and this run has no row of its own. M6 deleted a tally row while no prose cited the archives it held,
+and the guard caught it on the coverage case first - `evidence no document names or indexes`, nine red lines - which left the claim "deleting a
+row is caught by the floor" untested. Now that three documents name all four of this pass's shelves, the same mutant over the citation leg's row
+printed `RECHECK mutation_lines=15 rows_now=223`, `exit=1`, three red lines, and the assertion behind them is the floor: `the table carries 223
+archives; subsections 57 through 71 quote more runs than that, so a number in them is unguarded`. Coverage stayed quiet, correctly, because the
+archive is still named by a document and still carried by the index, and the digest came back `restored_md5_equal=True`. So the floor is what
+bites once the ledger does its job, exactly as the archive predicted.

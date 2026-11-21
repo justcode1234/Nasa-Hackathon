@@ -1920,10 +1920,77 @@ const TALLIES = [
        'DRIFT_TREE_EXIT=0\nTREE CITED_LINES_CHECKED 263 DRIFTED 0 INSIDE_DIFF_HUNKS 2'],
    absent: ['✘', 'DRIFTED 1', 'DRIFT_TREE_EXIT=1', 'DRIFT_HEAD_EXIT=1'],
    marks: 0 },
+  { archive: 'docs/evidence/iter71-f2-layer-census-2026-11-21.log.gz',
+   lines: ['MODE static BASE http://127.0.0.1:4173 STEP1_PICKER_CACHE=location-picker.js:6 CHAT_CACHE=workflow-assistant.js:284 TRANSPORT_CACHE=locations.js:9',
+       'SENTENCE_OBSERVED 3 [sentence /data/locations/manifest.json , sentence /data/locations/manifest.json , sentence /data/locations/manifest.json]',
+       'RETRY_OBSERVED 2 [retry /data/locations/manifest.json , retry /data/locations/BM.json]',
+       'TAP_OBSERVED 0 []',
+       'LAYER_VERDICT static tap_answered=true tap_reads=0',
+       'RETRY_OBSERVED 1 [retry /api/locations?country=BM]',
+       'TAP_OBSERVED 1 [tap /api/locations?country=BM]',
+       'LAYER_VERDICT node tap_answered=false tap_reads=1',
+       'PLACE_LIST_CACHE_LAYERS_DONE'],
+   phrases: ['ESTABLISHED: the blind layer is the location client bundled into the static service worker',
+       'NOT ESTABLISHED: whether the worker\'s Map or the picker\'s Map',
+       '=== INSTRUMENT SOURCE (scripts/place-list-cache-layers.mjs, md5 68cc4832e23db8c5ca83772570194fd2) ===',
+       'the region you chose could not be checked against it. Nothing was selected'],
+   absent: ['Place list is busy or unavailable.', '✘'],
+   marks: 0 },
+  { archive: 'docs/evidence/iter71-instrument-hardening-2026-11-21.log.gz',
+   lines: ['CTL_START probe_md5=5554dc6f1a45b305c82fbf11b597b05e layers_md5=68cc4832e23db8c5ca83772570194fd2',
+       'CTL1_restored md5_equal=True', 'CTL2_restored md5_equal=True', 'CTL3_restored md5_equal=True',
+       'CTL4_restored md5_equal=True', 'CTL5_restored md5_equal=True', 'CTL6_restored md5_equal=True',
+       'Error: cannot arm a saved-list failure (503/LOCATIONS_SCHEMA)',
+       'A_REQUESTS_DURING_TAP 2 []',
+       'B_REQUESTS_DURING_TAP 1 []',
+       'B_REQUESTS_DURING_TAP 1 [B /api/locations?country=BM]',
+       'B_REQUESTS_DURING_TAP 0 []',
+       'CONTROLS_DONE'],
+   phrases: ['=== CONTROLS SUMMARY (bash artifacts/scratch/iter71/controls.sh, verbatim) ===',
+       'CTL6_mutation_lines=1', 'CTL3_mutation_lines=1', 'CTL5_mutation_lines=4',
+       'ABORT no "Try the place list again" button was offered',
+       'LAYER_VERDICT node tap_answered=false tap_reads=0',
+       'B_REQUESTS_DURING_TAP 0 [B /data/locations/manifest.json]'],
+   absent: ['✘', 'town_tap_rejects=true', 'VERDICT_STATIC region_tap_rejects=true'],
+   marks: 0 },
+  { archive: 'docs/evidence/iter71-tally-ladder-2026-11-21.log.gz',
+   lines: ['LADDER_START guard_md5=eca41712c7624d9171e3bd080ed47690 rows=222',
+       'MUTANT_M1 exit=1 red_lines=3', 'MUTANT_M2 exit=1 red_lines=3', 'MUTANT_M3 exit=1 red_lines=3',
+       'MUTANT_M4 exit=1 red_lines=3', 'MUTANT_M5 exit=1 red_lines=3', 'MUTANT_M6 exit=1 red_lines=9',
+       'MUTANT_M1_restored md5_equal=True', 'MUTANT_M6_restored md5_equal=True',
+       'LADDER_FINAL md5=eca41712c7624d9171e3bd080ed47690 md5_equal=True',
+       'LADDER_DONE'],
+   phrases: ['never prints the line "TAP_OBSERVED 7 []" the ledger reads out of it',
+       'contains "PLACE_LIST_CACHE_LAYERS_DONE", which the ledger states that archive does not print',
+       'evidence no document names or indexes',
+       '=== LADDER DRIVER SOURCE (artifacts/scratch/iter71/tally-ladder.sh, md5 994cf7d839d5727632b710afee4775ec) ==='],
+   absent: ['MUTANT_M1 exit=0', 'MUTANT_M6 exit=0'],
+   // The ✘ glyph appears twice in this archive inside quoted driver text and once inside the floor message it embeds, so
+   // the row cannot claim the archive never prints it. What it claims is that no case line does, which is `marks: 0`.
+   marks: 0 },
+  // Iteration 71's citation leg. The interesting pair here is not the zero but the denominator: `scripts/citation-drift.mjs`
+  // walks pointers only into files the working copy modifies, so a pass that moves no application byte reports one pointer
+  // checked and calls the leg green. The row pins that reading literally - a larger number here would mean the pass had
+  // edited sources after the capture - and pins the eight `QUOTE` lines the archive adds to cover what the scout cannot see.
+  { archive: 'docs/evidence/iter71-drift-final-2026-11-21.log.gz',
+   lines: ['TREE CITED_LINES_CHECKED 1 DRIFTED 0 INSIDE_DIFF_HUNKS 0',
+       'HEAD CITED_LINES_CHECKED 1 DRIFTED 0 INSIDE_DIFF_HUNKS 0',
+       'DRIFT_TREE_EXIT=0', 'DRIFT_HEAD_EXIT=0', 'CLOSE71_LEG_DONE leg=drift', 'QUOTED_LINES_DONE',
+       'FILES_WITH_EDITS tests/documentation-evidence-index.test.js',
+       "QUOTE server/context/locations.js:20 :: throw new AppError('The saved town list could not load. Retry the country selection, search a place or use the map.', 503, 'LOCATIONS_UNAVAILABLE');",
+       'QUOTE public/js/modules/context.js:248 :: const read = await picker.setCountry(countryCode, { regionCode });',
+       'QUOTE tests/security-boundaries.test.js:103 :: assert.equal(locationReads, 0, \'a rejected country code must not read a file path\');'],
+   phrases: ['=== QUOTED-LINE RUN LOG (bash artifacts/scratch/iter71/quoted-lines.sh, verbatim, md5 0aca66dbec131412bf42d92fa329bec9) ===',
+       'ESTABLISHED: every `file:line` pointer this pass writes bytes about lands on those bytes',
+       'NOT ESTABLISHED: the same thing the scout has never established for an unmodified file',
+       'a green drift leg on such a pass is the shape of a guard skipping while',
+       'That gap is queued as F15 in `docs/handoff-2026-11-18.md`'],
+   absent: ['✘', 'DRIFTED 1', 'DRIFT_TREE_EXIT=1', 'DRIFT_HEAD_EXIT=1', 'CITED_LINES_CHECKED 263'],
+   marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 220, `the table carries ${TALLIES.length} archives; subsections 57 through 70 quote more runs ` +
+  assert.ok(TALLIES.length >= 224, `the table carries ${TALLIES.length} archives; subsections 57 through 71 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -2048,7 +2115,18 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'times before every layer bit because its first two drafts anchored on text that matched nothing or matched seven ' +
     'rows at once, and 220 when the citation-drift scout that reads all six joined it - the leg that runs last because it ' +
     'counts the pointers the closing paragraph adds, and whose row arrived after it, together with the docguards capture ' +
-    're-shelved over a corrected header once its own WHAT line claimed a ledger newer than the run it described.');
+    're-shelved over a corrected header once its own WHAT line claimed a ledger newer than the run it described; 221 when ' +
+    'iteration 71 archived the F2 layer census that names which place-list cache absorbs a tapped region\'s read on each ' +
+    'transport, and 222 when it archived the six mutation controls over the two instruments that produced that census - ' +
+    'the witness line whose deletion empties a bracket while its count survives, once per handler, the arming guard that ' +
+    'has to refuse a 503 whose code is not the outage being armed, and the census counter that silently starts reporting ' +
+    'the static column\'s zero when its recording line goes, and 223 when the ladder over these three rows joined it - ' +
+    'six mutants, one broken needle per assertion shape, each red naming the archive its row reads, and the sixth caught ' +
+    'by the coverage case rather than the floor in a ledger whose prose did not yet cite the shelves, and 224 when this ' +
+    'pass\'s citation leg joined it - the leg whose zero is true and whose denominator is one, because the scout opens ' +
+    'only the files a working copy modifies and a pass that moves no application byte leaves it nothing to compare, so ' +
+    'the eight source lines the ledger quotes bytes about are pinned here by the lines a driver printed rather than by a ' +
+    'green verdict that measured none of them.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

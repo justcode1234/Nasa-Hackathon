@@ -15,6 +15,7 @@
 // The verdict is the status line plus whether an assistant reply was rendered: a rejection leaves the farmer's sentence
 // in the composer and no reply, an answered tap clears it and replies.
 import { chromium } from '@playwright/test';
+import { createLocationClient } from '../server/context/locations.js';
 
 const mode = process.argv[2] ?? 'static';
 const staticPort = Number(process.env.E2E_PORT ?? 4173);
@@ -23,6 +24,24 @@ const lists = /\/api\/locations\?|\/data\/locations\//;
 const reads = /\/api\/locations\?|\/data\/locations\/|\/api\/places\?|\/api\/farms\?|\/api\/country-crops\?|\/api\/water-context\?|nominatim\.openstreetmap\.org|overpass/;
 // The Bermuda parish/capital pair, because the town and a differently numbered region share its spelling.
 const COUNTRY = 'Bermuda', REGION = 'Hamilton city', TOWN = 'Hamilton';
+
+// The refusal this probe arms is the one the shipped adapter writes, read out of the adapter rather than typed out here, so the
+// instrument cannot keep arming a sentence the server no longer sends. The typed bodies had drifted: they said
+// "Place list is busy or unavailable." while server/context/locations.js writes "The saved town list could not load. Retry the
+// country selection, search a place or use the map." - visible side by side in the 21 Nov readings, where the static form showed
+// the authored sentence (its failure comes from the worker running that adapter) and the Node form showed the typed one (its
+// failure is fulfilled by this route). tests/e2e/place-list-refused.spec.js has taken its body from the adapter for the same reason.
+const authored = await (async () => {
+  const error = await createLocationClient({ readJson: async () => { throw new Error('probe: armed refusal'); } })({ country: 'BM' })
+    .then(() => null, reason => reason);
+  if (!error || error.status !== 503 || error.code !== 'LOCATIONS_UNAVAILABLE') {
+    throw new Error(`cannot arm a saved-list failure (${error ? `${error.status}/${error.code}` : 'the reader was expected to fail and did not'})`);
+  }
+  return { status: error.status, body: { error: { code: error.code, message: error.message } } };
+})();
+const refuse = route => (route.request().url().includes('/api/locations')
+  ? route.fulfill({ ...authored, contentType: 'application/json', body: JSON.stringify(authored.body) })
+  : route.abort('failed'));
 
 let armed = null;
 const counts = {};
@@ -37,9 +56,7 @@ await page.context().route(reads, async route => {
   counts[armed] = (counts[armed] ?? 0) + 1;
   seen.add(`${armed} ${path}`);
   // A worker-side read fails as a transport failure; the API-boundary read answers with the shape server/index.js writes.
-  if (!path.includes('/api/locations')) return route.abort('failed');
-  return route.fulfill({ status: 503, contentType: 'application/json',
-    body: JSON.stringify({ error: { code: 'LOCATIONS_UNAVAILABLE', message: 'Place list is busy or unavailable.' } }) });
+  return refuse(route);
 });
 const settled = async () => { await page.waitForFunction(() =>
   /Answer ready|Step 4 is ready|Error|came back|unavailable|could not|not reachable|invalid source|Choose a region/i.test(document.getElementById('answer-status')?.textContent ?? ''), null, { timeout: 90_000 }); };
@@ -89,10 +106,16 @@ const a = await verdict('A', counts.A);
 // already shows the town tap surviving them).
 const contextB = await browser.newContext();
 const fresh = await contextB.newPage();
-await contextB.route(lists, route => (armed === 'B' ? (counts.B = (counts.B ?? 0) + 1,
-  route.request().url().includes('/api/locations')
-    ? route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: { code: 'LOCATIONS_UNAVAILABLE', message: 'Place list is busy or unavailable.' } }) })
-    : route.abort('failed')) : route.continue()));
+// The URLs section B refuses are recorded as well as counted: until 21 Nov this handler only incremented a total, so
+// `B_REQUESTS_DURING_TAP 1 []` was printed with an empty witness list and a reading could not tell a page-side
+// `/api/locations` call from a worker-side `/data/locations/...` read - which is the difference F2 turned out to hinge on.
+await contextB.route(lists, route => {
+  const path = route.request().url().replace(/^https?:\/\/[^/]+/, '');
+  if (armed !== 'B') return route.continue();
+  counts.B = (counts.B ?? 0) + 1;
+  seen.add(`B ${path}`);
+  return refuse(route);
+});
 armed = 'B';
 await fresh.goto(`${base}/`, { waitUntil: 'domcontentloaded' });
 await fresh.getByRole('button', { name: 'Open FieldShift assistant', exact: true }).click();
@@ -108,7 +131,7 @@ console.log(`B_REGION_FIELD_PLACEHOLDER "${await fresh.locator('#place-region').
 armed = null;
 await freshTap('Try the place list again');
 console.log(`B_RECOVERED_BUTTONS ${(await fresh.locator('#chat-history article').last().locator('button[data-choice-type="region"]').allTextContents()).map(t => t.trim()).join(' | ')}`);
-armed = 'B'; counts.B = 0;
+armed = 'B'; counts.B = 0; seen.clear();
 await freshTap(REGION);
 armed = null;
 const b = await verdict('B', counts.B ?? 0, fresh, REGION);
