@@ -6557,8 +6557,9 @@ question nobody asked.
 choose a town in the Town list in step 1, or type its name here.` with `buttons=["Acworth","Adel","Albany","Whole United
 States"]` and `region=GA`; China's reads `Inner Mongolia is selected.` with `region=20` and three Inner Mongolian towns
 offered. The two sentences the fix deliberately does not change are in that file too, unchanged from the pre-fix run, and
-they are the honest limits: with no country held there is no list to read, so "Georgia" stays a crop question
-(`tests/workflow-bare-place-name.test.js:146` pins the zero reads), and the United States list holds the town name
+they were the honest limits on that tree: with no country held there is no list to read, so "Georgia" reached this as a
+crop question (iteration 68 closed that half in subsection 68; `tests/workflow-bare-place-name.test.js:146` still pins
+the zero reads), and the United States list holds the town name
 Athens on five rows in five different regions (read out of `public/data/locations/US.json`: AL, GA, OH, TN, TX, and no
 region row of that name), where `exactPlaceRow` returns `null` rather than pick a point
 (`public/js/modules/workflow-assistant.js:681` accepts exactly one town row, and its own comment at
@@ -6931,3 +6932,185 @@ at
 Still UNVERIFIED after every number above: real phones, Safari/WebKit, microphones, audio quality and independent
 agronomy.
 
+
+### 68. A country name typed with step 1 empty was answered as a crop question, on all 302 spellings the tables publish
+
+Iteration 66's page probe (`docs/evidence/iter66-f1-page-probe-2026-11-20.log.gz`) walked four sentences by hand and
+recorded what the assistant said for two of them with nothing chosen in step 1: `Georgia` came back as
+`I could not match that crop to a sourced entry for Georgia.` and `Inner Mongolia` as
+`…a sourced entry for Mongolia.` Both sentences name a country as if it were a crop, and both arrived with `buttons=[]`
+- the farmer gets a dead end plus a claim about a plant they never mentioned. The guided place switch cannot intercept
+it: `exactPlaceRow` (`public/js/modules/workflow-assistant.js`) reads a saved list only once a country is held, and the
+case that holds it to that limit (`tests/workflow-bare-place-name.test.js:146`, "a bare place name with no country
+chosen selects nothing and costs no saved-list read") is deliberate - guessing which Georgia the farmer meant would move
+the form on a guess.
+
+The sentence is therefore the only thing that can be wrong or right here, and the root cause is one line up from it.
+`server/agronomy/conversation.js` decides what a message is about before it decides what to say: `findCountries` matches
+a country *inside* any sentence, so `Georgia` sets `explicitCountry`, and because the same message matches no crop
+profile, no starter crop and no FAOSTAT commodity alias it falls to the `!profile && !starter && !item` branch at
+`server/agronomy/conversation.js:72`, whose guard passes for exactly that reason (`explicitCountry` is truthy) and
+returns the unmatched-crop reply. Fixing it there rather than in the page means one handler answers both transports,
+which is what the parity objective asks for: the static arm bundles `server/api.js` through
+`public/js/lib/core-worker-entry.js`, so the sentence is shared by construction and only the build has to carry it.
+
+What the branch does now: `namedOnlyCountry` asks whether the message, once `normal()` has folded case and punctuation,
+is *equal* to one of the forms `countryNameForms` publishes for one country, and `unmatchedCropReply` turns that into
+`mode: deterministic country-name clarification` - one block, no sources, and a follow-up whose question is the planning
+sentence the guided assistant already answers:
+
+```
+“Georgia” is a country this assistant recognises, not a crop it has a sourced entry for. Use the “Plan a rotation in
+Georgia” button to work on that country. A town or region sharing this name is matched from the saved place list of the
+country chosen in step 1, so choose it there and type the name again.
+```
+
+The third sentence is the honest half. It does not promise that naming a town works with step 1 empty - it tells the
+farmer where the list comes from, which is the thing the old reply got backwards.
+
+Why not reuse `countryOnly`: the file already carried a whole-message predicate at
+`server/agronomy/conversation.js:60`, written for one-word country follow-ups. The census in
+`docs/evidence/iter68-f8-probe-2026-11-21.log.gz` compares the two over every form the runtime tables publish on HEAD's
+bytes - `CENSUS spellings=302 cropSentence=302 withNoButton=302 currentPredicateCatches=266 misses=36` - and the misses
+are not obscure: `uae`, `uk`, `britain`, `great britain`, `cabo verde`, `czech republic`, `ivory coast`,
+`south georgia`, `hong kong`, `china, hong kong sar`, `cocos islands` and `keeling`. `countryOnly` strips a handful of
+lead-in words and compares against Intl's display name, so any official variant or alias no engine returns falls
+through to the crop sentence again. `countryNameForms` is the table the rest of the app already uses for exactly this
+question, so the check compares the message against every form it publishes and nothing else.
+
+`docs/evidence/iter68-f8-probe-2026-11-21.log.gz` is one driver run twice and merged, red arm first. Eight sentences go
+through `createApiHandler` built with every fetcher throwing, so a read-only answer cannot quietly load weather; the
+delivered arm prints `mode="deterministic country-name clarification"` and
+`buttons=["Plan a rotation in Georgia"]` for `Georgia` with step 1 empty *and* with `US` held, and the census reads
+`cropSentence=0 withNoButton=0`. The unchanged lines are the control that the fix is a branch and not a takeover:
+`cassava in Ghana` still answers with the dated FAOSTAT record at `sources=1`, `Tell me about moonfruit in Canada` still
+gets the crop sentence, a bare `moonfruit` still reaches the catalog fallback (the offline case asserts
+`answerConversation('moonfruit', { country: '' })` is `null`), `Acworth`, `Athens` and `Zqxwv` still get the generic
+clarification - identical lines in both arms, so F9 is untouched by this pass - and `GUIDED q="Georgia" answered=no` in
+both arms: the guided layer's limit is still there and still pinned.
+
+The merge that produced that archive had its own defect, caught while this subsection was being written and left visible
+inside the file rather than quietly re-cut. The banner above the two arms was stamped with `printf`, its separators were
+lost, and the four banner sentences landed on one 447-character line - whose tail happened to be `PROBE iter68 F8
+red-first`, the first line of SECTION 1 - while this shelf's draft description still said "four-line banner", because
+that is what the command was meant to emit and nobody had read the output back. The repair restamps only the banner and
+says so in a `MERGE_NOTE` line that carries `md5(SECTION 1 bytes + SECTION 2 bytes)=df7dd59d5f1f8b95b8ed7da19608f1de`,
+the body both merges contain unchanged; the first merge's collapsed file is still on disk beside the second. A
+description of what a capture tool intends to write is not evidence of what it wrote, and reading the file back after
+the run is the only way to tell the two apart - which is also why this archive's `RUN_UTC` field, not only this
+paragraph, names the collapsed banner.
+
+The four new offline cases in `tests/conversation.test.js` (13 in that file now) assert the shape rather than the prose:
+the mode, the absence of the crop sentence, the single block with zero sources, the one follow-up, and
+`useSelectedLocation === false`. One of them walks the whole table - `COUNTRY_CODES × countryNameForms` - and fails with
+the offender list, because the defect was in a branch every country reaches and a five-country sample would have proved
+the sample, not the fix. A fourth case is cross-layer: it takes the follow-up sentence the reply offers and feeds it to
+the guided assistant the page uses, asserting `state.country` becomes `GE`. That case exists because a reply that
+"offers a way on" only offers one if tapping it moves the app.
+
+`docs/evidence/iter68-f8-offline-controls-2026-11-21.log.gz` is the five-mutant ladder over that file, one needle at a
+time, each restore proved by digest before the next mutant: `return '';` from `namedOnlyCountry` → 3 red; `followUps: []`
+→ 2 red; a button whose question is the bare name instead of the planning sentence → 2 red; dropping the whole-message
+equality so any sentence naming a country is treated as a place → **1 red**, and the red one is `an unmatched crop is
+still answered as a crop question`, which is the measurement that says the fix does not swallow sentences that merely
+mention a country; Intl's display name only → 2 red. The delivered bytes print 13/13 before the first mutant and after
+the last restore.
+
+`docs/evidence/iter68-f8-browser-controls-2026-11-21.log.gz` is the same argument on the page, three arms over
+`tests/e2e/chat-bare-place-name.spec.js:105` and both transports, each on its own rebuilt bundle: green
+(`ARM=green exit=0 cases=2 static-desktop:passed node-desktop:passed`), then with `server/agronomy/conversation.js`
+replaced by `git show HEAD:…` and rebuilt it is red on both projects with the page quoting
+`I could not match that crop to a sourced entry for Georgia.` at the assertion that says a country name is not a crop
+question, then green again with `RESTORED_SRC_MD5=6f52f4d8d538d2565be069ce0a481a07 identical=True`. The bundle digest is
+printed per arm (`3ec88085fb5873b6cc7f0b426daf022f → 7434ebb3a4a2b8e12733649db789a90c → 3ec88085fb5873b6cc7f0b426daf022f`)
+because the file the static transport loads is gitignored and built; an arm that tested a stale bundle would show it
+here instead of passing for the wrong reason. The page case asserts `#pest-country` is empty before the sentence, still
+empty after the reply (a chat answer must not move the form), and `GE` after the farmer taps the offered button.
+
+`docs/evidence/iter68-gate-2026-11-21.log.gz` is the four-project gate on the delivered bytes:
+`Running 328 tests using 1 worker`, `328 passed (20.3m)`, `GATE_EXIT=0`, opening with
+`ITER68_GATE_START 2026-11-21T06:16:33Z HEAD=58d65c4fbcf01854cea5fc52e87e39fc9206a13f NODE=v26.13.1` and closing with
+`ITER68_GATE_DONE 2026-11-21T06:36:52Z`. No case was skipped and no line begins with `✘`, so the new page case ran in
+all four projects rather than only the two that read `server/`. The file also carries the freeze as a measurement
+instead of a promise: `ITER68_FROZEN` above the first build line and `ITER68_AFTER` below `GATE_EXIT=0` print the same
+seven digests - `conversation=6f52f4d8d538d2565be069ce0a481a07`, `bundle=3ec88085fb5873b6cc7f0b426daf022f`,
+`assistant=43c133a152fee4fa5b15dee6dff8e0e0`, `unit=b6430da1c473c5b6938f587c2ee90944`,
+`spec=e15aa55f1a51b57537afe27b4bee0b8c`, `anchors=5c3376d8941a1bb9cbac66f877238c34`,
+`index=753c0fb64f0f01f4e030fe4bade1ccdf` - which are the product file, the built bundle the static projects serve, the
+assistant module, both new test files and the two guards that prose edits usually touch. An edit during the run would
+leave `ITER68_AFTER` naming bytes that are not in the archive.
+
+Five rows are only evidence if the table can reject them, and
+`docs/evidence/iter68-tally-controls-2026-11-21.log.gz` is the ladder that shows it. It runs the guard green on the
+delivered bytes (`BASELINE rc=0 tests=7 pass=7 fail=0 reds=0` with `ROWS_ON_TREE 194` above it), then five more times
+with exactly one broken needle each, and prints which archive the resulting assertion named: a `lines:` pin on a line
+the probe never prints (red, quoting `iter68-f8-probe`), a `phrases:` fragment the page controls do not contain (red,
+`iter68-f8-browser-controls`), an `absent:` marker the probe does print (red, `iter68-f8-probe`), a `marks:` count
+raised from 0 to 7 (red, `iter68-f8-browser-controls`) and the `TALLIES.length` floor pushed past the table it judges
+(red, quoting the count of 194). `LAYER_BITE … red=True bit=True` five times, the file restored to
+`md5 d2b7d1367bf621caa479d9d168201ee2` and proved by digest between mutants, `FINAL rc=0 … fail=0` at the end. The
+ladder's own lesson is in its anchors: the first draft pointed at `absent: [...], marks: 0 },` as one line, which is how
+the rows were drafted but not how they were pasted, and a needle that matches nothing would have reported five layers as
+unbitten rather than reporting the driver as broken - so the loop now prints `MUTATION_REFUSED` for a needle that does
+not match exactly one place, and closes with `LAYERS_BITTEN 5/5 ALL`: an unapplied layer is part of the verdict rather
+than a line in a log nobody reads.
+
+Four closing legs then read the finished tree, each in its own archive because each stamps the digests of the bytes it
+judged. `docs/evidence/iter68-offline-final-2026-11-21.log.gz` runs the whole offline suite at
+`ℹ tests 307 / pass 307 / fail 0` with `OFFLINE_TESTS=307` - four above the 303 the previous pass archived, which is
+this pass's four conversation cases. The leg asserts that count instead of trusting its exit status because the first
+version of the driver started two directories below the repository root, where the test folder does not exist: the glob
+matched no file, node executed nothing, printed `ℹ tests 0` and exited 0.
+`docs/evidence/iter68-docguards-final-2026-11-21.log.gz` is the five guard files as a set at `GUARD_FILES 5` and
+`tests 28 | pass 28 | fail 0`. Two of those 28 were red an hour earlier and neither red was a defect in a guard: the
+ladder archive had been shelved without regenerating `docs/evidence-index.md`, and the pair was repaired by running the
+generator so the committed snapshot again equals what its own `--stdout` mode prints.
+`docs/evidence/iter68-drift-final-2026-11-21.log.gz` reports `TREE CITED_LINES_CHECKED 27 DRIFTED 0` and
+`HEAD CITED_LINES_CHECKED 24 DRIFTED 0`; the small counts are the F6 boundary below stated as a number, because the
+scout walks pointers whose target is among the modified sources, so 27 of the ledger's roughly one thousand citations are
+judged by it and the rest only by the anchor and citation cases.
+`docs/evidence/iter68-census-final-2026-11-21.log.gz` counts `Total: 328 tests in 29 files` and then names the spec this
+pass added: `CENSUS_SPEC_LINES=16` spread over `4 node-desktop; 4 node-mobile; 4 static-desktop; 4 static-mobile`, four
+cases in four projects, which is the census's own evidence that the parity claim was measured on both transports. That
+project list first printed empty because the extraction anchored its bracket at column 0 while the listing indents every
+line, and the leg now fails when fewer than four projects carry the spec: a blank that reads as a result is the same
+defect the offline count guards against.
+The four closing legs are re-run over the finished documents whenever the closing prose moves, because an archived
+`DIGESTS … agentmd= validation= handoff=` line naming bytes that no longer exist is provenance that has quietly gone
+stale - the first set in this pass did exactly that, and the shelf replaced those captures by name rather than leaving a
+stale one beside it. The readings are identical across the re-runs: `OFFLINE_TESTS=307`, `tests 28 | pass 28 | fail 0`,
+`TREE … 27 DRIFTED 0` and `HEAD … 24 DRIFTED 0`, `Total: 328 tests in 29 files` over the four projects. One limit is
+stated rather than left to a reader: no run can archive its own verdict last, because a closing capture is an input to
+the tally case that reads it, so what the archived guard run proves is the document bytes it digested and not its own
+replacement on disk. The witness that the table can still reject a row is not this sentence but
+`docs/evidence/iter68-tally-controls-2026-11-21.log.gz`, where five broken needles each went red and the count of needles
+that bit is printed as `LAYERS_BITTEN 5/5 ALL`.
+
+Still open after this pass, and unchanged by it: **F2** the worker-side list cache in
+`server/context/locations.js:9-34` blinds the page's request counters on the static transport; **F3** a refusal replay
+re-selects the region and leaves the town unselected; **F6** `scripts/citation-drift.mjs:76-78` compares trimmed bytes
+and continues when they match, so a pointer onto a line that is blank on both sides or missing on both passes without
+comparing any text, and the bare-`:NNN` continuation at `scripts/citation-drift.mjs:65` credits every colon-number on a
+line to the last `public|server|tests` path on it, which turns clock times and `file:line:col` triples into pointers
+that name the wrong line; **F7** the scripted re-point matches only `public/`-`server/`-`tests/`-prefixed cites;
+**F9** `Athens`, which `public/data/locations/US.json` lists in five regions, is declined with the generic sentence
+although `public/js/modules/workflow-assistant.js:592` can already ask which town is meant; **F12** name folding happens
+after the 60-character place-shape test; **F13** each iteration's control drivers live in gitignored `artifacts/`, so
+their captures are archived but not re-runnable from the branch; **F14** deep-link labels do not name the rules their
+sentences describe.
+
+Two boundaries of this branch are measured rather than described, in
+`docs/evidence/iter68-f8-limits-2026-11-21.log.gz`: `LIMITS q="Georgia"` / `"georgia"` / `"Georgia?"` / `"Georgia."` /
+`" georgia "` all take the new reply, because `normal()` folds case, punctuation and padding before the comparison, while
+`in Georgia`, `rotation in Georgia` and `What about Georgia?` still get the crop sentence - a country name with any other
+wording in it is not a bare name, and the planning wording that does open a plan is `Plan a rotation in <country>`, which
+the guided layer answers before the API is consulted. The same file prints that string straight to `/api/ask` and gets
+`crop=true` back, which is why the recovery is asserted one layer up instead: `public/js/modules/chat.js:94` asks
+`workflow.respond()` first and only its `null` reaches `/api/ask` at `:96`, and the offline case plus the page case both
+drive the offered button through that path. A
+reader should not take the follow-up label as a plain question the read-only handler resolves. `Georgia and Japan`
+answers `Which country should I focus on first: Georgia or Japan?` with both buttons, unchanged by this pass, which is
+the multi-country branch the new predicate deliberately cannot reach (it requires exactly one country).
+
+Still UNVERIFIED after every number above: real phones, Safari/WebKit, microphones, audio quality and independent
+agronomy. The reply is English, matching the rest of the assistant's sentences.

@@ -94,3 +94,36 @@ test('a typed cancellation mid-plan stops the plan instead of reporting a runtim
   expect(errors,'page errors while a plan was opened and cancelled by typing').toEqual([]);
   await info.attach('Typed cancellation mid-plan',{body:Buffer.from(JSON.stringify({spoken,status},null,2)),contentType:'application/json'});
 });
+
+// Iteration 68, queue item F8, the half the three cases above cannot reach because it needs no country held:
+// "Georgia" typed with step 1 empty came back "I could not match that crop to a sourced entry for Georgia."
+// with buttons=[] (docs/evidence/iter66-f1-page-probe-2026-11-20.log.gz, FRESH_NO_COUNTRY arm, and
+// docs/evidence/iter68-f8-probe-2026-11-21.log.gz for all 302 spellings). The reply is made by the server
+// handler the static worker bundles, so this one case measures both transports. Nothing here lets the page
+// choose a country by itself: the point is that the farmer is told what the name is and given a button that
+// works, and that pressing it is what moves step 1.
+test('a bare country name typed with step 1 empty is answered as a place and its button selects that country',async({page},info)=>{
+  test.setTimeout(180_000);
+  const errors=[];
+  page.on('pageerror',error=>errors.push(error.message));
+  await page.goto('/',{waitUntil:'domcontentloaded'});
+  await expect(page.locator('#catalog-status')).toContainText('Choose a country');
+  await page.getByRole('button',{name:'Open FieldShift assistant',exact:true}).click();
+  expect(await page.locator('#pest-country').inputValue(),'step 1 holds no country before the message').toBe('');
+  await send(page,'Georgia');
+  const spoken=await replyText(page);
+  expect(await speaker(page),'the country name is answered').toBe('Assistant');
+  expect(spoken,'a country name is not the crop question the farmer did not ask').not.toMatch(/could not match that crop/i);
+  expect(spoken,'the reply names what the wording actually is').toMatch(/“Georgia” is a country this assistant recognises/);
+  const offered=(await last(page).locator('button[data-chat-choice]').allTextContents()).map(label=>label.trim());
+  expect(offered,'a reply with nothing to tap is the dead end this case exists to close').toContain('Plan a rotation in Georgia');
+  expect(await page.locator('#pest-country').inputValue(),'the reply alone must not move step 1').toBe('');
+  await last(page).getByRole('button',{name:'Plan a rotation in Georgia',exact:true}).click();
+  await ready(page);
+  const tapped=await replyText(page);
+  expect(await speaker(page),'the offered button is answered').toBe('Assistant');
+  expect(tapped,'tapping the offer takes the farmer into the country the offer named').toMatch(/Georgia/);
+  expect(await page.locator('#pest-country').inputValue(),'step 1 now shows the country the button selected').toBe('GE');
+  expect(errors,'page errors while a bare country name was typed with step 1 empty').toEqual([]);
+  await info.attach('Bare country name with step 1 empty',{body:Buffer.from(JSON.stringify({spoken,offered,tapped},null,2)),contentType:'application/json'});
+});

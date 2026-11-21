@@ -1527,10 +1527,116 @@ const TALLIES = [
    absent: ['✘', 'ABORT', 'OFFLINE_EXIT=0'],
     marks: 0,
    onlyReds: ['a command named inside a sentence is a file the repository ships, not one only this machine has'] },
+  // Iteration 68 (F8). One file holds both arms of the sentence probe: HEAD's answer to a bare country name and the
+  // delivered one, over the 302 spellings the runtime tables publish. The banner line is the row that keeps a repaired
+  // instrument honest - the first merge stamped it with printf, lost its separators and collapsed four sentences onto
+  // one 447-character line, which `merged-2` restamps without moving a measured byte.
+  { archive: 'docs/evidence/iter68-f8-probe-2026-11-21.log.gz',
+   lines: ['MERGE_UTC 2026-11-21T06:15:10Z ITERATION 68 F8 probe, both arms in one file, red arm first',
+       'PROBE iter68 F8 red-first', 'PROBE iter68 F8 post-fix',
+       'CENSUS spellings=302 cropSentence=0 withNoButton=0 currentPredicateCatches=0 misses=0 e.g.',
+       'PROBE COMPLETE', 'EXIT=0'],
+   phrases: ['cropSentence=302 withNoButton=302 currentPredicateCatches=266 misses=36',
+       'mode="deterministic country-name clarification"', 'buttons=["Plan a rotation in Georgia"]',
+       'GUIDED q="Georgia" len=7 answered=no country=none'],
+   absent: ['✘', 'ABORT'],
+    marks: 0 },
+  // Five mutants, one clause each, each restored by digest before the next. M4 is the narrowness control: it goes red on
+  // exactly one case, and the row pins which case, because "the fix does not swallow sentences that merely mention a
+  // country" is only evidence if an archive names the assertion that measures it.
+  { archive: 'docs/evidence/iter68-f8-offline-controls-2026-11-21.log.gz',
+   lines: ['DELIVERED rc=0 tests=13 pass=13 fail=0 reds=0',
+       'M4-any-mention-of-a-country rc=1 tests=13 pass=12 fail=1 reds=1',
+       'RED an unmatched crop is still answered as a crop question',
+       'CTL_FINAL md5 6f52f4d8d538d2565be069ce0a481a07 identical=True fail=0'],
+   phrases: ['M1-no-country-name-branch MUTATED',
+       'M5-intl-spellings-only RESTORED md5 6f52f4d8d538d2565be069ce0a481a07 identical=True'],
+   absent: ['✘', 'ABORT'],
+    marks: 0 },
+  // The same argument on the page: green, red on both transports with HEAD's file rebuilt into the bundle, green again.
+  // Two bundle digests are pinned because the served file is built and gitignored - a stale bundle would print one.
+  { archive: 'docs/evidence/iter68-f8-browser-controls-2026-11-21.log.gz',
+   lines: ['ARM=green exit=0 cases=2 static-desktop:passed node-desktop:passed',
+       'ARM=reverted exit=1 cases=2 static-desktop:failed node-desktop:failed',
+       'ARM=restored exit=0 cases=2 static-desktop:passed node-desktop:passed',
+       'RESTORED_SRC_MD5=6f52f4d8d538d2565be069ce0a481a07 identical=True'],
+   phrases: ['BUNDLE_MD5=3ec88085fb5873b6cc7f0b426daf022f', 'BUNDLE_MD5=7434ebb3a4a2b8e12733649db789a90c',
+       'a country name is not the crop question the farmer did not ask'],
+   absent: ['✘', 'ABORT'],
+    marks: 0 },
+  // Where the new branch stops, read off the handler rather than off the source: folded spellings answer as a place,
+  // a country name inside other wording still answers as a crop question, and the offered planning sentence is proved
+  // to be answered a layer above this handler by the bytes that say so.
+  { archive: 'docs/evidence/iter68-f8-limits-2026-11-21.log.gz',
+   lines: ['LIMITS_UTC=2026-11-21T06:20:54Z INTERPRETER=v26.13.1', 'LIMITS COMPLETE',
+       'LIMITS q="in Georgia" mode="deterministic conversational clarification" buttons=[] crop=true ' +
+       'generic=false text="I could not match that crop to a sourced entry for Georgia. Try its comm"'],
+   phrases: ['LIMITS_MD5 server/agronomy/conversation.js=6f52f4d8d538d2565be069ce0a481a07',
+       'q="Georgia and Japan" mode="deterministic conversational clarification" buttons=["Georgia","Japan"] ' +
+       'crop=false'],
+   absent: ['✘', 'ABORT'],
+    marks: 0 },
+  // The gate on the frozen bytes. Both digest banners are pinned because their equality, not the prose around them, is
+  // what shows nothing moved while 328 cases ran. `skipped` is assertable here only because the shelving header that
+  // wraps this log was reworded to avoid the token: a provenance line that mentions a marker disqualifies the needle
+  // whose job is to catch it, and the first draft of this row failed on its own banner for exactly that reason.
+  { archive: 'docs/evidence/iter68-gate-2026-11-21.log.gz',
+   lines: ['Running 328 tests using 1 worker', '328 passed (20.3m)', 'GATE_EXIT=0',
+       'ITER68_GATE_DONE 2026-11-21T06:36:52Z'],
+   phrases: ['ITER68_FROZEN conversation=6f52f4d8d538d2565be069ce0a481a07',
+       'ITER68_AFTER conversation=6f52f4d8d538d2565be069ce0a481a07',
+       'chat-bare-place-name.spec.js:105:1 › a bare country name typed with step 1 empty'],
+   absent: ['✘', 'ABORT', 'failed (', 'skipped'],
+    marks: 0 },
+  // The four closing legs and the ladder that controls the F8 rows. Two things are worth reading before these rows:
+  // first, `node --test` prints U+2716 (✖) for a red case and Playwright prints U+2718 (✘), so a leg that ran the unit
+  // suite asserts the former glyph rather than inheriting the latter from the gate row above, where it would have been
+  // the absence of a character that runner never emits. Second, the ladder row asserts almost nothing away, because a
+  // driver that mutates a needle echoes that needle's own text into its log: ✘, ABORT and OFFLINE_EXIT=0 are inside the
+  // archive by construction, and the claim that nothing failed moves to `LAYERS_BITTEN 5/5 ALL` plus `marks: 0`.
+  { archive: 'docs/evidence/iter68-offline-final-2026-11-21.log.gz',
+   lines: ['ℹ tests 307', 'ℹ pass 307', 'ℹ fail 0', 'ℹ skipped 0',
+       'LEG=offline OFFLINE_TESTS=307', 'LEG=offline OFFLINE_EXIT=0'],
+   phrases: ['DIGESTS conversation=6f52f4d8d538d2565be069ce0a481a07', 'node --test tests/*.test.js'],
+   absent: ['✘', '✖', 'ABORT', 'fail 3'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter68-docguards-final-2026-11-21.log.gz',
+   lines: ['DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0', 'DOCSGUARDS_CHILD_EXIT 0',
+       'LEG=docguards DOCSGUARDS_EXIT=0'],
+   phrases: ['GUARD_FILES 5',
+       '✔ the tally of every archived run is printed by that archive, not by the prose quoting it',
+       'node scripts/docs-guards.mjs'],
+   absent: ['✘', '✖', 'ABORT', 'fail 2'],
+    marks: 0 },
+  // The scout's own coverage boundary is stated in the ledger as 27 lines against roughly a thousand citations, and the
+  // row pins both modes' counts so a scout that walked nothing could not report the clean half of the pair.
+  { archive: 'docs/evidence/iter68-drift-final-2026-11-21.log.gz',
+   lines: ['TREE CITED_LINES_CHECKED 27 DRIFTED 0 INSIDE_DIFF_HUNKS 2',
+       'HEAD CITED_LINES_CHECKED 24 DRIFTED 0 INSIDE_DIFF_HUNKS 0',
+       'LEG=drift TREE_EXIT=0', 'LEG=drift HEAD_EXIT=0'],
+   phrases: ['node scripts/citation-drift.mjs', 'FILES_WITH_EDITS server/agronomy/conversation.js'],
+   absent: ['✘', 'ABORT', 'DRIFTED 1'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter68-census-final-2026-11-21.log.gz',
+   lines: ['Total: 328 tests in 29 files',
+       'LEG=census CENSUS_SPEC=tests/e2e/chat-bare-place-name.spec.js', 'LEG=census CENSUS_SPEC_LINES=16',
+       'LEG=census CENSUS_SPEC_PROJECTS= 4 node-desktop; 4 node-mobile; 4 static-desktop; 4 static-mobile',
+       'LEG=census CENSUS_EXIT=0'],
+   phrases: ['npx playwright test --list'],
+   absent: ['✘', 'ABORT', 'Total: 327'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter68-tally-controls-2026-11-21.log.gz',
+   lines: ['BASELINE rc=0 tests=7 pass=7 fail=0 reds=0', 'ROWS_ON_TREE 194', 'LAYERS_BITTEN 5/5 ALL',
+       'LAYER_BITE layer=lines red=True bit=True', 'LAYER_BITE layer=floor red=True bit=True',
+       'TALLYCTL_FINAL md5 d2b7d1367bf621caa479d9d168201ee2 identical=True fail=0'],
+   phrases: ['DELIVERED md5 d2b7d1367bf621caa479d9d168201ee2',
+       'RESTORED md5 d2b7d1367bf621caa479d9d168201ee2 identical=True'],
+   absent: ['MUTATION_REFUSED', 'ABORT the guard is not green'],
+    marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 189, `the table carries ${TALLIES.length} archives; subsections 57 through 67 quote more runs than ` +
+  assert.ok(TALLIES.length >= 199, `the table carries ${TALLIES.length} archives; subsections 57 through 68 quote more runs than ` +
     'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -1621,7 +1727,15 @@ test('the tally of every archived run is printed by that archive, not by the pro
     + 'and the `--list` census counting the same 324 in 29 files, and 188 when the ladder that breaks one needle in each '
     + 'of those rows\' assertion layers joined it beside them - its row reading the six bites the child printed, since a '
     + 'summary this file wrote would prove nothing about them - and 189 when the whole offline suite that went red '
-    + 'because this pass\'s own prose named a gitignored driver joined it too.');
+    + 'because this pass\'s own prose named a gitignored driver joined it too, and 194 when iteration 68 archived F8 with the same sentence read on '
+    + 'both trees - HEAD answered a country name as a crop question on all 302 spellings the tables publish, and the '
+    + 'predicate this pass did not use would have caught 266 of them and missed 36 - beside the five-clause mutant '
+    + 'ladder, the three-arm page control on both transports, the measured boundary of the new branch and the '
+    + 'four-project gate whose two digest banners are equal because no byte moved while its 328 cases ran, and 199 when '
+    + 'this pass\'s four closing legs and the ladder that controls their rows joined it - the offline suite at 307, the '
+    + 'guard set at 28, the scout in both of its modes and the census that counts the new spec in all four projects - '
+    + 'because a closing reading is the one number a pass can invent without noticing, and these five cannot be '
+    + 'quoted from prose while the table holds their pins.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

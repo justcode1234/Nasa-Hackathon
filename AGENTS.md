@@ -2297,9 +2297,17 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   Findings this pass leaves: F1, first now, a bare place
   name typed while no chat plan is open still never reaches the switch guard; F2 the worker-side list cache
   (`server/context/locations.js:9-34`) keeps page-side request counters blind on the static transport; F3 the
-  replay a refusal offers re-selects the region and leaves the town unselected; F4 `exactPlaceRow` still swallows
-  a refusal inside it; F6 `scripts/citation-drift.mjs:76-78` cannot see a pointer that slid onto a blank line,
-  which is how two stale sites survived a `DRIFTED 0` reading that the citations guard then caught; F7 the
+  replay a refusal offers re-selects the region and leaves the town unselected; F4 `exactPlaceRow` still swallows a
+  refusal inside it; F6 `scripts/citation-drift.mjs:76-78` compares trimmed bytes and continues when they are equal,
+  so a pair that is blank on both sides or absent on both
+  (a pointer past the end of a file that shrank) passes without comparing any text, and its bare-`:NNN` continuation
+  at `scripts/citation-drift.mjs:65` credits every colon-number on a line to the last `public|server|tests` path on
+  that line - measured 21 Nov over the six files it reads: of 1,828 cited target lines, 15 come from clock times
+  (`docs/validation.md:4239` reads `16:14:59Z` as line 59 of `server/context/client.js`, a 51-line file) and 13
+  from `file:line:col` triples (the trailing column of
+  `tests/e2e/place-list-refused.spec.js:224:3` is read as line 3 of that spec, which is blank), while
+  1,800 of the 1,828 sit in files the pass did not modify and so were never opened at all - which is how two stale
+  sites survived a `DRIFTED 0` reading that the citations guard then caught; F7 the
   scripted re-point only matches `public/`-`server/`-`tests/`-prefixed cites, so bare-basename pointers moved
   silently and are now reworded to name the revision they describe. Full account in subsection 65 of
   `docs/validation.md`. Every refusal in these runs is simulated by route interception or a stub - no live
@@ -2355,12 +2363,14 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   the same harness with the list answering selects `GA` and says so
   (`docs/evidence/iter66-f4-refusal-fallthrough-2026-11-20.log.gz`; the swallow was the `.catch(() => null)` that
   `public/js/modules/workflow-assistant.js:311` held on that tree, which this pass widened to the no-plan path and
-  iteration 67 closed (subsection 67)); F6 `scripts/citation-drift.mjs:76-78` still
-  cannot see a pointer that slid onto a blank line, which is why the re-point here was checked by content and not by
+  iteration 67 closed (subsection 67)); F6 `scripts/citation-drift.mjs:76-78` still passes any pair whose trimmed
+  bytes match, blank-to-blank and past-the-end-to-past-the-end included, and its continuation rule reads every
+  `:NNN` on a line as a pointer - the itemised counts are in iteration 65's queue line above - which is why the
+  re-point here was checked by content and not by
   `DRIFTED 0`; F7 the scripted re-point only matches `public/`-`server/`-`tests/`-prefixed cites, so bare-basename
-  pointers still move silently; F8 a bare name typed with no country selected is answered as a crop question naming
-  that place as a country, because `exactPlaceRow` returns null when no country is set
-  (`public/js/modules/workflow-assistant.js:675`) and the read-only path keeps the sentence; F9 `Athens`, which
+  pointers still move silently; F8 was a bare name typed with no country selected answered as a crop question that
+  named the place as a country, because `exactPlaceRow` returns null when no country is set
+  (`public/js/modules/workflow-assistant.js:675`) and the read-only path kept the sentence; iteration 68 closed it (subsection 68); F9 `Athens`, which
   `public/data/locations/US.json` lists in five regions (GA, OH, TN, TX, AL among 7,558 rows), is declined with the
   generic sentence although the module can already ask "Several listed towns match … Which one do you mean?"
   (`:592`) - `:694` asks only with a held region, though `towns` at `:677` is country-wide; F10 and F15 close in this
@@ -2447,8 +2457,41 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   trusted by a second ladder (`docs/evidence/iter67-tally8-controls-2026-11-20.log.gz`): six breaks on rows this pass
   wrote, six reds naming their own layer, `TARGET` and `RESTORED` digests equal, and the ladder's first casualty was its
   own row - it declared `ABORT` absent in an archive of a driver that prints every needle it applies, which is the
-  `absent:` layer working, not the ladder failing. F2, F3, F6, F7, F8, F9, F12, F13 and F14 stay open; `main` is
+  `absent:` layer working, not the ladder failing. F2, F3, F6, F7, F9, F12, F13 and F14 stayed open after that pass
+  (F8 closed in subsection 68); `main` is
   untouched and nothing was deployed.
+- **21 Nov, same branch: iteration 68 - a country name typed with step 1 empty was answered as a crop question about
+  that country, and every country the tables publish reached that sentence.** F8 is closed on measurement. The farmer
+  who has not chosen a country and types `Georgia` was told `I could not match that crop to a sourced entry for
+  Georgia.` with nothing to tap, because the sentence that reports an unmatched crop is also the only place a bare
+  country name arrives when `exactPlaceRow` legitimately declines (it reads a saved list only once a country is held,
+  and `tests/workflow-bare-place-name.test.js:146` still pins that limit and its zero reads). The repair is in
+  `server/agronomy/conversation.js`, one handler behind both transports: a message that is nothing but a recognised
+  country spelling is now answered as a place (`mode: deterministic country-name clarification`), says what the wording
+  actually is, and offers `Plan a rotation in <name>`, whose sentence the guided assistant already answers.
+  `docs/evidence/iter68-f8-probe-2026-11-21.log.gz` holds both arms of one driver on one set of sentences: on HEAD's
+  bytes `CENSUS spellings=302 cropSentence=302 withNoButton=302` - every spelling, not the two the page probe found by
+  hand - against `cropSentence=0 withNoButton=0` on the delivered bytes, with the same file's
+  `currentPredicateCatches=266 misses=36` recording why the whole-message predicate already in that file (`countryOnly`
+  at `server/agronomy/conversation.js:60`) was not reused: it misses `uae`, `uk`, `cabo verde`, `czech republic` and 32
+  more published forms, so the check compares the message against every form `countryNameForms` returns. The controls
+  are in the same archive's unchanged lines - `cassava in Ghana` keeps its dated FAOSTAT record with `sources=1`,
+  `Tell me about moonfruit in Canada` keeps the crop sentence, and `GUIDED q="Georgia" answered=no` in both arms - and
+  `docs/evidence/iter68-f8-offline-controls-2026-11-21.log.gz` runs five mutants over the new cases: dropping the
+  branch leaves 3 red, removing the button 2, making the button send the bare name 2, matching Intl's own spelling only
+  2, and the narrowness control - letting any sentence that names a country count as a place - is red on exactly one
+  case, the pre-existing crop-sentence control, each restore proved by digest.
+  `docs/evidence/iter68-f8-browser-controls-2026-11-21.log.gz` is the same green/red/green ladder on the page: the new
+  case passes on both transports, fails on the reverted file with the page quoting the crop sentence back, and passes
+  again on the restored bytes, with the bundle digest moving `3ec88085 → 7434ebb3 → 3ec88085` so a static arm reading a
+  stale build would be visible. Four offline cases (`tests/conversation.test.js`, 13 in the file) and one page case
+  (`tests/e2e/chat-bare-place-name.spec.js:105`) carry it forward; the page case taps the offered button and asserts
+  `#pest-country` becomes `GE`, so the recovery is proven rather than asserted. The pass closed on the four-project gate
+  at `328 passed (20.3m)` with `GATE_EXIT=0` and its two digest banners equal, the offline suite at 307 passed and 0
+  failed with `OFFLINE_TESTS=307`, the five guard files at 28 and 0, the census at 328 in 29 files with the new spec
+  listed four times in each of the four projects, and the tally table at 199 rows - the five closing captures pinned
+  under a control ladder that ends `LAYERS_BITTEN 5/5 ALL`, which is what stops an unapplied mutant reading as a pass.
+  Full account in subsection 68 of `docs/validation.md`.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

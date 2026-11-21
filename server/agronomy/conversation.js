@@ -1,7 +1,7 @@
 import { catalog, mentionedCrops, ambiguousCornQuestion, cornScopeNotice } from './catalog.js';
 import knowledge from './knowledge.json' with { type: 'json' };
 import { getCountryCrops, cropItems, screeningItemIds } from '../context/crops.js';
-import { COUNTRY_CODES, COUNTRY_NAMES, findCountries } from '../../public/js/lib/countries.js';
+import { COUNTRY_CODES, COUNTRY_NAMES, countryNameForms, findCountries } from '../../public/js/lib/countries.js';
 
 const normal = value => String(value ?? '').normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
 const contains = (text, phrase) => (` ${text} `).includes(` ${normal(phrase)} `);
@@ -72,7 +72,7 @@ export function answerConversation(question, { country: selectedCountry = '', co
   if (!profile && !starter && !item) {
     if (!explicitCountry && !/\btell me about\b/.test(text)) return null;
     return { schemaVersion: 1, mode: 'deterministic conversational clarification', question, topic: 'clarification', useSelectedLocation: false,
-      blocks: [{ kind: 'evidence gap', text: `I could not match that crop to a sourced entry${country ? ` for ${COUNTRY_NAMES.of(country)}` : ''}. Try its common English name and a country, for example “cassava in Ghana”.`, sourceIds: [] }], sources: [], followUps: [] };
+      ...unmatchedCropReply(text, country) };
   }
   const name = profile?.name ?? starter?.name ?? item.name;
   const cropKey = profile?.id ?? starter?.id ?? `fao-${item.id}`;
@@ -120,4 +120,24 @@ export function answerConversation(question, { country: selectedCountry = '', co
   return { schemaVersion: 1, mode: 'deterministic crop-country evidence retrieval', question, topic,
     context: { cropKey, country }, blocks: visible, useSelectedLocation: false,
     sources: [...new Map(sources.filter(source => ids.has(source.id)).map(source => [source.id, source])).values()], followUps };
+}
+
+// The message is nothing but one recognised country spelling, in any wording the tables publish: Intl's
+// own, an official variant, or an alias no engine returns. `findCountries` alone cannot say this, because
+// it matches a country inside any sentence.
+function namedOnlyCountry(text) {
+  const countries = findCountries(text);
+  return countries.length === 1 && countryNameForms(countries[0]).some(form => normal(form) === text) ? countries[0] : '';
+}
+
+// A bare country name is not a farmer naming a crop, and the guided place switch cannot answer it either:
+// `exactPlaceRow` (public/js/modules/workflow-assistant.js) reads a saved list only once a country is
+// held, so with step 1 empty the name arrives here. Saying so is the only place the sentence can be fixed.
+function unmatchedCropReply(text, country) {
+  const code = namedOnlyCountry(text);
+  if (!code) return { blocks: [{ kind: 'evidence gap', text: `I could not match that crop to a sourced entry${country ? ` for ${COUNTRY_NAMES.of(country)}` : ''}. Try its common English name and a country, for example “cassava in Ghana”.`, sourceIds: [] }], sources: [], followUps: [] };
+  const name = COUNTRY_NAMES.of(code);
+  return { mode: 'deterministic country-name clarification',
+    blocks: [{ kind: 'clarification', text: `“${name}” is a country this assistant recognises, not a crop it has a sourced entry for. Use the “Plan a rotation in ${name}” button to work on that country. A town or region sharing this name is matched from the saved place list of the country chosen in step 1, so choose it there and type the name again.`, sourceIds: [] }],
+    sources: [], followUps: [{ label: `Plan a rotation in ${name}`, question: `Plan a rotation in ${name}` }] };
 }
