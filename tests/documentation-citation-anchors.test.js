@@ -182,12 +182,12 @@ const PINS = [
   { file: 'tests/e2e/place-list-refused.spec.js', line: 36, quote: 'is reported as a failed read, keeps the country, and answers with its regions once the retry gets through', citedBy: 'docs/validation.md subsection 61, The reproducing case' },
   { file: 'tests/e2e/place-list-refused.spec.js', line: 92, quote: 'the tapped region is selected in step 1, not just in the chat', citedBy: 'docs/validation.md subsection 61, the second defect the browser run found' },
   { file: 'tests/e2e/place-list-refused.spec.js', line: 100, quote: 'an unreadable source shape names its own reason, offers no retry it has ruled out', citedBy: 'docs/validation.md subsection 61, the schema class' },
-  // The three links this pass re-pointed by tool. Their labels moved and their `#LNNN` anchors did not, which is the
-  // defect the anchor case in tests/documentation-citations.test.js was written for; pinning the label text is what
-  // stops a later repair repeating it, because a pin that quotes the number goes red when the number is moved alone.
-  { file: 'docs/validation.md', line: 1007, quote: 'region is selected ([public/js/modules/workflow-assistant.js:255-261]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
-  { file: 'docs/validation.md', line: 1021, quote: 'answers honestly instead ([public/js/modules/workflow-assistant.js:462-474]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
-  { file: 'docs/validation.md', line: 1035, quote: '([public/js/modules/workflow-assistant.js:283-295]', citedBy: 'docs/validation.md subsection 61, the anchor defect this pass caused' },
+  // The three links iteration 67 re-pointed by tool - and iteration 75 re-pointed again, because 67 moved the labels
+  // onto bands that hold other code. A pin that quotes the label is what makes the second repair honest: the label, the
+  // `#LNNN`, the row in DEEP_LINKS below and this quote all have to move together or one of the two guards goes red.
+  { file: 'docs/validation.md', line: 1007, quote: 'region is selected ([public/js/modules/workflow-assistant.js:415-420, where `allowEponymousTown`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
+  { file: 'docs/validation.md', line: 1021, quote: 'answers honestly instead ([public/js/modules/workflow-assistant.js:608-619, the branch where `replySpelling`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
+  { file: 'docs/validation.md', line: 1035, quote: 'anything ([public/js/modules/workflow-assistant.js:445-449, where `rowCarriesReply`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
   // The guard quoting its own case, because the handoff header names this file by line and four lines added above the
   // case below moved it while every other guard stayed green; iteration 66's twenty-four rows and loop moved it again.
   { file: 'tests/documentation-citation-anchors.test.js', line: 524, quote: "test('no pin is satisfied by the statement above or below the line it names'", citedBy: 'docs/handoff-2026-11-18.md:19 and docs/validation.md subsection 61 (re-pointed by 65, 66, 72 and 73)' },
@@ -540,4 +540,192 @@ test('no pin is satisfied by the statement above or below the line it names', as
     }
   }
   assert.ok(ambiguous.length === 0, `pins a one-line drift would leave green:\n${ambiguous.join('\n')}`);
+});
+
+// ── iteration 75, F14: what a clickable deep link owes the reader ─────────────────────────────────────────────────
+// The pins above certify a `file:NNN` number against the bytes sitting at that number, and the anchor case at
+// tests/documentation-citations.test.js:139 certifies a markdown link's label against the `#LNNN` its click carries.
+// Neither reads the third thing a deep link asserts: that the band the label names holds the rule the sentence around
+// it describes. Iteration 67 measured the gap while repairing the *target* of this ledger's three links
+// (docs/validation.md:1007, :1021 and :1035; docs/evidence/iter67-f10-deeplink-repair-2026-11-20.log.gz, whose row at
+// tests/documentation-evidence-index.test.js:1435 still quotes the pre-repair labels): all three pointed at code that
+// does not contain the rule, one of them at a bare `}`. The census that reopened this on 21 Nov
+// (artifacts/scratch/iter75/label-census.mjs) counted 43 tracked markdown files, 3 labelled deep links, 0 unresolved
+// targets and 0 labels that name anything but a coordinate. Iteration 67 then pinned those three labels *as text*, so
+// the strongest guard on the branch required the wrong numbers to keep being written.
+//
+// DEEP_LINKS is the layer that was missing: one row per clickable link, naming the bytes its band must contain and the
+// line a click has to land on. The table is graded against a fresh scan of the tracked prose in both directions, so a
+// new link cannot join the tree ungraded and a row cannot be deleted to make a stale link true. The label rule is the
+// half F14 complained about: a label must carry the band the row cites and must name at least one identifier the cited
+// bytes contain, which a coordinate-only label cannot do.
+const DEEP_LINKS = new Map([
+  ['docs/validation.md:1007', {
+    file: 'public/js/modules/workflow-assistant.js', from: 415, to: 420, anchor: 420,
+    quotes: ['const allowEponymousTown = namedRegions.length === 0 || Boolean(regionFilter);'],
+  }],
+  ['docs/validation.md:1021', {
+    file: 'public/js/modules/workflow-assistant.js', from: 608, to: 619, anchor: 608,
+    quotes: [
+      'if (replySpelling === countrySpelling && !regionMentions.length && !townMentions.length',
+      'const level = regionName ? `a town in ${regionName}`',
+      'or choose Whole ${countryName} for the country overview. Nothing was selected.',
+    ],
+  }],
+  ['docs/validation.md:1035', {
+    file: 'public/js/modules/workflow-assistant.js', from: 445, to: 449, anchor: 449,
+    quotes: [
+      'const rowCarriesReply = [...places.regions, ...places.places]',
+      'if (replySpelling === countrySpelling && !rowCarriesReply) { regionMentions = []; townMentions = []; }',
+    ],
+  }],
+  // The three rows below take this table from three pointers to six, and they are not the F14 class. They are iteration
+  // 66's prose, which named `regionRecovery()` beside a `workflow-assistant.js:315` that has not held that closure since
+  // code was inserted above it - a drift of 149 lines, invisible to every instrument on the branch because the drift
+  // scout is differential: it compares a cited line to the same ordinal in HEAD, so a pointer that moves 20 lines per
+  // commit never shows up as having moved. Queued as F18; repaired here as clickable pointers, which this table grades.
+  ['docs/validation.md:1555', {
+    file: 'public/js/modules/workflow-assistant.js', from: 451, to: 464, anchor: 464,
+    quotes: ['const placeRecovery = () => {', 'const regionRecovery = () => {'],
+  }],
+  ['AGENTS.md:605', {
+    file: 'public/js/modules/workflow-assistant.js', from: 464, to: 470, anchor: 464,
+    quotes: ['const regionRecovery = () => {', 'const prompt = areaPrompt(countryName, null, places);'],
+  }],
+  // Its sibling in the same paragraph cited `:442` for "the fallthrough chooses by the pending question", which is a
+  // comment three lines above the country-spelling rule and nowhere near either branch. The branches are 599-600.
+  ['AGENTS.md:607', {
+    file: 'public/js/modules/workflow-assistant.js', from: 599, to: 600, anchor: 599,
+    quotes: ['return regionRecovery();', "return scope === 'area' || areaRegion ? placeRecovery() : null;"],
+  }],
+  // The last two rows point back at this file. F18's mechanism is that a pointer and the bytes it names drift apart with
+  // nobody watching, and the guard that catches that for the six prose pointers was itself cited by nothing: adding a
+  // case here moves the table's own tail, so this pass says so in the ledger instead of the next one discovering it.
+  // Neither band may contain the row that quotes it - a quote whose own text sits inside the band it grades is the
+  // vacuous instrument iteration 67 recorded as F15 - so both point below the table, at the scanner and the judgement.
+  ['docs/validation.md:8028', {
+    file: 'tests/documentation-citation-anchors.test.js', from: 629, to: 643, anchor: 629,
+    quotes: ['async function foundDeepLinks() {', 'if (line.length > 2000) return;', 'return links;'],
+  }],
+  ['docs/validation.md:8026', {
+    file: 'tests/documentation-citation-anchors.test.js', from: 647, to: 668, anchor: 647,
+    quotes: ['function deepLinkProblems(link, row, targetLines) {', 'const out = [];'],
+  }],
+]);
+
+// Same shape as the anchor case's ANCHORED, widened to carry the label: the two scanners have to disagree about
+// nothing, because a link one of them can see and the other cannot is a link graded by neither.
+const DEEP_LINK = /\[([^\]]+)\]\(([^()\s[\]]*?)#L(\d+)(?:-L\d+)?\)/g;
+const LABEL_BAND = /[\w./-]+:(\d+)-(\d+)/g;
+
+async function trackedFiles(pattern = null) {
+  // Imported inside the call rather than at the top: a line added above this file's own pinned case is the drift
+  // this guard exists to catch, and this pass has no business moving the self-pin it is re-pointing elsewhere.
+  const { execFileSync } = await import('node:child_process');
+  const args = pattern ? ['ls-files', '-z', pattern] : ['ls-files', '-z'];
+  return execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).split('\0').filter(Boolean);
+}
+
+async function foundDeepLinks() {
+  const links = [];
+  for (const doc of await trackedFiles('*.md')) {
+    const lines = await linesOf(doc);
+    lines.forEach((line, index) => {
+      if (line.length > 2000) return;
+      for (const match of line.matchAll(DEEP_LINK)) {
+        const resolved = path.relative(ROOT, path.resolve(ROOT, path.dirname(doc), match[2])).split(path.sep).join('/');
+        links.push({ key: `${doc}:${index + 1}`, label: match[1], target: match[2], resolved,
+          anchor: Number(match[3]), bands: [...match[1].matchAll(LABEL_BAND)].map((b) => [Number(b[1]), Number(b[2])]) });
+      }
+    });
+  }
+  return links;
+}
+
+// One link, one row, the target's bytes: every claim the pair makes, as strings. Returning problems instead of
+// asserting lets the replay below feed mutated bytes through the same judgement the shipped tree is graded by.
+function deepLinkProblems(link, row, targetLines) {
+  if (!link) return [];
+  if (!row) return [`${link.key} links ${link.target}#L${link.anchor}, which no DEEP_LINKS row grades, so nothing reads where it lands`];
+  const out = [];
+  if (row.file !== link.resolved) out.push(`${link.key} row grades ${row.file} but the link resolves to ${link.resolved}`);
+  if (row.anchor < row.from || row.anchor > row.to) out.push(`${link.key} row anchors line ${row.anchor} outside the band ${row.from}-${row.to} it cites`);
+  if (link.anchor !== row.anchor) out.push(`${link.key} anchor is #L${link.anchor} while the row requires #L${row.anchor}, so the click no longer lands on the line the bytes are quoted from`);
+  if (row.to > targetLines.length) { out.push(`${link.key} cites ${row.file}:${row.from}-${row.to} in a file of ${targetLines.length} lines`); return out; }
+  if (!link.bands.some(([from, to]) => from === row.from && to === row.to)) {
+    out.push(`${link.key} label reads ${JSON.stringify(link.label.slice(0, 90))} whose band ${link.bands.map(([f, t]) => `${f}-${t}`).join(', ') || 'is absent'} is not the ${row.from}-${row.to} the row grades`);
+  }
+  const band = targetLines.slice(row.from - 1, row.to);
+  for (const quote of row.quotes) {
+    if (!band.some((line) => line.includes(quote))) out.push(`${link.key} cites ${row.file}:${row.from}-${row.to} but no line in that band reads ${JSON.stringify(quote)}`);
+  }
+  const at = targetLines[row.anchor - 1] ?? '<no such line>';
+  if (!row.quotes.some((quote) => at.includes(quote))) out.push(`${link.key} lands on ${row.file}:${row.anchor}, which reads ${JSON.stringify(at.trim().slice(0, 60))} and carries none of the quoted rule`);
+  const words = (link.label.replace(LABEL_BAND, '').match(/[A-Za-z_][A-Za-z0-9_]{5,}/g) ?? []).map((w) => w.toLowerCase());
+  const bandText = band.join('\n').toLowerCase();
+  if (!words.some((w) => bandText.includes(w))) out.push(`${link.key} label ${JSON.stringify(link.label.slice(0, 90))} names no identifier the cited band contains, which is the coordinate-only label F14 records`);
+  return out;
+}
+
+test('every labelled deep link in tracked prose resolves, and the band table grades each one and cannot be narrowed', async () => {
+  const tracked = new Set(await trackedFiles());
+  assert.ok(tracked.has('docs/validation.md'), 'the tracked-file scan saw no prose at all, so it would grade nothing');
+  const links = await foundDeepLinks();
+  const wrong = [];
+  for (const link of links) {
+    if (!tracked.has(link.resolved)) wrong.push(`${link.key} resolves ${link.target} to ${link.resolved}, which is not a tracked file`);
+    if (link.resolved.startsWith('..')) wrong.push(`${link.key} leaves the repository through ${link.resolved}`);
+  }
+  const stale = [...DEEP_LINKS.keys()].filter((key) => !links.some((link) => link.key === key));
+  for (const key of stale) wrong.push(`${key} has a DEEP_LINKS row but no labelled deep link is there, so the table is grading a pointer the prose no longer contains`);
+  // Three links was the whole measured population on 21 Nov, six after F14 re-pointed three and F18 promoted three more,
+  // and eight on 22 Nov once the ledger pointed back at this table and the function that grades it; a scan that saw none
+  // would otherwise print the same clean list as one that saw all eight, which is the defect iteration 67 recorded as
+  // F15. Starvation is graded before any row is called stale, because a scan that saw nothing makes every row look
+  // orphaned at once and hides the cause; the message therefore names both counts so a reader can tell which side broke.
+  assert.ok(links.length >= 8, `the deep-link scan saw ${links.length} clickable pointers while ${DEEP_LINKS.size} rows waited for them; the ledger has carried at least eight since iteration 75`);
+  assert.ok(DEEP_LINKS.size >= 8, `the band table holds ${DEEP_LINKS.size} rows; it was written against eight links and shrinking it is a decision, not an accident`);
+  assert.ok(wrong.length === 0, `deep links that resolve or are graded wrongly:\n${wrong.join('\n')}`);
+});
+
+test('a deep link band contains the rule its sentence names, and its label names that rule back', async () => {
+  const links = await foundDeepLinks();
+  const byFile = new Map();
+  for (const link of links) {
+    if (byFile.has(link.resolved)) continue;
+    // A target that cannot be read is a finding this table has to state in words, not a stack trace from the reader:
+    // the pointer no longer resolves, so no byte of the band it promises exists to grade against.
+    try { byFile.set(link.resolved, await linesOf(link.resolved)); } catch { byFile.set(link.resolved, null); }
+  }
+  const wrong = [];
+  for (const link of links) {
+    const targetLines = byFile.get(link.resolved);
+    if (targetLines === null) {
+      wrong.push(`${link.key} resolves ${link.target} to ${link.resolved}, which cannot be read, so its band cannot be graded against any byte`);
+      continue;
+    }
+    wrong.push(...deepLinkProblems(link, DEEP_LINKS.get(link.key), targetLines));
+  }
+  assert.ok(wrong.length === 0, `clickable pointers that do not show the reader the rule they cite:\n${wrong.join('\n')}`);
+});
+
+// The two ways this ledger has actually broken a deep link, replayed against every row so no entry can sit in the
+// table unexercised: iteration 67's repair moved code above the cited band, and iteration 67's un-repaired labels
+// anchored a click on a line that was a closing brace. The first is a drift the pins guard would catch in a label the
+// prose cites by number; the second is invisible to every instrument that existed before this table.
+test('a deep link goes red when the code moves off its band or its anchor stops carrying the rule', async () => {
+  const links = await foundDeepLinks();
+  const unchecked = [...DEEP_LINKS.keys()].filter((key) => !links.some((link) => link.key === key));
+  assert.ok(unchecked.length === 0, `the replay cannot exercise ${unchecked.join(', ')} because no link is there to read`);
+  for (const link of links) {
+    const row = DEEP_LINKS.get(link.key);
+    const lines = await linesOf(row.file);
+    const shifted = [...lines.slice(0, row.from - 1), '  const inserted = 1;', ...lines.slice(row.from - 1)];
+    assert.ok(deepLinkProblems(link, row, shifted).length > 0,
+      `${link.key} still passes after one line is inserted above ${row.file}:${row.from}, so a drift off this band would stay green`);
+    const brace = lines.map((line, index) => (index + 1 === row.anchor ? '}' : line));
+    assert.ok(deepLinkProblems(link, row, brace).length > 0,
+      `${link.key} still passes when ${row.file}:${row.anchor} becomes a bare closing brace, so the click could land off the rule unnoticed`);
+    assert.deepEqual(deepLinkProblems(link, row, lines), [], `${link.key} fails on the shipped bytes, so the replay above reports a repair rather than a drift`);
+  }
 });

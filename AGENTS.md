@@ -602,9 +602,9 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   recovery.** Iteration 13 measured this and left it open; driving the real India list, the region
   question answered with `Zqxwv` returned "No town by that name…" with country-wide town buttons and
   dropped the real region rows. `respond()` reached one fallthrough for both pending place questions;
-  a new `regionRecovery()` (workflow-assistant.js:315) reuses `areaPrompt()`'s region rows and caveat,
+  a new `regionRecovery()` ([public/js/modules/workflow-assistant.js:464-470, where `regionRecovery()` opens on `areaPrompt()`'s rows](public/js/modules/workflow-assistant.js#L464)) reuses that prompt's region rows and caveat,
   says the level that is missing and that nothing was selected, and always keeps `Whole <country>`
-  tappable. The fallthrough (workflow-assistant.js:442) now chooses by the pending question and leaves
+  tappable. The fallthrough ([public/js/modules/workflow-assistant.js:599-600, where `scope` picks `regionRecovery()` over `placeRecovery()`](public/js/modules/workflow-assistant.js#L599)) now chooses by the pending question and leaves
   the town recovery unchanged inside a chosen region and in region-less lists. A new census
   (tests/matrix-coverage.test.js:502) walks **every saved list with a named region row — 227 lists**
   and pins the wording, a real region button, and no selection or data action; with the branch
@@ -2441,8 +2441,8 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `docs/evidence/iter67-anchor-controls-2026-11-20.log.gz` breaks the case four ways - floor raised to 4 printing
   `saw 3`, an anchor moved to `#L300` printing the `docs/validation.md:1007` mismatch, the pre-repair pattern and the
   naive widening that leaves brackets in the class each printing `saw 0` - and restores it byte-for-byte. F10 and F15
-  close here; F14 stays open for the pass after this one, because its labels and its pins have to move in one change and
-  a pin is a test file this pass froze. The four-project gate ran on the stamped tree and the five closing readings after
+  close here; F14 stayed open after this pass, because its labels and its pins had to move in one change and a pin was a
+  test file that pass froze - it closed in iteration 75, and F18 was found on the way. The four-project gate ran on the stamped tree and the five closing readings after
   it, on the bytes this branch ships: `ITER67_GATE_START 2026-11-20T20:00:51Z
   HEAD=6c3091f370fa9f7dd1eb2a3fe992b2a08f3d00bf NODE=v26.13.1 pgid=87040`, `Running 324 tests using 1 worker`,
   `324 passed (26.4m)`, `GATE_EXIT=0`, `ITER67_GATE_DONE 2026-11-20T20:27:13Z`; then
@@ -2685,6 +2685,23 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   Real phones, Safari/WebKit,
   microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test
   weakened, no timeout raised. Full account in subsection 74 of `docs/validation.md`.
+- 22 Nov, iteration 75 (`docs/validation.md` subsection 75): F14 closes and F18 opens, and the pass changes no application
+  file. `tests/documentation-citation-anchors.test.js` grows from 543 lines to 731 with a `DEEP_LINKS` band table that grades eight
+  clickable pointers, and the reason it needed grading is in the ledger's own HEAD: `git show HEAD:docs/validation.md` carried
+  three links whose labels repeated the coordinate and whose bands sat 146, 160 and 162 lines from the rules their sentences
+  named, while a guard compared each anchor to its own label and called that a check. The three plain citations this pass
+  repaired (`docs/validation.md:1555`, `AGENTS.md:605`, `AGENTS.md:607`, all naming `workflow-assistant.js` lines that no longer
+  hold what was said about them) became rows too, and the last two rows point back at the guard's own scanner and judgement with
+  the rule that a band may never contain the row quoting it. Measured on the tree, not carried over: the citation survey reads
+  `citations=1204`, `SPAN_PAIRED 219` and 55 candidates; the offline suite reads `ℹ tests 340 ℹ pass 340 ℹ fail 0`; the docs guards read
+  `pass 31 | fail 0`; the drift scout reads
+  `TREE CITED_LINES_CHECKED 12 DRIFTED 0 INSIDE_DIFF_HUNKS 37`. Archived as `docs/evidence/iter75-controls-2026-11-22.log.gz`,
+  `docs/evidence/iter75-instruments-2026-11-22.log.gz`, `docs/evidence/iter75-offline-2026-11-22.log.gz`, `docs/evidence/iter75-docguards-2026-11-22.log.gz` and
+  `docs/evidence/iter75-drift-2026-11-22.log.gz`. **Not run, and therefore not claimed:** no row-matrix record and no `TALLIES` needle rows for
+  these five archives, because the close was cut short on 22 Nov at the user's instruction; the shelf therefore carries archives
+  that no row grades, which is the exposure iteration 71 sized and F17's rule still describes. Real phones, Safari/WebKit,
+  microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened, no
+  timeout raised.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -2962,6 +2979,20 @@ carried unknowingly: its driver filtered `iter74-row-matrix-*` out of the shelf,
 about, so `matrix74.sh` now reads every `iter74-*.log.gz` and refuses before comparing a needle unless `archives == rows`. The shelved record
 prints `archives=6 rows=6` and `self_ok=6/6 cross_rejected=30/30`, and the re-run that grades the row written after it prints
 `archives=7 rows=7` and `self_ok=7/7 cross_rejected=42/42`; the re-run is not shelved, for the circularity named in subsection 74.
+
+F14 closed in iteration 75, and the closure is a table rather than a rule. Three clickable deep links were graded against their own
+labels and nothing else, all three pointed 146 to 162 lines from the code their sentences named, and the layer that ships now reads
+each band's bytes, requires the anchor line to carry an identifier the label spells, requires the label to say more than the
+coordinate, and requires the set of links and the set of rows to be equal in both directions - then proves each of those four
+properties with its own mutation leg. F18 is what the same pass found on the way and could not fix: the identical drift in the
+*plain* citations, which are 1,204 of this ledger's pointers and are covered by neither the pin table (191 statements iteration 58
+chose to quote) nor `scripts/citation-drift.mjs`, because the scout is differential - it compares a cited ordinal in HEAD against the
+working copy, so a pointer that slid 162 lines across five commits never reads as drift to anything.
+`artifacts/scratch/iter75/citation-band.mjs` sizes that population (67 citations whose target cannot be resolved at all, 219 whose
+coordinate has a code span beside it, 55 where that symbol is neither on the cited line nor within three of it) and states no verdict
+on purpose: two of the three genuine misses this pass repaired were in that list and the third was found by reading the paragraph,
+because proximity is not a decidable property of English prose. Protection therefore stays table-driven - PINS for quoted statements,
+`DEEP_LINKS` for clickable ones - and F18 is a standing exposure with a measured denominator, not a task a heuristic can finish.
 
 ### 13.1. Next 50 goals, in priority order
 

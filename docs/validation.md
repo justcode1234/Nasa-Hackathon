@@ -1004,7 +1004,7 @@ region row San Marino (SM) and **Türkmenistan** in Ahal (TM). `allowEponymousTo
 `namedRegions.length === 0`, so in every list that *has* regions the country spelling stayed excluded
 from the town matches even after the plan was asking "which town". The farmer could see the town in
 step 1's list, tap it if a button offered it, but could not type it. The rule now also allows it while a
-region is selected ([public/js/modules/workflow-assistant.js:255-261](../public/js/modules/workflow-assistant.js#L255)),
+region is selected ([public/js/modules/workflow-assistant.js:415-420, where `allowEponymousTown` also holds once a region filters the town list](../public/js/modules/workflow-assistant.js#L420)),
 because the pending question at that point is a town question and the country overview is already
 reachable through the `Whole <country>` button.
 
@@ -1018,7 +1018,7 @@ At "Which state or region of France?", typing "France" matched nothing: the repl
 same area prompt, so the chat asked itself the same thing with nothing new to tap. The long official
 spellings reached it too ("South Georgia & South Sandwich Islands" is past the short-reply limit, so the
 first attempt only fixed the short ones). The rule now compares the whole reply in the same canonical
-shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:462-474](../public/js/modules/workflow-assistant.js#L462)):
+shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:608-619, the branch where `replySpelling` equals `countrySpelling` and `level` names the tier still missing](../public/js/modules/workflow-assistant.js#L608)):
 it names the level still missing ("a town in Nampula", "one of its regions"), offers that level's real
 rows plus `Whole <country>`, and ends with "Nothing was selected." A saved row that really does carry
 the country's spelling is matched earlier and still selects itself, so Guadeloupe and Martinique keep
@@ -1032,7 +1032,7 @@ the specific field; the town itself is not farmland."** - the chat picked a plac
 because the country's own spelling *contains* the town's spelling and `typedPlace` matched that prefix.
 Defect 11's honest reply could not fire: it only ran when nothing matched at all. The narrowing rule now
 requires the reply to equal a saved row's whole canonical spelling before a country-name reply may select
-anything ([public/js/modules/workflow-assistant.js:283-295](../public/js/modules/workflow-assistant.js#L283));
+anything ([public/js/modules/workflow-assistant.js:445-449, where `rowCarriesReply` demands the whole canonical row name before a country reply may select](../public/js/modules/workflow-assistant.js#L449));
 otherwise the mentions are dropped and the honest reply answers instead. A town genuinely called "São
 Tomé" stays typeable by that name, and the two lists whose rows really do carry the country spelling
 (Guadeloupe, Martinique) still select themselves.
@@ -1552,7 +1552,7 @@ Cause: `respond()` reached one fallthrough for both pending place questions
 `placeRecovery()`, whose wording, caveat and buttons all assume the plan is asking for a town. At the
 area question the plan is asking for a region.
 
-The fix adds `regionRecovery()` beside `placeRecovery()` (`workflow-assistant.js:315`). It reuses
+The fix adds `regionRecovery()` beside `placeRecovery()` ([public/js/modules/workflow-assistant.js:451-464, where both recovery closures are defined](../public/js/modules/workflow-assistant.js#L464)). It reuses
 `areaPrompt()`'s own region rows and honesty caveat, prefixed with a sentence that names the level
 and says nothing was selected: "No region by that name is in the saved place list for India, and no
 listed town carries that spelling either. Nothing was selected; I will not guess a similar name."
@@ -7961,3 +7961,81 @@ negatives this row does carry are signatures of *other* legs: a node-test summar
 archives carry it) and a Playwright run banner (`Running 16 tests using`, 2 of 7). Both are live bytes somewhere on the
 shelf and neither is reachable from a read-only comparison, so the row refuses something a matrix log could actually get
 wrong instead of something no log has ever contained.
+
+### 75. Three clickable pointers certified themselves, and the 1,204 plain citations beside them had no instrument at all
+
+**VERIFIED FIX (§13.1 item 8; closes F14, opens and sizes F18).** No application file changed in this pass, so nothing a farmer
+can tap behaves differently. What changed is the layer that decides whether this ledger's own pointers are true, plus the
+first measurement of the class of pointer that layer still cannot see.
+
+`git show HEAD:tests/documentation-citation-anchors.test.js` is 543 lines and mentions `DEEP_LINKS` zero times: on the
+delivered tip nothing read a clickable `[label](file#LNNN)` against the bytes it lands on. The three links that existed were graded
+against their own shape - a pointer passed when its anchor sat inside the band its *label* spelled - which is a tautology. A
+pointer can be self-consistent and far from its subject, and all three were. Read out of HEAD's git objects, kept in
+`artifacts/scratch/iter75/instruments.txt`, against the bands this pass verified one line at a time:
+
+| pointer in prose | band the label spelled | band the rule actually sits in | band start moved |
+| --- | --- | --- | --- |
+| `docs/validation.md:1007` | `workflow-assistant.js`:255-261 | the same file's 415-420 | 160 lines |
+| `docs/validation.md:1021` | `workflow-assistant.js`:462-474 | the same file's 608-619 | 146 lines |
+| `docs/validation.md:1035` | `workflow-assistant.js`:283-295 | the same file's 445-449 | 162 lines |
+
+The layer that ships now grades one pointer per `DEEP_LINKS` row and refuses all four ways a pointer can lie: each quoted line
+must be present in the band's bytes, the anchor line must carry an identifier the label names, the label must say what the band
+is for instead of repeating the coordinate, and the link/row pair must be bijective - a link with no row is read by nothing, a
+row with no link grades a pointer the prose deleted. Both sides of that pair sit under a floor, because an instrument that
+scanned nothing prints the same clean list as one that scanned everything, which is the defect iteration 67 recorded as F15.
+
+The class beside it is the reason F14 could not be closed by repairing three links. Most pointers in this ledger are not
+clickable: they are prose like "the guard at `chat.js:100` refuses to render a stale answer", where the number is followed by a
+colon and a reader's browser jumps nowhere. Two instruments certify those - the pin table, which covers the 191 statements
+iteration 58 chose to quote, and `scripts/citation-drift.mjs`, which asks only whether a cited line moved *since HEAD*. Neither
+asks whether the line names what the sentence says, and because the drift scout is differential a pointer that slid 149 lines
+across five commits is invisible to it permanently. `artifacts/scratch/iter75/citation-band.mjs` sizes that population instead of
+ruling on it: 1,204 `path:NNN` citations over 43 tracked markdown files; 67 whose target cannot be read at all (9 name no tracked
+file, 58 resolve to two or four candidates); 25 whose sentence carries no identifier worth grading; and of the 219 that put a code
+span beside the coordinate, 126 name a symbol on the cited line, 38 within three lines of it, 29 elsewhere in the file, and 26
+nowhere in the file at all.
+
+Three of those misses were real, and this pass verified all three against the target's bytes before touching the prose:
+`docs/validation.md:1555` and `AGENTS.md:605` each cited `workflow-assistant.js:315` for the two recovery closures that now sit at
+451-464 and 464-470, and `AGENTS.md:607` cited `:442` - a comment three lines above the country-spelling rule - for a fallthrough
+whose two branches are 599-600. All three sentences now carry clickable bands and rows of their own, which is what takes the graded
+population from three links to six, and then to eight with the two added at the end of this section.
+
+The instrument's recall is measured, not assumed: of those three it listed two. `AGENTS.md:607` never appears in the candidate
+rows because the survey only grades a coordinate that has a code span beside it, and that sentence names its subject in ordinary
+English ("now chooses by the pending question"). So the 55 candidates are neither a verdict nor a complete list, and turning them
+into a rule was rejected for the same reason: a citation whose symbol sits three lines away is usually correct about a two-line
+condition, and no proximity heuristic separates that from a pointer that genuinely moved. Protection stays table-driven - PINS for
+quoted statements, `DEEP_LINKS` for clickable ones - and F18 records the ungraded remainder as a standing exposure rather than a
+solved problem.
+
+Each property is graded by a mutation rather than by a reading. `artifacts/scratch/iter75/controls75.sh` restores pristine copies
+of the guard and the prose, applies one anchor-and-replacement through `mutate.mjs` - which refuses a leg whose anchor does not
+occur exactly the number of times claimed - re-parses the file, runs the guard pair and then requires that leg's own message in
+the output. Eleven legs: two controls plus one per property (coordinate-only label, row spliced to a pointer that does not exist,
+quote moved off the band, anchor moved onto a comment, target file renamed, anchor moved outside the band, label band narrowed by
+one line, floor raised above the population, scanner blinded). Three of those legs were invalid before they were honest: a
+JavaScript anchor containing `||` collided with the field separator, a leg that moved an anchor from `#L420` to `#L415` stayed
+inside the label's own band so no guard could see it, and a blinded scanner hit the floor assertion before the stale-row loop
+could name the rows it missed - which is why the floor's message now prints both counts.
+
+The last two pointers point back at this file, because a guard that grades other people's drift while being cited by nobody is
+the same defect in a different coat. Its judgement is
+[tests/documentation-citation-anchors.test.js:647-668, where `deepLinkProblems()` turns one row and one link into strings](../tests/documentation-citation-anchors.test.js#L647),
+which is what all eleven legs exercise, and its scanner is
+[tests/documentation-citation-anchors.test.js:629-643, where `foundDeepLinks()` reads the prose](../tests/documentation-citation-anchors.test.js#L629),
+which is the half that can be blind and still report a full table. Neither band contains the row that quotes it: a quote
+whose own text sits inside the band it grades is satisfied by the guard's source rather than by the code, which is F15
+again in the last costume anyone should describe twice.
+
+**Stays UNVERIFIED:** whether any of the 55 candidate pointers is wrong about its subject - they are a measured population, not a
+triaged one, and this pass deliberately did not turn proximity into a rule. No browser leg, no runtime behaviour and no agronomy
+claim changed here. Five archives carry what did run - the offline suite at `ℹ tests 340 ℹ pass 340 ℹ fail 0`, the five docs guards at
+`pass 31 | fail 0` and the drift scout at `TREE CITED_LINES_CHECKED 12 DRIFTED 0` - as `docs/evidence/iter75-controls-2026-11-22.log.gz`,
+`docs/evidence/iter75-instruments-2026-11-22.log.gz`, `docs/evidence/iter75-offline-2026-11-22.log.gz`,
+`docs/evidence/iter75-docguards-2026-11-22.log.gz` and `docs/evidence/iter75-drift-2026-11-22.log.gz` - and this iteration has no
+row-matrix record and no `TALLIES` needle rows, because the close was cut short on instruction rather than finished; those five
+files therefore sit on the shelf graded by nothing but their own existence, which iteration 76 has to repair before adding a
+sixth.
