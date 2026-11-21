@@ -5749,7 +5749,7 @@ that "arrived in a shape this app cannot read, so … asking again cannot change
 has ruled out. Both keep the country selected, leave the point unset and invent no regions. The read at
 `public/js/modules/workflow-assistant.js:392` now rethrows a cancellation instead of answering for it, and the four
 sites that used to fall through to the empty-list wording (`:423`, `:434`, `:580` and the whole-country escape through
-`public/js/modules/workflow-assistant.js:708`) return the failure reply instead. Nothing caches a failure: the
+`public/js/modules/workflow-assistant.js:718`) return the failure reply instead. Nothing caches a failure: the
 assistant's `locationLists`, `public/js/modules/location-picker.js:33` and the server-side read all store on success
 only, which is what makes the retry in the reproducing case a real re-ask rather than a replay.
 
@@ -6176,7 +6176,7 @@ region row and moves nothing, which is the whole of the difference this pass is 
 allowed to arbitrate a move.
 
 The guard no longer treats a refusal as an answer. A failed read now produces its own reply (`switchListUnreadable`,
-`workflow-assistant.js:735-751`): it names the read that could not be done, says which two readings it cannot tell
+`workflow-assistant.js:780-795`): it names the read that could not be done, says which two readings it cannot tell
 apart, states that nothing was changed, and offers the two things that are still true — replay the sentence
 (`Ask that again`) and, if the farmer really meant the country, say so (`Switch to Mongolia`). Four limits inside that
 shape, each with a case of its own. An explicit lead-in still switches during a refusal, because the fix must not
@@ -6562,8 +6562,8 @@ crop question (iteration 68 closed that half in subsection 68; `tests/workflow-b
 the zero reads), and the United States list holds the town name
 Athens on five rows in five different regions (read out of `public/data/locations/US.json`: AL, GA, OH, TN, TX, and no
 region row of that name), where `exactPlaceRow` returns `null` rather than pick a point
-(`public/js/modules/workflow-assistant.js:681` accepts exactly one town row, and its own comment at
-`public/js/modules/workflow-assistant.js:693` says two rows sharing a name stay a question). The single-row case is what
+(`public/js/modules/workflow-assistant.js:682` accepts exactly one town row, and its own comment at
+`public/js/modules/workflow-assistant.js:694` says two rows sharing a name stay a question). The single-row case is what
 the page spec types instead: Acworth is one row, in GA.
 
 Four clauses carry the fix. `STOP_WORD` and `GREETING`
@@ -7114,3 +7114,162 @@ the multi-country branch the new predicate deliberately cannot reach (it require
 
 Still UNVERIFIED after every number above: real phones, Safari/WebKit, microphones, audio quality and independent
 agronomy. The reply is English, matching the rest of the assistant's sentences.
+
+
+### 69. A town name the saved list carries more than once answered nothing, so typing `Athens` got the generic refusal
+
+Iteration 68's queue line asked F9 for two things: answer *which one* when the saved list holds the typed name twice
+or more, and keep out of the selector a name the list does not carry. The second half measured false before anything
+was written - `public/data/locations/US.json` lists `West Athens` exactly once (row 5407841, CA), so the name that
+queue called a risk is an ordinary single-row town that resolves to its own point. The first half is real and wider
+than the example: `artifacts/scratch/iter69/name-counts.mjs` reads the shipped lists and finds the United States
+holding `Athens` five times (GA, OH, TN, TX, AL) and Argentina holding `San Vicente` three (Buenos Aires once,
+Misiones twice).
+
+The shipped behaviour for those sentences was silence. `exactPlaceRow` (`public/js/modules/workflow-assistant.js`)
+returned a row only when exactly one town row or one region row claimed the folded spelling, so five rows answered
+`null`; no plan was open, so the guided branch that already knows how to ask never ran; `respond()` therefore
+returned `null` and the sentence fell to the read-only answer. The page's words for that are in the red arm of
+`docs/evidence/iter69-f9-spec-4projects-2026-11-21.log.gz`: `I could not match that request to a supported question
+or planning step. Please clarify in English: name a crop and country, …` - a dead end with no buttons, for a name
+the farmer's own saved list spells five times.
+
+`docs/evidence/iter69-f9-offline-redfirst-2026-11-21.log.gz` holds both readings of the same probe, each printing the
+digest of the module bytes it actually read. On the defect bytes (`8027a1ec55ff7f6208d0454cf50e78d4`) the ambiguous
+Argentine name is answered by
+`ARM AMBIGUOUS AR q="San Vicente" regionHeld=none townRows=3 regionRows=2 answered=no asks=1 calls=[] location=none`;
+on the delivered bytes (`efd158ed05f258705593ceb422893a5c`) the identical line reads `answered=yes`. Angola moves the
+same way (`ARM DUP-REGION AO q="Calandula"`, `answered=no` then `answered=yes`). The other six arms - one row
+(`Cordele`), a name that is one region row (`CR San José`), a name no list holds (`Atlantis`), a real question, an
+accented name (`BR Curuá`), and `Athens` typed while `TX` is held, where that region has exactly one such row - print
+the same lines in both arms. That is the control saying the change opens one branch rather than taking over the place
+switch.
+
+The fix is one statement at the tail of `exactPlaceRow`, placed after the region rule and before `return null`:
+`if (towns.length > 1) return { type: 'towns', ids: towns.map(row => row.id) };`. It reuses a shape that already
+exists: `towns` is what the guided branch renders as `Several listed towns match, showing 3 of 5` plus one button
+per row, and it selects nothing until the farmer taps, so a question cannot move step 1. The region rule keeps
+precedence by order rather than by a second condition - `Costa Rica`'s `San José` is province `08` and two towns,
+and the province answer is the one that has always been correct.
+
+That last sentence is the part of this pass worth recording as a measurement rather than a design opinion, because
+the first version of the fix also carried a guard for it and the guards said the guard was doing nothing. The
+mutation ladder in `docs/evidence/iter69-f9-offline-controls-2026-11-21.log.gz` is archived in both rounds,
+unedited. Round 1 ran on intermediate bytes (`fe1f66a8c199d11ef6a35b6a24a3d25d`) and printed `MUT NOGUARD
+verdict=MISSED a wrong fix passed every guard` and `LAYERS_BITTEN 3/4 INCOMPLETE`: dropping the region-precedence
+condition changed nothing observable, so no assertion in the four place-name files could tell the two versions
+apart. The response was not a weaker claim about the mutant. The redundant condition was deleted, the ordering rule
+was written into the comment where the next reader will meet it, and round 2 ran on the delivered bytes with the
+same shape as `MUT ORDERSWAP verdict=BLIND_AT_BOUNDARY as stated above; the guards cannot distinguish it, so it is
+not counted as missed` - `CONTROLS RAN=6 of 6 SCORED=4 DOCUMENTED_BLIND=1 MISSED=0`, `LAYERS_BITTEN 4/4 ALL`. A
+blind spot the guards state is a fact about the code; a blind spot the guards hide behind a passing count is a
+defect in the ledger.
+
+The four scored mutants in round 2, each restored and digest-checked before the next: `REVERT` (the shipped defect)
+→ `PASS=77 FAIL=5` over the four guard files (`tests/workflow-ambiguous-place-name.test.js`,
+`tests/workflow-bare-place-name.test.js`, `tests/workflow-place-choices.test.js`, `tests/matrix-coverage.test.js`,
+82 tests); `PICKFIRST` (answer with one of the rows chosen for the farmer) → 6 red, and the sixth is `towns that
+share a name and a region never produce two identical but…`, a case that predates this pass; `CLIP` (hide the rows
+past the third instead of saying `showing 3 of 5`) → 2 red; `REGIONONLY` (patch only the no-region shape) → 1 red,
+the case named `an ambiguous name inside a region the farmer already holds also asks which one`. `NOOP` printed
+`TESTS=82 PASS=82 FAIL=0` in both rounds, which is what those counts are measured against.
+
+The page half needed its own lesson. `public/js/modules/chat.js:17` builds the assistant in the page, so both
+transports run the same module - but the two static Playwright projects are served from `dist/client`, which `npm
+run build` refreshes by copying `public/` (`scripts/build-browser.js:33-34`), while the Node projects read `public/`
+directly. The first ladder run skipped the build, so the static arm measured `dist`'s stale copy of the module
+(`43c133a152fee4fa5b15dee6dff8e0e0`, the bytes iteration 68 delivered) and answered the ambiguous name with the
+generic refusal while the Node arm answered with the selector. That was an instrument sequencing error, not a
+transport difference, and it is written into the archive's `Instrument note` rather than re-cut: every arm below
+rebuilds and prints the served digest before it runs, so `PW69 reverted_START … module=8027a1ec… served=8027a1ec…`
+and `PW69 green_START … module=efd158ed… served=efd158ed…` say which bytes the browser was actually given.
+
+`tests/e2e/chat-ambiguous-place-name.spec.js` is new and runs on all four projects (static/node × desktop/mobile).
+On the defect bytes the ladder printed `8 failed` - both cases in each of the four projects, the first stopping at
+`expect(spoken,'the reply says the name matches several towns').toMatch(/Several listed towns match/)` on the
+generic refusal - and on the delivered bytes `8 passed (27.1s)` with `red_exit=1 green_exit=0`. The first case
+asserts the words and the untouched form: `Several listed towns match`, `showing 3 of 5`, `Which one do you mean?`,
+the three offered labels `Athens · Georgia`, `Athens · Ohio`, `Athens · Tennessee`, and `#place-region` and
+`#latitude` byte-identical to what they were before the sentence. The second taps `Athens · Ohio` and asserts
+`39.32924`/`-82.10126` - that row's coordinates and not the first match's - with the field lookup aborted so the
+case measures the place switch rather than OpenStreetMap's availability.
+
+`tests/workflow-ambiguous-place-name.test.js` carries the ten offline cases; five of them are the ones that fail on
+the defect bytes and five are the controls that must not: a single row still selects silently, a name that is also
+one region row still selects the region, a longer row containing the name is still one row, a name the list does not
+carry still reaches the read-only answer, and a point the farmer already chose survives an ambiguous name and costs
+no saved-list read. Every id, coordinate and region name in its fixtures is copied from
+`public/data/locations/<CC>.json`; the invented part is only that a fixture holds a subset of that country's rows,
+which is why the counts the file quotes are the counts `name-counts.mjs` measured in the shipped data.
+
+The gate ran on the delivered tree, and the two digest banners it prints are equal: `ITER69_FROZEN` and
+`ITER69_AFTER` both carry `assistant=efd158ed05f258705593ceb422893a5c`, which is the module the four projects were
+served (`ITER69_SERVED_MATCHES_SOURCE the static projects ran on the bytes this pass delivered`), and the run closes
+at `336 passed (21.2m)` with `GATE_EXIT=0` and no `✘` line in the log. Two of the files that banner stamps moved
+after the gate closed, and the ledger says so rather than leaving it to a reader who notices the digests disagree:
+the banner's `index=fdbf950e9085976c2a1a7c575324230a` is the tally table before this subsection's rows joined it,
+and its `anchors=5c3376d8941a1bb9cbac66f877238c34` is the pin table before three pins followed the statements they
+name from 681, 693 and 708 to 682, 694 and 718. The re-pointing is what the eight prose cites repaired above needed;
+it is a pointer change in a test file, not a change of assertion, and the doc-guard and offline captures below run
+on the moved bytes.
+
+What this pass leaves stated rather than fixed. The ordering rule at the tail of `exactPlaceRow` is a blind spot of
+the four place-name guard files, which is the only measurement of it this pass has; the page cases use the lists the
+data ships, and no shipped list holds two towns of a name that is also its own country's region row, so the case
+that would separate the two orders does not exist in the tables. And the counts above are Chromium's, over a served
+build: real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED here as they
+have through every preceding subsection.
+The gate and the four closing captures. `docs/evidence/iter69-gate-2026-11-21.log.gz` is the four-project run on the
+bytes this pass ships: `Running 336 tests using 1 worker` at the top, `336 passed (21.2m)` and `GATE_EXIT=0` at the
+bottom, 336 case lines carrying the passed marker and no case line carrying the failure marker, and the two
+ten-digest banners `ITER69_FROZEN` and `ITER69_AFTER` printing the same values above the build and below the exit
+status - the freeze list this pass grew from seven keys to ten, so the assistant module, its unit file, the new
+spec, the previous pass's spec and unit files, the bundle, the served copy, the conversation module and both prose
+guards are named bytes rather than promises. `ITER69_SERVED_MATCHES_SOURCE` between them is the line that says the
+static projects were served the file this pass edited, which is the check whose absence produced the false transport
+difference recorded above. Two of those ten keys did move after the gate: 80 seconds after
+`ITER69_GATE_DONE 2026-11-21T08:13:59Z` the anchors pin table was re-pointed to follow three statements this pass
+relocated in the assistant module, and the tally table then grew. Neither is a byte a browser case reads, so the
+captures that judge them are the offline suite and the guard set below, each archived from a pass taken after both
+moves.
+`docs/evidence/iter69-offline-final-2026-11-21.log.gz` is `node --test tests/*.test.js` on the finished tree:
+`ℹ tests 317`, `ℹ pass 317`, `ℹ fail 0` and the leg's own `OFFLINE_TESTS=317` with `OFFLINE_EXIT=0`, which is
+iteration 68's 307 plus the ten cases of `tests/workflow-ambiguous-place-name.test.js` and no other movement.
+`docs/evidence/iter69-docguards-final-2026-11-21.log.gz` is the five documentation guards as a set: `GUARD_FILES 5`
+and `DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0`. Neither of those readings is the first one this
+pass took, and the header of each archive says so instead of presenting green as if it had been immediate: the
+opening pass of both legs went red on exactly two cases, the index header count and the index equality, because
+three F9 archives had landed on the shelf without the snapshot being regenerated; the second pass of both went red
+on two cases again, the citations guard and the commands guard, because this pass wrote prose naming six archives
+before any of them existed; the archived pass of each is the one taken with every archive shelved and all nine tally
+rows on the tree.
+`docs/evidence/iter69-census-final-2026-11-21.log.gz` counts the same 336 with the runner's own
+`Total: 336 tests in 30 files`, `CENSUS_SPEC_LINES=8` for the new spec, `CENSUS_SPEC_PROJECTS` naming two cases in
+each of the four projects and `CENSUS_EXIT=0`: the parity claim of this pass is that one page module answers on
+both transports, so a spec listed in only the two node projects would have made the total look right while measuring
+one transport. `docs/evidence/iter69-drift-final-2026-11-21.log.gz` runs the citation scout over the finished ledger
+in both modes, and its row pins each mode's counts beside its verdicts because a scout that compared nothing would
+also report nothing drifted: `TREE CITED_LINES_CHECKED 252 DRIFTED 0 INSIDE_DIFF_HUNKS 0` against the working copy,
+and `HEAD CITED_LINES_CHECKED 253 DRIFTED 21` against the commit before this one, where the 21 are the line moves
+this fix caused - that mode reads this pass's edited ledger against the assistant module as it shipped, so every
+pointer this pass re-pointed is correct in the tree and stale at HEAD.
+
+Both guard legs were then run once more over the tree exactly as it ships, after every one of these archives had
+been replaced by the re-shelving of its own reading, and both exited 0. That last reading is deliberately not on
+the shelf, because shelving a confirmation would move the bytes it confirms; it is reproducible on the shipped
+tree with `node scripts/docs-guards.mjs` and `node --test tests/*.test.js`, which are the two commands the
+archives above carry.
+
+The tally rows and the ladder over them. Nine rows join `tests/documentation-evidence-index.test.js` for this pass -
+three for the F9 captures, one each for the gate and the four closing legs, and one for the ladder itself - which is
+what moves the floor from 199 to 208. `docs/evidence/iter69-tally-controls-2026-11-21.log.gz` is the evidence that
+those rows reject a false claim instead of passing because nothing in the table looked at the archive: five needles,
+one per assertion shape a row uses, each applied to the guard file and each required to turn the tally case red,
+with the delivered bytes restored and the restore proved by digest between mutants. It prints `ROWS_ON_TREE 205`,
+five `LAYER_BITE` lines and `LAYERS_BITTEN 5/5 ALL`. The 205 is the table as it stood while the ladder ran, three
+rows short of the nine this pass pastes, and the row says so: a ladder cannot pin a count the run it describes did
+not print, so the three rows that arrived after it are pinned instead by the offline suite and the guard set, both
+of which executed against the finished table. The count is part of the verdict rather than decoration: an earlier
+draft of this driver reported the accounting only after the loop, so an anchor matching no place in the file printed
+`MUTATION_REFUSED`, the loop skipped that layer, and the run still ended with the final guard green - a ladder of
+five that had tested one.

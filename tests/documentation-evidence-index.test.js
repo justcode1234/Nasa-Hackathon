@@ -1633,11 +1633,105 @@ const TALLIES = [
        'RESTORED md5 d2b7d1367bf621caa479d9d168201ee2 identical=True'],
    absent: ['MUTATION_REFUSED', 'ABORT the guard is not green'],
     marks: 0 },
+  // Iteration 69's F9 captures: the offline guards as they ran against the bytes HEAD ships (green, because the defect
+  // was still unfixed), the mutation ladder that attacked this pass's own cases in two rounds, and the page spec once
+  // per project - the last of which prints the digest each arm served, because a static arm that measured a stale
+  // `dist/client` would otherwise read as a transport difference.
+  { archive: 'docs/evidence/iter69-f9-offline-redfirst-2026-11-21.log.gz',
+   lines: ['ℹ tests 82', 'ℹ pass 82', 'ℹ fail 0', 'GUARD_NODE_EXIT=0', 'ℹ fail 5', 'GUARD_NODE_EXIT=1',
+       'PROBE_GREEN_EXIT=0', 'PROBE_RED_EXIT=0', '######## 2. offline guards, REVERTED arm (shipped defect)'],
+   phrases: ['delivered md5 efd158ed05f258705593ceb422893a5c', 'shipped defect md5 8027a1ec55ff7f6208d0454cf50e78d4',
+       'ARM AMBIGUOUS AR q="San Vicente" regionHeld=none townRows=3 regionRows=2 answered=yes',
+       'CENSUS lists=245 regionRows=3802 townRows=70036 ambiguousNames=2478'],
+   absent: ['✘', 'EPONYMOUS_EXIT=1', 'SAMEREGION_EXIT=1', 'NAMECOUNTS_EXIT=1'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter69-f9-offline-controls-2026-11-21.log.gz',
+   lines: ['CONTROLS RAN=5 of 5', 'LAYERS_BITTEN 3/4 INCOMPLETE',
+       'CONTROLS RAN=6 of 6 SCORED=4 DOCUMENTED_BLIND=1 MISSED=0', 'LAYERS_BITTEN 4/4 ALL',
+       'MUT REVERT verdict=CAUGHT by 5 failing cases', 'MUT NOOP APPLIED=noop TESTS=82 PASS=82 FAIL=0'],
+   phrases: ['round 1 (recorded as it happened: NOGUARD scored MISSED)',
+       'CONTROLS SRC_MD5=efd158ed05f258705593ceb422893a5c',
+       'CONTROLS SRC_MD5=fe1f66a8c199d11ef6a35b6a24a3d25d', 'BLIND_AT_BOUNDARY'],
+   absent: ['✘', 'MUTATION_NOT_APPLIED'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter69-f9-spec-4projects-2026-11-21.log.gz',
+   lines: ['8 failed', '8 passed (27.1s)',
+       'PW69 REVERTED_ARM_EXIT=1 VERDICT=red, which is what a guard against the shipped defect must be',
+       'PW69 GREEN_ARM_EXIT=0 VERDICT=green',
+       'PW69 DONE 2026-11-21T07:47:35Z module=efd158ed05f258705593ceb422893a5c '
+           + 'served=efd158ed05f258705593ceb422893a5c red_exit=1 green_exit=0'],
+   phrases: ['PROBE TEXT Several listed towns match, showing 3 of 5. Which one do you mean?',
+       'PROBE BUTTONS Athens · Georgia | Athens · Ohio | Athens · Tennessee',
+       'md5 43c133a152fee4fa5b15dee6dff8e0e0', 'served=8027a1ec55ff7f6208d0454cf50e78d4'],
+   absent: ['GREEN_ARM_EXIT=1', 'red_exit=0', '✖'],
+    marks: 8 },
+  // The gate is the only iteration-69 capture that drove a browser. Its two digest banners being equal is the freeze
+  // claim: ten inputs, read before the first project and after the last, with nothing in between moved.
+  { archive: 'docs/evidence/iter69-gate-2026-11-21.log.gz',
+   lines: ['ITER69_GATE_START 2026-11-21T07:52:45Z HEAD=976d77924a98c7969b1d141457a1ef40c694caf7 '
+           + 'NODE=v26.13.1 pgid=18335',
+       'Running 336 tests using 1 worker', '336 passed (21.2m)', 'GATE_EXIT=0',
+       'ITER69_GATE_DONE 2026-11-21T08:13:59Z'],
+   phrases: ['ITER69_FROZEN conversation=6f52f4d8d538d2565be069ce0a481a07 assistant=efd158ed05f258705593ceb422893a5c '
+           + 'served=efd158ed05f258705593ceb422893a5c',
+       'ITER69_AFTER conversation=6f52f4d8d538d2565be069ce0a481a07 assistant=efd158ed05f258705593ceb422893a5c '
+           + 'served=efd158ed05f258705593ceb422893a5c', 'npm run test:e2e'],
+   absent: ['✘', '✖', 'ABORT', '1 failed', '335 passed'],
+    marks: 0 },
+  // The scout is the one instrument in this pass that can print a clean reading while comparing nothing, so both
+  // modes' checked-line counts sit next to their drift counts. HEAD's 21 are the line moves this fix caused: that
+  // mode reads this pass's edited ledger against the assistant module as the previous commit shipped it, so every
+  // pointer this pass re-pointed (708 to 718, 681 to 682, 693 to 694) is correct against the tree and stale at HEAD.
+  { archive: 'docs/evidence/iter69-drift-final-2026-11-21.log.gz',
+   lines: ['TREE CITED_LINES_CHECKED 252 DRIFTED 0 INSIDE_DIFF_HUNKS 0',
+       'HEAD CITED_LINES_CHECKED 253 DRIFTED 21 INSIDE_DIFF_HUNKS 0',
+       'LEG=drift TREE_EXIT=0', 'LEG=drift HEAD_EXIT=0'],
+   phrases: ['FILES_WITH_EDITS public/js/modules/workflow-assistant.js '
+           + 'tests/documentation-citation-anchors.test.js',
+       'LEG=drift DIGESTS assistant=efd158ed05f258705593ceb422893a5c', 'node scripts/citation-drift.mjs'],
+   absent: ['✘', 'ABORT', 'TREE CITED_LINES_CHECKED 27'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter69-census-final-2026-11-21.log.gz',
+   lines: ['Total: 336 tests in 30 files',
+       'LEG=census CENSUS_SPEC=tests/e2e/chat-ambiguous-place-name.spec.js', 'LEG=census CENSUS_SPEC_LINES=8',
+       'LEG=census CENSUS_SPEC_PROJECTS= 2 node-desktop; 2 node-mobile; 2 static-desktop; 2 static-mobile',
+       'LEG=census CENSUS_EXIT=0'],
+   phrases: ['npx playwright test --list', 'LEG=census CENSUS_RAW_MD5=8b13f0e0859423dc9a50bd3451eadb8e'],
+   absent: ['✘', 'ABORT', 'Total: 328'],
+    marks: 0 },
+  // The offline suite and the guard set are the two legs that had to run twice: the first reading of each was red on
+  // exactly the two citation cases that name this pass's six archives, because the prose was written before the shelf
+  // was filled. The bytes on the shelf are the re-run, so the row pins the green summary and not the red one.
+  { archive: 'docs/evidence/iter69-offline-final-2026-11-21.log.gz',
+   lines: ['ℹ tests 317', 'ℹ pass 317', 'ℹ fail 0', 'LEG=offline OFFLINE_TESTS=317', 'LEG=offline OFFLINE_EXIT=0'],
+   phrases: ['node --test tests/*.test.js', 'LEG=offline DIGESTS assistant=efd158ed05f258705593ceb422893a5c',
+       '✔ an ambiguous name inside a region the farmer already holds also asks which one'],
+   absent: ['✘', '✖', 'ABORT', 'OFFLINE_EXIT=1', 'ℹ fail 2'],
+    marks: 0 },
+  { archive: 'docs/evidence/iter69-docguards-final-2026-11-21.log.gz',
+   lines: ['DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0', 'DOCSGUARDS_CHILD_EXIT 0',
+       'LEG=docguards DOCSGUARDS_EXIT=0'],
+   phrases: ['GUARD_FILES 5', 'node scripts/docs-guards.mjs',
+       '✔ the tally of every archived run is printed by that archive, not by the prose quoting it'],
+   absent: ['✘', '✖', 'ABORT', 'fail 2'],
+    marks: 0 },
+  // The ladder's own row pins the table size it ran against - 205, before the three rows above it existed - because a
+  // row that pinned a count the archived run could not have printed would be the invention this whole table exists to
+  // catch. The later rows landed after it, and the offline suite re-read on the finished 208-row table is what proves
+  // they are green.
+  { archive: 'docs/evidence/iter69-tally-controls-2026-11-21.log.gz',
+   lines: ['BASELINE rc=0 tests=7 pass=7 fail=0 reds=0', 'ROWS_ON_TREE 205', 'LAYERS_BITTEN 5/5 ALL',
+       'LAYER_BITE layer=lines red=True bit=True', 'LAYER_BITE layer=floor red=True bit=True',
+       'TALLYCTL_FINAL md5 2a14bab0dedfd8364c50c7eb87b74cb5 identical=True fail=0'],
+   phrases: ['DELIVERED md5 2a14bab0dedfd8364c50c7eb87b74cb5',
+       'RESTORED md5 2a14bab0dedfd8364c50c7eb87b74cb5 identical=True'],
+   absent: ['MUTATION_REFUSED', 'ABORT the guard is not green'],
+    marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 199, `the table carries ${TALLIES.length} archives; subsections 57 through 68 quote more runs than ` +
-    'that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
+  assert.ok(TALLIES.length >= 208, `the table carries ${TALLIES.length} archives; subsections 57 through 69 quote more runs ` +
+    'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
     'green pre-final offline suite and the provenance snapshot joined it, 32 when the skipped controls pass, the ' +
@@ -1735,7 +1829,12 @@ test('the tally of every archived run is printed by that archive, not by the pro
     + 'this pass\'s four closing legs and the ladder that controls their rows joined it - the offline suite at 307, the '
     + 'guard set at 28, the scout in both of its modes and the census that counts the new spec in all four projects - '
     + 'because a closing reading is the one number a pass can invent without noticing, and these five cannot be '
-    + 'quoted from prose while the table holds their pins.');
+    + 'quoted from prose while the table holds their pins, and 208 when iteration 69 archived F9 with the same six ' +
+    'shapes - the offline guards read against the bytes HEAD ships, the two-round mutation ladder that left one of its ' +
+    'own mutants unscored and said so, the page spec once per project printing the digest each arm served, the ' +
+    'four-project gate at 336 whose two digest banners are equal because no byte moved while it ran, the scout in both ' +
+    'of its modes, the case census and the ladder over these nine rows, beside the offline suite and the guard set as ' +
+    'they read once every one of those shelves existed.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }

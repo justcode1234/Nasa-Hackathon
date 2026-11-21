@@ -172,7 +172,7 @@ const PINS = [
   { file: 'public/js/modules/workflow-assistant.js', line: 231, quote: "const unreadable = error?.code === 'LOCATIONS_SCHEMA'", citedBy: 'docs/validation.md subsection 61, the two failure classes' },
   { file: 'public/js/modules/workflow-assistant.js', line: 406, quote: 'catch (error) { if (error.cancelled === true) throw error; listFailed = error;', citedBy: 'docs/validation.md subsection 61, What was wrong (re-pointed by 65)' },
   { file: 'public/js/modules/workflow-assistant.js', line: 551, quote: 'is selected. Now choose a town in the Town list in step 1', citedBy: 'docs/validation.md subsection 61, The recovery the refusal promises (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 708, quote: 'if (listFailed) return placeListFailure(countryName, listFailed);', citedBy: 'docs/validation.md subsection 61, The whole-country escape (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 718, quote: 'if (listFailed) return placeListFailure(countryName, listFailed);', citedBy: 'docs/validation.md subsection 61, The whole-country escape (re-pointed by 65) (re-pointed by 69)' },
   { file: 'public/js/modules/context.js', line: 248, quote: "const read = await picker.setCountry(countryCode, { regionCode });", citedBy: 'docs/validation.md subsection 61, the second defect the browser run found' },
   { file: 'public/js/modules/context.js', line: 250, quote: 'Choose a region from the current country list.', citedBy: 'docs/validation.md subsection 61, the sentence the stale dropdown threw' },
   { file: 'public/js/lib/api.js', line: 13, quote: 'if (!response.ok) throw identified(new Error(data?.error?.message', citedBy: 'docs/validation.md subsection 60, and AGENTS.md §13 queue (both re-pointed by 61)' },
@@ -216,8 +216,8 @@ const PINS = [
   { file: 'public/js/modules/workflow-assistant.js', line: 302, quote: 'const noOtherSignal = !parsed || Boolean(parsed.cancel) || !parsed.intent && (parsed.implicitList ||', citedBy: 'docs/validation.md subsection 66, Four clauses' },
   { file: 'public/js/modules/workflow-assistant.js', line: 310, quote: 'if (!choice && !neverAPlaceName && noOtherSignal && (active || !getState().location)) {', citedBy: 'docs/validation.md subsection 66, Four clauses' },
   { file: 'public/js/modules/workflow-assistant.js', line: 332, quote: 'if (parsed.cancel) { active = false; invalidate(); return reply(\'Guided planning stopped. Your current form values remain available.\'); }', citedBy: 'docs/validation.md subsection 66, the sentence that never reached the page' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 681, quote: 'if (towns.length === 1) return { type: \'town\', id: towns[0].id };', citedBy: 'docs/validation.md subsection 66, the duplicate-town limit' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 693, quote: '// two rows sharing the name stay a question rather than a guess.', citedBy: 'docs/validation.md subsection 66, why a shared name stays a question' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 682, quote: 'if (towns.length === 1) return { type: \'town\', id: towns[0].id };', citedBy: 'docs/validation.md subsection 66, the duplicate-town limit (re-pointed by 69)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 694, quote: '// two rows sharing the name stay a question rather than a guess.', citedBy: 'docs/validation.md subsection 66, why a shared name stays a question (re-pointed by 69)' },
   { file: 'tests/workflow-bare-place-name.test.js', line: 51, quote: 'a bare region name typed with no plan open selects the region instead of answering a crop question', citedBy: 'docs/validation.md subsection 66, Tests' },
   { file: 'tests/workflow-bare-place-name.test.js', line: 62, quote: 'assert.deepEqual(calls, [\'region\'], `the form was moved by: ${JSON.str', citedBy: 'docs/validation.md subsection 66, Tests, the assertion this pass corrected' },
   { file: 'tests/workflow-bare-place-name.test.js', line: 89, quote: 'a greeting and a stop word are never read as place names, and cost no saved-list read', citedBy: 'docs/validation.md subsection 66, Tests' },
@@ -350,7 +350,7 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   }
   // Subsection 61's own eight numbers plus the ±1 repair band this iteration re-pointed by tool rather than by hand.
   for (const [file, line] of [['public/js/modules/workflow-assistant.js', 230], ['public/js/modules/workflow-assistant.js', 406],
-    ['public/js/modules/workflow-assistant.js', 551], ['public/js/modules/workflow-assistant.js', 708],
+    ['public/js/modules/workflow-assistant.js', 551], ['public/js/modules/workflow-assistant.js', 718],
     ['public/js/modules/context.js', 248], ['public/js/modules/context.js', 250],
     ['public/js/lib/api.js', 13], ['tests/e2e/place-list-refused.spec.js', 36], ['tests/e2e/place-list-refused.spec.js', 100], ['docs/validation.md', 1007], ['docs/validation.md', 1021], ['docs/validation.md', 1035], ['tests/documentation-citation-anchors.test.js', 482]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 61 quotes while changing it and is no longer pinned`);
@@ -371,7 +371,7 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   // the cancellation reply, the rule exactPlaceRow declines a duplicated town name on, and four of the new cases.
   for (const [file, line] of [['public/js/modules/workflow-assistant.js', 7], ['public/js/modules/workflow-assistant.js', 291],
     ['public/js/modules/workflow-assistant.js', 302], ['public/js/modules/workflow-assistant.js', 310],
-    ['public/js/modules/workflow-assistant.js', 332], ['public/js/modules/workflow-assistant.js', 681],
+    ['public/js/modules/workflow-assistant.js', 332], ['public/js/modules/workflow-assistant.js', 682],
     ['tests/workflow-bare-place-name.test.js', 51], ['tests/workflow-bare-place-name.test.js', 132],
     ['tests/e2e/chat-bare-place-name.spec.js', 31], ['tests/e2e/chat-bare-place-name.spec.js', 76]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 66 quotes while changing it and is no longer pinned`);

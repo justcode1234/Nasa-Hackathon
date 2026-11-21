@@ -666,8 +666,9 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
   }
   async function getLocationList(country){let data=locationLists.get(country);if(!data){data=await request(`/api/locations?country=${country}`);locationLists.set(country,data);while(locationLists.size>4)locationLists.delete(locationLists.keys().next().value);}return data;}
   // The whole saved list decides whether a reply is a place name, so the read-only question test in
-  // chat-intent.js can stay list-blind. Only an unambiguous exact row name is accepted here. One
-  // wording can be both a region row and a town row (Andorra, Tuvalu, Jordan, Japan), so the step
+  // chat-intent.js can stay list-blind. Only exact row names are accepted here: one row is a choice,
+  // several town rows sharing the name are a question, and nothing the list does not carry is neither.
+  // One wording can be both a region row and a town row (Andorra, Tuvalu, Jordan, Japan), so the step
   // already reached decides: while the plan asks for a region the reply is that region, and inside a
   // chosen region the same wording is its town.
   async function exactPlaceRow(question, { regionCode = null, preferRegion = false } = {}) {
@@ -698,7 +699,16 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
       // Two points share the name, so the honest answer is the question, not one of them.
       if (elsewhere.length > 1) return { type: 'towns', ids: elsewhere.map(row => row.id) };
     }
-    return regions.length === 1 ? { type: 'region', id: regions[0].id } : null;
+    // Behind the region rule, a name the list carries more than once is a question rather than a dropped reply. The
+    // United States lists five towns called Athens and Argentina three called San Vicente, and answering null here made
+    // the typed place name reach the read-only branch as a crop name. `towns` is the shape the guided branch already
+    // renders as “Several listed towns match, showing 3 of N”, and it selects nothing until the farmer taps a row. The
+    // order carries the precedence, not a condition: a name one region row claims is that region (Costa Rica’s San José
+    // is a province and two towns), and a guard repeating it here measured unobservable — the caller re-derives region
+    // precedence from the sentence, and no saved list holds two towns of a name that is also its own country’s region.
+    if (regions.length === 1) return { type: 'region', id: regions[0].id };
+    if (towns.length > 1) return { type: 'towns', ids: towns.map(row => row.id) };
+    return null;
   }
   function areaPrompt(countryName, regionName, places, options = {}) {
     const { regionCode = null, wholeEscape = true, listFailed = null } = options;

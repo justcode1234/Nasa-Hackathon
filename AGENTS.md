@@ -2217,7 +2217,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   local", and `docs/evidence/iter64-country-switch-probe-2026-11-20.log.gz` measures what that cost: "Inner Mongolia", a
   Chinese province that parses as the country Mongolia, left `country=MN region=null place=null evidence=null` - the
   point and its readings gone - where the same sentence with a readable list selects region 22 and moves nothing. The
-  refusal now gets its own reply (`switchListUnreadable`, `workflow-assistant.js:735-751`): the read that could not be
+  refusal now gets its own reply (`switchListUnreadable`, `workflow-assistant.js:780-795`): the read that could not be
   done, the two readings it cannot separate, `Nothing was changed`, a replay, and the explicit switch that still works.
   Six offline cases carry it, red before the guard (`docs/evidence/iter64-offline-cases-red-4-2026-11-20.log.gz`), red
   after the first draft of it (`docs/evidence/iter64-offline-cases-red-3-2026-11-20.log.gz`) and green at 37
@@ -2370,10 +2370,10 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `DRIFTED 0`; F7 the scripted re-point only matches `public/`-`server/`-`tests/`-prefixed cites, so bare-basename
   pointers still move silently; F8 was a bare name typed with no country selected answered as a crop question that
   named the place as a country, because `exactPlaceRow` returns null when no country is set
-  (`public/js/modules/workflow-assistant.js:675`) and the read-only path kept the sentence; iteration 68 closed it (subsection 68); F9 `Athens`, which
-  `public/data/locations/US.json` lists in five regions (GA, OH, TN, TX, AL among 7,558 rows), is declined with the
-  generic sentence although the module can already ask "Several listed towns match … Which one do you mean?"
-  (`:592`) - `:694` asks only with a held region, though `towns` at `:677` is country-wide; F10 and F15 close in this
+  (`public/js/modules/workflow-assistant.js:676`) and the read-only path kept the sentence; iteration 68 closed it (subsection 68); F9 `Athens`, which
+  `public/data/locations/US.json` lists in five regions (GA, OH, TN, TX, AL among 7,558 rows), was declined with the
+  generic sentence although the module could already ask "Several listed towns match … Which one do you mean?"; iteration 69
+  closed it (subsection 69, which names the deciding statements by their text rather than by a line number); F10 and F15 close in this
   pass: the three deep links at `docs/validation.md:1007, :1021 and :1035` now carry the repo-relative target plus a
   `#L` anchor inside their own bands; F15 is that the guard checking those anchors read only `file:///` URLs, so the
   repair blinded it (subsection 67); F11 was found by re-reading, not by
@@ -2492,6 +2492,44 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   listed four times in each of the four projects, and the tally table at 199 rows - the five closing captures pinned
   under a control ladder that ends `LAYERS_BITTEN 5/5 ALL`, which is what stops an unapplied mutant reading as a pass.
   Full account in subsection 68 of `docs/validation.md`.
+- **21 Nov, same branch: iteration 69 - a town name the saved list carries more than once answered nothing, so
+  typing `Athens` got the generic refusal.** F9 is closed on measurement. With a country held and no plan open,
+  `exactPlaceRow` (`public/js/modules/workflow-assistant.js`) returned a row only when exactly one town row or one
+  region row claimed the folded spelling, so `Athens` - five rows in `public/data/locations/US.json`, GA, OH, TN, TX
+  and AL - fell out of `respond()` as `null` and the page handed the sentence to the read-only answer, which said
+  `I could not match that request to a supported question or planning step.` with nothing to tap. Argentina's
+  `San Vicente` (three rows) and Angola's `Calandula` (two) did the same, while a name one region row claims still
+  selected that region: the hole is the multi-row shape, not the place switch. The fix is one statement -
+  `if (towns.length > 1) return { type: 'towns', ids: … };` between the region rule and the `return null` - reusing
+  the selector the guided branch already renders (`Several listed towns match, showing 3 of 5`, one button per row,
+  nothing selected until a tap). Ten offline cases in `tests/workflow-ambiguous-place-name.test.js` and two page cases
+  in `tests/e2e/chat-ambiguous-place-name.spec.js` carry it: five offline cases fail on the defect bytes and five are
+  the controls that must not (one row still selects silently, a region collision still selects the region, a longer
+  row containing the name is still one row, an unlisted name still reaches the read-only answer, a chosen point
+  survives an ambiguous name at the cost of no saved-list read). Two things this pass records against itself rather
+  than smoothing over. Its mutation ladder is archived in both rounds: round 1 printed `MUT NOGUARD verdict=MISSED`
+  with `LAYERS_BITTEN 3/4 INCOMPLETE` because the region-precedence condition it attacked had no observable effect, so
+  the condition was deleted, the ordering rule was written into the comment where the next reader meets it, and round
+  2 ran on the delivered bytes with `RAN=6 of 6 SCORED=4 DOCUMENTED_BLIND=1 MISSED=0 LAYERS_BITTEN 4/4 ALL`. And its
+  first page ladder lied: the static projects are served from `dist/client`, which `npm run build` refreshes
+  (`scripts/build-browser.js:33-34`), so an arm that mutates `public/` without rebuilding measures the previous pass's
+  bytes - `43c133a152fee4fa5b15dee6dff8e0e0`, iteration 68's module - and reads a transport difference that is an
+  instrument error; every arm in `docs/evidence/iter69-f9-spec-4projects-2026-11-21.log.gz` prints the digest it
+  served before it asserts anything, beside `docs/evidence/iter69-f9-offline-redfirst-2026-11-21.log.gz` and
+  `docs/evidence/iter69-f9-offline-controls-2026-11-21.log.gz`. The closing captures are
+  `docs/evidence/iter69-gate-2026-11-21.log.gz` at `336 passed (21.2m)` with `GATE_EXIT=0` and both ten-digest banners
+  equal, `docs/evidence/iter69-offline-final-2026-11-21.log.gz` at `ℹ tests 317` with `ℹ fail 0` and
+  `OFFLINE_EXIT=0`, `docs/evidence/iter69-docguards-final-2026-11-21.log.gz` at
+  `DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0`, `docs/evidence/iter69-census-final-2026-11-21.log.gz` counting
+  `Total: 336 tests in 30 files` with the new spec listed twice in each of the four projects, and
+  `docs/evidence/iter69-drift-final-2026-11-21.log.gz` reading `TREE CITED_LINES_CHECKED 252 DRIFTED 0` against the
+  working copy. The row ladder `docs/evidence/iter69-tally-controls-2026-11-21.log.gz` ends `LAYERS_BITTEN 5/5 ALL`
+  and prints `ROWS_ON_TREE 205` - the table as it stood while the ladder ran, since a row cannot pin a count the run
+  it describes did not print - and the three rows that arrived after it are pinned instead by the offline suite and
+  the guard set as those two read with all nine rows on the tree. F3 (the `Ask that again` offer re-selects a region
+  and leaves the town unset), F2 (the worker-side list cache that makes page-side request counters blind on the static
+  transport), F6, F7, F12, F13 and F14 stay open; `main` is untouched and nothing was deployed. Full account in
+  subsection 69 of `docs/validation.md`.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
