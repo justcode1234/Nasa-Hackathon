@@ -14,7 +14,16 @@ test('a blocked model CDN reports the failure and the chat still answers a typed
   await context.route(/cdn\.jsdelivr\.net/,r=>r.abort('failed'));
   await open(page);
   // Opening the panel starts the load on its own (public/js/modules/chat.js:37), so no button click is needed.
-  await expect(page.locator('#model-status')).toContainText('Model could not start on this device. Evidence chat still works.',{timeout:60_000});
+  await expect(page.locator('#model-status')).toContainText('Model could not start because its runtime did not arrive. Evidence chat still works. Press Enable compact local model to try again.',{timeout:60_000});
+  // Iteration 72 pinned the wording as well as the failure. The old sentence called this the farmer's hardware
+  // ("on this device") when the observed fact is one blocked request, and naming the cause must not smuggle the
+  // worker's own text into the panel: that text carries the CDN host and an internal API name, which is why
+  // iteration 50 stopped echoing it (docs/validation.md subsection 50). The literal above, not a value imported
+  // from public/js/lib/model-failure.js, is deliberate: deriving the expectation from the code under test would
+  // reword itself silently whenever the wording changed.
+  const status=await page.locator('#model-status').textContent();
+  expect(status).not.toMatch(/on this device/i);
+  expect(status).not.toMatch(/jsdelivr|importScripts|WorkerGlobalScope|https?:/i);
   await expect(page.locator('#load-model')).toBeEnabled();
   await expect(page.locator('#unload-model')).toBeDisabled();
   await page.locator('#question').fill('Hi');

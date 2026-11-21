@@ -2606,6 +2606,28 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `location-picker.js:6` absorbs the static tap read, and whether a stale list survives a *country change* on static - the second is the
   half that would touch a farmer. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED; `main` is
   untouched, nothing was deployed, no test was weakened. Full account in subsection 71 of `docs/validation.md`.
+- **21 Nov, same branch: iteration 72 - the optional-model failure sentence blamed the farmer's hardware for five different observed
+  facts, and the page case that should have caught it agreed with the wording.** `public/js/modules/chat.js:63` and `:66` both ended a failed
+  model start with `Model could not start on this device. Evidence chat still works.` Iteration 50 chose those words to stop the worker's raw
+  text reaching the panel and that suppression still holds; the noun is what was wrong. A probe armed eight ways a start can fail on both
+  transports (`docs/evidence/iter72-capture-static-2026-11-21.log.gz`, `docs/evidence/iter72-capture-node-2026-11-21.log.gz`) and the six
+  failure arms post five distinct texts - a runtime that did not arrive, a model or tokenizer file that did not arrive, a file that arrived
+  unreadable, and an `onerror` whose message, filename and lineno are all null - every one of which rendered that identical sentence. A new
+  pure classifier, `public/js/lib/model-failure.js`, names the cause from an ordered table and returns no cause when nothing was observed;
+  no branch echoes its input, which is what keeps the CDN host and the internal API name out of the panel. `chat.js` calls it at both sites,
+  line-neutrally at 3 added / 3 removed on a 179-line file, and the page case at `tests/e2e/chat-model-egress.spec.js:17` now requires the
+  whole sentence and forbids `on this device`, the host, the API name and any URL. Nine offline cases (`tests/model-failure.test.js`), a
+  six-leg unit ladder and a four-leg page ladder (`docs/evidence/iter72-unit-controls-2026-11-21.log.gz`,
+  `docs/evidence/iter72-page-controls-2026-11-21.log.gz`) that reproduces iteration 50's leak through the current code path - the control the
+  ledger never had - then a four-project gate: `348 passed (26.1m)`, exit 0, red lines 0, the egress case green in all four projects, opening
+  and closing digest stamps identical (`docs/evidence/iter72-gate-2026-11-21.log.gz`). Two instruments in this pass were wrong before they
+  were right, and both are recorded rather than quietly fixed: the gate driver's spec counter printed `GATE_SPECS 0` because its pattern
+  could not match a path containing a slash while 31 spec files ran, and the row-discrimination matrix found the static capture's row passing
+  unchanged against the node capture's archive - true parity, but a row that cannot say which log it read - so each capture row now pins its
+  own `CMD` line and 20 of 20 foreign pairs reject. `Failed to fetch` still means two things, so the cause clause says only "a model file did
+  not arrive"; the null arm claims no cause; and the same shape survives at `public/js/modules/speech.js:72` and `:74`, queued as F16 rather
+  than widened into a gated change. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED; `main` is
+  untouched, nothing was deployed, no test was weakened. Full account in subsection 72 of `docs/validation.md`.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -2853,12 +2875,16 @@ only text. The reviewed location/field actions normally resolve; the missing-cat
 at `public/js/app.js:174` needs a real UI reproduction before changing retry state. Restoring
 an old town choice after a country change would itself be a wrong-location defect.
 
-The optional-model error branch at `public/js/modules/chat.js:63` drops the worker's message
-and blames the device. Give only an observed, safe reason; do not restore the old raw-error
-leak. The earlier CDN interruption and recovery are archived in
-`docs/evidence/iter56-dns-trace-census-2026-11-19.log.gz`; deterministic failure coverage and
-live model-loading coverage must remain distinct. Superseded evidence replies and body-read
-cancellation are candidates to reproduce, not already-proven defects.
+The optional-model error branch that dropped the worker's message and blamed the device is closed: as of iteration 72
+`public/js/modules/chat.js:63` and `:66` route through `public/js/lib/model-failure.js`, which states an observed cause or
+none, and `tests/e2e/chat-model-egress.spec.js:17` requires the whole sentence. Two rules from that queue item survive the fix
+and are what its regression tests enforce: give only an observed, safe reason, and do not restore the raw-error leak. The
+earlier CDN interruption and recovery stay archived in `docs/evidence/iter56-dns-trace-census-2026-11-19.log.gz`; deterministic
+failure coverage and live model-loading coverage must remain distinct. The same shape is still open one module over, queued as
+F16: `public/js/modules/speech.js:72` interpolates the raw worker text into the panel and `:74` blames the device. Superseded
+evidence replies and body-read cancellation are candidates to reproduce, not already-proven defects. F17, from the same pass: the
+tally guard at `tests/documentation-evidence-index.test.js` defaults a row's needle lists to empty, so a row written without needles
+passes by reading nothing; the candidate verifier now refuses that shape and the shipped guard should too.
 
 ### 13.1. Next 50 goals, in priority order
 

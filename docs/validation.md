@@ -4047,9 +4047,9 @@ What was measured. Two things, and the second is the one that matters to the led
   is not blank (`tests/documentation-citations.test.js:74-82`). One of the 40 was already stale before this iteration:
   `docs/validation.md:1685` cited `chat.js:15` for `announce()`, which a comment block had pushed to line 16.
 
-The fix. `public/js/modules/chat.js:63` now emits the sentence its sibling already used, as a one-line edit that
-  leaves the file at its 170 lines - `git diff --numstat` reads 1 added, 1 removed - so none of the 40 citations
-  moves. Line-neutrality is the point: the shared-constant form was the tidier code and the worse ledger.
+The fix, as measured on 19 Nov. `public/js/modules/chat.js:63` emits the sentence its sibling already used, as a one-line edit that
+  leaves the file at its then-170 lines - `git diff --numstat` reads 1 added, 1 removed - so none of the 40 citations
+  moves. Line-neutrality is the point: the shared-constant form was the tidier code and the worse ledger. Subsection 72 keeps the suppression this pass established and replaces the wording it chose, on a `chat.js` that is 179 lines now; the sentence quoted above is what iteration 50 shipped, not what the panel renders today.
   `tests/e2e/chat-model-egress.spec.js` (new, 1 case, 4 runs across the projects) aborts the model CDN and the
   Overpass hosts, requires the degraded sentence, requires `#load-model` enabled and `#unload-model` disabled, asks a
   typed question and requires `Answer ready`, then requires `window.fieldshiftModelMetrics === undefined` so the panel
@@ -5799,7 +5799,7 @@ physical line by construction, so `DRIFTED 0` after a repair confirms the mappin
 still names the right statement. The one real pointer of that shape was found by hand and re-pointed —
 `docs/handoff-2026-11-18.md:19` cited the ±1 pin-shift test at `tests/documentation-citation-anchors.test.js:339`,
 which this pass moved to `tests/documentation-citation-anchors.test.js:380` and iteration 66 to
-`tests/documentation-citation-anchors.test.js:482` (24 rows, was 443 before iteration 67 widened that table, the deep-link pins and the replay rewrite landed above it,
+`tests/documentation-citation-anchors.test.js:482`, which iteration 72's 16 new pins push to `tests/documentation-citation-anchors.test.js:503` (24 rows, was 443 before iteration 67 widened that table, the deep-link pins and the replay rewrite landed above it,
 40 past the 403 iteration 65 left) — the load stays where iteration 58 left it: the pin table, 88 to 106 here and 139 by
 66, is what carries it, and the floor case below is what stops it being narrowed. The repair then produced a defect of its own, which is the
 part worth keeping. Three deep links in this ledger — `docs/validation.md:1007`, `docs/validation.md:1021` and
@@ -7519,8 +7519,9 @@ exists to prevent.
 
 With the citation leg's capture and row on the shelf the finished table carries 224 rows over 795 evidence files; the numbers in the
 paragraph above describe the tree as the three earlier legs ran them, which is the asymmetry subsection 70 describes rather than a second
-one. The drivers for the controls, the ladder and this leg live under the gitignored `artifacts/`, the F13 shape from subsection 67 unchanged: the two instruments themselves are tracked and re-runnable from a
-clone (`node scripts/place-list-cache-layers.mjs static|node`), and the mutation drivers exist only as the source these archives embed.
+one. The drivers for the controls, the ladder and this leg live under the gitignored `artifacts/`, the F13 shape from
+subsection 67 unchanged: the two instruments themselves are tracked and re-runnable from a clone
+(`node scripts/place-list-cache-layers.mjs static|node`), and the mutation drivers exist only as the source these archives embed.
 
 What this pass does not establish, stated because the census invites the reader to over-read a zero: whether it is the worker's `Map` or
 `location-picker.js:6` that absorbs the static tap read, since both are warm by then and separating them means instrumenting the worker's
@@ -7536,3 +7537,125 @@ printed `RECHECK mutation_lines=15 rows_now=223`, `exit=1`, three red lines, and
 archives; subsections 57 through 71 quote more runs than that, so a number in them is unguarded`. Coverage stayed quiet, correctly, because the
 archive is still named by a document and still carried by the index, and the digest came back `restored_md5_equal=True`. So the floor is what
 bites once the ledger does its job, exactly as the archive predicted.
+
+### 72. The sentence shown when the optional model would not start described the farmer's hardware, and five different observed facts wore it
+
+**VERIFIED FIX.** `public/js/modules/chat.js:63` and `:66` both ended a failed model start with
+`Model could not start on this device. Evidence chat still works.` Iteration 50 installed that sentence to stop the worker's raw text
+reaching the panel (`docs/validation.md` subsection 50), and the suppression was correct; what was wrong is the claim it smuggled in.
+The panel has no observation of the farmer's hardware. It has a string from a worker, and the strings it was receiving describe five
+different things, none of them the device.
+
+**What was measured.** A probe drove the real page on both transports and armed each way a model start can fail, eight arms
+(`docs/evidence/iter72-capture-static-2026-11-21.log.gz` and `docs/evidence/iter72-capture-node-2026-11-21.log.gz`, 33 report lines
+each), which cover five distinct texts. The two healthy arms behave as expected: `none` (nothing blocked) reaches
+`Compact model ready · 157.1 KB weights · 0.1s load · experimental`, and `wasm` reaches the same line 2.7 s later on static and 0.2 s
+later on node. The six failure arms post five distinct messages, and every one of them renders the identical sentence:
+
+- `cdn` posts `Failed to execute 'importScripts' on 'WorkerGlobalScope': The script at 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js' failed to load.` -
+  the runtime never arrived. This is the arm a school or a national filter causes, and it says nothing about the handset.
+- `model` and `tokenizer` each post `Failed to fetch` - a weight or tokenizer file the page asked for did not arrive.
+- `model-garbage` posts `Failed to parse model JSON of response from /models/fieldshift-mini/model.json. …` and `tokenizer-garbage`
+  posts `Unexpected token '<', "<html>not "… is not valid JSON` - a file arrived and is not the file.
+- `worker` blocks the worker script itself, and the page receives an `onerror` whose `message`, `filename` and `lineno` are all
+  `null` - nothing was observed at all.
+
+All six arms leave `#load-model` enabled, `#unload-model` disabled and `window.fieldshiftModelMetrics`
+undefined, which is the correct state machine, so the defect is exactly one noun. Every failure reading above is byte-identical on
+static and node; the only cross-transport difference in either archive is the `wasm` load time.
+
+**The fix.** `public/js/lib/model-failure.js` (new, 32 lines, md5 `69fa1817db5601937e4f7a05835091ca`) separates the sentence a farmer
+reads from the text a machine wrote: `FRAME` at `:19` and `RECOVERY` at `:20`, an ordered cause table at `:23-25` whose ordering is
+pinned by the comment at `:21` because the runtime text also ends in `failed to load`, and a `return` at `:31` that composes
+`` `${FRAME} ${cause}. ${RECOVERY}` `` or drops the cause clause entirely. No branch returns any part of its argument - that is what
+keeps the jsdelivr host and the internal API name out of the panel, which iteration 50 established and this pass preserves. `:63`
+and `:66` of `chat.js` now call it (`md5 57fb95190930e3dc9d5ad47244537d9c`, `git diff --numstat` 3 added / 3 removed, file unchanged
+at 179 lines, so no citation moved), and the loading sentence at `:54` stays as it is because it describes something that is true at
+that moment. `tests/model-failure.test.js` (new, 9 cases at `:19 :23 :27 :32 :41 :47 :58 :67 :74`) checks each cause against the
+verbatim text the capture recorded, checks the null-`onerror` arm gets the sentence that claims no cause, checks no branch echoes
+any substring of its input, and pins the recovery clause to the label the panel actually renders. The page case at
+`tests/e2e/chat-model-egress.spec.js:17` now requires the whole sentence instead of the old one, and `:25` forbids `on this device`
+plus the host, the API name and any URL in what the panel shows. The case that already existed could not have caught this: at HEAD
+`tests/e2e/chat-model-egress.spec.js:17` asserts that very sentence, so the code and its regression test agreed on the wrong words
+(HEAD's copy is 26 lines, md5 `524878ed4fbe9ab2efb9da6cf3eaa994`, and HEAD's `chat.js` is md5 `6c91d2705da110e7118707b8bed07e87` -
+both digests are stamped in the two capture archives, so the pre-fix state this paragraph describes is an artifact and not a
+reconstruction).
+
+**Controls, unit ladder.** `docs/evidence/iter72-unit-controls-2026-11-21.log.gz` runs the classifier's own suite against six byte
+states, each leg re-stamping the shipped digests: baseline `tests 9 pass 9 fail 0`; `ctl1` (chat.js reverted to the device sentence)
+`pass 8 fail 1`; `ctl2` (classifier echoes the worker text) `pass 2 fail 7`; `ctl3` (cause table emptied) `pass 6 fail 3`; `ctl4`
+(recovery clause replaced by a bare word) `pass 3 fail 6`; `ctl5` (the enable button renamed so the sentence names a control that no
+longer exists) `pass 8 fail 1`. Closing stamp returns both shipped digests unchanged, so the ladder is a measurement and not an edit.
+
+**Controls, page ladder.** A unit test can prove the classifier's arithmetic; it cannot prove the panel renders it.
+`docs/evidence/iter72-page-controls-2026-11-21.log.gz` runs the real spec, all four projects, over four byte states, rebuilding
+`dist/client` per leg and stamping source and served digests so a leg that graded a stale bundle is visible in the log. (A) shipped
+bytes: `4 passed (3.2s)`, exit 0. (B) `chat.js` back to the device sentence: `4 failed`, received string
+`"Model could not start on this device. Evidence chat still works."` - the new assertion is what catches the wording, not the
+failure. (C) classifier made to interpolate: `4 failed`, received string `"Model could not start: Failed to execute 'importScripts' …
+cdn.jsdelivr.net … tf.min.js' failed to load."` - iteration 50's leak reproduced on purpose through the current code path, which is
+the control the ledger never had. (D) restore: `4 passed (3.4s)`, final digests equal to the opening stamp. Two legs of that archive
+print a `DID_NOT_EXECUTE_MARKER` line, and it is a false positive worth its own sentence: the first draft of the driver treated any
+`Error: ` line as proof a leg never ran, so B and C - which each contain four - carry the marker while their real evidence
+(`4 failed` plus the received string) is the opposite conclusion. The pattern in the shipped driver is now narrower, and the row for
+this archive pins the four `tally:` lines rather than any absence, because a leg that never started cannot print a Playwright tally:
+all four legs print one. It also pins the two marker lines and the driver's own pattern text, so the archive documents its own stale
+artifact instead of the ledger paraphrasing it - iteration 71's ladder hit the same wall when an `absent` needle was contradicted by
+the driver source embedded beside the log, which is why this row states the marker's presence rather than the marker pattern's
+absence.
+
+**Two instruments this pass found lying about itself.** The gate driver prints a spec-count line, and the line it printed was
+`GATE_SPECS 0` on a run in which 31 spec files executed. The pattern demanded a path with no `/` in it, and every case line the gate
+prints is a repo-root path (`› tests/e2e/chat-model-egress.spec.js:`), so the counter could only ever report zero. That is the same
+shape of defect as iteration 71's two blind counters, found the same way: a number in a log that no other line contradicts. The
+shipped pattern now allows slashes and the census leg prints `CENSUS_SPECS 31` beside the gate's line so the two `--list` and run
+shapes cross-check; the wrong value stays in the gate archive because that archive is what the run printed. The second lying
+instrument was this subsection's own row verification. `artifacts/scratch/iter72/verify-row72.mjs` checks each candidate needle
+against the built bytes, and the first discrimination matrix built on it reported `cross_accepted=0` for five rows against four
+archives, which would have been the strongest claim in the pass. It was vacuous: the verifier selects the row to test by archive
+filename, so feeding it a foreign archive made it re-test the *matching* row twenty times and never once a mismatched pair. With an
+explicit `--row=` override is what makes the matrix mean something, and it immediately caught one real weakness: the static and node
+capture rows each accepted the other's bytes, because the two logs differ only in a load time and a count of milliseconds. Both rows
+now pin their own `CMD` line, which names the transport, and the pair discriminates. A guard that passes whenever it is asked the
+wrong question is not a guard, and the only way to tell is to ask it a question whose answer is known to be no. The run this
+subsection quotes is archived rather than described: `docs/evidence/iter72-row-matrix-2026-11-21.log.gz` carries the driver, the
+verifier and the log of nine rows against nine archives - `MATRIX self_ok=9/9 cross_rejected=72/72 cross_accepted=0`, with one
+`SELF_OK` line per row so the denominator sits in the bytes instead of in this sentence. The matrix archive is not a column of its own
+matrix, because it is the record of the run and cannot exist before the numbers it prints; its ledger row therefore reads nine
+archives and is read by none of them.
+
+**The row that grades the file that grades it.** Building that tenth row found two more shapes of the self-contradiction this pass
+kept meeting, and one that was not a needle at all. An abbreviated negative (`SELF_REJECTED iter72`) is refuted by the driver embedded
+beside the log, whose `echo` prints that token; a fully spelled negative (`SELF_REJECTED iter72-gate-….log.gz`) is refuted by the
+row's own `absent` line, because this is the one archive that embeds the file holding its own row. Its negatives therefore have to be
+assembled from parts when the check runs (`forbid('SELF_REJECTED', 'iter72-gate-….log.gz')`) so the forbidden text exists as a value
+and not as a quotation. The third shape was an edit to the verifier that deleted the drift row's `phrases` and `absent` lists: the
+row went on grading with whatever survived, and only the matrix noticed, by reporting the drift archive as `SELF_REJECTED` on a
+TypeError. `verify-row72.mjs` now refuses to open an archive until every row carries all three needle lists and a marker count, and
+prints `ROW_SHAPE_BAD <row> missing=…` if not. The guard's own loop still defaults a missing list to empty, so a row written without
+needles in `tests/documentation-evidence-index.test.js` would pass by reading nothing; that is queued as F17 rather than widened into
+mid-shelf. Lastly, no archive is current about a shelf it belongs to: the four closing legs stamp `TALLY_ROWS=234 SHELF=805` and read
+the matrix archive as it was before they ran, while the matrix reads the nine archives as they were before it was written. No
+ordering makes both statements true of one instant, so this pass states the limit instead of picking an ordering that hides it.
+
+**Costs.** `docs/evidence/iter72-gate-2026-11-21.log.gz` is green on all four projects: `Running 348 tests using 1 worker`,
+`348 passed (26.1m)`, `GATE_EXIT=0`, `GATE_RED_LINES 0`, `GATE_EGRESS_LINES 4` - one per project - and `GATE_CDN_HOST_LINES 0`, so
+the host the failure text carries never reached a report. The freeze banner before and after the run is byte-identical, and the
+served bytes are stamped `CHAT=57fb95190930e3dc9d5ad47244537d9c MODULE=69fa1817db5601937e4f7a05835091ca`. The four remaining legs ran
+on the same bytes: the `--list` census prints `Total: 348 tests in 31 files`, unchanged, because the new file is offline-only and the
+spec edit stays at one case in four projects; the offline suite prints `ℹ tests 331` / `pass 331` / `fail 0`; the documentation
+guards print `DOCSGUARDS_SUMMARY tests 28 | pass 28 | fail 0 | skipped 0`; the citation scout reports `DRIFTED 0` over 110 checked
+pointers, and this pass did move lines inside `tests/documentation-citation-anchors.test.js` - 16 new pins over HEAD's floor of 160,
+taking the table to 176 and the file from 501 lines to 522 (`git diff --numstat` 24 added / 3 removed) - so the guard's own ±1 case
+had something to bite on. Widening that table moved its self-pin twice in two passes, 443 to 482 to 503, and the required-line list
+and the floor both re-pointed in the same commit: an instrument that measures other files' line numbers has to measure its own.
+
+**What this pass does not establish.** `Failed to fetch` is the text for a blocked CDN and for a missing local weight file, so the
+cause clause the farmer sees says only "a model file did not arrive"; separating those two needs the worker to report which request
+failed, which is a build change this pass did not make. `model-garbage` and `tokenizer-garbage` share one cause string for the same
+reason, and both raw texts stay in the archive rather than in the panel. The `worker` arm still gets a sentence with no cause,
+because the event carried nothing that would license one - that is the honest reading, not a fixed one. Nothing here measures a
+phone, Safari or WebKit, a real microphone, or whether `Enable compact local model` is the right recovery for a device with 2 GB
+free, and no agronomy claim was touched. The sibling defect this pass deliberately did not widen into is
+`public/js/modules/speech.js:72`, which interpolates raw worker text into the panel and blames the device at `:74`: same shape,
+different module, queued as F16.

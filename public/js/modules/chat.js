@@ -2,7 +2,7 @@ import { api } from '../lib/api.js';
 import { el, sourceLinks } from '../lib/dom.js';
 import { composeAnswerBlocks, contextBlocks } from '../lib/chat-context.js';
 import { createWorkflowAssistant } from './workflow-assistant.js';
-import { initSpeech } from './speech.js';
+import { initSpeech } from './speech.js';import { modelFailureStatus } from '../lib/model-failure.js';
 
 export function initChat(getState, actions) {
   const $ = id => document.getElementById(id);
@@ -60,10 +60,10 @@ export function initChat(getState, actions) {
       if (data.type === 'selection') { window.fieldshiftModelMetrics = data.metrics; window.fieldshiftModelSelections = (window.fieldshiftModelSelections ?? 0) + 1; selections.get(data.id)?.(data.index); selections.delete(data.id); }
       if (data.type === 'error') {
         if (data.id) { selections.get(data.id)?.(null); selections.delete(data.id); }
-        else { unload(); setStatus('Model could not start on this device. Evidence chat still works.'); }
+        else { unload(); setStatus(modelFailureStatus(data.message)); }
       }
     };
-    worker.onerror = event => { event.preventDefault(); unload(); setStatus('Model could not start on this device. Evidence chat still works.'); };
+    worker.onerror = event => { event.preventDefault(); unload(); setStatus(modelFailureStatus(event.message)); };
     worker.postMessage({ type: 'load' });
   }
   $('load-model').addEventListener('click',loadModel);
