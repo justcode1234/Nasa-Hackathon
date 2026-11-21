@@ -2659,6 +2659,32 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `noTally` flag onto the matrix row - caught by the ledger's own reverse rule, not by review. Real phones, Safari/WebKit, microphones,
   audio quality and independent agronomy stay UNVERIFIED; `main` is untouched, nothing was deployed, no test was weakened. Full account in
   subsection 73 of `docs/validation.md`.
+- 21 Nov, iteration 74 (`docs/validation.md` subsection 74): the chat's superseded-reply contract is now pinned by a
+  browser case rather than by reading, and the guard the ledger credited with it is measured inert. `revision` has one
+  writer outside its declaration and `messageSerial` has one too, and each aborts the in-flight request in the same
+  motion (`public/js/modules/chat.js:166`, `:82` then `:85`), so every route that can reach `:100` has already rejected
+  on the way - `public/js/lib/api.js:8` over HTTP, `:35` on the worker, `workflow-assistant.js:341` on the guided turn -
+  so deleting `chat.js:100` leaves the new spec 16 of 16 green on all four projects. Two controls say that is a reading
+  and not an empty harness: loosening `:159`'s `finally`
+  condition reddens 4 of 16 naming a count (`unlocked the composer 20 time(s)`), and releasing the spec's own turn holds
+  - a mutation of the test, not the app - reddens 4 of 16 at `chat-stale-reply-superseded.spec.js:186`. `:163` returns
+  above `:166`, so an assistant-side invalidation moves neither counter and `:100` is unreachable there rather than
+  merely redundant; **UNVERIFIED: any user-reachable sequence** that puts a plain `/api/ask` reply across one. The
+  spec holds its turn open on the place read, not on `/api/ask`, because on the static transport that request never
+  reaches the wire (`public/js/lib/api.js:40` posts to the worker bundle) - which is what makes all four projects real
+  arms of the same contract instead of two. The ladder restores both mutated files by digest and prints the served
+  `chat.js` digest per arm, because the static projects serve `dist/client` and an arm that edited without rebuilding
+  would grade the old build. Offline suite 337 pass / 0 fail on the delivered tree, documentation guards 28, citation
+  scout `DRIFTED 0`, shipped table 255 rows over 826 files, row/archive matrix 7 of 7 self-accept and 42 of 42
+  cross-refuse - the shelved matrix archive itself says 6 of 6 and 30 of 30, because a run cannot grade the row for an
+  archive it is about to create. Evidence, each one now a full path so the archived-evidence existence rule can actually
+  check it rather than skip a bare basename: `docs/evidence/iter74-spec-2026-11-21.log.gz`,
+  `docs/evidence/iter74-page-controls-2026-11-21.log.gz`, `docs/evidence/iter74-offline-2026-11-21.log.gz`,
+  `docs/evidence/iter74-docguards-2026-11-21.log.gz`, `docs/evidence/iter74-drift-2026-11-21.log.gz`,
+  `docs/evidence/iter74-offline-final-2026-11-21.log.gz`, `docs/evidence/iter74-row-matrix-2026-11-21.log.gz`.
+  Real phones, Safari/WebKit,
+  microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test
+  weakened, no timeout raised. Full account in subsection 74 of `docs/validation.md`.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -2925,6 +2951,18 @@ parts with a space and no archive can contain the result. The verifier now cross
 driver embedded in the very archive it grades (`FORBID_SELFREFERENCE`), which is the half of F17 that is automated; the shipped guard still
 has neither rule, and both live in gitignored `artifacts/scratch` until F13 lands.
 
+F17 grew the other half in iteration 74, while the row that grades the row-matrix archive was being written: an archive whose bytes embed the
+tools that produced it contains every failure string those tools print, so a must-not-occur needle copied from a leg's intention rejects the
+evidence it certifies. `✖ `, `ℹ fail 1`, `SELF_REJECTED` and `MATRIX74_FAILED` each appear in exactly one of the seven iteration-74 archives,
+and the one that carries them is the matrix record, because it embeds `matrix74.sh` and `verify-row74.mjs` verbatim. The rule is therefore not
+"build negatives from parts" but "measure every negative against the archive before installing it", which is what
+`artifacts/scratch/iter74/probe74.mjs` prints: whole-line and substring counts per candidate, plus the names of the archives carrying each, so a
+needle that is live nowhere and a needle that is poisoned sit in the same report. The same pass removed the defect iteration 73's matrix
+carried unknowingly: its driver filtered `iter74-row-matrix-*` out of the shelf, which guarantees the archive the run produces is never asked
+about, so `matrix74.sh` now reads every `iter74-*.log.gz` and refuses before comparing a needle unless `archives == rows`. The shelved record
+prints `archives=6 rows=6` and `self_ok=6/6 cross_rejected=30/30`, and the re-run that grades the row written after it prints
+`archives=7 rows=7` and `self_ok=7/7 cross_rejected=42/42`; the re-run is not shelved, for the circularity named in subsection 74.
+
 ### 13.1. Next 50 goals, in priority order
 
 This is a proposed execution backlog, not 50 discovered bugs or 50 mandatory code changes.
@@ -2958,19 +2996,21 @@ when existing behaviour is sound. No goal is marked executed merely by appearing
 7. If reachable, retain the exact tapped identity on retry without overwriting a newer typed draft. NOT SHIPPED 20 Nov:
    its "if reachable" precondition was measured and is not met (goal 6), so there is no rejection that could exercise
    a restored identity, and no test could hold one. Re-open only with a reachable failure.
-8. Invalidate retained choices after location changes, cancellation or a different message. PARTIAL 20 Nov: the
-   cancellation half is now held - a typed stop word ends the plan and leaves the farmer's own country selection alone
-   on the page (`tests/e2e/chat-bare-place-name.spec.js:76`, `:93`) and selects nothing offline
-   (`tests/workflow-bare-place-name.test.js:132`, which is one of the four clauses its mutants go red on). The
-   "different message" half - a stale reply landing after the farmer moved on, and any choice invalidated by a
-   location change made outside the chat - is untouched and stays open. Premise corrected 21 Nov, measured rather than
-   assumed: three guards already sit on that path (`public/js/modules/chat.js:100` before the render, `:154` before the error
-   sentence, `:159` in the `finally` that returns the composer), and the two upstreams reject before them -
-   `public/js/lib/api.js:35` rejects a cancelled request with `cancellation()` and `public/js/modules/workflow-assistant.js:341`
-   throws `cancellation('Planning context changed')` from its own `guard()` - so `:100` is defensive over a microtask-scale window and
-   no test yet proves it bites; a spec that holds `/api/ask` open cannot be armed on the static transport at all, because
-   `public/js/lib/api.js:18-26` posts to the worker bundle instead of issuing that request, which is why the work left is a
-   contract-pinning spec with a mutation control on `:100` and a second one on `:159`, not a longer timeout.
+8. Invalidate retained choices after location changes, cancellation or a different message. CLOSED 21 Nov as
+   VERIFIED SOUND for the stale-reply half, where a premise carried here since 20 Nov is now measured; the
+   cancellation half was already held (`tests/e2e/chat-bare-place-name.spec.js:76`, `:93`;
+   `tests/workflow-bare-place-name.test.js:132`). New: `tests/e2e/chat-stale-reply-superseded.spec.js`, 4 cases in
+   each of the 4 projects, holds a turn open on the place read rather than on `/api/ask` - which is what arms it on
+   the worker transport - supersedes it from a reply button, and pins that the late answer never lands and only the
+   newest turn unlocks the composer. The seven-arm ladder at
+   `artifacts/scratch/iter74/close74.sh` (bytes in `docs/evidence/iter74-page-controls-2026-11-21.log.gz`) finds
+   deleting `public/js/modules/chat.js:100` still 16 of 16 green, and the reason is structural: `revision`'s only
+   writer `:166` aborts the request in the same statement and `messageSerial`'s writer `:82` aborts at `:85`, so every
+   route that reaches `:100` has already rejected - the `fetch` signal at `public/js/lib/api.js:8` over HTTP,
+   `public/js/lib/api.js:35` on the worker, `workflow-assistant.js:341` on the guided turn. Loosening `:159` reddens 4
+   of 16 naming a count (`unlocked the composer 20 time(s)`) and releasing the spec's own holds reddens 4 of 16 at
+   `:186`, which is what stops that green reading as an empty harness; `:163` returns above `:166`, so an
+   assistant-side invalidation moves neither counter - **UNVERIFIED: any user-reachable sequence** across that return.
 9. Replace unsupported device blame on model-load failure with safe, observable failure wording.
 10. Prove model refusal/unload/reload leaves deterministic chat and planning usable, with no fake success.
 

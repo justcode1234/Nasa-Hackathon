@@ -7846,3 +7846,118 @@ scratch copy, none in the shipped table, all of them sub-millisecond source-text
 the archived legs stamp and what a red must be re-run under before anyone reads it as a regression.
 A row was deliberately not written for an unarchived re-run: a ledger row pins bytes in an
 archive, and writing one here would have invented the artifact it claims to grade.
+
+### 74. The chat's stale-reply guard was measured inert, and the spec that pins the contract had to be built first to say so
+
+**VERIFIED SOUND (§13.1 item 8, the "different message" half).** Two sentences this file has carried since 20 Nov were
+replaced by readings: that the half was "untouched", and that `public/js/modules/chat.js:100` was "defensive over a
+microtask-scale window" that "no test yet proves it bites". The test now exists, the window is not a microtask - it is
+as wide as the place read the turn is waiting on, and the spec holds one open for `1_500` ms at
+`chat-stale-reply-superseded.spec.js:194` and `:231` with the older turn still inside the guard's shadow for all of it -
+and the guard does not bite on any route the farmer can reach. Nothing in `public/js/modules/chat.js` changed in this
+pass: what ships is a spec, a ladder that grades it, and this account of what the ladder printed.
+
+**What was measured.** `tests/e2e/chat-stale-reply-superseded.spec.js` runs four cases in each of the four Playwright
+projects. A guided turn is opened and then superseded from a reply button, and the assertions are what the farmer sees:
+the notice replaces the history, the late answer never lands, a turn that never rendered wrote no verified point, text
+typed after the invalidation survives, and only the newest turn re-enables the composer. It holds a turn open by
+delaying the *place read*, not `/api/ask`, because on the static transport `public/js/lib/api.js:40` posts the request
+to the worker bundle and no such HTTP request ever reaches the wire - a `/api/ask` stub would have been a silent no-op
+on half the farmer base. Both place reads do reach the network on both transports, node through the app's own
+`/api/…` contract and the worker through OpenStreetMap's hosts, which is what makes 16 cases one contract asked four
+times rather than two contracts.
+
+The seven-arm ladder then decides what those 16 greens are worth. Each arm rebuilds before it runs and prints both the
+source digest and the digest of the file the server actually served, because the static projects serve `dist/client`
+and an arm that edited a module without rebuilding would silently grade the previous build:
+
+| arm | mutation | reading |
+| --- | --- | --- |
+| A | shipped bytes | `CTL A-shipped exit=0 green=16 red=0`, served `aa198a0886235605ef1394bab36c2fdc` |
+| B | `chat.js:100` deleted outright | `CTL B-guard100-deleted exit=0 green=16 red=0`, served `23675e9d4a660ef3167e0ca222def775`, `guard_lines=0` |
+| C | digest-checked restore | `CTL_C_RESTORED sha256=238f4c2c909934a70d21b5f1eb66edd35f9f2abcfec783aa0688918d0d8bfb78 identical=True`, `CTL C-restore exit=0 green=16 red=0` |
+| D | `:159`'s `finally` condition replaced by `if (true)` | `exit=1 green=12 red=4`, served `95311a5d7dbe7c708ab88f01a7f50f0c`, four reds at `chat-stale-reply-superseded.spec.js:225:1` |
+| E | restore again | same `sha256=238f4c2c…` with `identical=True`, `CTL E-restore exit=0 green=16 red=0` |
+| W | the *spec's* own hold released, `1_500` → `0` at both `net.hold('places', SECOND.lat, …)` sites (`:194`, `:231`) | `exit=1 green=12 red=4` with the application served unchanged at `aa198a0886235605ef1394bab36c2fdc`, four reds at `:186:1`, `zero_hold_lines=3` |
+| X | spec restored and digest-checked | `CTL_X_SPEC_RESTORED sha256=82bc49ca6918c9f694156717bafd2e0367de6cee4b2663d84e8f5d48369f7c7d identical=True`, green 16/16 |
+
+**What it changes about the claim.** B's green means something only because W's is red: a harness that never actually
+interleaved two turns would print 16/16 for every mutation of the application and still call that a pass, and W is the
+arm that would have caught it. W reddens 4 of 16 with `the superseded answer must not land while the newer turn is
+still waiting`, so the interleaving is real and B's green is a finding about `:100`, not about the harness. The reason
+is in the source rather than in a reading of timing: `revision` is written twice in `chat.js`, the declaration at `:9`
+and `:166`, whose statement is `revision++; request?.abort();`, and `messageSerial` twice, `:18` and
+`serial = ++messageSerial` at `:82` inside the same `ask` that calls `request?.abort()` at `:85`. The only route that
+can make `:100` true aborts the in-flight request as it does so, and the abort rejects before the reply is read -
+`public/js/lib/api.js:8` over HTTP, `public/js/lib/api.js:35` on the worker, `workflow-assistant.js:341` on the guided
+turn. D is the counter-case that keeps the paragraph honest: `:159` is *not* redundant, because the composer unlock it
+guards is the one effect a superseded turn still has that the farmer can see, and loosened, the case reports the
+observed count rather than a diff - `the superseded turn unlocked the composer 20 time(s) while the newer one was still
+waiting`. The half that stays open is `:163`: `if (fromAssistant) return;` sits above `:166`, so an assistant-side
+invalidation moves neither counter and `:100` is *unreachable* on that route rather than merely inert.
+
+**Cost.** Run 2 of the ladder took 17m21s end to end (spec leg 16:23:50Z-16:26:15Z, seven-arm control leg
+16:26:15Z-16:41:11Z), which is one build per arm plus one suite per arm; the green arms are the expensive ones, because
+a suite that passes has nothing to stop early - A reported `16 passed (2.4m)` while D reported
+`4 failed / 12 passed (1.8m)` and W `1.6m`. The offline suite this pass had to satisfy is 25 s (`16:20:01Z-16:20:26Z`).
+Then a whole second ladder: run 1 was green on the same 16 cases, but the 16:20:01Z offline run refused to commit it -
+`OFFLINE_EXIT=1`, 337 tests, 336 pass, 1 fail - because the spec's header comment cited `api.js:NNN` bare, which the
+shipped citation guard rejects at `tests/documentation-citations.test.js:88` since `api.js` is ambiguous between
+`public/js/lib/api.js` and `server/api.js`. The same repository, the same defect class this pass exists to close, and
+the guard rather than a reviewer caught it. The repair touched whole-line comments only: the 203 non-comment lines hash
+the same before and after, and the `test()` declarations stay at `:144`, `:186`, `:225`, `:260`, so run 1's and run 2's
+case ids name the same cases. What is *not* preserved is run 1's per-test detail - the leg writes one filename, so the
+17:31:50Z green re-run overwrote it; the surviving witness is the scratch summary quoted above, and no archive on the
+shelf claims the failing bytes. Two instrument readings also corrected themselves on the way: a first guess that the
+supersession window was a microtask, and this file's older claim that a spec of this shape "cannot be armed on the
+static transport at all", which is true of `/api/ask` and false of the place read.
+
+**Reproduce.** The driver named `artifacts/scratch/iter74/close74.sh` takes one of `preconditions`, `spec`, `control`,
+`offline`, `offline-final`, `docguards` or `drift`; `artifacts/scratch/iter74/shelve74.mjs` assembles every archive
+header from one place (`--to=DIR` for a dry shelf, gzip mtime pinned to 0 so dry and delivered bytes are identical);
+`artifacts/scratch/iter74/verify-row74.mjs` refuses a candidate row whose needle lists are empty and prints the shipped
+row text with `--emit`; `artifacts/scratch/iter74/probe74.mjs` measures any candidate needle as a whole line and as a
+substring over the shelf plus whatever dry drafts exist, which is the only way a negative can be shown to be live rather
+than merely unsatisfiable; `artifacts/scratch/iter74/matrix74.sh` asks every row about every archive and refuses unless
+the two denominators agree before it compares a needle. The instruments live in the gitignored scratch directory until
+F13 moves them into the repository.
+
+**UNVERIFIED.** Real phones, Safari/WebKit, microphones, audio quality and independent agronomy, as always, plus one
+specific sequence: any user-reachable path that puts a plain `/api/ask` reply across an assistant-side context change,
+which is the only shape in which the two counters could disagree and no arm of this ladder reached it.
+
+**Evidence.** Seven archives carry this pass, one per leg: `docs/evidence/iter74-spec-2026-11-21.log.gz`,
+`docs/evidence/iter74-page-controls-2026-11-21.log.gz`, `docs/evidence/iter74-offline-2026-11-21.log.gz`,
+`docs/evidence/iter74-docguards-2026-11-21.log.gz`, `docs/evidence/iter74-drift-2026-11-21.log.gz`,
+`docs/evidence/iter74-offline-final-2026-11-21.log.gz` and `docs/evidence/iter74-row-matrix-2026-11-21.log.gz`. None of
+them could have been named earlier: `tests/documentation-commands.test.js:107` refuses prose that points at an evidence
+file the repository does not have, so a ledger section can cite only legs already shelved - and the row/archive matrix is
+by construction the last of them, because the row that names the matrix archive cannot be exercised by the run that
+builds its bytes: the file it would have to accept did not exist while that run read the shelf. The shelved record
+therefore prints `MATRIX74 DENOMINATORS archives=6 rows=6` and `MATRIX self_ok=6/6 cross_rejected=30/30`, and the row
+that cites it is graded by a re-run of the same driver over the seven-archive shelf, which prints `archives=7 rows=7` and
+`self_ok=7/7 cross_rejected=42/42` and is deliberately not shelved - a second matrix archive would have to embed the
+first inside it, and replacing the record the prose cites in order to grade that record is the circularity the leg exists
+to remove. The final re-check of the finished wording is unarchived for the same reason: a row can only pin bytes that
+exist, so the delivered text is graded by a run whose output no archive carries, which is the shape iteration 73
+recorded.
+
+**Which run pins which tree.** The three reading legs stamped the table size they saw, and they saw different ones: the
+archived docguards and drift legs carry `TALLY_ROWS=251 PINS=191 SHELF=822`, the archived offline-final carries
+`TALLY_ROWS=253 PINS=191 SHELF=824`, and the tree this section is committed from carries 255 rows over 826 archives. The
+delivered numbers therefore come from the re-check that has no archive: documentation guards 28 pass / 0 fail,
+`TREE CITED_LINES_CHECKED 1 DRIFTED 0 INSIDE_DIFF_HUNKS 0`, and an offline suite reporting `ℹ pass 337` and
+`ℹ fail 0` over `node --test tests/*.test.js`. A reader who wants the archived form of a number has to ask which of the
+two it is, which is why the distinction is stated here rather than left to the stamps.
+
+**What the matrix measured about its own row.** Four strings that read like signatures a green matrix must not carry -
+`✖ `, `ℹ fail 1`, `SELF_REJECTED` and `MATRIX74_FAILED` - are each present in the matrix archive, and `probe74.mjs`
+counted all four exactly 1 of 7 with the one being this archive: the record embeds the driver and the verifier it ran,
+and both quote their own failure paths. Any of them installed as a must-not-occur needle would have made the row reject
+the evidence it certifies. That is iteration 73's self-reference lesson arriving from the other direction - there a
+needle *helper* assembled a string no bytes could contain, here the bytes contain every string a reader would expect to
+be forbidden, so the check that has to happen is against the archive rather than against the leg's intention. The two
+negatives this row does carry are signatures of *other* legs: a node-test summary block (`ℹ duration_ms`, 3 of 7
+archives carry it) and a Playwright run banner (`Running 16 tests using`, 2 of 7). Both are live bytes somewhere on the
+shelf and neither is reachable from a read-only comparison, so the row refuses something a matrix log could actually get
+wrong instead of something no log has ever contained.
