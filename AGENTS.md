@@ -2702,6 +2702,18 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   that no row grades, which is the exposure iteration 71 sized and F17's rule still describes. Real phones, Safari/WebKit,
   microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened, no
   timeout raised.
+- 25 Nov, iteration 76 (`docs/validation.md` subsection 76): the five iteration-75 archives now have `TALLIES` rows, and the
+  row/archive matrix that grades them is archived as `docs/evidence/iter76-row-matrix-2026-11-25.log.gz`. The table moves from
+  255 to 261 rows and the shelf from 831 to 832 files. The shelved matrix read five archives and five rows -
+  `self_ok=5/5 cross_rejected=20/20 cross_accepted=0` - because the row for its own bytes could not exist yet; after that row
+  landed, the same driver read six of each and printed `self_ok=6/6 cross_rejected=30/30 cross_accepted=0`, deliberately
+  unshelved to avoid an infinite archive-embedding chain. Every positive needle is a unique rendered line; the matrix row's
+  negatives are raw signatures from other legs, measured absent from its own bytes. No application, e2e, configuration or
+  generated asset changed, so no browser leg was owed. F17 remains open because the shipped guard still defaults missing
+  needle lists to empty; F18's 55 candidates and F13's scratch instruments remain queued. Real phones, Safari/WebKit,
+  microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened,
+  no timeout raised. The prose-final self-check read documentation guards `31/31`, offline `340/340`, and both drift modes
+  `CITED_LINES_CHECKED 1 DRIFTED 0`; those outputs are unarchived by design and carry no tally rows.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -2966,7 +2978,8 @@ shipped guard should too, and its first run must be the single row the survey fo
 same class one step along: a negative can be well-formed, present in the row and still pin no bytes, because the needle it builds joined its
 parts with a space and no archive can contain the result. The verifier now cross-checks every negative against the text of the verifier and
 driver embedded in the very archive it grades (`FORBID_SELFREFERENCE`), which is the half of F17 that is automated; the shipped guard still
-has neither rule, and both live in gitignored `artifacts/scratch` until F13 lands.
+has neither rule, and both live in gitignored `artifacts/scratch` until F13 lands. Iteration 76 added six non-vacuous rows and a
+row/archive matrix for the iteration-75 debt, but that proves these rows read bytes; it does not close F17's missing-shape rule.
 
 F17 grew the other half in iteration 74, while the row that grades the row-matrix archive was being written: an archive whose bytes embed the
 tools that produced it contains every failure string those tools print, so a must-not-occur needle copied from a leg's intention rejects the

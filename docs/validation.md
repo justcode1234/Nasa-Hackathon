@@ -8035,7 +8035,38 @@ triaged one, and this pass deliberately did not turn proximity into a rule. No b
 claim changed here. Five archives carry what did run - the offline suite at `ℹ tests 340 ℹ pass 340 ℹ fail 0`, the five docs guards at
 `pass 31 | fail 0` and the drift scout at `TREE CITED_LINES_CHECKED 12 DRIFTED 0` - as `docs/evidence/iter75-controls-2026-11-22.log.gz`,
 `docs/evidence/iter75-instruments-2026-11-22.log.gz`, `docs/evidence/iter75-offline-2026-11-22.log.gz`,
-`docs/evidence/iter75-docguards-2026-11-22.log.gz` and `docs/evidence/iter75-drift-2026-11-22.log.gz` - and this iteration has no
-row-matrix record and no `TALLIES` needle rows, because the close was cut short on instruction rather than finished; those five
-files therefore sit on the shelf graded by nothing but their own existence, which iteration 76 has to repair before adding a
-sixth.
+`docs/evidence/iter75-docguards-2026-11-22.log.gz` and `docs/evidence/iter75-drift-2026-11-22.log.gz` - and this iteration had no
+row-matrix record and no `TALLIES` needle rows when the user stopped it, so those five files sat on the shelf graded by nothing
+but their own existence. Iteration 76 repaired that debt before adding its sixth archive; subsection 76 records the matrix and
+the circularity it leaves explicit.
+
+### 76. Five archives stopped being graded by their existence alone, and the matrix refused to grade itself
+
+**VERIFIED FIX (iteration-75 evidence debt; no application, e2e, configuration or generated-asset file changed).** The five
+iteration-75 archives were named by prose and checked for existence, but no `TALLIES` row read a single byte out of them. This
+pass installs one row per archive in `tests/documentation-evidence-index.test.js`, taking the table from 255 to 261 rows, and
+adds a sixth archive for the row/archive matrix itself. The shelf moves from 831 to 832 files; the pin table stays at 191.
+
+The first matrix run read exactly the five inherited archives and printed `MATRIX76 DENOMINATORS archives=5 rows=5`,
+`MATRIX self_ok=5/5 cross_rejected=20/20 cross_accepted=0` and `MATRIX76_DONE`. Its bytes are shelved as
+`docs/evidence/iter76-row-matrix-2026-11-25.log.gz`, together with the driver and the five-row verifier that produced them. The
+matrix row was written only after that archive existed; the same driver then read six archives and six rows and printed
+`MATRIX self_ok=6/6 cross_rejected=30/30 cross_accepted=0`. That re-run is deliberately not shelved. A second matrix archive
+would embed the first and move the circularity one step later rather than remove it, so the delivered record says 5/5 and the
+prose reports the 6/6 re-run with that distinction attached.
+
+Every positive needle in the six rows was measured as a whole rendered line unique to its archive. The matrix row's two
+negative needles are raw-output signatures from other legs, not failure strings printed by the matrix driver: one occurs in the
+iteration-75 offline archive and the other in both the docguards and offline archives, while neither occurs in the matrix
+archive. This is the iteration-74 rule applied to the repair set - a negative copied from what a leg intended to forbid can be
+poisoned by the driver source embedded in the very archive it grades.
+
+The prose-final self-check was run after the index regeneration: documentation guards `31/31`, the scoped offline suite
+`340/340`, and both citation-scout modes `CITED_LINES_CHECKED 1 DRIFTED 0` with exit 0. Those three outputs are deliberately
+unarchived and have no tally rows; they prove this write-up did not break a pin, not that a new browser behaviour ran.
+
+**Still open:** F17's shipped-guard rule is unchanged. The candidate verifier refuses a row with an empty needle list, but
+`tests/documentation-evidence-index.test.js` still defaults missing lists to empty; iteration 76 proves these six rows are
+non-vacuous without pretending that defect is closed. F18's 55 citation candidates remain untriaged, and F13's scratch
+instruments remain unshipped. No browser leg was owed because no browser-read byte changed; real phones, Safari/WebKit,
+microphones, audio quality and independent agronomy stay UNVERIFIED.
