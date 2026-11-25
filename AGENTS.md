@@ -2725,6 +2725,18 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `CITED_LINES_CHECKED 1 DRIFTED 0`; the final census summary stayed 1,203 / 218 / 48. F17 is next; real phones, Safari/WebKit,
   microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened,
   no timeout raised.
+- 25 Nov, iteration 78 (`docs/validation.md` subsection 78): F17 closes in the shipped guard. Every `TALLIES` row now
+  needs at least one positive `lines`, `phrases` or `onlyReds` needle; the one content-vacuous partial row gained bytes from
+  its own archive, and four count-shaped-only rows gained run-specific stamps. The shape census moves from 262 rows with
+  one no-positive row and four count-shaped-only rows to 262 / zero / zero. A global negative-liveness rule was measured
+  and rejected: 52 of 474 negatives are live in no other archived run, across 36 rows, so enforcing it would rewrite other
+  passes' evidence rather than tighten this defect. The two-directional control is green at 7/7, red at 6/7 with
+  `ROW_SHAPE_BAD` naming the partial archive after its positives are stripped, and green again at 7/7 after a byte-identical
+  restore. Evidence is `docs/evidence/iter78-f17-shape-2026-11-25.log.gz`. No application, e2e, configuration or generated
+  asset changed; F13 is next, while F18's broader plain-citation exposure remains open. The prose-final self-check read
+  documentation guards `31/31`, offline `340/340`, delivered-tree drift `CITED_LINES_CHECKED 1 DRIFTED 0`, and HEAD-mode
+  drift `CITED_LINES_CHECKED 1 DRIFTED 1`, the expected pre-repair witness. Real phones, Safari/WebKit, microphones, audio
+  quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened, no timeout raised.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -2988,9 +3000,13 @@ enforceable rule is at least one positive content needle (`lines`, `phrases` or 
 shipped guard should too, and its first run must be the single row the survey found rather than a table-wide rewrite. Iteration 73 found the
 same class one step along: a negative can be well-formed, present in the row and still pin no bytes, because the needle it builds joined its
 parts with a space and no archive can contain the result. The verifier now cross-checks every negative against the text of the verifier and
-driver embedded in the very archive it grades (`FORBID_SELFREFERENCE`), which is the half of F17 that is automated; the shipped guard still
-has neither rule, and both live in gitignored `artifacts/scratch` until F13 lands. Iteration 76 added six non-vacuous rows and a
+driver embedded in the very archive it grades (`FORBID_SELFREFERENCE`), which is the half of F17 that is automated; the shipped guard
+had neither rule, and both lived in gitignored `artifacts/scratch`. Iteration 76 added six non-vacuous rows and a
 row/archive matrix for the iteration-75 debt, but that proves these rows read bytes; it does not close F17's missing-shape rule.
+Iteration 78 closes the shipped half: every row now needs a positive `lines`, `phrases` or `onlyReds` needle, the one
+content-vacuous partial row and four count-shaped-only rows were repaired, and a green/red/green control proves the rule
+fails on the original shape. The broader negative-liveness rule was measured and rejected rather than imposed on 36 legacy
+rows.
 
 F17 grew the other half in iteration 74, while the row that grades the row-matrix archive was being written: an archive whose bytes embed the
 tools that produced it contains every failure string those tools print, so a must-not-occur needle copied from a leg's intention rejects the

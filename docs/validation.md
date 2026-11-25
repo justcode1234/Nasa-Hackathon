@@ -8092,3 +8092,33 @@ no browser leg was owed. The prose-final self-check read documentation guards `3
 `CITED_LINES_CHECKED 1 DRIFTED 0`; a later census kept the same 1,203 / 218 / 48 summary, with only an AGENTS line ordinal
 moving when this subsection's bullet landed. Those self-check outputs are unarchived by design. F17 is next; real phones,
 Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED.
+
+### 78. The shipped tally guard refuses a row that asserts no positive bytes
+
+**VERIFIED FIX (closes F17's shipped-guard half).** The candidate verifiers already refused empty needle shapes, but
+`tests/documentation-evidence-index.test.js` still defaulted missing arrays to empty and let a row pass without reading a
+single positive byte. The shipped loop now requires at least one `lines`, `phrases` or `onlyReds` needle and fails with
+`ROW_SHAPE_BAD` naming the archive. The inherited table has 262 rows; the delivered table has 263 after this pass's
+archive row is installed. Before this pass it held one content-vacuous row and four rows whose only positives were counts;
+afterwards it holds zero of each.
+
+The content-vacuous row is the deliberately partial iteration-57 catch-all run. It now pins its interpreter line, its
+`Running 20 tests` banner and its final seventh failure line, plus the catch-all and timeout phrases; `partial` and
+`marks: 7` stay unchanged. The four count-shaped rows gain run-specific bytes: the tripwire interpreter stamp, the two
+`ARCHIVED_FROM` paths that distinguish the red-4 and red-3 runs, and the pins-red source-log digest. No narrative or tally
+changed.
+
+A broader rule was measured and rejected. Of 474 negative needles, 52 occur in no other archived run, spread across 36
+rows. Requiring every negative to be live elsewhere would rewrite legacy evidence belonging to other passes rather than
+close this defect, so the shipped rule stays at the enforceable positive-needle boundary. The existing per-archive absence
+check still refuses a negative that is present in the bytes it grades.
+
+The control is two-directional: the focused guard is green at 7/7; stripping the partial row's positives makes it red at
+6/7 with `ROW_SHAPE_BAD docs/evidence/iter57-panel-catchall-last-partial-2026-11-20.log.gz`; restoring the file
+byte-identically returns it to 7/7. The before/after shape census, rejected liveness measurement, all three logs and the
+exact guard diff are archived as `docs/evidence/iter78-f17-shape-2026-11-25.log.gz`. No application, e2e, configuration or
+generated-asset file changed, so no browser leg was owed. The prose-final self-check read documentation guards `31/31`, offline
+`340/340`, delivered-tree drift `CITED_LINES_CHECKED 1 DRIFTED 0`, and HEAD-mode drift `CITED_LINES_CHECKED 1 DRIFTED 1` -
+the expected pre-repair witness for the tally-row pointer this pass moved back onto its statement. Those self-check outputs
+are unarchived by design. F13 is next; F18's broader plain-citation exposure remains open. Real phones, Safari/WebKit,
+microphones, audio quality and independent agronomy stay UNVERIFIED.

@@ -164,10 +164,16 @@ const TALLIES = [
     absent: ['SPEC_SHA256'] },
   { archive: 'docs/evidence/iter57-panel-focused-final-2026-11-20.log.gz', lines: ['20 passed (16.2s)',
     'FOCUSED_FINAL_EXIT=0', 'SPEC_SHA256 4eef52d3e776b42078914fc5493a3715ae32014ef060d9b98018658d300ec59b'], marks: 0 },
-  { archive: 'docs/evidence/iter57-panel-focused-tripwire-green-2026-11-20.log.gz', lines: ['20 passed (16.3s)'], marks: 0 },
+  { archive: 'docs/evidence/iter57-panel-focused-tripwire-green-2026-11-20.log.gz', lines: ['20 passed (16.3s)',
+    'ITERPRETER node v26.13.1 at 2026-11-19T23:52:54Z focused chat-evidence-panel, catch-all first + unpinned built from pinnedApi (ports 4173/4174 freed from the killed run)'], marks: 0 },
   { archive: 'docs/evidence/iter57-panel-api-seizure-2026-11-20.log.gz', lines: ['10 failed', '10 passed (2.8m)'],
     phrases: ['Crop catalog unavailable: No answer came back for this request'] },
-  { archive: 'docs/evidence/iter57-panel-catchall-last-partial-2026-11-20.log.gz', partial: true, marks: 7 },
+  { archive: 'docs/evidence/iter57-panel-catchall-last-partial-2026-11-20.log.gz',
+    lines: ['ITERPRETER node v26.13.1 at 2026-11-19T23:42:50Z focused chat-evidence-panel, catch-all registered last',
+      'Running 20 tests using 1 worker',
+      '✘   7 [static-mobile] › tests/e2e/chat-evidence-panel.spec.js:186:1 › a bare-rain question renders the measured rainfall paragraph with its own citation (1.0m)'],
+    phrases: ['catch-all registered last', ' (1.0m)'],
+    absent: ['✘   8', 'passed'], partial: true, marks: 7 },
   { archive: 'docs/evidence/iter57-control-d-tripwire-2026-11-20.log.gz', lines: ['5 failed'],
     phrases: ['NASA POWER could not be reached or returned invalid JSON'] },
   { archive: 'docs/evidence/iter57-control-d2-sealed-fires-2026-11-20.log.gz', lines: ['5 failed'],
@@ -960,14 +966,16 @@ const TALLIES = [
       '{"country":"IN","location":null}'],
     marks: 0 },
   { archive: 'docs/evidence/iter64-offline-cases-red-4-2026-11-20.log.gz',
-    lines: ['ℹ tests 35', 'ℹ pass 31', 'ℹ fail 4', 'ℹ skipped 0'],
+    lines: ['ℹ tests 35', 'ℹ pass 31', 'ℹ fail 4', 'ℹ skipped 0',
+      'ARCHIVED_FROM artifacts/scratch/iter64/switch-tests-red-1.log'],
     onlyReds: ['a switch an unreadable list cannot arbitrate keeps the plan and names the read it could not do',
       'a list whose shape cannot be read offers the move outright and no retry it has ruled out',
       '“switch to Mongolia” still moves the plan when the saved list refuses',
       'a cancelled list read is a stop, not a licence to move the plan to another country'],
     marks: 0 },
   { archive: 'docs/evidence/iter64-offline-cases-red-3-2026-11-20.log.gz',
-    lines: ['ℹ tests 35', 'ℹ pass 32', 'ℹ fail 3', 'ℹ skipped 0'],
+    lines: ['ℹ tests 35', 'ℹ pass 32', 'ℹ fail 3', 'ℹ skipped 0',
+      'ARCHIVED_FROM artifacts/scratch/iter64/switch-tests-red-2.log'],
     onlyReds: ['a switch an unreadable list cannot arbitrate keeps the plan and names the read it could not do',
       'a list whose shape cannot be read offers the move outright and no retry it has ruled out',
       'a cancelled list read is a stop, not a licence to move the plan to another country'],
@@ -1142,7 +1150,7 @@ const TALLIES = [
     marks: 0 },
   // The whole offline suite on delivered bytes with the pins still naming the pre-fix lines.
   { archive: 'docs/evidence/iter65-offline-pins-red-2026-11-20.log.gz',
-   lines: ['ℹ tests 286', 'ℹ pass 282', 'ℹ fail 4'],
+   lines: ['ℹ tests 286', 'ℹ pass 282', 'ℹ fail 4', 'SOURCE_LOG_MD5 51c57a847e6ed091c9b47e5cd12cf864'],
    onlyReds: ['every pinned ledger citation lands on the statement the ledger quotes',
        'inserting a line above a pinned statement turns this guard red rather than leaving it green',
        'every file:line citation resolves and names a line that exists and is not blank',
@@ -2621,10 +2629,21 @@ const TALLIES = [
        'No confirmed stale pointer remains in the original 55.'],
    absent: ['MATRIX76_DONE', 'OFFLINE75_EXIT=0', 'DOCSGUARDS_SUMMARY tests 31'],
    marks: 0 },
+  { archive: 'docs/evidence/iter78-f17-shape-2026-11-25.log.gz',
+   lines: ['F17_SHAPE start_utc=2026-11-25T10:21:00Z head=2401ace9f89e630e970567884fedaa17d4c7cff0 interpreter=v26.13.1',
+       'F17_BEFORE rows=262 no_positive=1 count_shaped_only=4',
+       'F17_AFTER rows=262 no_positive=0 count_shaped_only=0',
+       'F17_NEGATIVE_LIVENESS negatives=474 dead=52 affected_rows=36 rule=rejected',
+       'F17_CONTROL baseline=green mutation=red restore=green identical=true',
+       'F17_DONE'],
+   phrases: ['=== F17 MUTATION LOG',
+       'ROW_SHAPE_BAD docs/evidence/iter57-panel-catchall-last-partial-2026-11-20.log.gz has no positive content needle'],
+   absent: ['F18_TRIAGE_DONE', 'MATRIX76_DONE', 'OFFLINE75_EXIT=0'],
+   marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 262, `the table carries ${TALLIES.length} archives; subsections 57 through 76 quote more runs ` +
+  assert.ok(TALLIES.length >= 263, `the table carries ${TALLIES.length} archives; subsections 57 through 77 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -2790,8 +2809,10 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'seven-arm ladder that measures what that spec is worth and the offline run both were graded on. Every needle in those ' +
     'three rows is a rendered stamp with its values in place, because all three archives embed the same driver bytes and a ' +
     'needle copied from a line of that source therefore matches all of them - which is exactly what the row/archive matrix ' +
-    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive.');
+    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
+    assert.ok((lines?.length ?? 0) + (phrases?.length ?? 0) + (onlyReds?.length ?? 0) > 0,
+      `ROW_SHAPE_BAD ${archive} has no positive content needle (lines, phrases or onlyReds)`);
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }
     catch { assert.fail(`${archive} is quoted by the ledger and is not a readable gzip in the repository`); }
