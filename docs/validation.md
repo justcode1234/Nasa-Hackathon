@@ -2036,7 +2036,7 @@ tip and is recorded below.
 
 Iteration 22 let the record names the app already holds open the pest branch, through one rule: the last word
 of the name, and only if it is longer than four letters, tested as a substring. The trigger list
-(`TOPIC.pest`, `public/js/lib/chat-context.js:11`) already contains `moths?`, so the app promises to answer a
+(`TOPIC.pest`, `public/js/lib/chat-context.js:19`) already contains `moths?`, so the app promises to answer a
 moth question; the selector then cannot honour it, because the shipped name is `Diamondback moth` and its
 head noun is four letters. Both columns below are measured in one process, against the committed module
 (`git show a9e4566:public/js/lib/chat-context.js`, copied to `artifacts/` for the run) and the fixed one
@@ -2061,7 +2061,7 @@ The selector now takes the words that identify a species: the head noun when it 
 (`armyworm`, `locust`), and when the head is short the word in front of it as well (`moth` **or**
 `diamondback` → `Diamondback moth`). Every key is matched as a whole word with an optional plural
 (`\b<key>s?\b`) instead of a substring, so `months` still cannot match `moth`. Both halves are the same rule
-stated once, in `askedPest` (`public/js/lib/chat-context.js:63-72`), with no vocabulary added and no change to
+stated once, in `askedPest` (`public/js/lib/chat-context.js:88-92`), with no vocabulary added and no change to
 the record-selection order: a name typed in the question still beats the plan's crops, which still beat the
 first entry.
 
@@ -2466,9 +2466,9 @@ Comparison Priority is a four-value select (`public/index.html:122`: fewer famil
 historical rain-free exposure, shorter maturity), `applyPlanning` writes whatever the chat parser produces straight into
 it (`public/js/app.js:181-183`), each value reorders the comparison (`server/agronomy/rotation.js:143-147`, pinned by
 `tests/qa-contracts.test.js:76`) and the chosen value is named back to the farmer in the reply
-(`server/agronomy/rotation.js:214`, "the first by your *priority* is …"). Before this change the parser had two
-regexes for it (`public/js/modules/workflow-assistant.js:99-100`), matching only `water` and `family|fewer family
-repeats` immediately after the noun. Because the select's first option is `family`, an unread priority is not dropped
+(`server/agronomy/rotation.js:214`, "the first by your *priority* is …"). Before this change the parser on
+`4cc6178` had two regexes for it, matching only `water` and `family|fewer family repeats` immediately after the noun.
+Because the select's first option is `family`, an unread priority is not dropped
 but substituted: the farmer is told the ranking they never asked for, and `climate` and `short-season` were reachable
 only by mouse.
 
@@ -3318,7 +3318,7 @@ out `Sources (5)`, `(7)`, `(5)`, `(2)` and `(3)` with anchors equal to each coun
 
 **What was unpinned, proven by injection rather than argument.** Two control patches were applied and reverted on
 scratch copies (`artifacts/iter42-chat-context.before.js`, `artifacts/iter42-chat.before.js`). Dropping the
-`nasa-power` source inside `contextBlocks` (`chat-context.js:126`) *is* caught today: the offline suite came out
+`nasa-power` source inside `contextBlocks` (`chat-context.js:57`) *is* caught today: the offline suite came out
 **220 tests, 218 pass, 2 fail** - `a paragraph never cites a source the panel cannot link`
 (`tests/chat-context.test.js:350`) and the POWER-citation case - and the browser case at `:73` failed on its own
 `hrefs[1]` assertion (`docs/evidence/pest42-control-contextblocks-2026-11-19.log.gz`). Dropping the same citation
@@ -4145,7 +4145,7 @@ The fix. Four single-statement edits. `server/context/client.js:40` now emits "T
   where a `cause` reaches an operator - Node prints it beneath the AppError as `cause: TypeError: ...`.
   `tests/context.test.js` gains one case that runs four of those five shapes and requires one sentence, no
   parentheses, a `cause` on each error, and the machine-readable classification intact (`slow` true only for the
-  missed deadline, `answered` true only for the 503). `tests/terrain.test.js:49` had asserted `/remain unknown/`,
+  missed deadline, `answered` true only for the 503). `tests/terrain.test.js:49-52` had asserted `/remain unknown/`,
   which the leaky text satisfied too; it is rewritten as the exact sentence plus the no-detail and `cause` assertions.
   That is a superseded assertion rewritten stricter, not weakened, and the rule says it has to be named here. The same
   was found by measurement for the producer this iteration only attached a `cause` to: `tests/nasa.test.js:62`
@@ -4384,7 +4384,7 @@ Mistakes in this iteration's own process, recorded because they cost runs. The f
   completion, and its final `restore()` overwrote the fix with a snapshot taken mid-control; four rounds then
   reported numbers for the wrong bytes and the log was discarded. The rewritten script refuses to snapshot unless
   the rule is present in all three places, and it runs in the foreground. Separately, a comment claimed five callers
-  branch on `AbortError` where the count is four - `public/js/modules/chat.js:154`, `public/js/app.js:236`,
+  branched on `AbortError` where the count was four in the pre-fix bytes - `public/js/modules/chat.js:154`, `public/js/app.js:236`,
   `public/js/app.js:296` and `public/js/modules/workflow-assistant.js:467` - and the gate was restarted rather than
   left running on bytes that a later edit would change. Three more cost time after the gate. The trace reader
   first reported 0 Overpass requests, because Playwright wraps every record in a `resource-snapshot` object and
@@ -5750,7 +5750,7 @@ has ruled out. Both keep the country selected, leave the point unset and invent 
 `public/js/modules/workflow-assistant.js:392` now rethrows a cancellation instead of answering for it, and the four
 sites that used to fall through to the empty-list wording (`:423`, `:434`, `:580` and the whole-country escape through
 `public/js/modules/workflow-assistant.js:718`) return the failure reply instead. Nothing caches a failure: the
-assistant's `locationLists`, `public/js/modules/location-picker.js:33` and the server-side read all store on success
+assistant's `locationLists`, `public/js/modules/location-picker.js:35-36` and the server-side read all store on success
 only, which is what makes the retry in the reproducing case a real re-ask rather than a replay.
 
 **The second defect, found by running it in a browser and not by reading the code.** The refusal sentence tells the
@@ -5905,7 +5905,7 @@ farmer's aim, and the farmer's aim was fine: the region is in the list, and the 
 one the app made a second later. On the static build the same section prints `B_REQUESTS_DURING_TAP 0`, and that zero
 is the limit of the instrument rather than a measured cache hit: no list request was visible in the page or in the
 worker while the tap ran, so the refusal armed for it never reached the read, the tap was answered from a cache the
-probe cannot see (the picker's page-side `Map` at `public/js/modules/location-picker.js:33` or the shared list
+probe cannot see (the picker's page-side `Map` at `public/js/modules/location-picker.js:6` or the shared list
 cache at `server/context/locations.js:12`), and `region_tap_rejects=false` on static is therefore not evidence that
 a static farmer is spared the failure - only that this harness cannot arm it there.
 
@@ -8070,3 +8070,25 @@ unarchived and have no tally rows; they prove this write-up did not break a pin,
 non-vacuous without pretending that defect is closed. F18's 55 citation candidates remain untriaged, and F13's scratch
 instruments remain unshipped. No browser leg was owed because no browser-read byte changed; real phones, Safari/WebKit,
 microphones, audio quality and independent agronomy stay UNVERIFIED.
+
+### 77. Every F18 candidate was read, twelve coordinates were repaired, and proximity was still not made a rule
+
+**VERIFIED SOUND (F18 candidate triage; F18 remains open for the broader plain-citation population).** The iteration-75
+survey found 55 span-paired citations whose nearest code-span symbol was neither on the cited line nor within three lines of
+it. Iteration 77 opened every one against the target bytes instead of treating that list as a verdict. Twelve stale or
+misleading prose coordinates were repaired across thirteen candidate rows: the terrain assertion band, the
+`parseWorkflowMessage` call, two page-side `Map` declarations, `TOPIC.pest`, `askedPest`, the `contextBlocks` source push,
+two cache bands, a historical priority-parser coordinate and the pre-fix `AbortError` sites.
+
+The same census moved from 1,204 citations / 219 span-paired / 55 candidates to 1,203 / 218 / 48. Seven candidates left the
+heuristic list. The remaining 48 were each classified in the archive as a historical reference, a broad function or test
+location, or a false span pairing; no confirmed stale pointer remains in the original 55. That is a manual result, not an
+automated semantic guard, and it does not certify the other plain citations. F18 therefore stays open with a smaller and
+fully triaged candidate set rather than being closed by a proximity threshold.
+
+The complete before/after census, all 55 verdicts, the exact prose diff and the detail instrument are archived as
+`docs/evidence/iter77-f18-triage-2026-11-25.log.gz`. No application, e2e, configuration or generated-asset file changed, so
+no browser leg was owed. The prose-final self-check read documentation guards `31/31`, offline `340/340`, and both drift modes
+`CITED_LINES_CHECKED 1 DRIFTED 0`; a later census kept the same 1,203 / 218 / 48 summary, with only an AGENTS line ordinal
+moving when this subsection's bullet landed. Those self-check outputs are unarchived by design. F17 is next; real phones,
+Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED.

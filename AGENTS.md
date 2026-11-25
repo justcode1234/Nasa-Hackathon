@@ -1014,7 +1014,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   500, which is where an operator reads it - `artifacts/iter51-502-probe.mjs` asks the running app with
   `globalThis.fetch` replaced, gets clean 502 bodies and 2 stderr lines naming the reason, and 0 of those lines
   with the sink reverted (`docs/evidence/iter51-502-sink-2026-11-19.log.gz`). `tests/context.test.js` pins one
-  sentence across four of the shapes plus `slow`/`answered`/`cause`; `tests/terrain.test.js:49`'s `/remain
+  sentence across four of the shapes plus `slow`/`answered`/`cause`; `tests/terrain.test.js:49-52`'s `/remain
   unknown/` - which the leaky text satisfied too - is rewritten to the exact sentence, a superseded assertion made
   stricter. Ten controls, three archives (`docs/evidence/iter51-controls-2026-11-19.log.gz`,
   `docs/evidence/iter51-power-controls-2026-11-19.log.gz`,
@@ -2714,6 +2714,17 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened,
   no timeout raised. The prose-final self-check read documentation guards `31/31`, offline `340/340`, and both drift modes
   `CITED_LINES_CHECKED 1 DRIFTED 0`; those outputs are unarchived by design and carry no tally rows.
+- 25 Nov, iteration 77 (`docs/validation.md` subsection 77): all 55 F18 span-paired citation candidates were read against
+  their target bytes. Twelve stale or misleading prose coordinates were repaired across thirteen candidate rows; the census
+  moves from 1,204 citations / 219 span-paired / 55 candidates to 1,203 / 218 / 48, so seven candidates left the heuristic
+  list. The remaining 48 are historical references, broad function or test locations, or false span pairings; no confirmed
+  stale pointer remains in the original 55. This is a manual triage, not a proximity rule and not a guard over the remaining
+  plain citations, so F18 stays open. The complete before/after census and every verdict are archived as
+  `docs/evidence/iter77-f18-triage-2026-11-25.log.gz`. No application, e2e, configuration or generated asset changed, so no
+  browser leg was owed. The prose-final self-check read documentation guards `31/31`, offline `340/340`, and both drift modes
+  `CITED_LINES_CHECKED 1 DRIFTED 0`; the final census summary stayed 1,203 / 218 / 48. F17 is next; real phones, Safari/WebKit,
+  microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened,
+  no timeout raised.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -3006,6 +3017,9 @@ coordinate has a code span beside it, 55 where that symbol is neither on the cit
 on purpose: two of the three genuine misses this pass repaired were in that list and the third was found by reading the paragraph,
 because proximity is not a decidable property of English prose. Protection therefore stays table-driven - PINS for quoted statements,
 `DEEP_LINKS` for clickable ones - and F18 is a standing exposure with a measured denominator, not a task a heuristic can finish.
+Iteration 77 read all 55 candidates against their target bytes, repaired twelve prose sites and found no confirmed stale pointer
+left in that set; the remaining 48 are historical, broad or false-paired. F18 stays open because the other plain citations
+still have no semantic guard.
 
 ### 13.1. Next 50 goals, in priority order
 

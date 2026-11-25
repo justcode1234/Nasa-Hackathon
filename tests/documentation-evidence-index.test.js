@@ -2611,10 +2611,20 @@ const TALLIES = [
    absent: ['explicit Node transport sends form inputs as JSON and preserves abort signals',
        'the index header states counts its own rows and the filesystem agree with'],
    marks: 0 },
+  { archive: 'docs/evidence/iter77-f18-triage-2026-11-25.log.gz',
+   lines: ['F18_TRIAGE start_utc=2026-11-25T09:31:15Z head=2588312854eca5366f80778ac4997bd9e0036f3d interpreter=v26.13.1',
+       'F18_BEFORE citations=1204 span_paired=219 candidates=55',
+       'F18_AFTER citations=1203 span_paired=218 candidates=48',
+       'F18_REPAIRS prose_sites=12 candidate_rows=13 cleared=7',
+       'F18_TRIAGE_DONE'],
+   phrases: ['=== F18 TRIAGE RECORD',
+       'No confirmed stale pointer remains in the original 55.'],
+   absent: ['MATRIX76_DONE', 'OFFLINE75_EXIT=0', 'DOCSGUARDS_SUMMARY tests 31'],
+   marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 261, `the table carries ${TALLIES.length} archives; subsections 57 through 75 quote more runs ` +
+  assert.ok(TALLIES.length >= 262, `the table carries ${TALLIES.length} archives; subsections 57 through 76 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -2780,7 +2790,7 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'seven-arm ladder that measures what that spec is worth and the offline run both were graded on. Every needle in those ' +
     'three rows is a rendered stamp with its values in place, because all three archives embed the same driver bytes and a ' +
     'needle copied from a line of that source therefore matches all of them - which is exactly what the row/archive matrix ' +
-    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number.');
+    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     let text;
     try { text = gunzipSync(await readFile(path.join(ROOT, archive))).toString('utf8'); }
