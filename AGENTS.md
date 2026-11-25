@@ -2737,6 +2737,18 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   documentation guards `31/31`, offline `340/340`, delivered-tree drift `CITED_LINES_CHECKED 1 DRIFTED 0`, and HEAD-mode
   drift `CITED_LINES_CHECKED 1 DRIFTED 1`, the expected pre-repair witness. Real phones, Safari/WebKit, microphones, audio
   quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened, no timeout raised.
+- 25 Nov, iteration 79 (`docs/validation.md` subsection 79): F13 closes. Six instruments now ship under `scripts/` -
+  `citation-band.mjs`, `tally-shape.mjs`, `exact-mutate.mjs`, `controls-deep-links.sh`, `evidence-needle-probe.mjs` and
+  `evidence-source.mjs` - with npm entry points `test:citations`, `test:tally-shape` and `test:deep-link-controls`. The
+  tracked-prose census of scratch-script paths moves from 28 to zero; historical one-pass drivers are cited through the
+  evidence archives that embed them or described without a runnable scratch path. A new documentation-command case rejects
+  any scratch script named in tracked prose and is proved green 8/8, red 7/8 after an injected path, then green 8/8 after a
+  byte-identical restore. The shipped deep-link ladder runs 11 legs with zero failures and restores both files identically.
+  Evidence is `docs/evidence/iter79-f13-instruments-2026-11-25.log.gz`. No application, e2e, configuration or generated
+  asset changed; F6/F7/F12 are next, while F18's broader plain-citation exposure remains open. The prose-final self-check
+  read documentation guards `32/32`, offline `341/341`, both drift modes `CITED_LINES_CHECKED 26 DRIFTED 0`, and the
+  scratch-script census `references=0`. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay
+  UNVERIFIED; `main` untouched, nothing deployed, no test weakened, no timeout raised.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -3013,7 +3025,7 @@ tools that produced it contains every failure string those tools print, so a mus
 evidence it certifies. `✖ `, `ℹ fail 1`, `SELF_REJECTED` and `MATRIX74_FAILED` each appear in exactly one of the seven iteration-74 archives,
 and the one that carries them is the matrix record, because it embeds `matrix74.sh` and `verify-row74.mjs` verbatim. The rule is therefore not
 "build negatives from parts" but "measure every negative against the archive before installing it", which is what
-`artifacts/scratch/iter74/probe74.mjs` prints: whole-line and substring counts per candidate, plus the names of the archives carrying each, so a
+`scripts/evidence-needle-probe.mjs` prints: whole-line and substring counts per candidate, plus the names of the archives carrying each, so a
 needle that is live nowhere and a needle that is poisoned sit in the same report. The same pass removed the defect iteration 73's matrix
 carried unknowingly: its driver filtered `iter74-row-matrix-*` out of the shelf, which guarantees the archive the run produces is never asked
 about, so `matrix74.sh` now reads every `iter74-*.log.gz` and refuses before comparing a needle unless `archives == rows`. The shelved record
@@ -3028,14 +3040,15 @@ properties with its own mutation leg. F18 is what the same pass found on the way
 *plain* citations, which are 1,204 of this ledger's pointers and are covered by neither the pin table (191 statements iteration 58
 chose to quote) nor `scripts/citation-drift.mjs`, because the scout is differential - it compares a cited ordinal in HEAD against the
 working copy, so a pointer that slid 162 lines across five commits never reads as drift to anything.
-`artifacts/scratch/iter75/citation-band.mjs` sizes that population (67 citations whose target cannot be resolved at all, 219 whose
+`scripts/citation-band.mjs` sizes that population (67 citations whose target cannot be resolved at all, 219 whose
 coordinate has a code span beside it, 55 where that symbol is neither on the cited line nor within three of it) and states no verdict
 on purpose: two of the three genuine misses this pass repaired were in that list and the third was found by reading the paragraph,
 because proximity is not a decidable property of English prose. Protection therefore stays table-driven - PINS for quoted statements,
 `DEEP_LINKS` for clickable ones - and F18 is a standing exposure with a measured denominator, not a task a heuristic can finish.
 Iteration 77 read all 55 candidates against their target bytes, repaired twelve prose sites and found no confirmed stale pointer
 left in that set; the remaining 48 are historical, broad or false-paired. F18 stays open because the other plain citations
-still have no semantic guard.
+still have no semantic guard. F13 closed in iteration 79: the current census, tally-shape, mutation, deep-link control,
+needle-probe and evidence-source instruments ship under `scripts/`, and tracked prose names zero scratch scripts.
 
 ### 13.1. Next 50 goals, in priority order
 
@@ -3077,7 +3090,7 @@ when existing behaviour is sound. No goal is marked executed merely by appearing
    each of the 4 projects, holds a turn open on the place read rather than on `/api/ask` - which is what arms it on
    the worker transport - supersedes it from a reply button, and pins that the late answer never lands and only the
    newest turn unlocks the composer. The seven-arm ladder at
-   `artifacts/scratch/iter74/close74.sh` (bytes in `docs/evidence/iter74-page-controls-2026-11-21.log.gz`) finds
+   the close driver embedded in `docs/evidence/iter74-page-controls-2026-11-21.log.gz` finds
    deleting `public/js/modules/chat.js:100` still 16 of 16 green, and the reason is structural: `revision`'s only
    writer `:166` aborts the request in the same statement and `messageSerial`'s writer `:82` aborts at `:85`, so every
    route that reaches `:100` has already rejected - the `fetch` signal at `public/js/lib/api.js:8` over HTTP,

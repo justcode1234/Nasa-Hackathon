@@ -168,3 +168,17 @@ test('a command named inside a sentence is a file the repository ships, not one 
     await assert.rejects(readFile(path.join(ROOT, fake)), `${fake} is cited as an injected fake and must stay out of the tree`);
   }
 });
+
+test('no tracked prose names a scratch script as a runnable instrument', async () => {
+  const scratchScript = /artifacts\/scratch\/[A-Za-z0-9_./-]+\.(?:m?js|cjs|js|py|sh)\b/g;
+  const sample = 'historical source: `artifacts/scratch/iter74/matrix74.sh`';
+  assert.deepEqual([...sample.matchAll(scratchScript)].map(match => match[0]),
+    ['artifacts/scratch/iter74/matrix74.sh'], 'the scratch-script scan must see a wrapped path');
+  const files = ['AGENTS.md', 'README.md', ...(await markdownFiles('docs'))];
+  const found = [];
+  for (const file of files) {
+    const text = await readFile(path.join(ROOT, file), 'utf8');
+    for (const match of text.matchAll(scratchScript)) found.push(`${file} -> ${match[0]}`);
+  }
+  assert.deepEqual(found, [], `these scratch scripts are named in tracked prose; ship the instrument or cite the archive that embeds it:\n${found.join('\n')}`);
+});

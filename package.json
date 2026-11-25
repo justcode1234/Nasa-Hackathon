@@ -30,6 +30,9 @@
     "test:country-spelling": "node scripts/country-spelling-cross-engine-probe.mjs",
     "test:choice-loss": "node scripts/place-choice-loss-census.mjs",
     "test:tap-rejection": "node scripts/place-tap-rejection-probe.mjs",
+    "test:citations": "node scripts/citation-band.mjs --spans",
+    "test:tally-shape": "node scripts/tally-shape.mjs",
+    "test:deep-link-controls": "bash scripts/controls-deep-links.sh",
     "test:release": "npm test && npm run test:e2e"
   },
   "dependencies": {

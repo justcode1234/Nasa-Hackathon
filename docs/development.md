@@ -60,8 +60,13 @@ npm run test:chat-place         # one country, detailed place checks
 npm run test:country-spelling   # this engine's country spellings against Chrome's recognition module
 npm run test:choice-loss        # offline, no server: does an untouched retry land on the branch the tap chose?
 npm run test:tap-rejection      # real Chrome, both transports: can a tapped place button reject its send?
+npm run test:citations          # plain-citation census and span-paired candidate list
+npm run test:tally-shape        # proves every archived-tally row has a positive needle
+npm run test:deep-link-controls # mutation ladder for the clickable deep-link table
 node scripts/check-sourced-context.js
 node scripts/check-documentation.js   # add --external to also GET the public URLs
+node scripts/evidence-source.mjs docs/evidence/iter74-row-matrix-2026-11-21.log.gz --list
+node scripts/evidence-needle-probe.mjs --prefix=iter74 'MATRIX74_DONE'
 node scripts/benchmark-mini-lm.js
 ```
 

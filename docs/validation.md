@@ -4767,7 +4767,7 @@ Offline negative control, executed. The gate was still running while this was me
 `public/` and `server/` from disk per request, so the product files could not be reverted in place. The control reverts
 the consumer as bytes instead: `git show HEAD:public/js/lib/chat-context.js`, which has no imports and so behaves in a
 copy exactly as the shipped file does, written beside the working copy, with two copies of the new test built by
-`artifacts/scratch/iter55-control/make-control.mjs` whose only difference from the committed file is three relative
+a generated control copy whose only difference from the committed file is three relative
 specifiers - assertions verbatim, and the generator throws instead of measuring the wrong subject if one fails to
 rewrite. Against the pre-fix bytes: **3 tests, 1 pass, 2 fail, exit 1** - the rainfall case fails at
 `tests/chat-loaded-evidence.test.js:42` with actual 0 against expected 1 and the soil case reports the estimate missing
@@ -4966,7 +4966,7 @@ tip.
 `66bd857ac010c1a4ccbbc01e3db0068f9a9036ceb3753f7d81efc580ad315584`) and
 `chat-evidence-raw-soilgrids.json` (866 bytes, sha256
 `c131235e01116209270956ad361b4efd2b227de40efdde9c9ae5851b7dd17224`), both recorded through the shipped handler by
-`artifacts/scratch/iter57/record-upstreams.mjs`, so they are the services' own bytes rather than a hand-written shape.
+the committed raw captures under `tests/e2e/fixtures/raw/`, so they are the services' own bytes rather than a hand-written shape.
 Neither carries a retrieval instant: the `retrieved …` the panel prints is this run's clock, which is why
 `tests/e2e/chat-evidence-panel.spec.js:96` masks exactly that pattern and nothing else, so a case cannot pass because
 it was recorded on the day it asserts. `tests/e2e/fixtures/chat-evidence-ask-rain.json` is deleted here - it held a
@@ -5104,7 +5104,7 @@ relaunching is now the recorded recovery.
 
 **Controls on the guard itself.** A tally table is only as good as its ability to notice a wrong tally, so the
 `the tally of every archived run` case was attacked eight times from
-`artifacts/scratch/iter57/run-tally-controls.mjs`, which patches one needle in the table, re-runs that single case and
+the iteration-57 tally-control harness, which patches one needle in the table, re-runs that single case and
 requires exit 1, then restores the file from the bytes it read at start: a wrong gate count (`248 passed (22.1m)` to
 `247`), a `-partial-` archive repointed at a run that does have a tally, a `marks` count off by one, a red-set short by
 one case, three `absent` needles replaced by a string the archive really does print, a `phrases` needle that names a
@@ -5237,7 +5237,7 @@ static-mobile` and `MISSED none of 4 projects ran` for all four. Any future iter
 driver's header comment.
 
 **Four half-fixes, each detected in all four projects.** A green focused spec proves the fix works; only a control
-proves the spec detects the bug. `artifacts/scratch/iter58/run-field-refusal-controls.mjs` patches one decision the
+proves the spec detects the bug. the iteration-58 field-refusal control harness patches one decision the
 fix makes, runs the one case in all four projects, then restores the file and rebuilds, and every case came back
 `RED as required (exit 1, 4 failed / 0 passed)`: reporting a refusal as an empty successful result
 (`{ok: false, reason: 'lookup-failed'}` → `{ok: true, count: 0}`), which is the exact defect the farmer met;
@@ -5298,7 +5298,7 @@ The five documentation guard files re-run over the table that archive joined pri
 (`docs/evidence/iter58-docsguards-final-2026-11-20.log.gz`).
 
 **Controls on the guard itself, six passes and 53 attacks.** A 36-row tally table is only as good as its ability to
-notice a wrong tally, so `artifacts/scratch/iter58/run-tally-controls.mjs` patches one needle, re-runs the single tally
+notice a wrong tally, so the iteration-58 tally-control harness patches one needle, re-runs the single tally
 case and requires it to go red, then restores the file. Pass one ran against a 25-row table: `CONTROL_ROWS 25`,
 `CONTROLS_DONE 24 cases, 24 detections aimed, 0 red-but-unaimed, 0 invalid patches, 0 green controls, 0 skipped
 anchors`, and `CONTROL_RESTORED_IDENTICAL true` against the opening hash `eaf7bc42673ff24d` with a green re-run after
@@ -5358,7 +5358,7 @@ rather than the product:
    first pass printed the literal token instead of the archive name for all 22 cases. The log is what says, and this
    time the log said something impossible.
 
-**Provenance.** `artifacts/scratch/iter58/capture-provenance.mjs` prints the interpreter (`v26.13.1`,
+**Provenance.** `docs/evidence/iter58-provenance-2026-11-20.log.gz` prints the interpreter (`v26.13.1`,
 `/opt/homebrew/Cellar/node/26.13.1_2/bin/node`), `GIT_HEAD d6ce8c884fd6979041113ccb035128aada97cbaf`,
 `GIT_BRANCH fix/chat-flow-and-answers`, `GIT_REMOTE_MAIN 4a54fa3fbd75f4b1ccaae238b00d439accf1d0d4 refs/heads/main`,
 the `git status --porcelain` of the moment and the sha256 of the nine files this iteration ships or reads as input
@@ -5519,7 +5519,7 @@ it is also the reading that first showed the suite at 260 rather than 259.
 re-run on their own read **25 tests / 25 pass / 0 fail / 0 skipped**, exit 0, under a header line that prints the table
 size they were reading: `GUARD_TABLE_ROWS 49`, because their own green run is row 50
 ([docs/evidence/iter59-docsguards-final-2026-11-20.log.gz](evidence/iter59-docsguards-final-2026-11-20.log.gz)).
-`artifacts/scratch/iter59/capture-provenance.mjs` prints the interpreter (`v26.13.1`,
+`docs/evidence/iter59-provenance-2026-11-20.log.gz` prints the interpreter (`v26.13.1`,
 `/opt/homebrew/Cellar/node/26.13.1_2/bin/node`), `GIT_HEAD cadd0b375191b9616a76c121304e318ed642a473`,
 `GIT_BRANCH fix/chat-flow-and-answers`, `GIT_REMOTE_MAIN 4a54fa3fbd75f4b1ccaae238b00d439accf1d0d4 refs/heads/main`, the
 working-tree status of the moment and the sha256/bytes/lines of the eight files this iteration ships or reads as input
@@ -6462,9 +6462,9 @@ Neither of those readings is taken on faith by this ledger: every capture this s
 (`lines`), the substrings it must contain (`phrases`), the strings it must not (`absent`), the number of `✘` case marks
 it must equal (`marks`) and, for a run that went red, the exact set of red case titles (`onlyReds`); the guard refuses a
 row whose archive never printed one of those strings, so no figure in this section is quoted from memory. The rows were
-emitted by `artifacts/scratch/iter65/tally65.py`, which validates each candidate against the archive on disk before
-printing it and refuses to emit an apostrophe or a line wider than 118 characters; `artifacts/scratch/iter65/shelf.py`
-decides what reaches the shelf and `artifacts/scratch/iter65/final.sh` takes the two closing readings, all three under
+emitted by the iteration-65 tally installer, which validates each candidate against the archive on disk before
+printing it and refuses to emit an apostrophe or a line wider than 118 characters; the iteration-65 shelving tool
+decides what reaches the shelf and the closing driver takes the two closing readings, all three under
 the `.gitignore:4` limitation subsection 58 records - a reviewer checking out this branch cannot run them, only
 re-derive their output from the guard that ships. The shelving script had two defects of the kind this programme keeps
 meeting, both found by reading its own output rather than by a test. Its prose-cite extractor stripped the `iter65-`
@@ -6497,7 +6497,7 @@ stamping 152. Tree mode counts 13 more pointers than the reading above because t
 and head mode reads the committed prose, so its 230 is a different population rather than a smaller one. The 18 inside-hunk pointers
 are the honest limit on that `DRIFTED 0`: `scripts/citation-drift.mjs:57` returns null for a pointer whose target line sits in a hunk
 this branch rewrote and `scripts/citation-drift.mjs:74` counts it and moves on, so it is never compared.
-`artifacts/scratch/iter65/drift-skipped.mjs`, which walks the same diff and prints what the shipped tool only counts, names all 18:
+the iteration-65 drift-skipping census, which walks the same diff and prints what the shipped tool only counts, names all 18:
 5 into `public/js/modules/workflow-assistant.js`, 5 into `tests/e2e/chat-refused-ask-keeps-question.spec.js` and 8 into
 `tests/workflow-place-choices.test.js`. Every one of them points at code this pass wrote, where only the prose can say whether the line
 still means what the sentence claims, and several are pinned by quote in the anchor table rather than left to a line number. The first
@@ -6769,9 +6769,9 @@ from 771 split-lines to 788 and re-addressed 543 of them (`ALIGNED … LINES_MOV
 passes are kept as failures: the first matched a cited line by its bare text, which lands a `}` or `});` on the wrong
 neighbour and finished `DOCUMENT_CITATIONS_REPOINTED 57` with `NOTES 10` ambiguity lines - one `:229` cite had
 candidates `[231, 243, 779]` - and a later pass died inside its own report with `IndexError: list index out of range`
-at `artifacts/scratch/iter67/repoint_docs.py:107`, which was reading HEAD bytes at a citation the pre-fix file never
-had. The pass that shipped (`artifacts/scratch/iter67/repoint_docs.py`, captured in
-`docs/evidence/iter67-docs-repoint-2026-11-20.log.gz`) aligns HEAD against the working tree over the whole file with a
+at line 107 of the iteration-67 re-pointing script, which was reading HEAD bytes at a citation the pre-fix file never
+had. The pass that shipped (captured in `docs/evidence/iter67-docs-repoint-2026-11-20.log.gz`) aligns HEAD against the
+working tree over the whole file with a
 sequence matcher, moves each citation of an edited file to the aligned line, and then refuses to trust the alignment:
 every move is re-checked against the HEAD bytes of the old line and the tree bytes of the new one, and a citation
 naming a statement the fix rewrote or deleted keeps its number and is printed for a human instead. That is what the
@@ -7122,7 +7122,7 @@ Iteration 68's queue line asked F9 for two things: answer *which one* when the s
 or more, and keep out of the selector a name the list does not carry. The second half measured false before anything
 was written - `public/data/locations/US.json` lists `West Athens` exactly once (row 5407841, CA), so the name that
 queue called a risk is an ordinary single-row town that resolves to its own point. The first half is real and wider
-than the example: `artifacts/scratch/iter69/name-counts.mjs` reads the shipped lists and finds the United States
+than the example: the iteration-69 name-count census reads the shipped lists and finds the United States
 holding `Athens` five times (GA, OH, TN, TX, AL) and Argentina holding `San Vicente` three (Buenos Aires once,
 Misiones twice).
 
@@ -7610,7 +7610,7 @@ prints is a repo-root path (`› tests/e2e/chat-model-egress.spec.js:`), so the 
 shape of defect as iteration 71's two blind counters, found the same way: a number in a log that no other line contradicts. The
 shipped pattern now allows slashes and the census leg prints `CENSUS_SPECS 31` beside the gate's line so the two `--list` and run
 shapes cross-check; the wrong value stays in the gate archive because that archive is what the run printed. The second lying
-instrument was this subsection's own row verification. `artifacts/scratch/iter72/verify-row72.mjs` checks each candidate needle
+instrument was this subsection's own row verification. the iteration-72 candidate-row verifier checks each candidate needle
 against the built bytes, and the first discrimination matrix built on it reported `cross_accepted=0` for five rows against four
 archives, which would have been the strongest claim in the pass. It was vacuous: the verifier selects the row to test by archive
 filename, so feeding it a foreign archive made it re-test the *matching* row twenty times and never once a mismatched pair. With an
@@ -7732,7 +7732,7 @@ side (the table grows from 176 entries to 191), which moved that guard's own sel
 
 **Controls, unit ladder.** `tests/model-failure.test.js` was run four times against three states of
 `public/js/lib/model-failure.js` (`docs/evidence/iter73-unit-controls-2026-11-21.log.gz`, driver
-`artifacts/scratch/iter73/unit-controls.sh`, which mutates one file, runs the suite, restores it and refuses to continue
+the iteration-73 unit-control driver, which mutates one file, runs the suite, restores it and refuses to continue
 if a digest does not come back byte-identical). Baseline: `tests 15 / pass 15 / fail 0` at md5 `a614c2ff10a95f4a1dd5b7693391bd90`.
 `ctl1-causes-swapped` exchanges the two clauses at `:34` and `:35` - the tidy-up a later pass would plausibly make - and
 goes red with `pass 13 / fail 2`: `a corrupt model binary is not called a missing runtime`, which is the ordering case
@@ -7747,7 +7747,7 @@ the driver and its log. Both ladders ran in their own process group and print `D
 `SELF_PGID` in those stamps because the launcher calls `setpgrp` and so leads the group it is measured against.
 
 **Controls, page ladder.** Three legs, each `npm run build` plus `npx playwright test tests/e2e/speech-microphone.spec.js`
-on both transports (`docs/evidence/iter73-page-controls-2026-11-21.log.gz`, driver `artifacts/scratch/iter73/page-controls.sh`,
+on both transports (`docs/evidence/iter73-page-controls-2026-11-21.log.gz`, driver source embedded in that archive,
 launched detached at `2026-11-21T13:59:20Z` against `021ecf79`, each leg's raw suite output archived beside the log). Leg A, the
 shipped bytes: build exit 0, `served=ed702667361edf7657db607d71d5c289` for the module the browser actually fetched - the
 same digest as the source file, which is what makes the rest of the leg about the code rather than about a stale
@@ -7912,15 +7912,15 @@ shelf claims the failing bytes. Two instrument readings also corrected themselve
 supersession window was a microtask, and this file's older claim that a spec of this shape "cannot be armed on the
 static transport at all", which is true of `/api/ask` and false of the place read.
 
-**Reproduce.** The driver named `artifacts/scratch/iter74/close74.sh` takes one of `preconditions`, `spec`, `control`,
-`offline`, `offline-final`, `docguards` or `drift`; `artifacts/scratch/iter74/shelve74.mjs` assembles every archive
-header from one place (`--to=DIR` for a dry shelf, gzip mtime pinned to 0 so dry and delivered bytes are identical);
-`artifacts/scratch/iter74/verify-row74.mjs` refuses a candidate row whose needle lists are empty and prints the shipped
-row text with `--emit`; `artifacts/scratch/iter74/probe74.mjs` measures any candidate needle as a whole line and as a
-substring over the shelf plus whatever dry drafts exist, which is the only way a negative can be shown to be live rather
-than merely unsatisfiable; `artifacts/scratch/iter74/matrix74.sh` asks every row about every archive and refuses unless
-the two denominators agree before it compares a needle. The instruments live in the gitignored scratch directory until
-F13 moves them into the repository.
+**Reproduce.** The close driver, shelver, candidate-row verifier and matrix driver are embedded verbatim in
+`docs/evidence/iter74-page-controls-2026-11-21.log.gz` and `docs/evidence/iter74-row-matrix-2026-11-21.log.gz`.
+List or extract those sections with `node scripts/evidence-source.mjs <archive> --list`; the shipped
+`scripts/evidence-needle-probe.mjs` measures candidate needles as whole lines and substrings over the current shelf.
+The historical dry-shelf mode and denominator checks are preserved in the embedded driver sources, so a fresh
+clone can inspect exactly what ran without a gitignored scratch directory. The candidate verifier still refuses
+empty needle lists and prints row text with `--emit`; the matrix still asks every row about every archive and
+refuses unless the two denominators agree before it compares a needle. F13's shipped instruments now cover the
+repeatable census and extraction work; the one-pass drivers remain reproducible from their archives.
 
 **UNVERIFIED.** Real phones, Safari/WebKit, microphones, audio quality and independent agronomy, as always, plus one
 specific sequence: any user-reachable path that puts a plain `/api/ask` reply across an assistant-side context change,
@@ -7991,7 +7991,7 @@ clickable: they are prose like "the guard at `chat.js:100` refuses to render a s
 colon and a reader's browser jumps nowhere. Two instruments certify those - the pin table, which covers the 191 statements
 iteration 58 chose to quote, and `scripts/citation-drift.mjs`, which asks only whether a cited line moved *since HEAD*. Neither
 asks whether the line names what the sentence says, and because the drift scout is differential a pointer that slid 149 lines
-across five commits is invisible to it permanently. `artifacts/scratch/iter75/citation-band.mjs` sizes that population instead of
+across five commits is invisible to it permanently. `scripts/citation-band.mjs` sizes that population instead of
 ruling on it: 1,204 `path:NNN` citations over 43 tracked markdown files; 67 whose target cannot be read at all (9 name no tracked
 file, 58 resolve to two or four candidates); 25 whose sentence carries no identifier worth grading; and of the 219 that put a code
 span beside the coordinate, 126 name a symbol on the cited line, 38 within three lines of it, 29 elsewhere in the file, and 26
@@ -8011,7 +8011,7 @@ condition, and no proximity heuristic separates that from a pointer that genuine
 quoted statements, `DEEP_LINKS` for clickable ones - and F18 records the ungraded remainder as a standing exposure rather than a
 solved problem.
 
-Each property is graded by a mutation rather than by a reading. `artifacts/scratch/iter75/controls75.sh` restores pristine copies
+Each property is graded by a mutation rather than by a reading. `scripts/controls-deep-links.sh` restores pristine copies
 of the guard and the prose, applies one anchor-and-replacement through `mutate.mjs` - which refuses a leg whose anchor does not
 occur exactly the number of times claimed - re-parses the file, runs the guard pair and then requires that leg's own message in
 the output. Eleven legs: two controls plus one per property (coordinate-only label, row spliced to a pointer that does not exist,
@@ -8122,3 +8122,29 @@ generated-asset file changed, so no browser leg was owed. The prose-final self-c
 the expected pre-repair witness for the tally-row pointer this pass moved back onto its statement. Those self-check outputs
 are unarchived by design. F13 is next; F18's broader plain-citation exposure remains open. Real phones, Safari/WebKit,
 microphones, audio quality and independent agronomy stay UNVERIFIED.
+
+### 79. A fresh clone can run the instruments, and tracked prose names no scratch script
+
+**VERIFIED FIX (closes F13).** The ledger named 28 scratch-script paths across 43 tracked markdown files. Some were
+historical one-pass drivers, but the prose gave a fresh clone no runnable path and no extraction recipe. Six instruments now
+ship under `scripts/`: the plain-citation census, tally-shape census, exact-string mutator, deep-link control ladder,
+evidence-needle probe and evidence-source extractor. Three npm commands expose the safe repeatable checks:
+`test:citations`, `test:tally-shape` and `test:deep-link-controls`.
+
+The scratch-script census moves from 28 references to zero. Current instruments point at their shipped paths; historical
+one-pass drivers point at the evidence archives that embed them or are described without a runnable scratch path. The two
+raw JSON fixtures remain named as historical inputs, not as instruments. `scripts/evidence-source.mjs --list` verifies the
+md5 of every embedded section before a reviewer extracts it, so the archive is the reproducibility boundary rather than a
+gitignored workspace.
+
+A new case in `tests/documentation-commands.test.js` rejects any scratch script named in tracked prose. Its control is
+green at 8/8, red at 7/8 after injecting a representative scratch path into the development doc, and green again
+at 8/8 after a byte-identical restore. The promoted deep-link ladder runs all 11 legs with zero failures and restores both
+mutated files identically. The complete census, control logs, smoke tests, six shipped sources and tracked diff are archived
+as `docs/evidence/iter79-f13-instruments-2026-11-25.log.gz`.
+
+No application, e2e, configuration or generated-asset file changed; package.json gained only command aliases. The
+prose-final self-check read documentation guards `32/32`, offline `341/341`, both drift modes
+`CITED_LINES_CHECKED 26 DRIFTED 0`, and the scratch-script census `references=0`; those outputs are unarchived by design.
+F6/F7/F12 are next, while F18's broader plain-citation exposure remains open. Real phones, Safari/WebKit, microphones,
+audio quality and independent agronomy stay UNVERIFIED.

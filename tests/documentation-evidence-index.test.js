@@ -2640,10 +2640,21 @@ const TALLIES = [
        'ROW_SHAPE_BAD docs/evidence/iter57-panel-catchall-last-partial-2026-11-20.log.gz has no positive content needle'],
    absent: ['F18_TRIAGE_DONE', 'MATRIX76_DONE', 'OFFLINE75_EXIT=0'],
    marks: 0 },
+  { archive: 'docs/evidence/iter79-f13-instruments-2026-11-25.log.gz',
+   lines: ['F13_INSTRUMENTS start_utc=2026-11-25T11:05:28Z head=c1cade6da9911742d319b95ab27f4909be0f8eb7 interpreter=v26.13.1',
+       'F13_SCRATCH_REFERENCES before=28 after=0',
+       'F13_SHIPPED_SCRIPTS 6 npm_scripts=3',
+       'F13_GUARD baseline=8/8 mutation=7/8 restored=8/8 identical=true',
+       'F13_DEEP_LINK_CONTROLS legs=11 failed=0 restored_identical=true',
+       'F13_DONE'],
+   phrases: ['=== SHIPPED SOURCE citation-band.mjs',
+       '=== SHIPPED SOURCE evidence-source.mjs'],
+   absent: ['F17_DONE', 'F18_TRIAGE_DONE', 'MATRIX76_DONE'],
+   marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 263, `the table carries ${TALLIES.length} archives; subsections 57 through 77 quote more runs ` +
+  assert.ok(TALLIES.length >= 264, `the table carries ${TALLIES.length} archives; subsections 57 through 78 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -2809,7 +2820,7 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'seven-arm ladder that measures what that spec is worth and the offline run both were graded on. Every needle in those ' +
     'three rows is a rendered stamp with its values in place, because all three archives embed the same driver bytes and a ' +
     'needle copied from a line of that source therefore matches all of them - which is exactly what the row/archive matrix ' +
-    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule.');
+    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule. Iteration 79 adds the shipped-instrument census and the guard control that keeps scratch scripts out of tracked prose.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     assert.ok((lines?.length ?? 0) + (phrases?.length ?? 0) + (onlyReds?.length ?? 0) > 0,
       `ROW_SHAPE_BAD ${archive} has no positive content needle (lines, phrases or onlyReds)`);
