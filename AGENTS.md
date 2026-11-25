@@ -2749,6 +2749,20 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   read documentation guards `32/32`, offline `341/341`, both drift modes `CITED_LINES_CHECKED 26 DRIFTED 0`, and the
   scratch-script census `references=0`. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay
   UNVERIFIED; `main` untouched, nothing deployed, no test weakened, no timeout raised.
+- 25 Nov, iteration 80 (`docs/validation.md` subsection 80): F6 closes and F7 retires as VERIFIED SOUND; F12 is BLOCKED
+  with an explicit unblock condition. The drift scout now treats a blank or missing pair as `UNREADABLE` and exits nonzero,
+  strips clock times and URL ports before reading bare `:NNN` continuations, and removes `file:line:column` triples before
+  they can donate their column as a citation. Three unit cases are green 3/3; removing the clock filter, triple filter or
+  blank-pair check makes the relevant case red at 2/3, and the byte-identical restore returns 3/3. F7's historical
+  re-point script no longer ships, the current tree has zero re-point tools and zero scratch-script references, so the
+  prefixed-only defect is not reachable in the current workflow. F12 remains: a folded name over 60 characters still falls
+  through to the read-only answer during a cold list refusal, because no safe wording test can distinguish a long row name
+  from a long evidence question without the list. The existing focused file passes 8/8 with that limit pinned. Unblock F12
+  only with a product-approved discriminator or a cached known-row inventory. Evidence is
+  `docs/evidence/iter80-f6-f7-f12-2026-11-25.log.gz`. No application, e2e, configuration or generated asset changed; next is
+  a fresh scout of §13.1 items 9-20. The prose-final self-check read documentation guards `32/32`, offline `344/344`, and
+  both drift modes `CITED_LINES_CHECKED 1 DRIFTED 0 UNREADABLE 0`. Real phones, Safari/WebKit, microphones, audio quality
+  and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened, no timeout raised.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -3048,7 +3062,11 @@ because proximity is not a decidable property of English prose. Protection there
 Iteration 77 read all 55 candidates against their target bytes, repaired twelve prose sites and found no confirmed stale pointer
 left in that set; the remaining 48 are historical, broad or false-paired. F18 stays open because the other plain citations
 still have no semantic guard. F13 closed in iteration 79: the current census, tally-shape, mutation, deep-link control,
-needle-probe and evidence-source instruments ship under `scripts/`, and tracked prose names zero scratch scripts.
+needle-probe and evidence-source instruments ship under `scripts/`, and tracked prose names zero scratch scripts. F6 closed
+in iteration 80: blank/missing pairs are unreadable and clock/URL/column tokens cannot become citations. F7 is VERIFIED
+SOUND because no re-point tool ships in the current workflow. F12 is BLOCKED: a cold refused list provides no safe way to
+distinguish a folded name over 60 characters from a long evidence question; it needs a product-approved discriminator or a
+cached known-row inventory.
 
 ### 13.1. Next 50 goals, in priority order
 

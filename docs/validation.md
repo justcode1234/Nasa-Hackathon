@@ -8148,3 +8148,33 @@ prose-final self-check read documentation guards `32/32`, offline `341/341`, bot
 `CITED_LINES_CHECKED 26 DRIFTED 0`, and the scratch-script census `references=0`; those outputs are unarchived by design.
 F6/F7/F12 are next, while F18's broader plain-citation exposure remains open. Real phones, Safari/WebKit, microphones,
 audio quality and independent agronomy stay UNVERIFIED.
+
+### 80. The drift scout refuses empty evidence, F7 has no current tool, and F12 needs a decision
+
+**VERIFIED FIX (closes F6).** The drift scout treated two blank or missing lines as equal and let every bare `:NNN` on a
+line inherit the last source path, so clock times and `file:line:column` triples could become citations that named the
+wrong line. It now classifies a blank or missing pair as `UNREADABLE` and exits nonzero, strips clock timestamps and URL
+ports before scanning continuations, and removes column triples before their trailing column can be read as a new line.
+The parser and comparator are exported for direct tests. Three cases cover the clock/URL/triple filter, a real range and
+the blank/missing/same/drift outcomes.
+
+Each property has a mutation: removing the clock filter, the triple filter or the blank-pair check reddens its case at
+2/3, and the byte-identical restore returns 3/3. The hardened CLI reports `UNREADABLE 0` on the current tree in both
+modes. The complete control logs, script diff and shipped test source are archived with the two queue outcomes below in
+`docs/evidence/iter80-f6-f7-f12-2026-11-25.log.gz`.
+
+**VERIFIED SOUND (retires F7).** The prefixed-only re-point defect belonged to a historical scratch script. No re-point
+tool ships in the current `scripts/` inventory, tracked prose names zero scratch scripts, and the current repair workflow
+is the manual F18 triage plus the shipped citation instruments. There is no current code path on which the old regex can
+silently move a bare-basename pointer.
+
+**BLOCKED (F12; unblock condition required).** A folded message over 60 characters still falls through to the read-only
+answer when the saved list refuses cold. The successful-read path can compare the full folded wording with rows, but a
+refused read has no rows and no safe wording test that separates a long saved name from a long evidence question. The
+existing focused file remains green at 8/8 and pins the limit rather than hiding it. Unblock only with a product-approved
+discriminator or a cached known-row inventory; do not widen `mentionPhrase` merely to make this case green.
+
+No application, e2e, configuration or generated-asset file changed. The prose-final self-check read documentation guards
+`32/32`, offline `344/344`, and both drift modes `CITED_LINES_CHECKED 1 DRIFTED 0 UNREADABLE 0`; those outputs are
+unarchived by design. The next action is a fresh scout of §13.1 items 9-20. Real phones, Safari/WebKit, microphones, audio
+quality and independent agronomy stay UNVERIFIED.

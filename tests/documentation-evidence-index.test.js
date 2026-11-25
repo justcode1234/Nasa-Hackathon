@@ -2651,10 +2651,20 @@ const TALLIES = [
        '=== SHIPPED SOURCE evidence-source.mjs'],
    absent: ['F17_DONE', 'F18_TRIAGE_DONE', 'MATRIX76_DONE'],
    marks: 0 },
+  { archive: 'docs/evidence/iter80-f6-f7-f12-2026-11-25.log.gz',
+   lines: ['F6_F7_F12 start_utc=2026-11-25T11:25:11Z head=32c3ab15ec051d072df1f48bee581447cce387ef interpreter=v26.13.1',
+       'F6_CONTROL baseline=3/3 clock=red triple=red blank=red restored=3/3 identical=true',
+       'F7_REPOINT_TOOLS=0 current_scratch_references=0 outcome=VERIFIED_SOUND',
+       'F12_LIMIT tests=8 pass=8 long_refusal_fallthrough=pinned outcome=BLOCKED',
+       'F6_F7_F12_DONE'],
+   phrases: ['=== F6 BLANK MUTATION',
+       'the same long row name with the list refusing still falls through, which is this fix’s limit'],
+   absent: ['F13_DONE', 'F17_DONE', 'F18_TRIAGE_DONE'],
+   marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 264, `the table carries ${TALLIES.length} archives; subsections 57 through 78 quote more runs ` +
+  assert.ok(TALLIES.length >= 265, `the table carries ${TALLIES.length} archives; subsections 57 through 79 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -2820,7 +2830,7 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'seven-arm ladder that measures what that spec is worth and the offline run both were graded on. Every needle in those ' +
     'three rows is a rendered stamp with its values in place, because all three archives embed the same driver bytes and a ' +
     'needle copied from a line of that source therefore matches all of them - which is exactly what the row/archive matrix ' +
-    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule. Iteration 79 adds the shipped-instrument census and the guard control that keeps scratch scripts out of tracked prose.');
+    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule. Iteration 79 adds the shipped-instrument census and the guard control that keeps scratch scripts out of tracked prose. Iteration 80 adds the F6 mutation controls, F7 retirement census and F12 blocked-limit record.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     assert.ok((lines?.length ?? 0) + (phrases?.length ?? 0) + (onlyReds?.length ?? 0) > 0,
       `ROW_SHAPE_BAD ${archive} has no positive content needle (lines, phrases or onlyReds)`);
