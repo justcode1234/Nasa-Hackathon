@@ -24,15 +24,19 @@ const SOURCES = /^(public|server|tests)\//;
 const CLOCK = /\b\d{1,2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?\b/g;
 const URL = /https?:\/\/\S+/g;
 const TRIPLE = /((?:public|server|tests)\/[A-Za-z0-9_./-]+\.js):\d+(?:-\d+)?:\d+/g;
+const BARE_FILE = /(?<![A-Za-z0-9_./-])(?:[A-Za-z0-9_-]+\.js):\d+(?:-\d+)?/g;
 
 export function citationsFromLine(line) {
-  const cleaned = line.replace(URL, ' ').replace(CLOCK, ' ').replace(TRIPLE, '$1');
+  const cleaned = line.replace(URL, ' ').replace(CLOCK, ' ').replace(TRIPLE, '$1').replace(BARE_FILE, ' ');
   const found = [];
-  let last = null;
-  for (const match of cleaned.matchAll(/((?:public|server|tests)\/[A-Za-z0-9_./-]+\.js)|:([0-9]+)(?:-([0-9]+))?(?![\d:])/g)) {
-    if (match[1]) { last = match[1]; continue; }
-    if (!last) continue;
-    found.push({ file: last, from: Number(match[2]), to: Number(match[3] ?? match[2]) });
+  for (const sentence of cleaned.split(/(?<=[.!?])\s+/)) {
+    let last = null, lastIndex = -1;
+    for (const match of sentence.matchAll(/((?:public|server|tests)\/[A-Za-z0-9_./-]+\.js)|:([0-9]+)(?:-([0-9]+))?(?![\d:])/g)) {
+      if (match[1]) { last = match[1]; lastIndex = match.index; continue; }
+      if (!last || match.index - lastIndex > 120) continue;
+      found.push({ file: last, from: Number(match[2]), to: Number(match[3] ?? match[2]) });
+      lastIndex = match.index;
+    }
   }
   return found;
 }

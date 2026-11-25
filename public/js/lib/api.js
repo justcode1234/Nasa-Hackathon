@@ -9,7 +9,7 @@ async function httpApi(path, { method, body, signal }) {
     ...(body === undefined ? {} : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }).catch(reason => { throw unlabelled(reason, signal); });
   let data;
   try { data = await response.json(); }
-  catch { throw new Error('The Node.js API returned an unreadable response. Check the local server.'); }
+  catch (reason) { if (signal?.aborted === true) throw cancellation(); throw new Error('The Node.js API returned an unreadable response. Check the local server.', { cause: reason instanceof Error ? reason : new Error(String(reason?.message ?? reason)) }); }
   if (!response.ok) throw identified(new Error(data?.error?.message ?? `The Node.js API returned HTTP ${response.status}.`), response.status, data?.error?.code);
   return data;
 }

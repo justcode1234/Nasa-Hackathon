@@ -4343,7 +4343,7 @@ Controls. Four, each removing one part, run on the same working tree the gate ra
   loss and not merely on a missing source token. Re-applying the rule returns 8 / 0 in the unit file and 8 of 8 in
   the browser. The offline suite is 245 of 245, 0 failed and 0 skipped in 27.6 s
   (`docs/evidence/iter52-npm-test-2026-11-19.log.gz`), with five new cases at
-  `tests/api-transport.test.js:61-97`, and `tests/e2e/api-exit-parity.spec.js` adds one case to each of the four
+  `tests/api-transport.test.js`, and `tests/e2e/api-exit-parity.spec.js` adds one case to each of the four
   projects: 236 tests in 23 files where `npx playwright test --list` counted 232 in 22 before. One existing
   assertion was rewritten because it is superseded, and it got stricter: `tests/e2e/review-phase-b.spec.js:30` used
   to accept `/No fields were invented|Failed to fetch|fetch failed|NetworkError/`, which tolerated three runtime
@@ -8178,3 +8178,28 @@ No application, e2e, configuration or generated-asset file changed. The prose-fi
 `32/32`, offline `344/344`, and both drift modes `CITED_LINES_CHECKED 1 DRIFTED 0 UNREADABLE 0`; those outputs are
 unarchived by design. The next action is a fresh scout of §13.1 items 9-20. Real phones, Safari/WebKit, microphones, audio
 quality and independent agronomy stay UNVERIFIED.
+
+### 81. A cancellation that arrived during the HTTP body read stopped being a failure
+
+**VERIFIED FIX (§13.1 item 11).** `public/js/lib/api.js` previously caught every `response.json()` rejection and
+replaced it with the unreadable-response sentence. A caller that aborted while the body was still arriving therefore lost
+the `cancelled` fact, and the page could announce a failure for a stop the farmer requested. The catch now checks the
+caller's own signal first; an unexpected `AbortError` remains an unreadable response and keeps its cause.
+
+The offline file went from 15 pass / 1 fail on the original bytes to 16 / 16 after the one-line, line-neutral repair. The
+new browser case executes in all four projects: 12 / 12 green on the delivered build. Reverting only the api.js line and
+rebuilding makes the two Node projects fail with the unreadable-response sentence while the two static projects stay
+green; restoring byte-identically and rebuilding returns 12 / 12. The full four-project gate on the frozen tree passed
+368 / 368 in 26.2 minutes, exit 0.
+
+The post-gate drift check then exposed a continuation flaw in the hardened scout: a bare `:NNN` could still inherit a
+full path across a sentence or past a standalone bare filename, and one historical test range included blank separator
+lines. The parser now resets at sentence boundaries, strips standalone bare-file citations before scanning, and the two
+prose ranges were narrowed to the file name. Five mutation controls are green 4/4 at baseline, red 3/4 for each removed
+filter/check, and green 4/4 after a byte-identical restore. The delivered-tree scout reads 70 checked / 0 unreadable;
+HEAD mode retains eight unreadable witnesses for the pre-repair range until this commit lands.
+
+The evidence is `docs/evidence/iter81-http-body-cancel-2026-11-25.log.gz`. No dependency, timeout, retry or assertion was
+added to hide a failure; the two new offline cases separate caller-owned cancellation from a runtime-raised AbortError,
+and the browser case executes rather than skips on the worker transports. Next: §13.1 item 12. Real phones, Safari/WebKit,
+microphones, audio quality and independent agronomy stay UNVERIFIED.

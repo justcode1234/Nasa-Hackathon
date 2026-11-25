@@ -51,3 +51,36 @@ test('a cancellation the page asked for stays silent while an AbortError it neve
     expect(warnings.join('\n')).not.toMatch(/request ended with no status/);
   }
 });
+
+// Item 11: on HTTP the cancellation can land after fetch resolves, while response.json() is still reading. The
+// worker transport has no page-side body read, so the same case arms its existing caller-owned cancellation there.
+test('caller cancellation during an HTTP body read stays cancellation on both transports',async({page},testInfo)=>{
+  await page.goto('/',{waitUntil:'domcontentloaded'});
+  const expectedTransport=testInfo.project.name.startsWith('node')?'http':'worker';
+  expect(await page.evaluate(()=>document.querySelector('meta[name="fieldshift-transport"]').content)).toBe(expectedTransport);
+  const outcome=await page.evaluate(async()=>{
+    const m=await import('/js/lib/api.js');
+    const controller=new AbortController();
+    const describe=run=>run().then(()=>'resolved',error=>`${error.name}|${error.cancelled === true}|${error.message}`);
+    if(document.querySelector('meta[name="fieldshift-transport"]').content==='worker'){
+      const pending=describe(()=>m.api('/api/ask',{method:'POST',body:{question:'Where is the rain?'},signal:controller.signal}));
+      controller.abort();
+      return pending;
+    }
+    const real=window.fetch;
+    let markReading;
+    const reading=new Promise(resolve=>{markReading=resolve;});
+    window.fetch=async()=>({ok:true,status:200,json:()=>{
+      markReading();
+      return new Promise((resolve,reject)=>controller.signal.addEventListener('abort',
+        ()=>reject(new DOMException('body read aborted','AbortError')),{once:true}));
+    }});
+    const pending=describe(()=>m.api('/api/ask',{method:'POST',body:{question:'Where is the rain?'},signal:controller.signal}));
+    await reading;
+    controller.abort();
+    const result=await pending;
+    window.fetch=real;
+    return result;
+  });
+  expect(outcome).toBe('AbortError|true|Cancelled');
+});

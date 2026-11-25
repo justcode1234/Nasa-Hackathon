@@ -164,3 +164,31 @@ test('a failure with no status behind it borrows no authored identity', async t 
   assert.equal(error.code, undefined, 'an unlabelled failure must not read as a coded one');
   assert.match(warnings.join('\n'), /request ended with no status/);
 });
+
+test('caller cancellation while the HTTP response body is being read stays cancellation', async t => {
+  nodeMode(t);
+  const controller = new AbortController();
+  let markReading;
+  const reading = new Promise(resolve => { markReading = resolve; });
+  t.mock.method(globalThis, 'fetch', async () => ({ ok: true, status: 200,
+    json: () => {
+      markReading();
+      return new Promise((resolve, reject) => controller.signal.addEventListener('abort',
+        () => reject(new DOMException('The user aborted a request.', 'AbortError')), { once: true }));
+    } }));
+  const pending = rejected(api('/api/ask', { method: 'POST', body: { question: 'Where is the rain?' }, signal: controller.signal }));
+  await reading;
+  controller.abort();
+  const error = await pending;
+  assert.equal(error.cancelled, true, 'the caller cancelled while the body was in flight');
+  assert.equal(error.name, 'AbortError');
+});
+
+test('an unexpected AbortError while reading the HTTP body is still an unreadable response', async t => {
+  nodeMode(t);
+  t.mock.method(globalThis, 'fetch', async () => ({ ok: true, status: 200,
+    json: async () => { throw new DOMException('runtime abort nobody asked for', 'AbortError'); } }));
+  const error = await rejected(api('/api/ask', { signal: new AbortController().signal }));
+  assert.equal(error.cancelled, undefined, 'the runtime name must not borrow the caller cancellation fact');
+  assert.match(error.message, /unreadable response/);
+});

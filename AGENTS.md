@@ -2763,6 +2763,17 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   a fresh scout of §13.1 items 9-20. The prose-final self-check read documentation guards `32/32`, offline `344/344`, and
   both drift modes `CITED_LINES_CHECKED 1 DRIFTED 0 UNREADABLE 0`. Real phones, Safari/WebKit, microphones, audio quality
   and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed, no test weakened, no timeout raised.
+- 25 Nov, iteration 81 (`docs/validation.md` subsection 81): §13.1 item 11 closes. The HTTP body-read catch now checks
+  the caller's own signal before naming an unreadable response, while an unexpected `AbortError` remains an unreadable
+  response with its cause. The one-line api.js repair is line-neutral. The offline transport file went from 15 pass /
+  1 fail on the original bytes to 16 / 16; the focused browser spec passed 12/12 across all four projects. Reverting only
+  api.js and rebuilding made the two Node projects fail the new case while both static projects stayed green; a
+  byte-identical restore and rebuild returned 12/12. The full four-project gate on the frozen tree passed 368/368 in
+  26.2 minutes, exit 0. The post-gate drift check also closed a continuation flaw: bare line tokens no longer inherit a
+  path across sentences or past bare filenames, five mutation controls pass, and the delivered-tree scout reads 70 checked /
+  0 unreadable. Evidence is `docs/evidence/iter81-http-body-cancel-2026-11-25.log.gz`. No dependency, timeout, retry or assertion was weakened;
+  next is §13.1 item 12. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED;
+  `main` untouched, nothing deployed.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 

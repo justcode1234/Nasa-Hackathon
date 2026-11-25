@@ -11,6 +11,13 @@ test('the drift scout ignores clock times, URL ports and file:line:column triple
   ]);
 });
 
+test('a bare continuation cannot cross a sentence or inherit past a bare filename citation', () => {
+  const line = 'see public/js/lib/api.js:8 over HTTP, workflow-assistant.js:341 on the guided turn. :328 reports; :35 stays unrelated';
+  assert.deepEqual(citationsFromLine(line), [
+    { file: 'public/js/lib/api.js', from: 8, to: 8 },
+  ]);
+});
+
 test('the drift scout keeps a real citation range as one band', () => {
   assert.deepEqual(citationsFromLine('public/js/modules/chat.js:96-99'), [
     { file: 'public/js/modules/chat.js', from: 96, to: 99 },
