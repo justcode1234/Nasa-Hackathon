@@ -2774,6 +2774,19 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   0 unreadable. Evidence is `docs/evidence/iter81-http-body-cancel-2026-11-25.log.gz`. No dependency, timeout, retry or assertion was weakened;
   next is §13.1 item 12. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED;
   `main` untouched, nothing deployed.
+- 26 Nov, iteration 82 (`docs/validation.md` subsection 82): §13.1 items 12 and 15 close as VERIFIED SOUND, and item 14
+  closes as VERIFIED FIX. A cancelled worker request now has a committed late-reply/fresh-request case, and worker
+  `onerror` crash/restart has a committed recovery case. Two line-neutral api.js guards make synchronous worker
+  constructor and `postMessage` failures reject with the authored no-answer sentence, clear pending work, terminate the
+  broken worker and let the next request create a fresh one. The transport file went from 18 pass / 2 fail on the original
+  bytes to 20 / 20; the focused browser spec passed 16/16 across all four projects. Reverting both guards and rebuilding
+  failed the new case, and a byte-identical restore plus rebuild returned 16/16. Full-gate attempts are disclosed rather
+  than called green: SIGTERM interrupted the first at case 136/372; the second finished 371/372 on an external terrain DNS
+  failure and its unchanged case passed 1/1 on rerun; the final run finished 362 passed / 6 failed / 4 not run on live NASA
+  POWER TLS resets in node-desktop, and the five affected files passed 22/22 unchanged after a direct HTTP 200 check. No
+  single full-gate pass is claimed. Evidence is `docs/evidence/iter82-worker-recovery-2026-11-26.log.gz`. No dependency,
+  timeout, retry or assertion was weakened; next is a fresh scout of §13.1 items 16-20. Real phones, Safari/WebKit,
+  microphones, audio quality and independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -2895,7 +2908,7 @@ stale responses, caching, rate limits and optional-model failures cannot silentl
 result; where a regression test detects what it claims to detect; and where every reported
 number traces to an executed run and its source revision.
 
-**What "achieved" means — six checks a reader can run, not a feeling.**
+**What "achieved" means — seven checks a reader can run, not a feeling.**
 
 1. A clone of the branch tip passes `npm test` with no skip, and `npm run test:e2e` passes in
    all four projects (static-desktop, static-mobile, node-desktop, node-mobile).
@@ -2910,6 +2923,9 @@ number traces to an executed run and its source revision.
 5. No number in `docs/validation.md`, `AGENTS.md` or `docs/handoff-2026-11-18.md` is quoted
    without an archive under `docs/evidence/` that prints it, and a red run is kept as a red run.
 6. The blockers and the UNVERIFIED list below are stated in the same place as the successes.
+7. Every farmer task reachable through the UI is also reachable through chat text or chat buttons, and those
+   controls perform the same state transition rather than merely describing it. The audit covers place selection,
+   constraints, evidence loading, comparison, navigation, retry/recovery and optional model/speech controls.
 
 **Repository verification tools.** Read `package.json` before using a command; run from the
 repository root, one browser suite at a time. A command's existence is not proof it passed.
@@ -3085,6 +3101,11 @@ This is a proposed execution backlog, not 50 discovered bugs or 50 mandatory cod
 Start with 1-5, then select the highest-impact unblocked item. A goal closes as VERIFIED FIX,
 VERIFIED SOUND or BLOCKED with evidence and an unblock condition; do not manufacture a change
 when existing behaviour is sound. No goal is marked executed merely by appearing here.
+
+**Cross-cutting UI↔chat parity requirement (26 Nov).** Before the programme can finish, inventory the farmer-facing
+UI controls and prove each task has an equivalent chat text or button path that performs the same transition. Cover
+place, constraints, evidence, comparison, navigation, retry/recovery and optional model/speech controls; record any
+UI-only task as a defect with a reproducing case, and any chat-only convenience as additive rather than parity.
 
 **Failure truthfulness and recovery**
 

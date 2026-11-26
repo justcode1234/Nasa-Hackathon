@@ -2673,10 +2673,28 @@ const TALLIES = [
        'caller cancellation during an HTTP body read stays cancellation on both transports'],
    absent: ['F6_F7_F12_DONE', 'F13_DONE', 'F17_DONE'],
    marks: 0 },
+  { archive: 'docs/evidence/iter82-worker-recovery-2026-11-26.log.gz',
+   lines: ['ITEM14_WORKER_RECOVERY start_utc=2026-11-26T04:36:03Z head=58f7d40b597fa5af9e37f7409c4dd4cc1978c3dd interpreter=v26.13.1',
+       'ITEM14_OFFLINE red_pass=18 red_fail=2 green_pass=20 green_fail=0',
+       'ITEM14_FOCUSED_E2E passed=16 failed=0 projects=4',
+       'ITEM14_CONTROL reverted_case_red=true restored_identical=true restored_passed=16',
+       'ITEM14_FIRST_GATE interrupted_exit=143 last_case=136 announced=372 failed_case_lines=0',
+       'ITEM14_DNS_FAILED_GATE exit=1   1 failed |   371 passed (21.7m) case=map3d-review-static-desktop cause=net::ERR_NAME_NOT_RESOLVED',
+       'ITEM14_TERRAIN_RERUN unchanged_case_passed=1 exit=0 after_direct_tile_http_200=true',
+       'ITEM14_NASA_FOCUSED_RERUN passed=22 failed=0 exit=0',
+       'ITEM14_FINAL_OFFLINE tests=351 pass=351 fail=0 skipped=0 exit=0',
+       'ITEM14_FINAL_DOCS_GUARDS tests=32 pass=32 fail=0 skipped=0 exit=0',
+       'ITEM14_FINAL_DRIFT checked=66 drifted=0 unreadable=0 exit=0',
+       'ITEM14_GATE_RERUN exit=1   6 failed |   4 did not run |   362 passed (24.5m) cause=live_NASA_TLS_ECONNRESET',
+       'ITEM14_DONE'],
+   phrases: ['=== ITEM14 DNS-FAILED GATE RAW', 'net::ERR_NAME_NOT_RESOLVED',
+       '=== ITEM14 NASA FOCUSED RERUN', 'No single full-gate pass is claimed'],
+   absent: ['ITEM14_GATE_RERUN exit=0', 'SHELVE82_REFUSE'],
+   marks: 7 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 266, `the table carries ${TALLIES.length} archives; subsections 57 through 80 quote more runs ` +
+  assert.ok(TALLIES.length >= 267, `the table carries ${TALLIES.length} archives; subsections 57 through 82 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +

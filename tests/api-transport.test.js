@@ -192,3 +192,107 @@ test('an unexpected AbortError while reading the HTTP body is still an unreadabl
   assert.equal(error.cancelled, undefined, 'the runtime name must not borrow the caller cancellation fact');
   assert.match(error.message, /unreadable response/);
 });
+
+test('a cancelled worker request ignores its late reply and leaves the next request usable', async t => {
+  const originalDocument = globalThis.document, originalWorker = globalThis.Worker;
+  let instance;
+  globalThis.document = { querySelector: () => ({ content: 'worker' }) };
+  globalThis.Worker = class {
+    constructor() { instance = this; this.messages = []; }
+    postMessage(message) { this.messages.push(message); }
+    terminate() {}
+  };
+  t.after(() => {
+    if (originalDocument === undefined) delete globalThis.document; else globalThis.document = originalDocument;
+    if (originalWorker === undefined) delete globalThis.Worker; else globalThis.Worker = originalWorker;
+  });
+  const { api } = await import('../public/js/lib/api.js?item12-late-reply');
+  const controller = new AbortController();
+  const first = api('/api/first', { signal: controller.signal });
+  const firstId = instance.messages[0].id;
+  controller.abort();
+  const error = await rejected(first);
+  assert.equal(error.cancelled, true);
+  instance.onmessage({ data: { id: firstId, data: { late: true } } });
+  const second = api('/api/second');
+  const secondId = instance.messages[1].id;
+  instance.onmessage({ data: { id: secondId, data: { fresh: true } } });
+  assert.deepEqual(await second, { fresh: true });
+  assert.equal(instance.messages.length, 2, 'the late reply must not create or resolve another request');
+});
+
+test('a worker constructor failure rejects with the authored sentence and the next call can retry', async t => {
+  const warnings = captureWarnings(t);
+  const originalDocument = globalThis.document, originalWorker = globalThis.Worker;
+  let created = 0;
+  globalThis.document = { querySelector: () => ({ content: 'worker' }) };
+  globalThis.Worker = class {
+    constructor() { created++; if (created === 1) throw new Error('synthetic worker start failure'); }
+    postMessage(message) { queueMicrotask(() => this.onmessage({ data: { id: message.id, data: { ok: true } } })); }
+    terminate() {}
+  };
+  t.after(() => {
+    if (originalDocument === undefined) delete globalThis.document; else globalThis.document = originalDocument;
+    if (originalWorker === undefined) delete globalThis.Worker; else globalThis.Worker = originalWorker;
+  });
+  const { api } = await import('../public/js/lib/api.js?item14-constructor');
+  const error = await rejected(api('/api/first'));
+  assert.equal(error.message, NO_ANSWER);
+  assert.equal(error.cause.message, 'synthetic worker start failure');
+  assert.deepEqual(await api('/api/second'), { ok: true });
+  assert.equal(created, 2, 'the failed constructor must not poison the next request');
+  assert.match(warnings.join('\n'), /request ended with no status/);
+});
+
+test('a synchronous worker postMessage failure clears pending work and the next call gets a fresh worker', async t => {
+  const warnings = captureWarnings(t);
+  const originalDocument = globalThis.document, originalWorker = globalThis.Worker;
+  let created = 0;
+  globalThis.document = { querySelector: () => ({ content: 'worker' }) };
+  globalThis.Worker = class {
+    constructor() { created++; }
+    postMessage(message) {
+      if (created === 1) throw new Error('synthetic postMessage failure');
+      queueMicrotask(() => this.onmessage({ data: { id: message.id, data: { ok: true } } }));
+    }
+    terminate() {}
+  };
+  t.after(() => {
+    if (originalDocument === undefined) delete globalThis.document; else globalThis.document = originalDocument;
+    if (originalWorker === undefined) delete globalThis.Worker; else globalThis.Worker = originalWorker;
+  });
+  const { api } = await import('../public/js/lib/api.js?item14-post-message');
+  const error = await rejected(api('/api/first'));
+  assert.equal(error.message, NO_ANSWER);
+  assert.equal(error.cause.message, 'synthetic postMessage failure');
+  assert.deepEqual(await api('/api/second'), { ok: true });
+  assert.equal(created, 2, 'the worker that could not accept a message must be terminated and replaced');
+  assert.match(warnings.join('\n'), /request ended with no status/);
+});
+
+test('a worker crash rejects pending work, resets the worker, and lets the next request recover', async t => {
+  const originalDocument = globalThis.document, originalWorker = globalThis.Worker;
+  const instances = [];
+  globalThis.document = { querySelector: () => ({ content: 'worker' }) };
+  globalThis.Worker = class {
+    constructor() { instances.push(this); }
+    postMessage(message) { this.message = message; }
+    terminate() { this.terminated = true; }
+  };
+  t.after(() => {
+    if (originalDocument === undefined) delete globalThis.document; else globalThis.document = originalDocument;
+    if (originalWorker === undefined) delete globalThis.Worker; else globalThis.Worker = originalWorker;
+  });
+  const { api } = await import('../public/js/lib/api.js?item15-worker-crash');
+  const first = api('/api/first');
+  let prevented = false;
+  instances[0].onerror({ preventDefault() { prevented = true; } });
+  const error = await rejected(first);
+  assert.match(error.message, /worker could not start/);
+  assert.equal(prevented, true);
+  assert.equal(instances[0].terminated, true);
+  const second = api('/api/second');
+  instances[1].onmessage({ data: { id: instances[1].message.id, data: { fresh: true } } });
+  assert.deepEqual(await second, { fresh: true });
+  assert.equal(instances.length, 2);
+});

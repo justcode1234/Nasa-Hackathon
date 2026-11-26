@@ -8203,3 +8203,30 @@ The evidence is `docs/evidence/iter81-http-body-cancel-2026-11-25.log.gz`. No de
 added to hide a failure; the two new offline cases separate caller-owned cancellation from a runtime-raised AbortError,
 and the browser case executes rather than skips on the worker transports. Next: §13.1 item 12. Real phones, Safari/WebKit,
 microphones, audio quality and independent agronomy stay UNVERIFIED.
+
+### 82. A worker that cannot start or accept a message no longer poisons the next request
+
+**VERIFIED SOUND (§13.1 items 12 and 15).** Cancelling a worker request after `postMessage` removes its pending entry;
+a later reply for that id is ignored, and a fresh request still resolves. A worker `onerror` event rejects pending work,
+prevents the default error, terminates the broken worker and lets the next request construct a fresh one. Both behaviours
+now have committed regression cases rather than only scratch probes.
+
+**VERIFIED FIX (§13.1 item 14).** Two synchronous failure paths were real defects. A constructor exception escaped
+`api()` synchronously with raw runtime text, and a `postMessage` exception rejected with raw text while leaving the pending
+entry and broken worker in place, so the next request failed the same way. Two line-neutral guards now route constructor
+failure through the authored no-answer sentence and route `postMessage` failure through pending cleanup, caller rejection,
+worker termination and reset. The next request creates a fresh worker.
+
+The transport file went from 18 pass / 2 fail on the original bytes to 20 / 20. The focused browser spec passed 16/16
+across all four projects. Reverting both guards and rebuilding failed the new case; restoring byte-identically and
+rebuilding returned 16/16. The first full-gate launch was terminated by SIGTERM at case 136/372 with no failed case lines
+and is preserved as interrupted. A second full gate finished 371/372 in 21.7 minutes: the static-desktop terrain review
+failed after the external tile host returned `net::ERR_NAME_NOT_RESOLVED`; the unchanged case passed 1/1 on rerun after a
+direct tile request returned HTTP 200. The final full-gate rerun finished 362 passed, 6 failed and 4 not run in 24.5
+minutes, all six failures on live NASA POWER TLS resets (`ECONNRESET`) in node-desktop. A direct request to the same POWER
+endpoint returned HTTP 200 afterward, and the five affected files passed 22/22 on an unchanged focused rerun. No single
+full-gate pass is claimed; both red full-gate records and both focused recovery records remain in the archive.
+
+Evidence is `docs/evidence/iter82-worker-recovery-2026-11-26.log.gz`. No dependency, timeout, retry or assertion was
+weakened. Next: a fresh scout of §13.1 items 16-20. Real phones, Safari/WebKit, microphones, audio quality and independent
+agronomy stay UNVERIFIED.

@@ -84,3 +84,43 @@ test('caller cancellation during an HTTP body read stays cancellation on both tr
   });
   expect(outcome).toBe('AbortError|true|Cancelled');
 });
+
+// Item 14: a worker that cannot start or cannot accept a message must settle the caller with the authored
+// no-answer sentence, discard the broken worker, and let the next request create a fresh one.
+test('worker constructor and postMessage failures settle and recover on every project',async({page})=>{
+  test.setTimeout(60_000);
+  await page.goto('/',{waitUntil:'domcontentloaded'});
+  const outcome=await page.evaluate(async()=>{
+    const originalWorker=window.Worker;
+    const meta=document.querySelector('meta[name="fieldshift-transport"]');
+    const originalTransport=meta.content;
+    meta.content='worker';
+    const grab=async promise=>promise.then(value=>`resolved:${JSON.stringify(value)}`,error=>`${error.name}|${error.message}`);
+    const run=async mode=>{
+      let created=0;
+      window.Worker=class {
+        constructor(){created++;if(mode==='constructor'&&created===1)throw new Error('synthetic worker start failure');}
+        postMessage(message){
+          if(mode==='post'&&created===1)throw new Error('synthetic postMessage failure');
+          queueMicrotask(()=>this.onmessage({data:{id:message.id,data:{ok:true}}}));
+        }
+        terminate(){}
+      };
+      const {api}=await import('/js/lib/api.js?item14='+mode);
+      const first=await grab(api('/api/first'));
+      const second=await grab(api('/api/second'));
+      return {first,second,created};
+    };
+    try {
+      return {constructor:await run('constructor'),post:await run('post')};
+    } finally {
+      window.Worker=originalWorker;
+      meta.content=originalTransport;
+    }
+  });
+  for(const mode of ['constructor','post']){
+    expect(outcome[mode].first,`${mode} failure must use the authored sentence`).toBe(`Error|No answer came back for this request. Nothing was invented in its place. Try again.`);
+    expect(outcome[mode].second,`${mode} failure must allow a fresh worker`).toBe('resolved:{"ok":true}');
+    expect(outcome[mode].created,`${mode} failure must replace the broken worker`).toBe(2);
+  }
+});

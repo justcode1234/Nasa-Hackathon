@@ -17,7 +17,7 @@ async function httpApi(path, { method, body, signal }) {
 export function api(path, { method = 'GET', body, signal } = {}) {
   if (getTransport() === 'http') return httpApi(path, { method, body, signal });
   if (!worker) {
-    worker = new Worker('/js/lib/core-worker.bundle.js', { type: 'module' });
+    try { worker = new Worker('/js/lib/core-worker.bundle.js', { type: 'module' }); } catch (reason) { return Promise.reject(signal?.aborted === true ? cancellation() : unlabelled(reason)); }
     worker.onmessage = event => {
       const task = pending.get(event.data.id);
       if (!task) return;
@@ -37,7 +37,7 @@ export function api(path, { method = 'GET', body, signal } = {}) {
     signal?.addEventListener('abort', cancel, { once: true });
     const cleanup = () => signal?.removeEventListener('abort', cancel);
     pending.set(id, { resolve: data => { cleanup(); resolve(data); }, reject: error => { cleanup(); reject(error); } });
-    worker.postMessage({ id, path, method, body });
+    try { worker.postMessage({ id, path, method, body }); } catch (reason) { pending.delete(id); cleanup(); reject(unlabelled(reason)); worker.terminate(); worker = null; }
   });
 }
 
