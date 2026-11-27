@@ -9,8 +9,21 @@ const GREETING = /^(?:hi|hello)\b/;
 export function parseWorkflowMessage(question, active = false) {
   const text = normalizeName(question);
   if (STOP_WORD.test(text)) return active ? { cancel: true } : null;
-  // Knowledge questions stay read-only, even during a guided planning session.
-  if (isEvidenceQuestion(question) || GREETING.test(text)) return null;
+  const unitWord = /\b(?:show|switch|change|set|use)\b.*\b(celsius|fahrenheit)\b/i.exec(question)?.[1]?.toLowerCase();
+  const temperatureUnit = unitWord ? ({ celsius: 'C', fahrenheit: 'F' })[unitWord] : undefined;
+  const loadEvidence = /\b(?:load|retry|show)\b.*\b(?:historical\s+)?nasa evidence\b/i.test(text);
+  const loadSoil = /\b(?:load|show|retrieve|get)\b.*\bsoil(?:grids)?\b.*\b(?:estimates?|context|data)\b/i.test(text);
+  const loadPests = /\b(?:load|look up|show|retrieve|get)\b.*\bpests?\b.*\b(?:records?|context|watchlist)\b/i.test(text);
+  const openMap3D = /\bopen\b.*\b3d\b.*\b(?:map|view|evidence)\b/i.test(text);
+  const closeMap3D = /\b(?:return|close)\b.*\b2d\b.*\bmap\b/i.test(text);
+  const goBack = /^(?:go |step )?back(?: one (?:workflow )?step)?$/i.test(text);
+  const searchQuery = /\b(?:search|find)\s+(?:for\s+)?(?:a\s+)?places?\s*(?:for|named|called|:)?\s*(.+)/i.exec(question)?.[1]?.trim().slice(0, 120);
+  const previousCrop = /\b(?:previous crop|crop before(?: this plan)?)\s*(?:is|:|=)?\s*([^.;,\n]+)/i.exec(question)?.[1]?.trim().slice(0, 80);
+  const drainageWord = /\b(?:drainage(?:\s+is|\s*[:=])?|soil drainage(?:\s+is|\s*[:=])?)\s*(well(?:\s+drained)?|moderate(?:ly)?(?:\s+drained)?|poor(?:ly)?(?:\s+drained)?)\b/i.exec(text)?.[1]?.toLowerCase();
+  const pestHistory = /\bpest history\s*(?:is|:|=)?\s*([^.;\n]+)/i.exec(question)?.[1]?.trim().slice(0, 300);
+  const uiAction = Boolean(temperatureUnit || loadEvidence || loadSoil || loadPests || openMap3D || closeMap3D || goBack || searchQuery || previousCrop || drainageWord || pestHistory || /\b(?:field|soil) (?:floods?|is waterlogged)\b/i.test(text));
+  // Knowledge questions stay read-only, even during a guided planning session; an explicit unit switch is a control action.
+  if ((isEvidenceQuestion(question) && !temperatureUnit) || GREETING.test(text)) return null;
   const countries = findCountries(question);
   // The whole-country phrasing test must survive Intl's shortened names: "whole St. Vincent
   // & Grenadines" and "whole Saint Vincent and the Grenadines" are the same request.
@@ -22,7 +35,7 @@ export function parseWorkflowMessage(question, active = false) {
     });
   const specificArea = /\b(?:specific|particular) (?:area|part|region)\b|^choose a (?:town|city|field|place|region)(?: or (?:town|city|field|place|region))*$/.test(text);
   const intent = /\b(help me|guide me|walk me|take me|pick|select|choose|find|use|set|plan|rotate|compare|continue|next|proceed)\b/.test(text);
-  if (!active && !wholeCountry && !specificArea && !(intent && (/\b(farm|farmland|field|rotation|rotate|crops|baseline|compare|step|task|point|coordinates)\b/.test(text) || countries.length))) return null;
+  if (!active && !uiAction && !wholeCountry && !specificArea && !(intent && (/\b(farm|farmland|field|rotation|rotate|crops|baseline|compare|step|task|point|coordinates)\b/.test(text) || countries.length))) return null;
   // A soil test in a comma-decimal locale says "pH 6,2". Matched here, before the coordinates below, because the
   // same comma otherwise reads as the separator between a latitude and a longitude and invents a pin at 6, 2.
   const phMatch = /\b(?:soil )?ph\s*(?:is|:|=)?\s*(\d+(?:[.,]\d{1,2})?)/i.exec(question);
@@ -109,6 +122,10 @@ export function parseWorkflowMessage(question, active = false) {
   const soilMatch = /\b(sandy|loam|clay) soil\b|\bsoil(?: (?:type|texture))?(?: is)? (sandy|loam|clay)\b/i.exec(text);
   const soil = soilMatch?.[1] ?? soilMatch?.[2] ?? null;
   if (soil) constraints.soil = soil;
+  const drainage = drainageWord?.startsWith('well') ? 'well' : drainageWord?.startsWith('moderate') ? 'moderate' : drainageWord?.startsWith('poor') ? 'poor' : /\b(?:field|soil) (?:floods?|is waterlogged)\b/i.test(text) ? 'poor' : null;
+  if (drainage) constraints.drainage = drainage;
+  if (previousCrop) constraints.previousCrop = previousCrop;
+  if (pestHistory) constraints.pestHistory = pestHistory;
   const ph = phMatch?.[1]?.replace(',', '.');
   if (ph != null) constraints.soilPh = Number(ph);
   // Comparison priority has four real values (public/index.html:122, validated at
@@ -144,7 +161,8 @@ export function parseWorkflowMessage(question, active = false) {
   const monthAfterParticiple = /\b(?:starting|beginning|planting|sowing)\s+(?:(?:in|around|by|during|from|at)\s+(?:(?:early|mid|middle|late)\s+)?)?([a-z]+)/i;
   const month = monthPhrase.exec(text)?.[1] ?? monthAfterParticiple.exec(text)?.[1];
   if (months.includes(month)) constraints.startMonth = months.indexOf(month) + 1;
-  return { countries, location, baseline, allowed, constraints, wholeCountry, specificArea, intent, implicitList,
+  return { countries, location, baseline, allowed, constraints, wholeCountry, specificArea, intent, implicitList, uiAction,
+    temperatureUnit, loadEvidence, loadSoil, loadPests, openMap3D, closeMap3D, goBack, searchQuery,
     farmId: /\bway\/(\d+)\b/.exec(question)?.[0],
     farmIndex: /\b(?:field|farm)\s+([1-9]\d?)\b/.exec(text)?.[1] ?? ({ first: 1, second: 2, third: 3 }[/\b(first|second|third) (?:mapped )?(?:field|farm)\b/.exec(text)?.[1]]),
     usePoint: /\b(?:use|using) (?:the |this |my |current |selected )*(?:point|coordinates|location)\b/.test(text),
@@ -299,7 +317,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     // reached: measured with this branch short-circuited back out, typing “cancel” mid-plan ended in chat.js’s catch
     // with the status line “Cannot read properties of undefined (reading 'length')” and the plan still open, which is
     // why the sentence “Guided planning stopped.” was unreachable from typed text.
-    const noOtherSignal = !parsed || Boolean(parsed.cancel) || !parsed.intent && (parsed.implicitList ||
+    const noOtherSignal = !parsed || Boolean(parsed.cancel) || !parsed.intent && !parsed.uiAction && (parsed.implicitList ||
       !parsed.countries.length && !parsed.location && !parsed.baseline && !parsed.allowed &&
       !parsed.wholeCountry && !parsed.specificArea && !Object.keys(parsed.constraints).length);
     // The list also decides for a chat with no plan open. Measured 20 Nov on a served build: with a country already
@@ -333,13 +351,52 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     // Asking for the mapped fields is an action in its own right: without this the sentence carries no
     // intent verb, falls out of the workflow at the place-reply check, and the retry button below does
     // nothing the farmer asked for.
-    const hasInput=choice||parsed.intent||parsed.findFarms||parsed.countries.length||parsed.location||parsed.baseline||parsed.allowed||parsed.wholeCountry||parsed.specificArea||Object.keys(parsed.constraints).length;
+    const hasInput=choice||parsed.intent||parsed.findFarms||parsed.countries.length||parsed.location||parsed.baseline||parsed.allowed||parsed.wholeCountry||parsed.specificArea||parsed.temperatureUnit||parsed.loadEvidence||parsed.loadSoil||parsed.loadPests||parsed.openMap3D||parsed.closeMap3D||parsed.goBack||parsed.searchQuery||Object.keys(parsed.constraints).length;
     if(!hasInput&&!getState().country)return null;
     if (!active) { scope = null; areaRegion = null; pointAccepted = false; }
     active = true;
     const version = ++generation;
     const guard = () => { if (version !== generation) throw cancellation('Planning context changed'); };
     const run = async (name, ...args) => { const result = await actions[name](...args); guard(); return result; };
+    if (parsed.temperatureUnit) {
+      await run('showStep', 'evidence'); await run('setTemperatureUnit', parsed.temperatureUnit);
+      return reply(`Temperature display set to ${parsed.temperatureUnit === 'F' ? 'Fahrenheit' : 'Celsius'}.`);
+    }
+    if (parsed.loadEvidence) {
+      const ok = await run('loadEvidence');
+      return reply(ok ? 'Historical NASA evidence loaded. Inspect the measurements and missingness in step 2.'
+        : 'NASA evidence was not loaded. Step 2 shows the validation or service reason; correct it and try again.');
+    }
+    if (parsed.loadSoil) {
+      await run('showStep', 'si'); const ok = await run('loadSoilContext');
+      return reply(ok ? 'Regional soil estimates loaded. They remain separate from farmer-supplied soil inputs.'
+        : 'Regional soil estimates were not loaded. Step 3 shows why; choose a valid location and try again.');
+    }
+    if (parsed.loadPests) {
+      await run('showStep', 'si'); const ok = await run('loadPestContext');
+      return reply(ok ? 'Country pest records loaded. They are inspection leads, not field presence.'
+        : 'Country pest records were not loaded. Step 3 shows why; choose a country and try again.');
+    }
+    if (parsed.openMap3D) {
+      await run('showStep', 'location'); const ok = await run('openMap3D');
+      return reply(ok ? 'The optional 3D evidence map is open. The 2D map remains available.'
+        : 'The 3D map is not available for this selection yet. Step 1 shows the reason.');
+    }
+    if (parsed.closeMap3D) {
+      const ok = await run('closeMap3D');
+      return reply(ok ? 'The 2D map is showing again.' : 'The 2D map is already showing.');
+    }
+    if (parsed.goBack) {
+      const ok = await run('goBack');
+      return reply(ok ? 'Moved back one workflow step.' : 'There is no earlier workflow step.');
+    }
+    if (parsed.searchQuery) {
+      let found;
+      try { found = await run('searchPlaces', parsed.searchQuery); }
+      catch (error) { if (error.cancelled === true) throw error; return reply(`The place search did not complete: ${error.message} Nothing was selected.`, [next('Try the search again', question)]); }
+      if (!found?.length) return reply('No matching places were found. Try a town, region or country name.');
+      return reply('Choose a place from the search results.', found.map(place => next(`${place.name} · ${/^[A-Z]{2}$/.test(place.countryCode ?? '') ? COUNTRY_NAMES.of(place.countryCode) : 'country not recorded'}`, `Use ${place.name}`, { type: 'place', place, countryCode: place.countryCode })));
+    }
     // One mapped-field request in flight per guided session: asking again while a shared community
     // service is still holding the connection must not open a second identical request against it.
     const findFields = () => {
@@ -517,6 +574,16 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
         if (!towns.some(place=>distance(place)<=50)) return reply(`Those coordinates are more than 50 km from the named town in the saved place list. Please confirm the town or point. This is a town-proximity check, not a farm-boundary measurement.`);
       }
       await run('chooseLocation', parsed.location, foundCountry); pointAccepted = true; scope = 'area'; state = getState();
+    }
+    if (choice?.type === 'place') {
+      const place = choice.place;
+      if (!place || !Number.isFinite(place.latitude) || !Number.isFinite(place.longitude)) return reply('That search result no longer has usable coordinates. Search again and choose a returned row.');
+      await run('chooseLocation', place, choice.countryCode ?? place.countryCode); pointAccepted = true; scope = 'area'; state = getState(); await keepInputs();
+      progress('Step 1: finding community-mapped fields near the selected place…');
+      const fields = await fieldsOutcome();
+      if (fields === 'waiting') return fieldsWaiting(`${place.name} is selected as a point.`);
+      if (fields === 'failed') return fieldsFailed(`${place.name} is selected as a point.`);
+      return fieldPrompt(state, `${place.name} is selected as a point. Choose the specific mapped field.`);
     }
     if (choice?.type === 'farm' || parsed.farmId || parsed.farmIndex) {
       const id = choice?.id ?? parsed.farmId ?? state.farms[Number(parsed.farmIndex) - 1]?.id;
@@ -770,11 +837,11 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
   }
   function fieldPrompt(state, message) {
     actions.showStep('location');
-    const choices = state.farms.slice(0, 3).map((farm, i) => ({ label: `Field ${i + 1}: ${farm.name.slice(0, 30)}`, question: `Use mapped field ${farm.id}`, workflowChoice: { type: 'farm', id: farm.id } }));
+    const choices = state.farms.map((farm, i) => ({ label: `Field ${i + 1}: ${farm.name.slice(0, 30)}`, question: `Use mapped field ${farm.id}`, workflowChoice: { type: 'farm', id: farm.id } }));
     // The town point stays offered even when fields came back, so a chat-only plan never
     // depends on discovering the typed command.
     choices.push(next('Use selected point', 'Use the selected point'));
-    return reply(`${message} ${state.farms.length} mapped fields were returned. You can also choose from the full field dropdown or use explicit farm coordinates.`, choices,
+    return reply(`${message} ${state.farms.length} mapped fields were returned. Every returned field is offered below; you can also use the full field dropdown or explicit farm coordinates.`, choices,
       [{ id: 'osm', title: 'OpenStreetMap contributors; community mapped land use, not verified ownership', url: 'https://www.openstreetmap.org/copyright' }]);
   }
   // Measured 20 Nov on the iteration-63 tree: the country-switch check asks the list of the country the plan is

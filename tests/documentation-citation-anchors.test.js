@@ -116,15 +116,15 @@ const PINS = [
   // re-pointed range are pinned here, so the next insertion near one of them is reported rather than silently aiming a
   // paragraph at its neighbour again.
   { file: 'public/js/modules/context.js', line: 141, quote: 'You can continue with the selected map point', citedBy: 'docs/handoff-2026-11-18.md:915 (re-pointed by 58, moved by the 58 queue bullet)' },
-  { file: 'public/js/modules/context.js', line: 192, quote: 'onPests(null)', citedBy: 'docs/handoff-2026-11-18.md:548 (re-pointed by 58)' },
+  { file: 'public/js/modules/context.js', line: 192, quote: 'onPests(null, options)', citedBy: 'docs/handoff-2026-11-18.md:548 (re-pointed by 58)' },
   { file: 'public/js/modules/context.js', line: 195, quote: "$('pest-country').value", citedBy: 'docs/handoff-2026-11-18.md:442 and :507, docs/validation.md:2977 (re-pointed by 58)' },
   { file: 'public/js/modules/context.js', line: 213, quote: 'record.scientificName', citedBy: 'docs/handoff-2026-11-18.md:549 (re-pointed by 58)' },
   { file: 'public/js/modules/context.js', line: 215, quote: 'GBIF country query', citedBy: 'docs/handoff-2026-11-18.md:553 (re-pointed by 58)' },
-  { file: 'public/js/modules/context.js', line: 225, quote: "$('pest-country').addEventListener", citedBy: 'docs/handoff-2026-11-18.md:507 (re-pointed by 58)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 422, quote: 'verifies that point (checked above)', citedBy: 'docs/handoff-2026-11-18.md:1156 (re-pointed by 58, moved by the 58 queue bullet) (re-pointed by 61) (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 462, quote: 'claimed a town question was pending', citedBy: 'docs/validation.md:1021 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 474, quote: 'silence would leave the farmer nothing to tap', citedBy: 'docs/validation.md:1021 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 481, quote: 'if (error.cancelled === true) throw error', citedBy: 'docs/validation.md:4388 and :4835, AGENTS.md:1827 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/context.js', line: 226, quote: "$('pest-country').addEventListener", citedBy: 'docs/handoff-2026-11-18.md:507 (re-pointed by 58)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 479, quote: 'verifies that point (checked above)', citedBy: 'docs/handoff-2026-11-18.md:1156 (re-pointed by 58, moved by the 58 queue bullet) (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 519, quote: 'claimed a town question was pending', citedBy: 'docs/validation.md:1021 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 531, quote: 'silence would leave the farmer nothing to tap', citedBy: 'docs/validation.md:1021 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 538, quote: 'if (error.cancelled === true) throw error', citedBy: 'docs/validation.md:4388 and :4835, AGENTS.md:1827 (re-pointed by 58) (re-pointed by 61) (re-pointed by 65)' },
   { file: 'tests/e2e/chat-only-flow.spec.js', line: 86, quote: "'Step 4 is ready'", citedBy: 'docs/validation.md:3998 (re-pointed by 58)' },
   { file: 'tests/e2e/chat-only-flow.spec.js', line: 100, quote: 'one typed message with coordinates reaches step 4', citedBy: 'docs/validation.md:4084, docs/handoff-2026-11-18.md:18 (re-pointed by 58)' },
   // The fourteen lines subsection 58 names while changing them, which is the lesson iteration 57 recorded and this
@@ -133,10 +133,10 @@ const PINS = [
   { file: 'public/js/modules/context.js', line: 130, quote: "reason: 'superseded'", citedBy: 'docs/validation.md subsection 58, The fix' },
   { file: 'public/js/modules/context.js', line: 138, quote: 'return { ok: true, count: farms.length };', citedBy: 'docs/validation.md subsection 58, The fix' },
   { file: 'public/js/modules/context.js', line: 144, quote: "reason: 'lookup-failed'", citedBy: 'docs/validation.md subsection 58, The fix' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 357, quote: "result?.ok === false ? 'failed' : 'done'", citedBy: 'docs/validation.md subsection 58, The fix (re-pointed by 61) (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 371, quote: 'const fieldsFailed = message => reply', citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 532, quote: "fieldsFailed('Your selected point is still in place.')", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 583, quote: "if (fields === 'failed') return fieldsFailed(", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 414, quote: "result?.ok === false ? 'failed' : 'done'", citedBy: 'docs/validation.md subsection 58, The fix (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 428, quote: 'const fieldsFailed = message => reply', citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 599, quote: "fieldsFailed('Your selected point is still in place.')", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 650, quote: "if (fields === 'failed') return fieldsFailed(", citedBy: 'docs/validation.md subsection 58, The failure reply (re-pointed by 61) (re-pointed by 65)' },
   { file: 'tests/e2e/field-service-failure.spec.js', line: 21, quote: 'a refused field lookup is reported as a failure', citedBy: 'docs/validation.md subsection 58, The reproducing case' },
   { file: 'tests/e2e/field-service-failure.spec.js', line: 77, quote: '0 mapped fields were returned', citedBy: 'docs/validation.md subsection 58, The third phase' },
   { file: 'tests/workflow-place-choices.test.js', line: 627, quote: 'a town tap whose field lookup was refused reports a failure', citedBy: 'docs/validation.md subsection 58, Tests (moved 488 -> 584 -> 621 by iteration 64) (re-pointed by 65)' },
@@ -157,7 +157,7 @@ const PINS = [
   { file: 'public/js/modules/chat.js', line: 155, quote: 'announce(error.message);', citedBy: 'docs/validation.md subsection 59, What was wrong' },
   { file: 'public/js/modules/chat.js', line: 156, quote: "$('question').value === ''", citedBy: 'docs/validation.md subsection 59, The fix is one statement' },
   { file: 'public/js/modules/chat.js', line: 159, quote: "finally { if (version === revision && serial === messageSerial)", citedBy: 'docs/validation.md subsection 59, What was wrong' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 500, quote: 'const result = await request(`/api/places?', citedBy: 'docs/validation.md subsection 59, How it was found (re-pointed by 61) (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 557, quote: 'const result = await request(`/api/places?', citedBy: 'docs/validation.md subsection 59, How it was found (re-pointed by 61) (re-pointed by 65)' },
   { file: 'server/api.js', line: 46, quote: 'body.question.length > 500', citedBy: 'docs/validation.md subsection 59, How it was found' },
   { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 26, quote: 'a refused ask leaves the message in the composer', citedBy: 'docs/validation.md subsection 59, The cases that cover it' },
   { file: 'tests/e2e/chat-refused-ask-keeps-question.spec.js', line: 54, quote: 'the refused message must still be in the composer', citedBy: 'docs/validation.md subsection 59, The cases that cover it' },
@@ -168,13 +168,13 @@ const PINS = [
   // quotes by number - the two failure classes, the picker re-read that makes the recovery the refusal names pressable,
   // the identity carrier both transports depend on, and the two cases plus the fixture that is derived from the shipped
   // adapter rather than restated in the spec.
-  { file: 'public/js/modules/workflow-assistant.js', line: 230, quote: 'function placeListFailure(countryName, error, question = null) {', citedBy: 'docs/validation.md subsection 61, The fix (widened by 67)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 231, quote: "const unreadable = error?.code === 'LOCATIONS_SCHEMA'", citedBy: 'docs/validation.md subsection 61, the two failure classes' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 406, quote: 'catch (error) { if (error.cancelled === true) throw error; listFailed = error;', citedBy: 'docs/validation.md subsection 61, What was wrong (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 551, quote: 'is selected. Now choose a town in the Town list in step 1', citedBy: 'docs/validation.md subsection 61, The recovery the refusal promises (re-pointed by 65)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 718, quote: 'if (listFailed) return placeListFailure(countryName, listFailed);', citedBy: 'docs/validation.md subsection 61, The whole-country escape (re-pointed by 65) (re-pointed by 69)' },
-  { file: 'public/js/modules/context.js', line: 248, quote: "const read = await picker.setCountry(countryCode, { regionCode });", citedBy: 'docs/validation.md subsection 61, the second defect the browser run found' },
-  { file: 'public/js/modules/context.js', line: 250, quote: 'Choose a region from the current country list.', citedBy: 'docs/validation.md subsection 61, the sentence the stale dropdown threw' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 248, quote: 'function placeListFailure(countryName, error, question = null) {', citedBy: 'docs/validation.md subsection 61, The fix (widened by 67)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 249, quote: "const unreadable = error?.code === 'LOCATIONS_SCHEMA'", citedBy: 'docs/validation.md subsection 61, the two failure classes' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 463, quote: 'catch (error) { if (error.cancelled === true) throw error; listFailed = error;', citedBy: 'docs/validation.md subsection 61, What was wrong (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 618, quote: 'is selected. Now choose a town in the Town list in step 1', citedBy: 'docs/validation.md subsection 61, The recovery the refusal promises (re-pointed by 65)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 785, quote: 'if (listFailed) return placeListFailure(countryName, listFailed);', citedBy: 'docs/validation.md subsection 61, The whole-country escape (re-pointed by 65) (re-pointed by 69)' },
+  { file: 'public/js/modules/context.js', line: 249, quote: "const read = await picker.setCountry(countryCode, { regionCode });", citedBy: 'docs/validation.md subsection 61, the second defect the browser run found' },
+  { file: 'public/js/modules/context.js', line: 251, quote: 'Choose a region from the current country list.', citedBy: 'docs/validation.md subsection 61, the sentence the stale dropdown threw' },
   { file: 'public/js/lib/api.js', line: 13, quote: 'if (!response.ok) throw identified(new Error(data?.error?.message', citedBy: 'docs/validation.md subsection 60, and AGENTS.md §13 queue (both re-pointed by 61)' },
   { file: 'public/js/lib/api.js', line: 60, quote: 'function identified(error, status, code) {', citedBy: 'docs/validation.md subsection 60, The fix keeps identity only when a status came' },
   { file: 'public/js/lib/api.js', line: 70, quote: "return typeof data.status === 'number' ? identified(new Error(data.error), data.status, data.code)", citedBy: 'docs/validation.md subsection 60, the worker half' },
@@ -185,19 +185,19 @@ const PINS = [
   // The three links iteration 67 re-pointed by tool - and iteration 75 re-pointed again, because 67 moved the labels
   // onto bands that hold other code. A pin that quotes the label is what makes the second repair honest: the label, the
   // `#LNNN`, the row in DEEP_LINKS below and this quote all have to move together or one of the two guards goes red.
-  { file: 'docs/validation.md', line: 1007, quote: 'region is selected ([public/js/modules/workflow-assistant.js:415-420, where `allowEponymousTown`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
-  { file: 'docs/validation.md', line: 1021, quote: 'answers honestly instead ([public/js/modules/workflow-assistant.js:608-619, the branch where `replySpelling`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
-  { file: 'docs/validation.md', line: 1035, quote: 'anything ([public/js/modules/workflow-assistant.js:445-449, where `rowCarriesReply`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
+  { file: 'docs/validation.md', line: 1007, quote: 'region is selected ([public/js/modules/workflow-assistant.js:472-477, where `allowEponymousTown`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
+  { file: 'docs/validation.md', line: 1021, quote: 'answers honestly instead ([public/js/modules/workflow-assistant.js:675-686, the branch where `replySpelling`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
+  { file: 'docs/validation.md', line: 1035, quote: 'anything ([public/js/modules/workflow-assistant.js:502-506, where `rowCarriesReply`', citedBy: 'docs/validation.md subsection 61, re-pointed by subsection 75 (F14)' },
   // The guard quoting its own case, because the handoff header names this file by line and four lines added above the
   // case below moved it while every other guard stayed green; iteration 66's twenty-four rows and loop moved it again.
   { file: 'tests/documentation-citation-anchors.test.js', line: 524, quote: "test('no pin is satisfied by the statement above or below the line it names'", citedBy: 'docs/handoff-2026-11-18.md:19 and docs/validation.md subsection 61 (re-pointed by 65, 66, 72 and 73)' },
   // Iteration 65 is the same shape again: the F5 fix put a fourteen-line helper above every line the coordinate
   // branch cites and added six cases to an offline file the ledger cites, so the helper, the guard that reaches
   // it, the single read the branch now shares and the cases and page spec that pin the request count are pinned.
-  { file: 'public/js/modules/workflow-assistant.js', line: 242, quote: 'function coordinateListUnreadable(countryName, latitude', citedBy: 'docs/validation.md subsection 65, The reply and AGENTS.md iteration-65 bullet' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 507, quote: 'if (listFailed) return coordinateListUnreadable(countryName', citedBy: 'docs/validation.md subsection 65, The fix' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 508, quote: 'const list = listed;', citedBy: 'docs/validation.md subsection 65, one quantity one source' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 667, quote: 'async function getLocationList(country)', citedBy: 'docs/validation.md subsection 65, why the read was unreachable' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 260, quote: 'function coordinateListUnreadable(countryName, latitude', citedBy: 'docs/validation.md subsection 65, The reply and AGENTS.md iteration-65 bullet' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 564, quote: 'if (listFailed) return coordinateListUnreadable(countryName', citedBy: 'docs/validation.md subsection 65, The fix' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 565, quote: 'const list = listed;', citedBy: 'docs/validation.md subsection 65, one quantity one source' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 734, quote: 'async function getLocationList(country)', citedBy: 'docs/validation.md subsection 65, why the read was unreachable' },
   { file: 'tests/workflow-place-choices.test.js', line: 777, quote: 'a coordinate sentence whose saved list refused answers instead of throwing', citedBy: 'docs/validation.md subsection 65, Tests' },
   { file: 'tests/workflow-place-choices.test.js', line: 829, quote: 'a coordinate sentence reads the saved list once', citedBy: 'docs/validation.md subsection 65, Tests' },
   { file: 'tests/workflow-place-choices.test.js', line: 855, quote: 'a coordinate sentence that moved the plan into a country whose list refused', citedBy: 'docs/validation.md subsection 65, Tests' },
@@ -210,14 +210,14 @@ const PINS = [
   // above or below it, which is what case 4 of this guard checks.
   { file: 'public/js/modules/workflow-assistant.js', line: 7, quote: 'const STOP_WORD = /^(?:cancel|stop|cancel planning|stop planning)$/;', citedBy: 'docs/validation.md subsection 66, Four clauses' },
   { file: 'public/js/modules/workflow-assistant.js', line: 11, quote: 'if (STOP_WORD.test(text)) return active ? { cancel: true } : null;', citedBy: 'docs/validation.md subsection 66, What was wrong' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 13, quote: 'if (isEvidenceQuestion(question) || GREETING.test(text)) return null;', citedBy: 'docs/validation.md subsection 66, What was wrong' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 291, quote: 'const neverAPlaceName = !choice && (GREETING.test(written) || STOP_WORD.test(written));', citedBy: 'docs/validation.md subsection 66, Four clauses' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 292, quote: 'let parsed = choice ? { countries: [], constraints: {} } : parseWorkflowMessage(question, active);', citedBy: 'docs/validation.md subsection 66, the branch a button press takes' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 302, quote: 'const noOtherSignal = !parsed || Boolean(parsed.cancel) || !parsed.intent && (parsed.implicitList ||', citedBy: 'docs/validation.md subsection 66, Four clauses' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 310, quote: 'if (!choice && !neverAPlaceName && noOtherSignal && (active || !getState().location)) {', citedBy: 'docs/validation.md subsection 66, Four clauses' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 332, quote: 'if (parsed.cancel) { active = false; invalidate(); return reply(\'Guided planning stopped. Your current form values remain available.\'); }', citedBy: 'docs/validation.md subsection 66, the sentence that never reached the page' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 682, quote: 'if (towns.length === 1) return { type: \'town\', id: towns[0].id };', citedBy: 'docs/validation.md subsection 66, the duplicate-town limit (re-pointed by 69)' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 694, quote: '// two rows sharing the name stay a question rather than a guess.', citedBy: 'docs/validation.md subsection 66, why a shared name stays a question (re-pointed by 69)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 26, quote: 'if ((isEvidenceQuestion(question) && !temperatureUnit) || GREETING.test(text)) return null;', citedBy: 'docs/validation.md subsection 66, What was wrong' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 309, quote: 'const neverAPlaceName = !choice && (GREETING.test(written) || STOP_WORD.test(written));', citedBy: 'docs/validation.md subsection 66, Four clauses' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 310, quote: 'let parsed = choice ? { countries: [], constraints: {} } : parseWorkflowMessage(question, active);', citedBy: 'docs/validation.md subsection 66, the branch a button press takes' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 320, quote: 'const noOtherSignal = !parsed || Boolean(parsed.cancel) || !parsed.intent && !parsed.uiAction && (parsed.implicitList ||', citedBy: 'docs/validation.md subsection 66, Four clauses' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 328, quote: 'if (!choice && !neverAPlaceName && noOtherSignal && (active || !getState().location)) {', citedBy: 'docs/validation.md subsection 66, Four clauses' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 350, quote: 'if (parsed.cancel) { active = false; invalidate(); return reply(\'Guided planning stopped. Your current form values remain available.\'); }', citedBy: 'docs/validation.md subsection 66, the sentence that never reached the page' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 749, quote: 'if (towns.length === 1) return { type: \'town\', id: towns[0].id };', citedBy: 'docs/validation.md subsection 66, the duplicate-town limit (re-pointed by 69)' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 761, quote: '// two rows sharing the name stay a question rather than a guess.', citedBy: 'docs/validation.md subsection 66, why a shared name stays a question (re-pointed by 69)' },
   { file: 'tests/workflow-bare-place-name.test.js', line: 51, quote: 'a bare region name typed with no plan open selects the region instead of answering a crop question', citedBy: 'docs/validation.md subsection 66, Tests' },
   { file: 'tests/workflow-bare-place-name.test.js', line: 62, quote: 'assert.deepEqual(calls, [\'region\'], `the form was moved by: ${JSON.str', citedBy: 'docs/validation.md subsection 66, Tests, the assertion this pass corrected' },
   { file: 'tests/workflow-bare-place-name.test.js', line: 89, quote: 'a greeting and a stop word are never read as place names, and cost no saved-list read', citedBy: 'docs/validation.md subsection 66, Tests' },
@@ -236,15 +236,15 @@ const PINS = [
   // replaced the swallowed read, the two lines of the comment that records why the gate exists, the marker a cancelled
   // read carries, and the eleven cases (eight offline, three in a page) that pin the behaviour and its bound. Every
   // quote was read out of the file at the line it names.
-  { file: 'public/js/modules/workflow-assistant.js', line: 188, quote: 'function mentionPhrase(question) {', citedBy: 'docs/validation.md subsection 67, The bound' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 190, quote: 'if (!folded || folded.length > 60) return null;', citedBy: 'docs/validation.md subsection 67, The bound' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 236, quote: "next('Ask that again', question)", citedBy: 'docs/validation.md subsection 67, Four clauses' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 319, quote: 'let row = null, listFailed = null;', citedBy: 'docs/validation.md subsection 67, Four clauses' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 320, quote: 'try { row = await exactPlaceRow(question, {', citedBy: 'docs/validation.md subsection 67, Four clauses' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 321, quote: 'catch (error) { if (error.cancelled === true) throw error; listFailed = error; }', citedBy: 'docs/validation.md subsection 67, Four clauses' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 322, quote: 'The refusal is stated for a message that has the shape of a place name', citedBy: 'docs/validation.md subsection 67, The bound' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 327, quote: 'The saved place list for United States could not be read just now', citedBy: 'docs/validation.md subsection 67, The bound' },
-  { file: 'public/js/modules/workflow-assistant.js', line: 328, quote: 'if (listFailed && asked === generation && mentionPhrase(question))', citedBy: 'docs/validation.md subsection 67, Four clauses' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 206, quote: 'function mentionPhrase(question) {', citedBy: 'docs/validation.md subsection 67, The bound' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 208, quote: 'if (!folded || folded.length > 60) return null;', citedBy: 'docs/validation.md subsection 67, The bound' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 254, quote: "next('Ask that again', question)", citedBy: 'docs/validation.md subsection 67, Four clauses' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 337, quote: 'let row = null, listFailed = null;', citedBy: 'docs/validation.md subsection 67, Four clauses' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 338, quote: 'try { row = await exactPlaceRow(question, {', citedBy: 'docs/validation.md subsection 67, Four clauses' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 339, quote: 'catch (error) { if (error.cancelled === true) throw error; listFailed = error; }', citedBy: 'docs/validation.md subsection 67, Four clauses' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 340, quote: 'The refusal is stated for a message that has the shape of a place name', citedBy: 'docs/validation.md subsection 67, The bound' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 345, quote: 'The saved place list for United States could not be read just now', citedBy: 'docs/validation.md subsection 67, The bound' },
+  { file: 'public/js/modules/workflow-assistant.js', line: 346, quote: 'if (listFailed && asked === generation && mentionPhrase(question))', citedBy: 'docs/validation.md subsection 67, Four clauses' },
   { file: 'public/js/lib/api.js', line: 52, quote: 'error.cancelled = true; return error;', citedBy: 'docs/validation.md subsection 67, Four clauses' },
   { file: 'tests/workflow-place-name-refused.test.js', line: 70, quote: 'a bare place name whose saved list refused names the read that failed', citedBy: 'docs/validation.md subsection 67, Tests' },
   { file: 'tests/workflow-place-name-refused.test.js', line: 86, quote: 'own words back and a tap after a healthy list selects the place', citedBy: 'docs/validation.md subsection 67, Tests' },
@@ -384,25 +384,25 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   // inserting above it, so a future rewrite of this block that drops any of them has to be a decision made here.
   for (const [file, line] of [['public/js/modules/chat.js', 91], ['public/js/modules/chat.js', 149], ['public/js/modules/chat.js', 154],
     ['public/js/modules/chat.js', 155], ['public/js/modules/chat.js', 156], ['public/js/modules/chat.js', 159],
-    ['public/js/modules/workflow-assistant.js', 500], ['server/api.js', 46]]) {
+    ['public/js/modules/workflow-assistant.js', 557], ['server/api.js', 46]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 59 quotes while changing it and is no longer pinned`);
   }
   for (const line of [26, 54, 76, 97]) {
     assert.ok(pinned('tests/e2e/chat-refused-ask-keeps-question.spec.js').includes(line), `chat-refused-ask-keeps-question.spec.js:${line} is a line subsection 59 quotes as its evidence and is no longer pinned`);
   }
   // Subsection 61's own eight numbers plus the ±1 repair band this iteration re-pointed by tool rather than by hand.
-  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 230], ['public/js/modules/workflow-assistant.js', 406],
-    ['public/js/modules/workflow-assistant.js', 551], ['public/js/modules/workflow-assistant.js', 718],
-    ['public/js/modules/context.js', 248], ['public/js/modules/context.js', 250],
+  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 248], ['public/js/modules/workflow-assistant.js', 463],
+    ['public/js/modules/workflow-assistant.js', 618], ['public/js/modules/workflow-assistant.js', 785],
+    ['public/js/modules/context.js', 249], ['public/js/modules/context.js', 251],
     ['public/js/lib/api.js', 13], ['tests/e2e/place-list-refused.spec.js', 36], ['tests/e2e/place-list-refused.spec.js', 100], ['docs/validation.md', 1007], ['docs/validation.md', 1021], ['docs/validation.md', 1035], ['tests/documentation-citation-anchors.test.js', 524]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 61 quotes while changing it and is no longer pinned`);
   }
   // Subsection 65 deletes a line out of the coordinate branch it then quotes, so the helper the branch answers
   // through, the guard that reaches it, the single read it now shares, the cache that keeps that read warm, three
   // of its six offline cases and its page case are named here too: a later narrowing has to decide so here.
-  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 242],
-    ['public/js/modules/workflow-assistant.js', 507], ['public/js/modules/workflow-assistant.js', 508],
-    ['public/js/modules/workflow-assistant.js', 667], ['tests/workflow-place-choices.test.js', 777],
+  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 260],
+    ['public/js/modules/workflow-assistant.js', 564], ['public/js/modules/workflow-assistant.js', 565],
+    ['public/js/modules/workflow-assistant.js', 734], ['tests/workflow-place-choices.test.js', 777],
     ['tests/workflow-place-choices.test.js', 829], ['tests/workflow-place-choices.test.js', 855],
     ['tests/e2e/chat-refused-ask-keeps-question.spec.js', 113], ['server/context/locations.js', 9]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 65 quotes while changing it and is no longer pinned`);
@@ -411,9 +411,9 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   // reachable that had never rendered, and adds an offline file and a page spec the ledger quotes by line. All of those
   // are named here so a future pass that drops a pin has to decide to do it: the shared patterns, the veto, the gate,
   // the cancellation reply, the rule exactPlaceRow declines a duplicated town name on, and four of the new cases.
-  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 7], ['public/js/modules/workflow-assistant.js', 291],
-    ['public/js/modules/workflow-assistant.js', 302], ['public/js/modules/workflow-assistant.js', 310],
-    ['public/js/modules/workflow-assistant.js', 332], ['public/js/modules/workflow-assistant.js', 682],
+  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 7], ['public/js/modules/workflow-assistant.js', 309],
+    ['public/js/modules/workflow-assistant.js', 320], ['public/js/modules/workflow-assistant.js', 328],
+    ['public/js/modules/workflow-assistant.js', 350], ['public/js/modules/workflow-assistant.js', 749],
     ['tests/workflow-bare-place-name.test.js', 51], ['tests/workflow-bare-place-name.test.js', 132],
     ['tests/e2e/chat-bare-place-name.spec.js', 31], ['tests/e2e/chat-bare-place-name.spec.js', 76]]) {
     assert.ok(pinned(file).includes(line), `${file}:${line} is a line subsection 66 quotes while changing it and is no longer pinned`);
@@ -422,11 +422,11 @@ test('the pin table covers the citation targets the loop leans on and cannot be 
   // gives the recovery helper a third argument and pins the result in eleven cases. The gate is the part a later pass
   // is most likely to "simplify" away, so the bound, both lines of its comment and every case that depends on it are
   // named here rather than left to a table size.
-  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 188], ['public/js/modules/workflow-assistant.js', 190],
-    ['public/js/modules/workflow-assistant.js', 236], ['public/js/modules/workflow-assistant.js', 319],
-    ['public/js/modules/workflow-assistant.js', 320], ['public/js/modules/workflow-assistant.js', 321],
-    ['public/js/modules/workflow-assistant.js', 322], ['public/js/modules/workflow-assistant.js', 327],
-    ['public/js/modules/workflow-assistant.js', 328], ['public/js/lib/api.js', 52],
+  for (const [file, line] of [['public/js/modules/workflow-assistant.js', 206], ['public/js/modules/workflow-assistant.js', 208],
+    ['public/js/modules/workflow-assistant.js', 254], ['public/js/modules/workflow-assistant.js', 337],
+    ['public/js/modules/workflow-assistant.js', 338], ['public/js/modules/workflow-assistant.js', 339],
+    ['public/js/modules/workflow-assistant.js', 340], ['public/js/modules/workflow-assistant.js', 345],
+    ['public/js/modules/workflow-assistant.js', 346], ['public/js/lib/api.js', 52],
     ['tests/workflow-place-name-refused.test.js', 70], ['tests/workflow-place-name-refused.test.js', 145],
     ['tests/workflow-place-name-refused.test.js', 175], ['tests/e2e/place-name-list-refused.spec.js', 57],
     ['tests/e2e/place-name-list-refused.spec.js', 112]]) {
@@ -561,11 +561,11 @@ test('no pin is satisfied by the statement above or below the line it names', as
 // bytes contain, which a coordinate-only label cannot do.
 const DEEP_LINKS = new Map([
   ['docs/validation.md:1007', {
-    file: 'public/js/modules/workflow-assistant.js', from: 415, to: 420, anchor: 420,
+    file: 'public/js/modules/workflow-assistant.js', from: 472, to: 477, anchor: 477,
     quotes: ['const allowEponymousTown = namedRegions.length === 0 || Boolean(regionFilter);'],
   }],
   ['docs/validation.md:1021', {
-    file: 'public/js/modules/workflow-assistant.js', from: 608, to: 619, anchor: 608,
+    file: 'public/js/modules/workflow-assistant.js', from: 675, to: 686, anchor: 675,
     quotes: [
       'if (replySpelling === countrySpelling && !regionMentions.length && !townMentions.length',
       'const level = regionName ? `a town in ${regionName}`',
@@ -573,7 +573,7 @@ const DEEP_LINKS = new Map([
     ],
   }],
   ['docs/validation.md:1035', {
-    file: 'public/js/modules/workflow-assistant.js', from: 445, to: 449, anchor: 449,
+    file: 'public/js/modules/workflow-assistant.js', from: 502, to: 506, anchor: 506,
     quotes: [
       'const rowCarriesReply = [...places.regions, ...places.places]',
       'if (replySpelling === countrySpelling && !rowCarriesReply) { regionMentions = []; townMentions = []; }',
@@ -585,17 +585,17 @@ const DEEP_LINKS = new Map([
   // scout is differential: it compares a cited line to the same ordinal in HEAD, so a pointer that moves 20 lines per
   // commit never shows up as having moved. Queued as F18; repaired here as clickable pointers, which this table grades.
   ['docs/validation.md:1555', {
-    file: 'public/js/modules/workflow-assistant.js', from: 451, to: 464, anchor: 464,
+    file: 'public/js/modules/workflow-assistant.js', from: 508, to: 521, anchor: 521,
     quotes: ['const placeRecovery = () => {', 'const regionRecovery = () => {'],
   }],
   ['AGENTS.md:605', {
-    file: 'public/js/modules/workflow-assistant.js', from: 464, to: 470, anchor: 464,
+    file: 'public/js/modules/workflow-assistant.js', from: 521, to: 527, anchor: 521,
     quotes: ['const regionRecovery = () => {', 'const prompt = areaPrompt(countryName, null, places);'],
   }],
   // Its sibling in the same paragraph cited `:442` for "the fallthrough chooses by the pending question", which is a
   // comment three lines above the country-spelling rule and nowhere near either branch. The branches are 599-600.
   ['AGENTS.md:607', {
-    file: 'public/js/modules/workflow-assistant.js', from: 599, to: 600, anchor: 599,
+    file: 'public/js/modules/workflow-assistant.js', from: 666, to: 667, anchor: 666,
     quotes: ['return regionRecovery();', "return scope === 'area' || areaRegion ? placeRecovery() : null;"],
   }],
   // The last two rows point back at this file. F18's mechanism is that a pointer and the bytes it names drift apart with

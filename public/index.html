@@ -177,6 +177,21 @@
     <button id="stop-speaking" type="button" hidden>Stop speaking</button>
     <p id="answer-status" role="status">Answers include sources and limitations.</p>
     <div id="answer-output" hidden></div>
+    <details id="assistant-tools"><summary>Planning tools</summary>
+      <div role="group" aria-label="Perform a UI task from chat">
+        <button type="button" data-prompt="Load historical NASA evidence">Load NASA evidence</button>
+        <button type="button" data-prompt="Find mapped fields around this point">Find mapped fields</button>
+        <button type="button" data-prompt="Compare baseline and two alternatives">Compare rotations</button>
+        <button type="button" data-prompt="Show temperature in Celsius">Show Celsius</button>
+        <button type="button" data-prompt="Show temperature in Fahrenheit">Show Fahrenheit</button>
+        <button type="button" data-prompt="Load regional soil estimates">Load regional soil estimates</button>
+        <button type="button" data-prompt="Look up country pest records">Load country pest records</button>
+        <button type="button" data-prompt="Open 3D evidence map">Open 3D evidence map</button>
+        <button type="button" data-prompt="Return to 2D map">Return to 2D map</button>
+        <button type="button" data-prompt="Go back one step">Go back one step</button>
+        <button type="button" data-chat-tool="search-place">Search places</button>
+      </div>
+    </details>
   </aside>
 </body>
 </html>

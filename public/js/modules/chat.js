@@ -18,8 +18,8 @@ export function initChat(getState, actions) {
   let pendingChoice = null, messageSerial = 0;
   // Optional voice input/read-aloud. Dictation only fills the editable message box.
   const speech = initSpeech({ input: $('question'), status: $('speech-status'), micButton: $('mic'), unloadButton: $('unload-speech'), stopButton: $('stop-speaking'), consent: $('speech-consent'), startButton: $('start-dictation'), cancelButton: $('cancel-dictation') });
-  const starters=[...$('chat-examples').querySelectorAll('button')];
-  starters.forEach(button=>button.addEventListener('click',()=>{if($('ask').disabled)return;pendingChoice=null;$('question').value=button.dataset.prompt;$('question-form').requestSubmit();}));
+  const starters=[...$('chat-examples').querySelectorAll('button')],toolButtons=[...$('assistant-tools').querySelectorAll('button')],shortcutButtons=[...starters,...toolButtons];
+  starters.concat(toolButtons.filter(button=>button.dataset.prompt)).forEach(button=>button.addEventListener('click',()=>{if($('ask').disabled)return;pendingChoice=null;$('question').value=button.dataset.prompt;$('question-form').requestSubmit();}));toolButtons.filter(button=>button.dataset.chatTool==='search-place').forEach(button=>button.addEventListener('click',()=>{if($('ask').disabled)return;pendingChoice=null;$('question').value='Search for a place named ';$('question').focus();}));
   function positionChat(){
     const main=document.querySelector('main');document.documentElement.style.setProperty('--main-scrollbar',`${main.offsetWidth-main.clientWidth}px`);
     const bar=document.querySelector('.workflow-navigation').getBoundingClientRect();
@@ -85,7 +85,7 @@ export function initChat(getState, actions) {
     request?.abort(); request = new AbortController();
     $('question').focus();
     $('ask').disabled = true; announce('Retrieving source facts…');
-    starters.forEach(button=>button.disabled=true);
+    shortcutButtons.forEach(button=>button.disabled=true);
     const user = el('article', null, { class: 'chat-message' });
     user.append(el('h3', 'You'), el('p', question)); log.append(user);
     $('question').value = '';
@@ -156,7 +156,7 @@ export function initChat(getState, actions) {
         if ($('question').value === '') $('question').value = question;
       }
     }
-    finally { if (version === revision && serial === messageSerial) { $('ask').disabled = false;starters.forEach(button=>button.disabled=false); } }
+    finally { if (version === revision && serial === messageSerial) { $('ask').disabled = false;shortcutButtons.forEach(button=>button.disabled=false); } }
   });
   return { invalidate({ fromAssistant = false } = {}) {
     chatContext = null;
@@ -164,7 +164,7 @@ export function initChat(getState, actions) {
     const guided = workflow.isActive();
     workflow.invalidate(); pendingChoice = null; speech.stopSpeaking();
     revision++; request?.abort(); $('ask').disabled = false; chatContext = null;
-    starters.forEach(button=>button.disabled=false);
+    shortcutButtons.forEach(button=>button.disabled=false);
     log.replaceChildren(el('p', 'Location or planning context changed. New messages use the current selection.'));
     // A guided plan can continue after the user picks a town or field in step 1 themselves.
     if (guided && getState().location) {

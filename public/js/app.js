@@ -168,7 +168,7 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
     return selectLocation(point.latitude, point.longitude, { pan: true, countryCode, regionCode: !filter || filter === '__all__' ? null : filter, placeId: point.id ?? '', fromAssistant: true });},
   chooseFarm: id => context.selectFarm(id, { fromAssistant: true }),
   loadFarms: () => context.loadFarms(),
-  showStep: activateTab, loadEvidence: () => loadEvidence({ fromAssistant: true }),
+  showStep: activateTab, loadEvidence: () => loadEvidence({ fromAssistant: true }), setTemperatureUnit: unit => { $('#temperature-unit').value = unit; if (observations) renderEvidence(observations, unit); }, loadSoilContext: () => $('#load-soil-context').disabled ? false : context.loadSoil(), loadPestContext: () => $('#load-pests').disabled ? false : context.loadPests({ fromAssistant: true }), openMap3D: async () => Boolean(await openEvidenceMap3D()), closeMap3D: () => { if ($('#map3d-panel').hidden) return false; closeMap3D(); return true; }, goBack: () => { if ($('#flow-back').disabled) return false; $('#flow-back').click(); return true; }, searchPlaces: async query => (await api(`/api/places?${new URLSearchParams({ q: query })}`)).places,
   compare: () => runComparison({ fromAssistant: true }),
   applyPlanning({ baseline, constraints, allowed }) {
     if (!catalogData || !countryCrops?.country) throw new Error('Country crop evidence is not loaded.');
@@ -178,9 +178,9 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
       if (![...select.options].some(option => option.value === crop.id)) select.add(new Option(`${crop.name} — farmer supplied / unassessed`, crop.id));
       select.value = crop.id;
     });
-    const controls = { irrigation: '#irrigation', soil: '#soil', soilPh: '#soil-ph', priority: '#priority',
+    const controls = { irrigation: '#irrigation', soil: '#soil', soilPh: '#soil-ph', priority: '#priority', drainage: '#drainage', pestHistory: '#pest-history',
       planningYear: '#planning-year', startMonth: '#start-month', referenceYear: '#reference-year' };
-    for (const [key, value] of Object.entries(constraints ?? {})) if (controls[key]) $(controls[key]).value = value;
+    for (const [key, value] of Object.entries(constraints ?? {})) if (key === 'previousCrop') { const crop = resolveCropInput(value, catalogData, countryCrops), select = $('#previous-crop'); if (![...select.options].some(option => option.value === crop.id)) select.add(new Option(`${crop.name} — farmer supplied / unassessed`, crop.id)); select.value = crop.id; } else if (controls[key]) $(controls[key]).value = value;
     if (allowed) {
       $('#alternative-scope').value='custom';
       const ids = allowed.map(name => resolveCropInput(name, catalogData, countryCrops).id);

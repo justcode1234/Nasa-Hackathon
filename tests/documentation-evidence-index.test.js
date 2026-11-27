@@ -2691,10 +2691,27 @@ const TALLIES = [
        '=== ITEM14 NASA FOCUSED RERUN', 'No single full-gate pass is claimed'],
    absent: ['ITEM14_GATE_RERUN exit=0', 'SHELVE82_REFUSE'],
    marks: 7 },
+  { archive: 'docs/evidence/iter83-ui-chat-parity-2026-11-26.log.gz',
+   lines: ['PARITY_UI_CHAT start_utc=2026-11-27T16:13:47Z head=66d777b5a38d68611b7e3812107061ddf658bce6 interpreter=v26.13.1',
+       'PARITY_UNIT red_pass=0 red_fail=5 green_pass=6 green_fail=0',
+       'PARITY_WORKFLOW_OFFLINE tests=131 pass=131 fail=0',
+       'PARITY_FOCUSED_E2E passed=8 failed=0 projects=4',
+       'PARITY_CONTROLS place_unit=red fields_unit=red place_browser=red pest_browser=red previous_browser=red restored=8/8',
+       'PARITY_CITATIONS mapped=114 repinned=26 coverage=25 manual=6 final_guard=22/22',
+       'PARITY_FIRST_GATE interrupted_exit=143 reason=missing_country_edge_case_found_before_full_run',
+       'PARITY_GATE exit=0   380 passed (22.4m)',
+       'PARITY_FINAL_OFFLINE tests=357 pass=357 fail=0 skipped=0 exit=0',
+       'PARITY_FINAL_DOCS_GUARDS tests=32 pass=32 fail=0 skipped=0 exit=0',
+       'PARITY_FINAL_DRIFT checked=477 drifted=0 unreadable=0 exit=0',
+       'PARITY_DONE'],
+   phrases: ['=== PARITY UNIT RED', '=== PARITY COUNTRY RED', '=== PARITY FULL GATE RAW',
+       'a global search row without a country code still offers a usable choice'],
+   absent: ['PARITY_GATE exit=1', 'SHELVE83_REFUSE'],
+   marks: 0 },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 267, `the table carries ${TALLIES.length} archives; subsections 57 through 82 quote more runs ` +
+  assert.ok(TALLIES.length >= 268, `the table carries ${TALLIES.length} archives; subsections 57 through 83 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +

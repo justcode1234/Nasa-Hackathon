@@ -100,18 +100,18 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
   }
   async function loadSoil() {
     const position = coordinates(), version = token;
-    if (!position) return message('soil-context-status', 'Choose a location first.', true);
+    if (!position) { message('soil-context-status', 'Choose a location first.', true); return false; }
     $('load-soil-context').disabled = true;
     message('soil-context-status', 'Retrieving mapped regional soil estimates and source prediction intervals…');
     try {
       const data = await request(`/api/soil?${new URLSearchParams(position)}`);
-      if (version !== token) return;
+      if (version !== token) return false;
       onSoil(data);
       $('soil-context-output').replaceChildren(el('p', `${data.product} · ${data.kind} · nominal ${data.nominalResolutionM} m grid · depth ${data.depth} · retrieved ${data.retrievedAt}. No single observation date.`),
         table(['Property', 'Model mean', '5th–95th quantiles', 'Units'], data.properties.map(p => [p.name, number(p.mean), `${number(p.lower)} to ${number(p.upper)}`, p.units]), 'Regional soil estimates — not measured farm soil'),
         list(data.notices), sourceLinks(['soilgrids'], [data.source]));
-      message('soil-context-status', 'Regional soil context loaded. Farm soil inputs remain unknown until supplied from local evidence.');
-    } catch (error) { if (version === token) message('soil-context-status', `${error.message} Soil remains unknown; no typical soil was guessed.`, true); }
+      message('soil-context-status', 'Regional soil context loaded. Farm soil inputs remain unknown until supplied from local evidence.'); return true;
+    } catch (error) { if (version === token) message('soil-context-status', `${error.message} Soil remains unknown; no typical soil was guessed.`, true); return false; }
     finally { $('load-soil-context').disabled = false; }
   }
   $('load-soil-context').addEventListener('click', loadSoil);
@@ -186,26 +186,26 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
     message('place-status', place.name);
     loadFarms();
   });
-  $('pest-form').addEventListener('submit', async event => {
-    event.preventDefault();
+  async function loadPests(options = {}) {
     const version = token;
-    $('load-pests').disabled = true; $('pest-output').replaceChildren(); onPests(null);
+    let country;
+    $('load-pests').disabled = true; $('pest-output').replaceChildren(); onPests(null, options);
     message('pest-status', 'Looking up country occurrence records…');
     try {
-      let country = $('pest-country').value;
+      country = $('pest-country').value;
       if (!country) {
         const position = coordinates();
         if (!position) throw new Error('Select a location or choose a country.');
         const data = await request(`/api/places?${new URLSearchParams(position)}`);
-        if (version !== token) return;
+        if (version !== token) return false;
         country = data.places[0]?.countryCode;
         if (!country) throw new Error('Country could not be identified here. Choose one manually.');
         $('pest-country').value = country;
         loadWater(country);
-        loadCountry(country);
+        loadCountry(country, options);
       }
       const data = await request(`/api/pests?country=${country}`);
-      if (version !== token) return;
+      if (version !== token) return false;
       const root = $('pest-output');
       root.replaceChildren(el('p', `${names.of(country)} · GBIF country records, all dates · retrieved ${data.retrievedAt ?? 'unavailable'}`), list(data.notices));
       data.records.forEach(record => {
@@ -217,18 +217,19 @@ export function initContext({ map, coordinates, selectLocation, onFarm, onPests,
           el('a', 'View example occurrence and dataset attribution', { href: record.example.url, target: '_blank', rel: 'noreferrer' }));
         root.append(article);
       });
-      onPests(data);
+      onPests(data, options);
       message('pest-status', 'Country context loaded. These are inspection leads, not a field diagnosis.');
-    } catch (error) { if (version === token) message('pest-status', error.message, true); }
+    } catch (error) { if (version === token) message('pest-status', error.message, true); return false; }
     finally { $('load-pests').disabled = false; }
-  });
+    return true; }
+  $('pest-form').addEventListener('submit', async event => { event.preventDefault(); await loadPests(); });
   $('pest-country').addEventListener('change', () => {
     const country = $('pest-country').value;
     onCountrySelection();
     locationChanged({ countryCode: country });
     message('place-status', country ? 'Choose a region or town from the dropdowns, search a place, or pick the map.' : 'Choose a country to browse towns.');
   });
-  return { locationChanged, loadFarms, selectFarm, loadSoil, ensureCountry, getFarms: () => farms,
+  return { locationChanged, loadFarms, selectFarm, loadSoil, loadPests, ensureCountry, getFarms: () => farms,
     async chooseCountry(country, options = {}) {
       if (!codes.includes(country)) throw new Error('Choose a supported country.');
       onCountrySelection(options);

@@ -45,7 +45,7 @@ printf 'L3-quote-off-band\ttests/documentation-citation-anchors.test.js\t1\tname
 printf 'L4-anchor-on-comment\ttests/documentation-citation-anchors.test.js\t1\tto: 420, anchor: 420,\tto: 420, anchor: 415,\tcarries none of the quoted rule;while the row requires\n'
 printf 'L5-target-missing\tdocs/validation.md\t1\t(../public/js/modules/workflow-assistant.js#L420)\t(../public/js/modules/workflow-assistantx.js#L420)\twhich is not a tracked file;cannot be read\n'
 printf 'L6-anchor-outside-band\tdocs/validation.md\t1\tworkflow-assistant.js#L420\tworkflow-assistant.js#L421\twhile the row requires;but its anchor lands on line 421\n'
-printf 'L7-label-band-narrowed\tdocs/validation.md\t1\tworkflow-assistant.js:415-420, where\tworkflow-assistant.js:415-419, where\tis not the 415-420 the row grades\n'
+printf 'L7-label-band-narrowed\tdocs/validation.md\t1\tworkflow-assistant.js:472-477, where\tworkflow-assistant.js:472-476, where\tis not the 472-477 the row grades\n'
 printf 'L8-floor-raised\ttests/documentation-citation-anchors.test.js\t1\tlinks.length >= 8\tlinks.length >= 9\tthe deep-link scan saw 8 clickable pointers\n'
 printf 'L9-scan-blind\ttests/documentation-citation-anchors.test.js\t1\tfor (const doc of await trackedFiles(\x27*.md\x27))\tfor (const doc of await trackedFiles(\x27docs/nothing-matches-this.md\x27))\tthe deep-link scan saw 0 clickable pointers;8 rows waited for them\n'
 printf 'CTRL-restored\tNONE\t0\tNONE\tNONE\tNONE\n'
