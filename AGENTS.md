@@ -2798,6 +2798,17 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   month-slider manipulation remains outside this primary-journey audit and is not claimed covered. No dependency, timeout,
   retry or assertion was weakened; next is §13.1 items 16-20. Real phones, Safari/WebKit, microphones, audio quality and
   independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed.
+- 27 Nov, iteration 84 (`docs/validation.md` subsection 84): §13.1 items 16-20 close as VERIFIED SOUND. Five browser
+  cases hold older country, region/town/search, field, evidence and comparison responses at the fetch/worker boundary,
+  perform a newer action, release the old response and require the newer state to remain. No application byte changed.
+  Focused browser checks pass 20/20 across four projects; country, search, fields, comparison and combined evidence
+  controls each redden 4/4, the evidence app-only half-fix reddens 2/4 while worker cancellation protects static, and the
+  byte-identical restore returns 20/20. The pre-documentation offline suite passes 357/357. The first full gate was
+  stopped by the 600000 ms tool deadline after 147 completed cases with no failure or tally; the relaunched frozen tree
+  passed 400/400 in 20.2 minutes, exit 0. Evidence is
+  `docs/evidence/iter84-stale-selection-parity-2026-11-27.log.gz`. No dependency, timeout, retry or assertion was weakened;
+  next is §13.1 item 21. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED;
+  `main` untouched, nothing deployed.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -3171,11 +3182,22 @@ remains open and is not claimed covered.
 13. Verify unexpected AbortError failures still surface instead of being treated as user cancellation.
 14. Verify worker-start and synchronous postMessage failures settle callers and allow recovery.
 15. Verify worker crash/restart clears pending work and prevents duplicate or stale answers.
-16. Reverse response order for successive countries; old crop/town lists must never win.
-17. Reverse order for successive regions, towns and place searches; selection stays with the latest action.
-18. Change location during a field lookup; old outlines and field counts must not attach to the new point.
-19. Change location during evidence loading; supersession must not appear as a NASA service failure.
-20. Edit constraints during comparison; results and chat must not describe the abandoned plan as current.
+16. Reverse response order for successive countries; old crop/town lists must never win. CLOSED 27 Nov as VERIFIED
+   SOUND: `tests/e2e/stale-selection-parity.spec.js:35` holds the older crop/town responses on both transports and passes
+   all four projects; removing the country/picker version guards reddens 4/4.
+17. Reverse order for successive regions, towns and place searches; selection stays with the latest action. CLOSED 27 Nov
+   as VERIFIED SOUND: `tests/e2e/stale-selection-parity.spec.js:62` releases the newer search first and retains its exact
+   row on all four projects; removing the search version guard reddens 4/4.
+18. Change location during a field lookup; old outlines and field counts must not attach to the new point. CLOSED 27 Nov
+   as VERIFIED SOUND: `tests/e2e/stale-selection-parity.spec.js:99` passes all four projects; removing the field-lookup
+   version guard reddens 4/4.
+19. Change location during evidence loading; supersession must not appear as a NASA service failure. CLOSED 27 Nov as
+   VERIFIED SOUND: `tests/e2e/stale-selection-parity.spec.js:122` passes all four projects. The app-only control reddens
+   2/4 because worker cancellation still protects static; removing both guards reddens 4/4.
+20. Edit constraints during comparison; results and chat must not describe the abandoned plan as current. CLOSED 27 Nov
+   as VERIFIED SOUND: `tests/e2e/comparison-superseded.spec.js:29` passes all four projects; removing both the revision
+   and worker-cancellation guards reddens 4/4. Evidence for items 16-20 is
+   `docs/evidence/iter84-stale-selection-parity-2026-11-27.log.gz`; the byte-identical restore returns 20/20.
 
 **Location and farmer-input integrity**
 

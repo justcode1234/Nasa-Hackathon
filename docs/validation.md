@@ -8252,3 +8252,32 @@ minutes, exit 0. Evidence is `docs/evidence/iter83-ui-chat-parity-2026-11-26.log
 assertion was weakened. Advanced 3D layer, terrain, imagery and month-slider manipulation remains outside this primary
 journey audit and is not claimed covered. Next: §13.1 items 16-20. Real phones, Safari/WebKit, microphones, audio quality
 and independent agronomy stay UNVERIFIED.
+
+### 84. Older country, place, field, evidence and comparison responses cannot become current
+
+**VERIFIED SOUND (§13.1 items 16-20).** Five browser cases hold the older response at the transport boundary, perform a
+newer selection or constraint edit, then release the old response and require the newer state to remain. The cases cover
+country crop/town lists (`tests/e2e/stale-selection-parity.spec.js:35`), region/town/global-search ordering (`:62`), field
+lookup supersession (`:99`), evidence supersession without a false NASA failure (`:122`) and comparison supersession
+(`tests/e2e/comparison-superseded.spec.js:29`). The shared hold helper intercepts both `fetch` and `Worker.postMessage`
+(`tests/e2e/helpers/transport-holds.js:1`), so the same case executes over Node HTTP and the static worker.
+
+No application byte changed. The existing guards are measurable: country/list and search completions compare their
+captured version before rendering (`public/js/modules/location-picker.js:22`, `:34`,
+`public/js/modules/context.js:58`, `:59`, `:172`, `:173`); field results compare the location token
+(`public/js/modules/context.js:124`, `:130`); evidence and comparison compare the application revision
+(`public/js/app.js:215`, `:217`, `:227`, `:236`, `:288`, `:296`); and worker cancellation removes the pending id
+(`public/js/lib/api.js:35`). The tests prove the composed behaviour rather than claiming that one guard alone covers both
+transports.
+
+The focused specs pass 20/20 across four projects, and the pre-documentation offline suite passes 357/357. Mutation
+controls fail as intended: country 4/4, search 4/4, fields 4/4, comparison with both revision and worker-cancellation
+guards removed 4/4, and evidence with both guards removed 4/4. Removing only the evidence revision guard reddens the two
+Node projects while worker cancellation still protects the two static projects; that half-fix result is retained rather
+than rounded up to a four-project failure. Byte-identical restoration returns 20/20.
+
+The first full-gate launch was stopped by the 600000 ms tool deadline after 147 completed cases, with no failed case line
+and no tally; it is preserved as partial/invalid. The same frozen test tree was relaunched with an explicit one-hour
+allowance and passed the full four-project gate: 400/400 in 20.2 minutes, exit 0. Evidence is
+`docs/evidence/iter84-stale-selection-parity-2026-11-27.log.gz`. No dependency, timeout, retry or assertion was weakened.
+Next: §13.1 item 21. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED.

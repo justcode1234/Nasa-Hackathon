@@ -2708,10 +2708,22 @@ const TALLIES = [
        'a global search row without a country code still offers a usable choice'],
    absent: ['PARITY_GATE exit=1', 'SHELVE83_REFUSE'],
    marks: 0 },
+  { archive: 'docs/evidence/iter84-stale-selection-parity-2026-11-27.log.gz',
+   lines: ['STALE_SELECTION start_utc=2026-11-27T17:32:24Z head=c690248a1812b68aac33addd3ef37041646c5259 interpreter=v26.13.1',
+       'STALE_FOCUSED passed=20 failed=0 projects=4',
+       'STALE_CONTROLS country=4red search=4red fields=4red evidence_app=2red evidence_combined=4red comparison_combined=4red restore=20/20',
+       'STALE_OFFLINE tests=357 pass=357 fail=0 skipped=0',
+       'STALE_FIRST_GATE stopped_by_tool_deadline_ms=600000 completed_cases=147 failed_case_lines=0 tally=none',
+       'STALE_GATE exit=0   400 passed (20.2m)',
+       'STALE_DONE'],
+   phrases: ['=== STALE FULL GATE RAW', '=== STALE EVIDENCE COMBINED RED',
+       'late country crop and town lists cannot replace a newer country',
+       'a comparison released after constraints change never renders or survives as current'],
+   absent: ['STALE_GATE exit=1', 'SHELVE84_REFUSE'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 268, `the table carries ${TALLIES.length} archives; subsections 57 through 83 quote more runs ` +
+  assert.ok(TALLIES.length >= 269, `the table carries ${TALLIES.length} archives; subsections 57 through 84 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -2877,7 +2889,7 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'seven-arm ladder that measures what that spec is worth and the offline run both were graded on. Every needle in those ' +
     'three rows is a rendered stamp with its values in place, because all three archives embed the same driver bytes and a ' +
     'needle copied from a line of that source therefore matches all of them - which is exactly what the row/archive matrix ' +
-    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule. Iteration 79 adds the shipped-instrument census and the guard control that keeps scratch scripts out of tracked prose. Iteration 80 adds the F6 mutation controls, F7 retirement census and F12 blocked-limit record. Iteration 81 adds the HTTP body-cancellation red/green pair, browser sensitivity control and full 368-case gate.');
+    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule. Iteration 79 adds the shipped-instrument census and the guard control that keeps scratch scripts out of tracked prose. Iteration 80 adds the F6 mutation controls, F7 retirement census and F12 blocked-limit record. Iteration 81 adds the HTTP body-cancellation red/green pair, browser sensitivity control and full 368-case gate. Iteration 84 adds the five-case stale-selection archive, its focused runs, mutation controls, stopped first gate and full 400-case gate.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     assert.ok((lines?.length ?? 0) + (phrases?.length ?? 0) + (onlyReds?.length ?? 0) > 0,
       `ROW_SHAPE_BAD ${archive} has no positive content needle (lines, phrases or onlyReds)`);
