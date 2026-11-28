@@ -126,6 +126,20 @@ test('typed town names match partially, an exact name wins and a new name re-tar
   assert.ok(!calls.includes('NASA'), 'moving the point clears evidence instead of reusing the old reading');
 });
 
+test('a regionless town choice never turns its unnamed code into a region filter', async () => {
+  const { assistant, state } = setup({ farms: 0 });
+  await assistant.respond('Help me plan a rotation in Singapore');
+  const area = await assistant.respond('A specific area');
+  const jurongEast = area.followUps.findIndex(choice => choice.label === 'Jurong East');
+  assert.ok(jurongEast >= 0, 'the regionless list offers Jurong East');
+  const selected = await click(assistant, area, jurongEast);
+  assert.match(text(selected), /Jurong East is selected as a town point/);
+  const partial = await assistant.respond('Jurong');
+  assert.match(text(partial), /Several listed towns match/);
+  assert.deepEqual(towns(partial).map(choice => choice.label), ['Jurong East', 'Jurong Town', 'Jurong West']);
+  assert.equal(state.regionCode, null);
+});
+
 test('the country name alone still selects the eponymous town when no regions are named', async () => {
   const { assistant, state } = setup();
   await assistant.respond('Help me plan a rotation in Singapore');

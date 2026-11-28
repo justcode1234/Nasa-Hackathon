@@ -604,7 +604,7 @@ The supplied *NASA Space Apps 2026 Project Submission Guide* indicates a demo **
   dropped the real region rows. `respond()` reached one fallthrough for both pending place questions;
   a new `regionRecovery()` ([public/js/modules/workflow-assistant.js:521-527, where `regionRecovery()` opens on `areaPrompt()`'s rows](public/js/modules/workflow-assistant.js#L521)) reuses that prompt's region rows and caveat,
   says the level that is missing and that nothing was selected, and always keeps `Whole <country>`
-  tappable. The fallthrough ([public/js/modules/workflow-assistant.js:666-667, where `scope` picks `regionRecovery()` over `placeRecovery()`](public/js/modules/workflow-assistant.js#L666)) now chooses by the pending question and leaves
+  tappable. The fallthrough ([public/js/modules/workflow-assistant.js:671-672, where `scope` picks `regionRecovery()` over `placeRecovery()`](public/js/modules/workflow-assistant.js#L671)) now chooses by the pending question and leaves
   the town recovery unchanged inside a chosen region and in region-less lists. A new census
   (tests/matrix-coverage.test.js:502) walks **every saved list with a named region row — 227 lists**
   and pins the wording, a real region button, and no selection or data action; with the branch
@@ -2265,7 +2265,7 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   (`public/js/modules/workflow-assistant.js:260`, reached at `public/js/modules/workflow-assistant.js:564`): it
   states the failed read, quotes the point, keeps the country the sentence moved, offers the replay and the
   whole-country overview, claims nothing about regions or towns, and says something different when the list
-  arrived in an unreadable shape. Six offline cases (`tests/workflow-place-choices.test.js:777`, `:829`, `:855`
+  arrived in an unreadable shape. Six offline cases (`tests/workflow-place-choices.test.js:791`, `:843`, `:869`
   among them) went **42 tests / 39 pass / 3 fail** before the fix
   (`docs/evidence/iter65-offline-cases-red-3-2026-11-20.log.gz`, each red on the `respond` frame at the pre-fix
   `:455`) and **43 / 43** after on the delivered bytes
@@ -2809,6 +2809,17 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `docs/evidence/iter84-stale-selection-parity-2026-11-27.log.gz`. No dependency, timeout, retry or assertion was weakened;
   next is §13.1 item 21. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED;
   `main` untouched, nothing deployed.
+- 28 Nov, iteration 85 (`docs/validation.md` subsection 85): §13.1 item 21 closes as VERIFIED FIX. Dropdown, global
+  search, coordinates, map click and chat selections now retain one exact point and region identity. Chat points no
+  longer inherit an older region filter, and unnamed source region codes never become a filter; a same-name town in
+  two regions asks instead of silently selecting the old point. The focused location spec passes 24/24, the location
+  plus city-state batch 32/32, related chat/whole-country specs 28/28, and offline 358/358. The app-side control reddens
+  8/8; the assistant-side control reddens 12/12 including Singapore; the byte-identical restore returns 24/24 and
+  city-state 8/8. The first full gate was stopped by the user at case 253 with three Singapore failures and no tally;
+  the corrected frozen tree passed 424/424 in 20.9 minutes, exit 0. Evidence is
+  `docs/evidence/iter85-location-path-consistency-2026-11-27.log.gz`. No dependency, timeout, retry or assertion was
+  weakened; next is §13.1 item 22. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay
+  UNVERIFIED; `main` untouched, nothing deployed.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -3201,7 +3212,12 @@ remains open and is not claimed covered.
 
 **Location and farmer-input integrity**
 
-21. Cross-check dropdown, map, search, coordinate and chat selections for the same stored location.
+21. Cross-check dropdown, map, search, coordinate and chat selections for the same stored location. CLOSED 28 Nov as
+   VERIFIED FIX: `tests/e2e/location-path-consistency.spec.js:96` covers all five input paths plus two chat follow-ups;
+   chat points clear stale region filters, unnamed codes never narrow a search, and same-name towns in two regions ask
+   for the exact row. The app control reddens 8/8, the assistant control reddens 12/12 including Singapore, and the
+   byte-identical restore returns 24/24 plus city-state 8/8. Evidence is
+   `docs/evidence/iter85-location-path-consistency-2026-11-27.log.gz`.
 22. Verify same-country town/field changes preserve valid crop choices without reusing stale evidence.
 23. Verify cross-country changes clear incompatible choices explicitly, never silently substituting crops.
 24. Check duplicate town names select the exact offered row, including same-name/same-region collisions.

@@ -160,12 +160,9 @@ chat = initChat(() => ({ inputs: comparedInputs, country: countryCrops?.country 
   regionCode: $('#place-region').value === '__all__' ? null : $('#place-region').value || null }), {
   chooseCountry: code => context.chooseCountry(code, { fromAssistant: true }),
   chooseRegion: code => context.chooseRegion(code, { fromAssistant: true }),
-  // The assistant's town choice must show in step 1 without inventing a region filter:
-  // the list keeps whatever region the farmer or the assistant already selected, which for a
-  // country with unnamed regions stays "All regions" so a partial town name lists every match.
+  // A chat point carries its saved region when known; global search and raw coordinates clear an older filter.
   chooseLocation: (point, countryCode) => {if(!point.id)setLocationMethod('coordinates');
-    const filter = $('#place-region').value;
-    return selectLocation(point.latitude, point.longitude, { pan: true, countryCode, regionCode: !filter || filter === '__all__' ? null : filter, placeId: point.id ?? '', fromAssistant: true });},
+    return selectLocation(point.latitude, point.longitude, { pan: true, countryCode, regionCode: point.regionCode ?? null, placeId: point.id ?? '', fromAssistant: true });},
   chooseFarm: id => context.selectFarm(id, { fromAssistant: true }),
   loadFarms: () => context.loadFarms(),
   showStep: activateTab, loadEvidence: () => loadEvidence({ fromAssistant: true }), setTemperatureUnit: unit => { $('#temperature-unit').value = unit; if (observations) renderEvidence(observations, unit); }, loadSoilContext: () => $('#load-soil-context').disabled ? false : context.loadSoil(), loadPestContext: () => $('#load-pests').disabled ? false : context.loadPests({ fromAssistant: true }), openMap3D: async () => Boolean(await openEvidenceMap3D()), closeMap3D: () => { if ($('#map3d-panel').hidden) return false; closeMap3D(); return true; }, goBack: () => { if ($('#flow-back').disabled) return false; $('#flow-back').click(); return true; }, searchPlaces: async query => (await api(`/api/places?${new URLSearchParams({ q: query })}`)).places,

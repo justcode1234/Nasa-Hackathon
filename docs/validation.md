@@ -1018,7 +1018,7 @@ At "Which state or region of France?", typing "France" matched nothing: the repl
 same area prompt, so the chat asked itself the same thing with nothing new to tap. The long official
 spellings reached it too ("South Georgia & South Sandwich Islands" is past the short-reply limit, so the
 first attempt only fixed the short ones). The rule now compares the whole reply in the same canonical
-shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:675-686, the branch where `replySpelling` equals `countrySpelling` and `level` names the tier still missing](../public/js/modules/workflow-assistant.js#L675)):
+shape as `regionPhrase` and answers honestly instead ([public/js/modules/workflow-assistant.js:680-692, the branch where `replySpelling` equals `countrySpelling` and `level` names the tier still missing](../public/js/modules/workflow-assistant.js#L680)):
 it names the level still missing ("a town in Nampula", "one of its regions"), offers that level's real
 rows plus `Whole <country>`, and ends with "Nothing was selected." A saved row that really does carry
 the country's spelling is matched earlier and still selects itself, so Guadeloupe and Martinique keep
@@ -4256,7 +4256,7 @@ Limits. What iteration 51 covers is the four producers, and it covers them on bo
   `public/js/lib/core-worker-entry.js:2` imports the same `createApiHandler` the Node server calls, so a wrapped
   sentence reads the same whichever side answers. Nine page-side sites still print whatever their own `catch` caught -
   `public/js/modules/context.js:80,114,136`, `public/js/modules/terrain-controls.js:56`,
-  `public/js/modules/map3d.js:36,83`, `public/js/modules/gibs-controls.js:40`, `public/js/app.js:307` and
+  `public/js/modules/map3d.js:36,83`, `public/js/modules/gibs-controls.js:40`, `public/js/app.js:304` and
   `public/js/modules/location-picker.js:50`, which assigns the message instead of interpolating it - and for an error
   raised outside those four producers, such as the MapLibre failure `map3d.js:36` reports deliberately, a runtime's
   own wording still reaches the screen. The worker exit is also structurally unlike the Node exit:
@@ -8281,3 +8281,35 @@ and no tally; it is preserved as partial/invalid. The same frozen test tree was 
 allowance and passed the full four-project gate: 400/400 in 20.2 minutes, exit 0. Evidence is
 `docs/evidence/iter84-stale-selection-parity-2026-11-27.log.gz`. No dependency, timeout, retry or assertion was weakened.
 Next: §13.1 item 21. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay UNVERIFIED.
+
+### 85. Every location input path retains one exact point and region identity
+
+**VERIFIED FIX (§13.1 item 21).** Six browser cases cross-check saved-dropdown, global-search, coordinate, map-click and
+chat selections (`tests/e2e/location-path-consistency.spec.js:96`, `:110`, `:122`, `:139`, `:156`, `:175`). Two real
+defects were found. The app's chat action reused the current region filter for every point, so a global search or raw
+coordinate could inherit an older region. The assistant also retained its old `areaRegion` across explicit point and
+field choices, and treated an unnamed source code as a selected region; in Singapore that narrowed a later `Jurong`
+reply to one town instead of offering the three real rows.
+
+The app now takes the region from the chosen point, or clears it when the point has no saved region
+(`public/js/app.js:164`). The assistant adopts only a named saved region, clears that memory for global search, raw
+coordinates and field choices, and carries a verified named region through coordinate entry
+(`public/js/modules/workflow-assistant.js:576`, `:582`, `:593`, `:648`). A same-name town in two regions now asks which
+row instead of silently selecting the old region's point. The owning-layer Singapore sequence is pinned at
+`tests/workflow-place-choices.test.js:129`: it failed before the correction and passes after it.
+
+The focused location spec passes 24/24, the location plus city-state batch passes 32/32, the related chat/whole-country
+specs pass 28/28, and the offline suite passes 358/358. Mutation controls fail as intended: restoring the app's old
+filter reddens 8/8, and restoring the assistant's old region memory reddens 12/12 including all four Singapore cases;
+the byte-identical restore returns 24/24 and city-state 8/8. Two earlier workflow controls stayed green because the
+test used a unique town that the matcher deliberately finds country-wide; both runs are retained, and the same-name
+two-region discriminator is what makes the final control bite.
+
+The first post-fix matrix was invalid (16 failed / 8 passed) because its fixture omitted `source`, its number assertion
+ignored input normalization, and its region assertion read legitimate option buttons; the corrected harness is archived
+beside that run. The first full gate was stopped by the user at case 253 with three Singapore failures and no tally.
+The corrected frozen tree passed the full four-project gate: 424/424 in 20.9 minutes, exit 0, with the Singapore case
+green in every project. Citation repairs moved the affected source pins, test pins, deep-link bands and prose pointers.
+Evidence is `docs/evidence/iter85-location-path-consistency-2026-11-27.log.gz`. No dependency, timeout, retry or
+assertion was weakened. Next: §13.1 item 22. Real phones, Safari/WebKit, microphones, audio quality and independent
+agronomy stay UNVERIFIED.

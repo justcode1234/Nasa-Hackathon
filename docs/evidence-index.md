@@ -1,10 +1,10 @@
 # Evidence the loop never cited
 
-<!-- Generated 27 Nov 2026 UTC by an isolated scan of docs/evidence against the tracked prose tree. Scanning
+<!-- Generated 28 Nov 2026 UTC by an isolated scan of docs/evidence against the tracked prose tree. Scanning
      and re-checking is the job of tests/documentation-evidence-index.test.js; the sizes below are read from the
      filesystem by that generator and re-asserted by that test, so a row cannot rot into a lie. -->
 
-163 of 840 files under `docs/evidence/` are named by no other tracked prose file:
+163 of 841 files under `docs/evidence/` are named by no other tracked prose file:
 no `docs/validation.md` subsection, no AGENTS.md bullet and no handoff sentence says what they are evidence
 for. They are listed here with the byte size each one has in this commit, because that is the only fact about
 them a reader can check without opening them. 25,593,186 bytes total.

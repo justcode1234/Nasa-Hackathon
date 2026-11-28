@@ -2720,10 +2720,24 @@ const TALLIES = [
        'late country crop and town lists cannot replace a newer country',
        'a comparison released after constraints change never renders or survives as current'],
    absent: ['STALE_GATE exit=1', 'SHELVE84_REFUSE'] },
+  { archive: 'docs/evidence/iter85-location-path-consistency-2026-11-27.log.gz',
+   lines: ['LOCATION_CONSISTENCY start_utc=2026-11-28T16:05:31Z head=98e21dbc2d2613f50a1436a48a7b0d701674a808 interpreter=v26.13.1',
+       'LOCATION_FOCUSED passed=24 failed=0 projects=4',
+       'LOCATION_CITY passed=32 failed=0 projects=4',
+       'LOCATION_RELATED passed=28 failed=0 projects=4',
+       'LOCATION_CONTROLS app=8red workflow_and_city=12red restore=24/24 city=8/8',
+       'LOCATION_OFFLINE tests=358 pass=358 fail=0 skipped=0',
+       'LOCATION_FIRST_GATE interrupted_by_user=true exit=missing last_case=253 failed_case_lines=3 tally=none',
+       'LOCATION_GATE exit=0   424 passed (20.9m)',
+       'LOCATION_DONE'],
+   phrases: ['=== LOCATION ORIGINAL RED', '=== LOCATION FIRST GATE RAW', '=== LOCATION CONTROLS FINAL',
+       'chat global search clears an older region before a town in another region',
+       'a regionless town choice never turns its unnamed code into a region filter'],
+   absent: ['LOCATION_GATE exit=1', 'SHELVE85_REFUSE'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 269, `the table carries ${TALLIES.length} archives; subsections 57 through 84 quote more runs ` +
+  assert.ok(TALLIES.length >= 270, `the table carries ${TALLIES.length} archives; subsections 57 through 85 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
@@ -2889,7 +2903,7 @@ test('the tally of every archived run is printed by that archive, not by the pro
     'seven-arm ladder that measures what that spec is worth and the offline run both were graded on. Every needle in those ' +
     'three rows is a rendered stamp with its values in place, because all three archives embed the same driver bytes and a ' +
     'needle copied from a line of that source therefore matches all of them - which is exactly what the row/archive matrix ' +
-    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule. Iteration 79 adds the shipped-instrument census and the guard control that keeps scratch scripts out of tracked prose. Iteration 80 adds the F6 mutation controls, F7 retirement census and F12 blocked-limit record. Iteration 81 adds the HTTP body-cancellation red/green pair, browser sensitivity control and full 368-case gate. Iteration 84 adds the five-case stale-selection archive, its focused runs, mutation controls, stopped first gate and full 400-case gate.');
+    'asks each row about. Iteration 76 adds the five iteration-75 archives and the matrix that grades them, because their existence checks did not pin a single reported number. Iteration 77 adds the complete F18 candidate triage, with the before/after census and every manual verdict in one archive. Iteration 78 adds the F17 shape census and the green/red/green control for the positive-needle rule. Iteration 79 adds the shipped-instrument census and the guard control that keeps scratch scripts out of tracked prose. Iteration 80 adds the F6 mutation controls, F7 retirement census and F12 blocked-limit record. Iteration 81 adds the HTTP body-cancellation red/green pair, browser sensitivity control and full 368-case gate. Iteration 84 adds the five-case stale-selection archive, its focused runs, mutation controls, stopped first gate and full 400-case gate. Iteration 85 adds the cross-path location archive, its regionless red/green pair, mutation controls, user-stopped first gate and full 424-case gate.');
   for (const { archive, lines = [], phrases = [], absent = [], marks, partial, noTally, onlyReds } of TALLIES) {
     assert.ok((lines?.length ?? 0) + (phrases?.length ?? 0) + (onlyReds?.length ?? 0) > 0,
       `ROW_SHAPE_BAD ${archive} has no positive content needle (lines, phrases or onlyReds)`);

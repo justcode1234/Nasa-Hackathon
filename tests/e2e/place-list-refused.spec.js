@@ -219,7 +219,7 @@ test.describe('a country place list that cannot be read', () => {
   // Mongolia, so a farmer who typed it after a refusal had the whole plan moved to another country: new country, no
   // region, no point, while the same sentence with a readable list selects the region. Measured offline in
   // docs/evidence/iter64-country-switch-probe-2026-11-20.log.gz and pinned by
-  // `tests/workflow-place-choices.test.js:380` and `:497`; this is the real page over both transports, plus the
+  // `tests/workflow-place-choices.test.js:394` and `:503`; this is the real page over both transports, plus the
   // outright switch the refusal names, which has to keep working because the fix cannot be a blanket refusal.
   test('a region spelled like another country keeps the plan when the list refuses, and naming the switch still moves it', async ({ page, context }, info) => {
     test.setTimeout(240_000);

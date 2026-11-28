@@ -573,11 +573,13 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
         const distance = place=>{const rad=Math.PI/180,dy=(place.latitude-latitude)*rad,dx=(place.longitude-longitude)*rad;const a=Math.sin(dy/2)**2+Math.cos(latitude*rad)*Math.cos(place.latitude*rad)*Math.sin(dx/2)**2;return 6371*2*Math.asin(Math.min(1,Math.sqrt(a)));};
         if (!towns.some(place=>distance(place)<=50)) return reply(`Those coordinates are more than 50 km from the named town in the saved place list. Please confirm the town or point. This is a town-proximity check, not a farm-boundary measurement.`);
       }
-      await run('chooseLocation', parsed.location, foundCountry); pointAccepted = true; scope = 'area'; state = getState();
+      areaRegion = regions.length === 1 ? regions[0].id : null;
+      await run('chooseLocation', { ...parsed.location, regionCode: areaRegion }, foundCountry); pointAccepted = true; scope = 'area'; state = getState();
     }
     if (choice?.type === 'place') {
       const place = choice.place;
       if (!place || !Number.isFinite(place.latitude) || !Number.isFinite(place.longitude)) return reply('That search result no longer has usable coordinates. Search again and choose a returned row.');
+      areaRegion = null;
       await run('chooseLocation', place, choice.countryCode ?? place.countryCode); pointAccepted = true; scope = 'area'; state = getState(); await keepInputs();
       progress('Step 1: finding community-mapped fields near the selected place…');
       const fields = await fieldsOutcome();
@@ -588,6 +590,7 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
     if (choice?.type === 'farm' || parsed.farmId || parsed.farmIndex) {
       const id = choice?.id ?? parsed.farmId ?? state.farms[Number(parsed.farmIndex) - 1]?.id;
       if (!state.farms.some(farm => farm.id === id)) return reply('That field is not in the current mapped results. Find nearby fields and select one of the returned outlines.');
+      areaRegion = null;
       await run('chooseFarm', id); pointAccepted = true; scope = 'area'; state = getState();
     }
     if (parsed.usePoint && state.location && !placeMention) { pointAccepted = true; scope = 'area'; }
@@ -642,7 +645,9 @@ export function createWorkflowAssistant({ getState, actions, request = api, prog
           name.length >= 3 && mentionsPlace(place.name) && (q === name || /\b(?:in|near|at|around)\b/.test(q));
       });
       if (matches.length === 1) {
-        await run('chooseLocation', matches[0], state.country); scope = 'area';
+        const region = places.regions.find(row => row.id === matches[0].regionCode);
+        areaRegion = region?.name ? region.id : null;
+        await run('chooseLocation', { ...matches[0], regionCode: areaRegion }, state.country); scope = 'area';
         progress('Step 1: finding community-mapped fields near the town…');
         const fields = await fieldsOutcome();
         await keepInputs(); state = getState();
