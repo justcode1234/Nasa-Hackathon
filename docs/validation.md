@@ -8313,3 +8313,27 @@ green in every project. Citation repairs moved the affected source pins, test pi
 Evidence is `docs/evidence/iter85-location-path-consistency-2026-11-27.log.gz`. No dependency, timeout, retry or
 assertion was weakened. Next: §13.1 item 22. Real phones, Safari/WebKit, microphones, audio quality and independent
 agronomy stay UNVERIFIED.
+
+### 86. Same-country point changes preserve exact crop choices and discard older evidence
+
+**VERIFIED SOUND (§13.1 item 22).** Two browser cases change a saved town and then mapped fields inside one country after
+NASA evidence has loaded (`tests/e2e/same-country-input-integrity.spec.js:92`, `:115`). They require the same country and
+exact point, all three baseline crops, the previous crop and the allowed-crop set to remain unchanged, while the evidence
+status reports the location change, the evidence output empties, comparison disables and no scenario remains. Both cases
+run on Node HTTP and the static worker in desktop and mobile projects.
+
+No application byte changed. The existing owning layers are crop-value retention in `updateCropChoices()`
+(`public/js/modules/si.js:50`, `:67`) and evidence invalidation for point and country-selection transitions
+(`public/js/app.js:127`, `:146`). Mutation controls show these are load-bearing rather than incidental: removing crop
+retention reddens 8/8; disabling point invalidation reddens the four field cases; disabling only the country-selection
+invalidator stays green because point selection independently clears evidence; removing both town-path invalidators
+reddens 8/8. Byte-identical restoration returns 8/8 and both source hashes match.
+
+The focused spec passes 8/8, related same-country/whole-country/workflow specs pass 28/28, and offline passes 358/358.
+Two harness-red attempts are retained: the first compared checkbox DOM order and clicked a field control hidden by the
+advanced evidence step; the second still had hidden town controls. Explicit checkbox sorting and step navigation made the
+final harness exercise the intended product paths without weakening an assertion. The frozen tree passed the full
+four-project gate: 432/432 in 24.1 minutes, exit 0. Evidence is
+`docs/evidence/iter86-same-country-input-integrity-2026-11-28.log.gz`. No dependency, timeout, retry or assertion was
+weakened. Next: §13.1 item 23. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay
+UNVERIFIED.

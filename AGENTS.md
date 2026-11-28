@@ -2820,6 +2820,16 @@ instead of projected from a scratch harness. Honest limit recorded rather than h
   `docs/evidence/iter85-location-path-consistency-2026-11-27.log.gz`. No dependency, timeout, retry or assertion was
   weakened; next is §13.1 item 22. Real phones, Safari/WebKit, microphones, audio quality and independent agronomy stay
   UNVERIFIED; `main` untouched, nothing deployed.
+- 28 Nov, iteration 86 (`docs/validation.md` subsection 86): §13.1 item 22 closes as VERIFIED SOUND. Two deterministic
+  browser cases change town and mapped field inside one country after loaded NASA evidence, then require all baseline,
+  previous and allowed crop choices to stay exact while older evidence clears and comparison is disabled. No application
+  byte changed. The focused spec passes 8/8, related specs 28/28, offline 358/358, and the frozen four-project gate passes
+  432/432 in 24.1 minutes, exit 0. Controls redden crop preservation 8/8 and field evidence invalidation 4/4; the town-only
+  half-fix stays green because point selection also invalidates, while removing both town invalidators reddens 8/8.
+  Byte-identical restoration returns 8/8. Two harness-red attempts are retained for checkbox order and hidden step
+  controls. Evidence is `docs/evidence/iter86-same-country-input-integrity-2026-11-28.log.gz`. No dependency, timeout,
+  retry or assertion was weakened; next is §13.1 item 23. Real phones, Safari/WebKit, microphones, audio quality and
+  independent agronomy stay UNVERIFIED; `main` untouched, nothing deployed.
 
 ## 11. Active plan — review fixes and 3D evidence map (proposed 2026-11-15)
 
@@ -3218,7 +3228,10 @@ remains open and is not claimed covered.
    for the exact row. The app control reddens 8/8, the assistant control reddens 12/12 including Singapore, and the
    byte-identical restore returns 24/24 plus city-state 8/8. Evidence is
    `docs/evidence/iter85-location-path-consistency-2026-11-27.log.gz`.
-22. Verify same-country town/field changes preserve valid crop choices without reusing stale evidence.
+22. Verify same-country town/field changes preserve valid crop choices without reusing stale evidence. CLOSED 28 Nov as
+   VERIFIED SOUND: `tests/e2e/same-country-input-integrity.spec.js:92` and `:115` pass all four projects after loaded
+   evidence; crop controls redden 8/8, field invalidation 4/4, both town invalidators 8/8, and byte-identical restore returns
+   8/8. Evidence is `docs/evidence/iter86-same-country-input-integrity-2026-11-28.log.gz`.
 23. Verify cross-country changes clear incompatible choices explicitly, never silently substituting crops.
 24. Check duplicate town names select the exact offered row, including same-name/same-region collisions.
 25. Recheck country-name, region-less and list-less flows against the existing full-matrix invariants.

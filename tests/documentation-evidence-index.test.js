@@ -2734,10 +2734,24 @@ const TALLIES = [
        'chat global search clears an older region before a town in another region',
        'a regionless town choice never turns its unnamed code into a region filter'],
    absent: ['LOCATION_GATE exit=1', 'SHELVE85_REFUSE'] },
+  { archive: 'docs/evidence/iter86-same-country-input-integrity-2026-11-28.log.gz',
+   lines: ['SAME_COUNTRY start_utc=2026-11-28T16:54:52Z head=3ccf6b2fa146b80f89ed2d1fbc143f34552794b8 interpreter=v26.13.1',
+       'SAME_COUNTRY_FOCUSED passed=8 failed=0 projects=4',
+       'SAME_COUNTRY_RELATED passed=28 failed=0 projects=4',
+       'SAME_COUNTRY_CONTROLS crop=8red field_evidence=4red town_evidence_half_fix=0red combined_evidence=8red restore=8/8',
+       'SAME_COUNTRY_OFFLINE tests=358 pass=358 fail=0 skipped=0',
+       'SAME_COUNTRY_HARNESS_RED first=8failed second=4failed/4passed',
+       'SAME_COUNTRY_GATE exit=0   432 passed (24.1m)',
+       'SAME_COUNTRY_DONE'],
+   phrases: ['=== SAME COUNTRY FIRST HARNESS RED', '=== SAME COUNTRY SECOND HARNESS RED',
+       '=== SAME COUNTRY CONTROLS FINAL', '=== SAME COUNTRY FULL GATE RAW',
+       'a same-country town change preserves crop choices and clears loaded evidence',
+       'same-country field changes preserve crop choices and clear each older evidence load'],
+   absent: ['SAME_COUNTRY_GATE exit=1', 'SHELVE86_REFUSE'] },
 ];
 
 test('the tally of every archived run is printed by that archive, not by the prose quoting it', async () => {
-  assert.ok(TALLIES.length >= 270, `the table carries ${TALLIES.length} archives; subsections 57 through 85 quote more runs ` +
+  assert.ok(TALLIES.length >= 271, `the table carries ${TALLIES.length} archives; subsections 57 through 86 quote more runs ` +
     'than that, so a number in them is unguarded. The floor was 16 after iteration 57, 25 when iteration 58 archived the red, ' +
     'the two controls readings, the focused green, its raw JSON, the superseded neighbours, the gate, the citation-drift ' +
     'instrument and the offline run that caught the stale header, 29 when the census, the tally controls run, the ' +
